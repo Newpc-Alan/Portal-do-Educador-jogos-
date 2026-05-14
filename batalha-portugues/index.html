@@ -1,0 +1,3767 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Batalha de Português · Portal do Educador</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+  #pde-painel {
+    font-family: 'Fredoka', 'Segoe UI', Roboto, sans-serif;
+    color: #4C1D95;
+    width: 100%;
+    margin: 0 auto;
+    min-height: 700px;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e0e9f3 100%);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #pde-painel h1, #pde-painel h2, #pde-painel h3, #pde-painel .titulo {
+    font-family: 'Baloo 2', 'Fredoka', sans-serif;
+  }
+
+  /* Cores institucionais NEWPC */
+  #pde-painel .pde-roxo { color: #4C1D95; }
+  #pde-painel .bg-pde-roxo { background-color: #4C1D95; }
+  #pde-painel .pde-violeta { color: #A78BFA; }
+  #pde-painel .bg-pde-violeta { background-color: #A78BFA; }
+  #pde-painel .pde-dourado { color: #FBBF24; }
+  #pde-painel .bg-pde-dourado { background-color: #FBBF24; }
+
+  /* Animações */
+  @keyframes pde-bounce-in { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
+  @keyframes pde-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  @keyframes pde-pulse-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); } 50% { box-shadow: 0 0 0 12px rgba(255, 215, 0, 0); } }
+  @keyframes pde-confetti { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(120vh) rotate(720deg); opacity: 0; } }
+  @keyframes pde-float-up { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-60px); opacity: 0; } }
+  @keyframes pde-flash { 0%, 100% { background-color: transparent; } 50% { background-color: rgba(255, 255, 0, 0.3); } }
+
+  #pde-painel .pde-bounce-in { animation: pde-bounce-in 0.5s ease-out; }
+  #pde-painel .pde-shake { animation: pde-shake 0.4s; }
+  #pde-painel .pde-pulse-glow { animation: pde-pulse-glow 1.5s infinite; }
+  #pde-painel .pde-flash { animation: pde-flash 0.5s; }
+
+  #pde-painel .confetti {
+    position: absolute; width: 12px; height: 12px;
+    animation: pde-confetti 3s ease-out forwards;
+    pointer-events: none;
+  }
+
+  #pde-painel .float-points {
+    position: absolute; font-weight: 800; font-size: 2rem;
+    animation: pde-float-up 1.2s ease-out forwards;
+    pointer-events: none; z-index: 50;
+  }
+
+  /* Botões da calculadora (legado, ainda usado em algumas regras) */
+  #pde-painel .numpad-btn {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    border-radius: 12px;
+    transition: transform 0.08s, box-shadow 0.08s;
+    cursor: pointer;
+    user-select: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.15);
+    height: clamp(44px, 7vh, 64px);
+    max-height: 64px;
+    font-size: clamp(1rem, 2.2vw, 1.4rem);
+    width: 100%;
+  }
+  #pde-painel .numpad-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
+  #pde-painel .numpad-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* Calculadora wrapper - controla largura máxima */
+  #pde-painel .calc-wrapper {
+    max-width: 520px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* Display da operação (questão) */
+  #pde-painel .operacao-display {
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    font-weight: 700;
+    line-height: 1.3;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.15);
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* Badge de área da questão (Ortografia/Gramática/etc) */
+  #pde-painel .questao-area-badge {
+    display: inline-block;
+    align-self: center;
+    padding: 3px 12px;
+    border-radius: 999px;
+    font-size: clamp(0.7rem, 1.4vw, 0.85rem);
+    font-weight: 800;
+    font-family: 'Baloo 2', sans-serif;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+    text-shadow: none;
+  }
+
+  /* Enunciado da questão */
+  #pde-painel .questao-enunciado {
+    font-size: clamp(0.95rem, 2vw, 1.25rem);
+    font-weight: 600;
+    padding: 4px 8px;
+    line-height: 1.35;
+  }
+
+  /* Display da resposta */
+  #pde-painel .answer-display {
+    background: white;
+    border-radius: 12px;
+    padding: 8px 12px;
+    text-align: center;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    min-height: 44px;
+    line-height: 1.2;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    word-break: break-word;
+    transition: background 0.2s, color 0.2s;
+  }
+  #pde-painel .answer-display.aguardando {
+    background: rgba(255,255,255,0.85);
+    color: #4C1D95;
+    font-style: italic;
+    font-size: clamp(0.85rem, 1.8vw, 1rem);
+    font-weight: 600;
+  }
+  #pde-painel .answer-display.success {
+    background: #DCFCE7;
+    color: #166534;
+    animation: pulseSuccess 0.6s;
+  }
+  #pde-painel .answer-display.error {
+    background: #FEE2E2;
+    color: #991B1B;
+  }
+  @keyframes pulseSuccess {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Container de alternativas (múltipla escolha) */
+  #pde-painel .alternativas-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  #pde-painel .alternativa-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background: white;
+    color: #1E1B4B;
+    border: 3px solid transparent;
+    border-radius: 12px;
+    padding: 10px 12px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+    line-height: 1.3;
+    transition: transform 0.08s, box-shadow 0.1s, border-color 0.1s, background 0.1s;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.18);
+  }
+  #pde-painel .alternativa-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    border-color: #FBBF24;
+  }
+  #pde-painel .alternativa-btn:active:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.18);
+  }
+  #pde-painel .alternativa-btn:disabled { cursor: default; opacity: 0.85; }
+  #pde-painel .alternativa-btn .letra {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #A78BFA, #4C1D95);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+  }
+  #pde-painel .alternativa-btn .texto { flex: 1; }
+  #pde-painel .alternativa-btn.alt-correta {
+    background: #DCFCE7;
+    border-color: #22C55E;
+    color: #166534;
+  }
+  #pde-painel .alternativa-btn.alt-correta .letra { background: linear-gradient(135deg, #22C55E, #166534); }
+  #pde-painel .alternativa-btn.alt-errada {
+    background: #FEE2E2;
+    border-color: #EF4444;
+    color: #991B1B;
+  }
+  #pde-painel .alternativa-btn.alt-errada .letra { background: linear-gradient(135deg, #EF4444, #991B1B); }
+  #pde-painel .alternativa-btn.alt-correta-revelada {
+    background: #FEF3C7;
+    border-color: #F59E0B;
+    color: #92400E;
+  }
+  #pde-painel .alternativa-btn.alt-correta-revelada .letra { background: linear-gradient(135deg, #F59E0B, #92400E); }
+
+  /* Teclado QWERTY (questões "digitar") */
+  #pde-painel .teclado-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  #pde-painel .teclado-row {
+    display: flex;
+    gap: 3px;
+    width: 100%;
+  }
+  #pde-painel .teclado-row .tecla-btn {
+    flex: 1;
+    min-width: 0;
+    background: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.75rem, 1.6vw, 1rem);
+    padding: 0;
+    cursor: pointer;
+    user-select: none;
+    height: clamp(34px, 5.5vh, 46px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.18);
+    transition: transform 0.06s, box-shadow 0.06s;
+  }
+  #pde-painel .teclado-row .tecla-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.18);
+  }
+  #pde-painel .teclado-row .tecla-acento { background: #FEF3C7; }
+  #pde-painel .teclado-row .tecla-confirmar {
+    flex: 2;
+    font-size: clamp(0.85rem, 1.7vw, 1.1rem);
+  }
+  #pde-painel .teclado-acoes {
+    margin-top: 2px;
+  }
+
+  /* Painel de explicação pedagógica (após erro) — sobrepõe o display da questão */
+  #pde-painel .operacao-display .explicacao-painel {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(76,29,149,0.97), rgba(109,40,217,0.97));
+    color: white;
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 10;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    box-shadow: inset 0 0 0 2px rgba(251,191,36,0.6), 0 6px 18px rgba(0,0,0,0.3);
+    text-shadow: none;
+  }
+  #pde-painel .explicacao-painel.visivel {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #pde-painel .explicacao-painel .exp-header {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.95rem, 1.9vw, 1.15rem);
+    color: #FBBF24;
+  }
+  #pde-painel .explicacao-painel .exp-header strong {
+    color: white;
+    text-decoration: underline;
+    text-decoration-color: #FBBF24;
+  }
+  #pde-painel .explicacao-painel .exp-corpo {
+    font-size: clamp(0.82rem, 1.6vw, 0.98rem);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  /* Time card */
+  #pde-painel .team-card {
+    transition: opacity 0.3s, transform 0.3s;
+    border-radius: 16px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  #pde-painel .team-card.inactive { opacity: 0.45; transform: scale(0.97); }
+  #pde-painel .team-card.active { opacity: 1; transform: scale(1); }
+
+  /* Cabo da batalha */
+  #pde-painel .rope-track {
+    position: relative;
+    height: 14px;
+    background: linear-gradient(90deg, #1E40AF 0%, #1E40AF 50%, #DC2626 50%, #DC2626 100%);
+    border-radius: 7px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+  }
+  #pde-painel .rope-marker {
+    position: absolute; top: 50%;
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    transform: translate(-50%, -50%);
+    transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 5;
+  }
+
+  /* Vidas */
+  #pde-painel .vida {
+    display: inline-block;
+    font-size: 1.5rem;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  #pde-painel .vida.perdida { opacity: 0.2; transform: scale(0.7) rotate(-30deg); }
+
+  /* Combo */
+  #pde-painel .combo-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    color: #4C1D95;
+    box-shadow: 0 2px 8px rgba(255, 165, 0, 0.5);
+  }
+
+  /* Modais */
+  #pde-painel .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    padding: 16px;
+  }
+  #pde-painel .modal-overlay.active { display: flex; }
+  #pde-painel .modal-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 24px;
+  }
+
+  /* Inputs */
+  #pde-painel input[type="text"], #pde-painel input[type="number"], #pde-painel select {
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    width: 100%;
+    background: white;
+  }
+  #pde-painel input[type="text"]:focus, #pde-painel select:focus {
+    outline: none;
+    border-color: #A78BFA;
+    box-shadow: 0 0 0 3px rgba(55, 177, 218, 0.2);
+  }
+
+  /* Botões principais */
+  #pde-painel .btn-primary {
+    background: linear-gradient(135deg, #A78BFA, #4C1D95);
+    color: white;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    padding: 14px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+    transition: transform 0.1s, box-shadow 0.1s;
+    font-size: 1.1rem;
+  }
+  #pde-painel .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+  #pde-painel .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  #pde-painel .btn-success {
+    background: linear-gradient(135deg, #FBBF24, #D97706);
+    color: #4C1D95;
+  }
+  #pde-painel .btn-warning {
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    color: #4C1D95;
+  }
+  #pde-painel .btn-danger {
+    background: linear-gradient(135deg, #EF4444, #B91C1C);
+    color: white;
+  }
+  #pde-painel .btn-ghost {
+    background: rgba(30, 50, 74, 0.1);
+    color: #4C1D95;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Chip / opção selecionável */
+  #pde-painel .chip {
+    background: white;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  #pde-painel .chip:hover { border-color: #A78BFA; }
+  #pde-painel .chip.active {
+    background: linear-gradient(135deg, #A78BFA, #4C1D95);
+    color: white;
+    border-color: #4C1D95;
+  }
+
+  /* Header app */
+  #pde-painel .app-header {
+    background: linear-gradient(135deg, #4C1D95 0%, #6D28D9 100%);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* Logo NEWPC inline */
+  #pde-painel .logo-newpc {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+  }
+  #pde-painel .logo-newpc .nw-circle {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #A78BFA, #FBBF24);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #4C1D95;
+    font-size: 1rem;
+  }
+
+  /* Layout responsivo principal */
+  #pde-painel .battle-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  @media (max-width: 640px) {
+    #pde-painel .battle-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    #pde-painel .team-card.inactive { display: none; }
+    #pde-painel .app-header { padding: 10px 14px; }
+    #pde-painel .operacao-display { font-size: 2rem; }
+  }
+
+  /* Cronômetro */
+  #pde-painel .timer-circle {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    gap: 6px;
+  }
+  #pde-painel .timer-circle.danger { background: #DC2626; animation: pde-pulse-glow 1s infinite; }
+
+  /* Tabela do relatório */
+  #pde-painel .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+  }
+  #pde-painel .report-table th {
+    background: #4C1D95; color: white;
+    padding: 10px; text-align: left;
+    font-family: 'Baloo 2', sans-serif;
+  }
+  #pde-painel .report-table td {
+    padding: 10px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  #pde-painel .report-table tr:nth-child(even) td { background: #f8fafc; }
+
+  /* Esconder elementos */
+  #pde-painel .hidden { display: none !important; }
+
+  /* Painel BNCC */
+  #pde-painel .bncc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+  }
+
+  /* Aviso vidas */
+  #pde-painel .lives-display {
+    display: flex; align-items: center; gap: 4px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 999px;
+    padding: 4px 10px;
+  }
+
+  /* Footer placar mobile */
+  #pde-painel .mobile-score {
+    display: none;
+    background: white;
+    border-top: 2px solid #4C1D95;
+    padding: 8px;
+    justify-content: space-around;
+    align-items: center;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+  }
+  @media (max-width: 640px) {
+    #pde-painel .mobile-score { display: flex; }
+  }
+
+  /* Animação de scroll de transição entre turnos */
+  @keyframes pde-slide-enter {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  #pde-painel .slide-enter { animation: pde-slide-enter 0.4s ease-out; }
+
+  /* ===== LOBBY COMPACTO (cabe sem scroll) ===== */
+  #pde-painel .lobby-compact {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 1100px;
+    margin: 0 auto;
+    min-height: 600px;
+  }
+
+  #pde-painel .lobby-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 4px 8px;
+    flex-wrap: wrap;
+  }
+
+  #pde-painel .lobby-titulo {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    color: #4C1D95;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+  }
+
+  #pde-painel .btn-link-relatorio {
+    background: rgba(55, 177, 218, 0.15);
+    color: #4C1D95;
+    border: 1px solid rgba(30, 50, 74, 0.2);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  #pde-painel .btn-link-relatorio:hover {
+    background: rgba(55, 177, 218, 0.25);
+  }
+
+  #pde-painel .lobby-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    flex: 1;
+  }
+
+  #pde-painel .lobby-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #pde-painel .lobby-secao {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    color: #4C1D95;
+    font-size: 1rem;
+    margin: 0 0 4px 0;
+  }
+
+  #pde-painel .lobby-input {
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.95rem;
+    width: 100%;
+    background: white;
+  }
+
+  #pde-painel .chip-sm {
+    background: white;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 5px 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-align: center;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  #pde-painel .chip-sm:hover { border-color: #A78BFA; }
+  #pde-painel .chip-sm.active {
+    background: linear-gradient(135deg, #A78BFA, #4C1D95);
+    color: white;
+    border-color: #4C1D95;
+  }
+
+  #pde-painel .lobby-actions {
+    display: flex;
+    gap: 10px;
+  }
+  #pde-painel .lobby-actions .btn-primary {
+    padding: 12px 18px;
+    font-size: 1rem;
+  }
+
+  /* Slider compacto */
+  #pde-painel .lobby-col input[type="range"] {
+    height: 6px;
+    margin-top: 4px;
+  }
+
+  /* BNCC anos compactos */
+  #pde-painel #bncc-anos .chip-sm {
+    padding: 4px 6px;
+    font-size: 0.85rem;
+  }
+
+  /* Mobile: empilha as colunas */
+  @media (max-width: 768px) {
+    #pde-painel .lobby-card {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    #pde-painel .lobby-titulo {
+      font-size: 1.3rem;
+    }
+    #pde-painel .lobby-header {
+      flex-wrap: wrap;
+    }
+  }
+
+  /* Desktop alto: aproveita espaço vertical sem ficar gigante */
+  @media (min-height: 800px) {
+    #pde-painel .lobby-compact {
+      padding: 24px;
+      gap: 16px;
+    }
+    #pde-painel .lobby-card { padding: 24px; gap: 28px; }
+  }
+
+  /* Botão admin flutuante */
+  #pde-painel .btn-admin {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    background: rgba(30, 50, 74, 0.85);
+    color: white;
+    border: none;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+
+/* ============== SELOS BNCC ============== */
+#pde-painel .selos-bncc {
+  background: #F8FAFC;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 14px 0 6px;
+  text-align: left;
+  border: 2px solid #E2E8F0;
+}
+#pde-painel .selos-bncc h3 {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  color: #1E324A;
+  font-size: 0.95rem;
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#pde-painel .selos-bncc .selo-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #E2E8F0;
+}
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone {
+  flex-shrink: 0;
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg,#37B1DA,#1E324A);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  color: white;
+  font-weight: 800;
+  font-family: 'Baloo 2',sans-serif;
+  letter-spacing: -0.5px;
+}
+#pde-painel .selos-bncc .selo-icone.matematica { background: linear-gradient(135deg,#0891B2,#0E7490); }
+#pde-painel .selos-bncc .selo-icone.portugues { background: linear-gradient(135deg,#9333EA,#581C87); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo {
+  font-weight: 800;
+  color: #1E324A;
+  font-size: 0.88rem;
+  margin-bottom: 3px;
+  font-family: 'Baloo 2',sans-serif;
+}
+#pde-painel .selos-bncc .selo-codigos {
+  font-size: 0.78rem;
+  color: #475569;
+  line-height: 1.5;
+}
+#pde-painel .selos-bncc .selo-codigos b {
+  color: #1E324A;
+  font-family: 'Baloo 2',sans-serif;
+  display: inline-block;
+  background: #E2E8F0;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.74rem;
+  margin-right: 4px;
+}
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px dashed #CBD5E1;
+  font-size: 0.72rem;
+  color: #64748B;
+  text-align: center;
+  line-height: 1.5;
+}
+#pde-painel .selos-bncc-rodape strong { color: #1E324A; }
+
+#pde-painel.alto-contraste .selos-bncc { background: #000; border-color: #FBBF24; }
+#pde-painel.alto-contraste .selos-bncc h3 { color: #FBBF24; }
+#pde-painel.alto-contraste .selos-bncc .selo-icone { background: #FBBF24 !important; color: #000; }
+#pde-painel.alto-contraste .selos-bncc .selo-titulo { color: #FBBF24; }
+#pde-painel.alto-contraste .selos-bncc .selo-codigos { color: #FFF; }
+#pde-painel.alto-contraste .selos-bncc .selo-codigos b { color: #000; background: #FBBF24; }
+#pde-painel.alto-contraste .selos-bncc .selo-row { border-bottom-color: #FBBF24; }
+#pde-painel.alto-contraste .selos-bncc-rodape { color: #FBBF24; border-top-color: #FBBF24; }
+
+
+/* ============================================ */
+/* PATCH UNIFICADO v2                            */
+/* 1. Acessibilidade: escala de texto FUNCIONAL  */
+/* 2. Desktop-wide: aproveita tela grande        */
+/* ============================================ */
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 12px clamp(12px, 2vw, 24px) 24px; }
+  #pde-painel .lobby-card { padding: 18px; }
+  #pde-painel .area-treino { padding: 16px; }
+  #pde-painel .painel-info { padding: 16px; }
+  #pde-painel .treino-grid { grid-template-columns: 280px minmax(0, 1fr); gap: 18px; }
+  #pde-painel .opcoes-grid {
+    max-width: 900px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  #pde-painel .fases-grid {
+    max-width: 1100px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  #pde-painel .fase-card { min-height: 170px; padding: 14px 8px; }
+  #pde-painel .fase-card .svg-fase { width: 110px; height: 110px; }
+  #pde-painel .fase-card .nome-fase { font-size: 0.92rem; }
+  #pde-painel .cores-grid {
+    max-width: 800px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .instrumentos-grid {
+    max-width: 720px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  #pde-painel .instrumento-btn { min-height: 110px; }
+  #pde-painel .instrumento-btn .icone-instr { font-size: 2.6rem; }
+  #pde-painel .instrumento-btn .nome-instr { font-size: 0.85rem; }
+  #pde-painel .mapa-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .mapa-etapa { padding: 12px 8px; }
+  #pde-painel .mapa-etapa .emoji-lugar { font-size: 2.2rem; }
+  #pde-painel .mapa-etapa .nome-lugar { font-size: 0.85rem; }
+  #pde-painel .pergunta-grande { font-size: 1.35rem; padding: 0 8px; margin-bottom: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .modal-conteudo h2 { font-size: 1.65rem; }
+  #pde-painel .modal-conteudo p { font-size: 1.05rem; }
+  #pde-painel .opcao-btn { min-height: 64px; font-size: 1.05rem; padding: 14px 12px; }
+  #pde-painel .area-mistura { max-width: 420px; }
+  #pde-painel .pista-musica { height: 280px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  #pde-painel .compositor-grid { grid-template-columns: 90px 1fr; max-width: 900px; margin: 0 auto; }
+  #pde-painel .passo-cel { min-height: 38px; }
+  #pde-painel .seq-progresso { padding: 14px; max-width: 720px; margin: 8px auto; }
+  #pde-painel .seq-progresso .seq-passo { width: 44px; height: 44px; font-size: 1.6rem; }
+  #pde-painel .estrelinhas-prog { padding: 12px; }
+  #pde-painel .header h1 { font-size: 1.45rem; }
+  #pde-painel .btn-header { font-size: 0.92rem; padding: 7px 14px; }
+  #pde-painel .input-nome { font-size: 1.1rem; padding: 14px 18px; }
+  #pde-painel .btn-comecar-aventura { font-size: 1.2rem; padding: 14px 24px; }
+  #pde-painel .quiz-pergunta { padding: 18px; }
+  #pde-painel .quiz-pergunta .qsvg { width: 160px; height: 160px; }
+  #pde-painel .quiz-pergunta .qtext { font-size: 1.25rem; }
+  #pde-painel .info-fase { padding: 14px 18px; max-width: 900px; margin-left: auto; margin-right: auto; }
+  #pde-painel .alvo-info { max-width: 480px; padding: 12px 18px; font-size: 1.05rem; }
+  #pde-painel .pote-cor { width: 100px; height: 100px; }
+  #pde-painel .balde { width: 130px; height: 130px; }
+  #pde-painel .escolha-dupla { max-width: 480px; gap: 14px; }
+  #pde-painel .opcao-dupla { font-size: 1.2rem; min-height: 90px; padding: 22px 12px; }
+  #pde-painel .cor-mostra { width: 200px; height: 200px; }
+  #pde-painel .svg-ilustracao { width: 280px; height: 280px; }
+  #pde-painel .mapa-jogo-wrap { max-width: 900px; margin: 0 auto; }
+}
+@media (min-width: 1440px) {
+  #pde-painel { max-width: 1400px; }
+  #pde-painel .opcoes-grid { max-width: 1000px; }
+  #pde-painel .fases-grid { max-width: 1240px; }
+}
+/* === FIM PATCH UNIFICADO v2 === */
+
+
+/* === SISTEMA A11Y === */
+#pde-painel.alto-contraste { background: #000 !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+#pde-painel.alto-contraste .a11y-grupo { background: #1A1A1A; border-color: #FBBF24; color: #FFF; }
+#pde-painel.alto-contraste .a11y-grupo h3 { color: #FBBF24; }
+#pde-painel.alto-contraste .a11y-tam-btn { background: #1A1A1A; color: #FBBF24; border-color: #FBBF24; }
+#pde-painel.alto-contraste .a11y-tam-btn.ativo { background: #FBBF24; color: #000; }
+#pde-painel.alto-contraste .toggle-row { background: #1A1A1A; color: #FFF; border-color: #FBBF24; }
+
+#pde-painel.daltonico .text-blue-700,
+#pde-painel.daltonico .bg-blue-600 { background-color: #3B82F6 !important; color: white !important; }
+#pde-painel.daltonico .text-red-700,
+#pde-painel.daltonico .bg-red-600 { background-color: #FB923C !important; color: white !important; }
+
+#pde-painel.sem-animacoes *,
+#pde-painel.sem-animacoes *::before,
+#pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Estilização dos elementos do modal A11Y */
+#pde-painel .a11y-grupo {
+  background: #FFF9E6; border: 3px solid #FBBF24; border-radius: 14px;
+  padding: 12px; margin-bottom: 10px; text-align: left;
+}
+#pde-painel .a11y-grupo h3 {
+  font-family: 'Fredoka','Baloo 2',sans-serif; font-size: 1rem;
+  font-weight: 700; color: #1E324A; margin: 0 0 4px;
+}
+#pde-painel .a11y-grupo .desc {
+  font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35;
+}
+#pde-painel .a11y-tam-grid {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 5px;
+}
+#pde-painel .a11y-tam-btn {
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 8px 4px; text-align: center;
+  font-family: 'Fredoka','Baloo 2',sans-serif; font-weight: 700;
+  cursor: pointer; transition: all 0.15s; color: #475569;
+}
+#pde-painel .a11y-tam-btn:hover { border-color: #1E324A; }
+#pde-painel .a11y-tam-btn.ativo {
+  background: linear-gradient(135deg,#1E324A 0%,#0F172A 100%);
+  color: white; border-color: #0F172A;
+}
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #1E324A; }
+#pde-painel .toggle-row.ativo {
+  background: linear-gradient(135deg,#16A34A 0%,#14532D 100%);
+  color: white; border-color: #14532D;
+}
+#pde-painel .toggle-row .switch {
+  width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px;
+  position: relative; flex-shrink: 0;
+}
+#pde-painel .toggle-row .switch::after {
+  content: ""; position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; background: white; border-radius: 50%;
+  transition: left 0.2s;
+}
+#pde-painel .toggle-row.ativo .switch { background: #14532D; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto {
+  flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka','Baloo 2',sans-serif;
+}
+#pde-painel .toggle-row .texto small {
+  display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px;
+}
+
+#pde-painel .btn-secundario {
+  background: white; color: #1E324A;
+  border: 2px solid #1E324A; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #1E324A; color: white; }
+/* === FIM SISTEMA A11Y === */
+
+</style>
+</head>
+<body>
+<div id="pde-painel">
+
+<!-- ========================================== -->
+<!-- TELA 1: LOBBY / CONFIGURAÇÃO DA BATALHA    -->
+<!-- ========================================== -->
+<div id="tela-lobby" class="lobby-compact">
+
+  <!-- Cabeçalho compacto: tudo em uma linha -->
+  <div class="lobby-header">
+    <div class="logo-newpc" style="font-size: 0.85rem; color: #4C1D95;">
+      <span class="nw-circle">N</span>
+      <span class="hidden sm:inline">NEWPC · Portal do Educador</span>
+    </div>
+    <h1 class="lobby-titulo">⚔️ Batalha de Português</h1>
+    <button class="btn-link-relatorio" onclick="abrirAcessibilidade()" title="Acessibilidade" style="margin-right: 4px;">
+      ♿ <span class="hidden sm:inline">A11Y</span>
+    </button>
+    <button class="btn-link-relatorio" onclick="abrirModal('modal-relatorio-dados')" title="Dados para o relatório">
+      📋 <span class="hidden sm:inline">Dados do relatório</span>
+    </button>
+  </div>
+
+  <!-- Card principal em 2 colunas -->
+  <div class="lobby-card">
+
+    <!-- COLUNA ESQUERDA: Conteúdo -->
+    <div class="lobby-col">
+      <h3 class="lobby-secao">📚 Conteúdo</h3>
+      <div class="flex gap-2 mb-2">
+        <div class="chip active flex-1" data-conteudo="livre" onclick="selecionarConteudo('livre')">⚙️ Modo Livre</div>
+        <div class="chip flex-1" data-conteudo="bncc" onclick="selecionarConteudo('bncc')">📖 Por Ano BNCC</div>
+      </div>
+
+      <!-- Painel Modo Livre -->
+      <div id="painel-livre" class="bg-slate-50 rounded-lg p-3 space-y-2">
+        <div>
+          <label class="text-xs font-semibold pde-roxo block mb-1">Áreas de estudo:</label>
+          <div class="grid grid-cols-2 gap-1.5">
+            <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-md cursor-pointer border border-slate-200 text-sm">
+              <input type="checkbox" id="area-ortografia" checked class="w-4 h-4"><span>📝 Ortografia</span>
+            </label>
+            <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-md cursor-pointer border border-slate-200 text-sm">
+              <input type="checkbox" id="area-gramatica" checked class="w-4 h-4"><span>📚 Gramática</span>
+            </label>
+            <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-md cursor-pointer border border-slate-200 text-sm">
+              <input type="checkbox" id="area-interpretacao" checked class="w-4 h-4"><span>💭 Interpret.</span>
+            </label>
+            <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-md cursor-pointer border border-slate-200 text-sm">
+              <input type="checkbox" id="area-vocabulo" checked class="w-4 h-4"><span>🔤 Vocábulo</span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-semibold pde-roxo block mb-1">Nível de dificuldade:</label>
+          <div class="flex gap-1.5">
+            <div class="chip-sm active flex-1" data-faixa="facil" onclick="selecionarFaixa('facil')">😊 Fácil</div>
+            <div class="chip-sm flex-1" data-faixa="medio" onclick="selecionarFaixa('medio')">🤔 Médio</div>
+            <div class="chip-sm flex-1" data-faixa="dificil" onclick="selecionarFaixa('dificil')">🔥 Difícil</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Painel BNCC -->
+      <div id="painel-bncc" class="bg-slate-50 rounded-lg p-3 space-y-2 hidden">
+        <label class="text-xs font-semibold pde-roxo block mb-1">Ano escolar:</label>
+        <div class="grid grid-cols-9 gap-1" id="bncc-anos"></div>
+        <div id="bncc-descricao" class="text-xs text-slate-600 bg-white p-2 rounded border border-slate-200">
+          <strong>Selecione um ano</strong> para ver as habilidades de Língua Portuguesa da BNCC.
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUNA DIREITA: Configurações + Times -->
+    <div class="lobby-col">
+      <h3 class="lobby-secao">⚙️ Configurações</h3>
+      <div class="grid grid-cols-2 gap-2 mb-3">
+        <div>
+          <label class="text-xs font-semibold block">🏆 Pontos: <span id="lbl-pontos" class="pde-violeta font-bold">10</span></label>
+          <input type="range" id="cfg-pontos" min="5" max="20" value="10" class="w-full" oninput="document.getElementById('lbl-pontos').textContent=this.value">
+        </div>
+        <div>
+          <label class="text-xs font-semibold block">⏱️ Tempo: <span id="lbl-tempo" class="pde-violeta font-bold">30</span>s</label>
+          <input type="range" id="cfg-tempo" min="15" max="60" value="30" step="5" class="w-full" oninput="document.getElementById('lbl-tempo').textContent=this.value">
+        </div>
+        <div>
+          <label class="text-xs font-semibold block">❤️ Vidas: <span id="lbl-vidas" class="pde-violeta font-bold">3</span></label>
+          <input type="range" id="cfg-vidas" min="1" max="5" value="3" class="w-full" oninput="document.getElementById('lbl-vidas').textContent=this.value">
+        </div>
+        <div>
+          <label class="text-xs font-semibold block mb-0.5">🔊 Som:</label>
+          <div class="flex gap-1">
+            <div class="chip-sm active flex-1" data-som="on" onclick="selecionarSom('on')">Ligado</div>
+            <div class="chip-sm flex-1" data-som="off" onclick="selecionarSom('off')">Mudo</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="lobby-secao">👥 Times</h3>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-xs font-semibold text-blue-700 block">💙 Time 1</label>
+          <input type="text" id="cfg-nome-azul" value="Time Azul" maxlength="20" class="lobby-input">
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-red-700 block">❤️ Time 2</label>
+          <input type="text" id="cfg-nome-vermelho" value="Time Vermelho" maxlength="20" class="lobby-input">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botões fixos no rodapé -->
+  <div class="lobby-actions">
+    <button class="btn-primary btn-warning flex-1" onclick="iniciarTreino()">
+      🎯 Treinar
+    </button>
+    <button class="btn-primary btn-success flex-1" onclick="iniciarBatalha()" style="font-size: 1.1rem;">
+      ⚔️ Iniciar Batalha
+    </button>
+  </div>
+</div>
+
+<!-- Modal: Dados do relatório -->
+<!-- MODAL A11Y -->
+<div id="modal-a11y" class="modal-overlay">
+    <div class="modal-conteudo">
+      <h2 style="color:#1E324A; font-family:'Fredoka','Baloo 2',sans-serif; font-weight:700; margin:0 0 6px; font-size:1.4rem; text-align:center;">♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem; text-align:center; margin:0 0 12px;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div style="margin-top:14px; text-align:center;">
+        <button onclick="fecharModal('modal-a11y')" style="background:linear-gradient(135deg,#16A34A,#14532D); color:white; border:3px solid #2E7D32; box-shadow:0 4px 0 #2E7D32; padding:11px 28px; border-radius:14px; font-family:'Fredoka','Baloo 2',sans-serif; font-weight:700; font-size:0.95rem; cursor:pointer;">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+<div id="modal-relatorio-dados" class="modal-overlay">
+  <div class="modal-card">
+    <h2 class="text-xl font-bold pde-roxo mb-3" style="font-family: 'Baloo 2', sans-serif;">📋 Dados para o relatório</h2>
+    <p class="text-sm text-slate-600 mb-4">Esses dados aparecem no PDF que você pode exportar ao final da batalha. Todos são opcionais.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div>
+        <label class="text-xs font-semibold">Escola</label>
+        <input type="text" id="cfg-escola" placeholder="Ex: EMEF Castelo Branco">
+      </div>
+      <div>
+        <label class="text-xs font-semibold">Turma</label>
+        <input type="text" id="cfg-turma" placeholder="Ex: 5º ano A">
+      </div>
+      <div>
+        <label class="text-xs font-semibold">Professor(a)</label>
+        <input type="text" id="cfg-professor" placeholder="Ex: Profa. Maria">
+      </div>
+      <div>
+        <label class="text-xs font-semibold">Data</label>
+        <input type="text" id="cfg-data" readonly>
+      </div>
+    </div>
+    <button class="btn-primary w-full mt-4" onclick="fecharModal('modal-relatorio-dados')">✓ Salvar e fechar</button>
+  </div>
+</div>
+
+
+<!-- ========================================== -->
+<!-- TELA 2: BATALHA                            -->
+<!-- ========================================== -->
+<div id="tela-batalha" class="hidden">
+
+  <!-- Cabeçalho -->
+  <div class="app-header">
+    <div class="flex items-center gap-3">
+      <button class="btn-ghost text-white" style="background: rgba(255,255,255,0.15);" onclick="confirmarSair()">↩️ Sair</button>
+      <div class="logo-newpc text-white" style="font-size: 0.85rem;">
+        <span class="nw-circle">N</span>
+        <span class="hidden md:inline">Batalha de Português</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 flex-wrap justify-center">
+      <div id="placar-azul" class="flex items-center gap-2 bg-blue-600 rounded-full px-3 py-1">
+        <span id="nome-azul-header" class="text-xs md:text-sm">💙</span>
+        <span id="pontos-azul" class="text-xl font-extrabold" style="font-family: 'Baloo 2', sans-serif;">0</span>
+      </div>
+      <span class="text-white">×</span>
+      <div id="placar-vermelho" class="flex items-center gap-2 bg-red-600 rounded-full px-3 py-1">
+        <span id="pontos-vermelho" class="text-xl font-extrabold" style="font-family: 'Baloo 2', sans-serif;">0</span>
+        <span id="nome-vermelho-header" class="text-xs md:text-sm">❤️</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <div id="timer" class="timer-circle">⏱️ <span id="timer-valor">20</span></div>
+      <button class="btn-ghost text-white" style="background: rgba(255,255,255,0.15); margin-right: 4px;" onclick="abrirAcessibilidade()" title="Acessibilidade">♿</button><button class="btn-ghost text-white" style="background: rgba(255,255,255,0.15);" onclick="abrirAjuda()">❓</button>
+    </div>
+  </div>
+
+  <!-- Cabo de guerra -->
+  <div class="px-4 pt-3">
+    <div class="bg-white rounded-xl shadow p-3">
+      <div class="flex items-center justify-between mb-2 text-xs md:text-sm font-bold">
+        <span id="label-azul" class="text-blue-700">💙 Time Azul</span>
+        <span class="text-slate-500" id="rodada-info">Rodada 1 · Vez do <span id="time-da-vez">Azul</span></span>
+        <span id="label-vermelho" class="text-red-700">Time Vermelho ❤️</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div id="vidas-azul" class="lives-display"></div>
+        <div class="rope-track flex-1">
+          <div id="rope-marker" class="rope-marker" style="left: 50%;">⭐</div>
+        </div>
+        <div id="vidas-vermelho" class="lives-display"></div>
+      </div>
+      <div class="flex justify-between mt-2 text-xs">
+        <span id="combo-azul" class="hidden combo-badge">🔥 Combo x<span class="combo-mult">2</span></span>
+        <span id="combo-vermelho" class="hidden combo-badge ml-auto">🔥 Combo x<span class="combo-mult">2</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arena dos times -->
+  <div class="battle-grid">
+
+    <!-- TIME AZUL -->
+    <div id="card-azul" class="team-card active" style="background: linear-gradient(165deg, #2563EB, #1E3A8A);">
+      <div class="flex items-center justify-between mb-2">
+        <h2 id="titulo-azul" class="text-white font-bold" style="font-family: 'Baloo 2', sans-serif;">💙 Time Azul</h2>
+        <span id="status-azul" class="text-yellow-300 text-xs font-bold hidden">SUA VEZ</span>
+      </div>
+     <div class="calc-wrapper">
+      <div id="op-azul" class="operacao-display text-white text-center py-3 px-3 rounded-xl mb-2"
+           style="background: rgba(0,0,0,0.25); border: 3px solid #FFD700;">
+        <div style="font-size: 1.2rem; opacity: 0.7;">Aguardando início...</div>
+      </div>
+      <div id="resp-azul" class="answer-display mb-2" style="color: #1E3A8A;">_</div>
+
+      <!-- Área de alternativas (múltipla escolha) -->
+      <div id="alternativas-azul" class="alternativas-container hidden"></div>
+
+      <!-- Teclado de digitação (questões "digitar") -->
+      <div id="teclado-azul" class="teclado-texto hidden">
+        <div class="teclado-row">
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','q')">Q</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','w')">W</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','e')">E</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','r')">R</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','t')">T</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','y')">Y</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','u')">U</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','i')">I</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','o')">O</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','p')">P</button>
+        </div>
+        <div class="teclado-row">
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','a')">A</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','s')">S</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','d')">D</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','f')">F</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','g')">G</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','h')">H</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','j')">J</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','k')">K</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','l')">L</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','ç')">Ç</button>
+        </div>
+        <div class="teclado-row">
+          <button class="tecla-btn tecla-acento" style="color: #1E3A8A;" onclick="digitar('azul','á')">Á</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','z')">Z</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','x')">X</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','c')">C</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','v')">V</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','b')">B</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','n')">N</button>
+          <button class="tecla-btn" style="color: #1E3A8A;" onclick="digitar('azul','m')">M</button>
+          <button class="tecla-btn tecla-acento" style="color: #1E3A8A;" onclick="digitar('azul','é')">É</button>
+          <button class="tecla-btn tecla-acento" style="color: #1E3A8A;" onclick="digitar('azul','í')">Í</button>
+        </div>
+        <div class="teclado-row teclado-acoes">
+          <button class="tecla-btn tecla-acento" style="color: #1E3A8A;" onclick="digitar('azul','ó')">Ó</button>
+          <button class="tecla-btn tecla-acento" style="color: #1E3A8A;" onclick="digitar('azul','ú')">Ú</button>
+          <button class="tecla-btn tecla-acento" style="color: #1E3A8A;" onclick="digitar('azul','ã')">Ã</button>
+          <button class="tecla-btn tecla-acento" style="color: #1E3A8A;" onclick="digitar('azul','õ')">Õ</button>
+          <button class="tecla-btn tecla-acento" style="color: #1E3A8A;" onclick="digitar('azul','â')">Â</button>
+          <button class="tecla-btn tecla-acento" style="color: #1E3A8A;" onclick="digitar('azul','ê')">Ê</button>
+          <button class="tecla-btn" style="background: #FCA5A5; color: #7F1D1D;" onclick="limpar('azul')">⌫</button>
+          <button class="tecla-btn tecla-confirmar" style="background: #FBBF24; color: #4C1D95;" onclick="confirmar('azul')">✓ OK</button>
+        </div>
+      </div>
+     </div>
+    </div>
+
+    <!-- TIME VERMELHO -->
+    <div id="card-vermelho" class="team-card inactive" style="background: linear-gradient(165deg, #DC2626, #7F1D1D);">
+      <div class="flex items-center justify-between mb-2">
+        <h2 id="titulo-vermelho" class="text-white font-bold" style="font-family: 'Baloo 2', sans-serif;">❤️ Time Vermelho</h2>
+        <span id="status-vermelho" class="text-yellow-300 text-xs font-bold hidden">SUA VEZ</span>
+      </div>
+     <div class="calc-wrapper">
+      <div id="op-vermelho" class="operacao-display text-white text-center py-3 px-3 rounded-xl mb-2"
+           style="background: rgba(0,0,0,0.25); border: 3px solid #FFD700;">
+        <div style="font-size: 1.2rem; opacity: 0.7;">Aguardando início...</div>
+      </div>
+      <div id="resp-vermelho" class="answer-display mb-2" style="color: #7F1D1D;">_</div>
+
+      <div id="alternativas-vermelho" class="alternativas-container hidden"></div>
+
+      <div id="teclado-vermelho" class="teclado-texto hidden">
+        <div class="teclado-row">
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','q')">Q</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','w')">W</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','e')">E</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','r')">R</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','t')">T</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','y')">Y</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','u')">U</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','i')">I</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','o')">O</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','p')">P</button>
+        </div>
+        <div class="teclado-row">
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','a')">A</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','s')">S</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','d')">D</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','f')">F</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','g')">G</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','h')">H</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','j')">J</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','k')">K</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','l')">L</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','ç')">Ç</button>
+        </div>
+        <div class="teclado-row">
+          <button class="tecla-btn tecla-acento" style="color: #7F1D1D;" onclick="digitar('vermelho','á')">Á</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','z')">Z</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','x')">X</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','c')">C</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','v')">V</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','b')">B</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','n')">N</button>
+          <button class="tecla-btn" style="color: #7F1D1D;" onclick="digitar('vermelho','m')">M</button>
+          <button class="tecla-btn tecla-acento" style="color: #7F1D1D;" onclick="digitar('vermelho','é')">É</button>
+          <button class="tecla-btn tecla-acento" style="color: #7F1D1D;" onclick="digitar('vermelho','í')">Í</button>
+        </div>
+        <div class="teclado-row teclado-acoes">
+          <button class="tecla-btn tecla-acento" style="color: #7F1D1D;" onclick="digitar('vermelho','ó')">Ó</button>
+          <button class="tecla-btn tecla-acento" style="color: #7F1D1D;" onclick="digitar('vermelho','ú')">Ú</button>
+          <button class="tecla-btn tecla-acento" style="color: #7F1D1D;" onclick="digitar('vermelho','ã')">Ã</button>
+          <button class="tecla-btn tecla-acento" style="color: #7F1D1D;" onclick="digitar('vermelho','õ')">Õ</button>
+          <button class="tecla-btn tecla-acento" style="color: #7F1D1D;" onclick="digitar('vermelho','â')">Â</button>
+          <button class="tecla-btn tecla-acento" style="color: #7F1D1D;" onclick="digitar('vermelho','ê')">Ê</button>
+          <button class="tecla-btn" style="background: #FCA5A5; color: #7F1D1D;" onclick="limpar('vermelho')">⌫</button>
+          <button class="tecla-btn tecla-confirmar" style="background: #FBBF24; color: #4C1D95;" onclick="confirmar('vermelho')">✓ OK</button>
+        </div>
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <!-- Score mobile -->
+  <div class="mobile-score">
+    <span class="text-blue-700">💙 <span id="mob-pts-azul">0</span></span>
+    <span class="text-slate-500 text-xs">vs</span>
+    <span class="text-red-700"><span id="mob-pts-vermelho">0</span> ❤️</span>
+  </div>
+
+  <!-- Modo treino badge -->
+  <div id="treino-badge" class="hidden fixed top-3 left-1/2 -translate-x-1/2 z-50 bg-yellow-400 text-slate-900 font-bold px-4 py-2 rounded-full shadow-lg" style="font-family: 'Baloo 2', sans-serif;">
+    🎯 MODO TREINO
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL: VITÓRIA / FIM DE JOGO               -->
+<!-- ========================================== -->
+<div id="modal-vitoria" class="modal-overlay">
+  <div class="modal-card pde-bounce-in relative">
+    <div id="confetti-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+    <div class="text-center relative z-10">
+      <div class="text-7xl mb-3">🏆</div>
+      <h2 class="text-2xl font-extrabold pde-roxo mb-1" style="font-family: 'Baloo 2', sans-serif;">VENCEDOR!</h2>
+      <p id="vitoria-time" class="text-3xl font-extrabold mb-4" style="font-family: 'Baloo 2', sans-serif;">—</p>
+      <p id="vitoria-motivo" class="text-sm text-slate-600 mb-4">—</p>
+
+      <div class="bg-slate-50 rounded-xl p-4 mb-4 text-left">
+        <h3 class="font-bold pde-roxo mb-3 text-center">📊 Resumo da Partida</h3>
+        <div id="vitoria-resumo" class="space-y-2 text-sm"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <button class="btn-primary btn-success" onclick="reiniciar()">🔁 Revanche</button>
+        <button class="btn-primary btn-warning" onclick="exportarPDF()">📄 Relatório PDF</button>
+        <button class="btn-primary" onclick="voltarLobby()">🏠 Nova partida</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL: EMPATE / MORTE SÚBITA               -->
+<!-- ========================================== -->
+<div id="modal-empate" class="modal-overlay">
+  <div class="modal-card pde-bounce-in text-center">
+    <div class="text-6xl mb-3">⚔️</div>
+    <h2 class="text-2xl font-extrabold pde-roxo mb-2" style="font-family: 'Baloo 2', sans-serif;">EMPATE!</h2>
+    <p class="text-slate-600 mb-4">Os dois times estão na mesma pontuação. É hora da <strong>morte súbita</strong>: uma operação, primeiro que acertar vence.</p>
+    <button class="btn-primary btn-danger w-full" onclick="iniciarMorteSubita()">⚡ Começar Morte Súbita</button>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL: AJUDA / REGRAS                      -->
+<!-- ========================================== -->
+<div id="modal-ajuda" class="modal-overlay">
+  <div class="modal-card">
+    <h2 class="text-xl font-bold pde-roxo mb-3" style="font-family: 'Baloo 2', sans-serif;">📖 Como funciona</h2>
+    <div class="space-y-3 text-sm text-slate-700">
+      <p><strong>⚔️ Rodadas alternadas:</strong> Os times revezam. Quando estiver sua vez, sua calculadora fica destacada.</p>
+      <p><strong>❤️ Vidas:</strong> Cada time começa com vidas. Errar perde 1 vida. Sem vidas = derrota.</p>
+      <p><strong>🔥 Combo:</strong> Acertou 3 seguidas? <strong>x2</strong> nos próximos pontos. 5 seguidas? <strong>x3</strong>! Errou? Combo zera.</p>
+      <p><strong>⏱️ Tempo:</strong> Cada rodada tem tempo individual. Estourou o tempo = perde 1 vida e turno passa.</p>
+      <p><strong>🏆 Vitória:</strong> Atingir os pontos definidos OU adversário ficar sem vidas.</p>
+      <p><strong>⌨️ Teclado físico:</strong> Números 0-9, Enter para confirmar, Backspace para apagar (funciona pro time da vez).</p>
+    </div>
+    <button class="btn-primary w-full mt-4" onclick="fecharModal('modal-ajuda')">Entendi</button>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL: CONFIRMAÇÃO SAIR                    -->
+<!-- ========================================== -->
+<div id="modal-sair" class="modal-overlay">
+  <div class="modal-card text-center">
+    <div class="text-5xl mb-3">⚠️</div>
+    <h2 class="text-xl font-bold pde-roxo mb-2" style="font-family: 'Baloo 2', sans-serif;">Sair da batalha?</h2>
+    <p class="text-slate-600 mb-4 text-sm">A partida atual será perdida. Tem certeza?</p>
+    <div class="grid grid-cols-2 gap-2">
+      <button class="btn-ghost" onclick="fecharModal('modal-sair')">Continuar jogando</button>
+      <button class="btn-primary btn-danger" onclick="voltarLobby()">Sim, sair</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /pde-painel -->
+
+<script>
+
+window.SELOS_BNCC_DADOS = {"nome": "batalha_port", "bncc": [{"tipo": "portugues", "icone": "LP", "titulo": "BNCC Língua Portuguesa", "itens": [{"cod": "EF02LP01", "desc": "Utilizar grafia correta de palavras conhecidas e regulares."}, {"cod": "EF03LP02", "desc": "Ler e escrever palavras com correspondências regulares entre grafemas e fonemas."}, {"cod": "EF35LP01", "desc": "Ler e compreender textos breves e de média extensão."}, {"cod": "EF35LP04", "desc": "Inferir informações implícitas nos textos lidos."}, {"cod": "EF35LP12", "desc": "Recorrer ao dicionário para esclarecer dúvida sobre a escrita de palavras."}, {"cod": "EF67LP32", "desc": "Escrever palavras com correção ortográfica."}]}, {"tipo": "computacao", "icone": "💻", "titulo": "BNCC Computação · Cultura Digital", "itens": [{"cod": "EF15CO01", "desc": "Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem."}]}]};
+
+/* ============== SELOS BNCC NEWPC ============== */
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div class="selos-bncc-info" style="font-size:0.78rem; color:#64748B; margin-bottom:8px; line-height:1.4;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  // Por componente curricular
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row">
+      <div class="selo-icone ${grupo.tipo}">${grupo.icone}</div>
+      <div class="selo-info">
+        <div class="selo-titulo">${grupo.titulo}</div>
+        <div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  // Acessibilidade (sempre)
+  html += `<div class="selo-row">
+    <div class="selo-icone acessibilidade">♿</div>
+    <div class="selo-info">
+      <div class="selo-titulo">Acessibilidade Digital</div>
+      <div class="selo-codigos">
+        <span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala de texto até 172%, modo daltônico, redução de animações</span>
+      </div>
+    </div>
+  </div>`;
+  // LBI (sempre)
+  html += `<div class="selo-row">
+    <div class="selo-icone lbi">⚖️</div>
+    <div class="selo-info">
+      <div class="selo-titulo">Lei Brasileira de Inclusão</div>
+      <div class="selo-codigos">
+        <span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span>
+      </div>
+    </div>
+  </div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  // Remove anterior se existir
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  // Insere antes da div de ações (ou no final se não houver)
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+
+
+/* ============================================================
+   BATALHA MATEMÁTICA · NEWPC · Portal do Educador
+   Aplicação autocontida para embed no Webnode
+   ============================================================ */
+
+// ===================== ESTADO ===============================
+const STATE = {
+  config: {
+    modo: 'lousa',
+    conteudo: 'livre',          // 'livre' | 'bncc'
+    faixa: 'facil',              // 'facil' | 'medio' | 'dificil'
+    bnccAno: null,               // 1..9
+    operacoes: { add: true, sub: true, mul: false, div: false }, // legado, mantido por compat
+    areas: { ortografia: true, gramatica: true, interpretacao: true, vocabulo: true },
+    pontos: 10,
+    tempo: 30,
+    vidas: 3,
+    som: true,
+    nomes: { azul: 'Time Azul', vermelho: 'Time Vermelho' },
+    escola: '', turma: '', professor: '',
+  },
+  jogo: {
+    ativo: false,
+    treino: false,
+    morteSubita: false,
+    rodada: 0,
+    timeDaVez: 'azul',
+    timer: null,
+    tempoRestante: 0,
+    pontos: { azul: 0, vermelho: 0 },
+    vidas: { azul: 3, vermelho: 3 },
+    acertosSeguidos: { azul: 0, vermelho: 0 },
+    operacao: { azul: null, vermelho: null },
+    resposta: { azul: '', vermelho: '' },
+    sinal: { azul: 1, vermelho: 1 },
+    historico: [], // { time, operacao, resposta, correta, certo, tempoGasto, rodada }
+    inicioRodada: 0,
+    inicioPartida: 0,
+  }
+};
+
+// ===================== BNCC PORTUGUÊS =======================
+// Configuração de habilidades BNCC por ano escolar
+const BNCC = {
+  1: { titulo: '1º ano', desc: 'Ortografia básica e reconhecimento de palavras (EF01LP08, EF01LP12).' },
+  2: { titulo: '2º ano', desc: 'Ortografia e classes gramaticais iniciais (EF02LP04, EF02LP09).' },
+  3: { titulo: '3º ano', desc: 'Ortografia, classes de palavras e leitura compreensiva (EF03LP05, EF03LP08).' },
+  4: { titulo: '4º ano', desc: 'Substantivos, adjetivos, ortografia avançada (EF04LP04, EF04LP06).' },
+  5: { titulo: '5º ano', desc: 'Pronomes, verbos básicos, interpretação de texto (EF05LP05, EF05LP09).' },
+  6: { titulo: '6º ano', desc: 'Sintaxe inicial: sujeito, predicado, classes de palavras (EF06LP04, EF06LP05).' },
+  7: { titulo: '7º ano', desc: 'Sintaxe: objetos, predicativo, regência (EF07LP05, EF07LP09).' },
+  8: { titulo: '8º ano', desc: 'Vozes verbais, modos verbais, figuras de linguagem (EF08LP04, EF08LP06).' },
+  9: { titulo: '9º ano', desc: 'Período composto, orações coordenadas e subordinadas (EF09LP04, EF09LP08).' },
+};
+
+// ===================== BANCO DE QUESTÕES ====================
+// Estrutura: { id, ano:[], area, tipo, enunciado, alternativas, correta, resposta, explicacao, dificuldade }
+// area: ortografia | gramatica | interpretacao | vocabulo
+// tipo: multipla | digitar
+const BANCO_PORTUGUES = [
+
+  // ============================================================
+  // ORTOGRAFIA — 1º ao 3º ANO (básico)
+  // ============================================================
+  { id: "ORT-001", ano: [1,2], area: "ortografia", tipo: "multipla", dificuldade: 1,
+    enunciado: "Qual palavra está escrita corretamente?",
+    alternativas: ["caza", "casa", "kasa", "kaza"], correta: 1,
+    explicacao: "Casa escreve-se com S, não com Z." },
+
+  { id: "ORT-002", ano: [1,2], area: "ortografia", tipo: "multipla", dificuldade: 1,
+    enunciado: "Qual palavra está escrita corretamente?",
+    alternativas: ["chave", "xave", "tchave", "chavi"], correta: 0,
+    explicacao: "O som /sh/ no início da palavra chave é grafado com CH." },
+
+  { id: "ORT-003", ano: [1,2,3], area: "ortografia", tipo: "multipla", dificuldade: 1,
+    enunciado: "Como se escreve corretamente?",
+    alternativas: ["passaro", "pasaro", "pássaro", "pásaro"], correta: 2,
+    explicacao: "Pássaro tem acento agudo no Á e dois SS." },
+
+  { id: "ORT-004", ano: [2,3], area: "ortografia", tipo: "digitar", dificuldade: 1,
+    enunciado: "Complete: A criança brinca com a ___ (b__ola)",
+    resposta: "bola",
+    explicacao: "Bola tem apenas uma letra B no início." },
+
+  { id: "ORT-005", ano: [2,3], area: "ortografia", tipo: "multipla", dificuldade: 1,
+    enunciado: "Qual está correta?",
+    alternativas: ["coraçao", "coração", "coraçaõ", "coracão"], correta: 1,
+    explicacao: "Coração leva til (~) no Ã e cedilha (Ç)." },
+
+  { id: "ORT-006", ano: [2,3], area: "ortografia", tipo: "multipla", dificuldade: 1,
+    enunciado: "Qual está correta?",
+    alternativas: ["familha", "família", "familia", "famelia"], correta: 1,
+    explicacao: "Família leva acento agudo no Í." },
+
+  { id: "ORT-007", ano: [3], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["mochila", "moxila", "muchila", "mochilha"], correta: 0,
+    explicacao: "Mochila escreve-se com CH (som /sh/)." },
+
+  { id: "ORT-008", ano: [3,4], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["jiló", "giló", "jilow", "ghiló"], correta: 0,
+    explicacao: "Jiló escreve-se com J. Antes de I e E, usamos J em palavras de origem indígena." },
+
+  { id: "ORT-009", ano: [3,4], area: "ortografia", tipo: "digitar", dificuldade: 2,
+    enunciado: "Complete corretamente: O ___ está cheio de água. (r__o)",
+    resposta: "rio",
+    explicacao: "Rio escreve-se com R simples no início." },
+
+  { id: "ORT-010", ano: [3,4], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["enxergar", "encherger", "enchergar", "exergar"], correta: 0,
+    explicacao: "Enxergar escreve-se com X (e não CH)." },
+
+  // ============================================================
+  // ORTOGRAFIA — 4º ao 6º ANO (intermediário)
+  // ============================================================
+  { id: "ORT-011", ano: [4,5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está escrita corretamente?",
+    alternativas: ["excessão", "exceção", "esceção", "ecceção"], correta: 1,
+    explicacao: "Exceção escreve-se com X seguido de Ç. Não confundir com 'excesso' (ss)." },
+
+  { id: "ORT-012", ano: [4,5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["pesquisa", "pequisa", "pesquiza", "pesquiça"], correta: 0,
+    explicacao: "Pesquisa escreve-se com S (não Z)." },
+
+  { id: "ORT-013", ano: [4,5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["concerteza", "comcerteza", "com certeza", "concertesa"], correta: 2,
+    explicacao: "Com certeza são duas palavras separadas. Não existe 'concerteza'." },
+
+  { id: "ORT-014", ano: [4,5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["através", "atravéz", "atravez", "atrabés"], correta: 0,
+    explicacao: "Através escreve-se com S (não Z) e leva acento agudo no É." },
+
+  { id: "ORT-015", ano: [4,5,6], area: "ortografia", tipo: "digitar", dificuldade: 2,
+    enunciado: "Escreva corretamente: 'Eu f__ a tarefa' (passado do verbo fazer)",
+    resposta: "fiz",
+    explicacao: "Fiz é a 1ª pessoa do passado de fazer (eu fiz)." },
+
+  { id: "ORT-016", ano: [4,5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["beneficiente", "beneficente", "benefiscente", "benficente"], correta: 1,
+    explicacao: "Beneficente, sem o I depois do C. Vem de benefício, mas perde o I." },
+
+  { id: "ORT-017", ano: [4,5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["privilégio", "previlégio", "previlégeo", "previlejo"], correta: 0,
+    explicacao: "Privilégio começa com PRI (não PRE)." },
+
+  { id: "ORT-018", ano: [4,5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["meio-dia", "meiodia", "meyo-dia", "meio dia"], correta: 0,
+    explicacao: "Meio-dia leva hífen (palavra composta)." },
+
+  { id: "ORT-019", ano: [5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["disenteria", "desenteria", "desinteria", "disinteria"], correta: 0,
+    explicacao: "Disenteria começa com DIS (do grego dys = mal)." },
+
+  { id: "ORT-020", ano: [5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["hospede", "óspede", "hóspede", "ospede"], correta: 2,
+    explicacao: "Hóspede leva H no início e acento agudo no Ó." },
+
+  { id: "ORT-021", ano: [5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["umidade", "humidade", "úmidade", "humedade"], correta: 0,
+    explicacao: "Umidade não tem H no início, ao contrário de 'húmus'." },
+
+  { id: "ORT-022", ano: [5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["cabeleireiro", "cabelereiro", "cabeleireira", "cabelereyro"], correta: 0,
+    explicacao: "Cabeleireiro tem dois I (cabelei-rei-ro)." },
+
+  { id: "ORT-023", ano: [5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["mendingo", "mendigo", "mendigu", "mindigo"], correta: 1,
+    explicacao: "Mendigo, sem o N depois do DI." },
+
+  { id: "ORT-024", ano: [5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["empecilho", "impecilho", "empicilho", "impessilho"], correta: 0,
+    explicacao: "Empecilho começa com EM (não IM)." },
+
+  { id: "ORT-025", ano: [5,6], area: "ortografia", tipo: "digitar", dificuldade: 2,
+    enunciado: "Escreva corretamente: 'O p__r__ ar foi limpo após a chuva' (PR__)",
+    resposta: "puro",
+    explicacao: "Puro é simples: P-U-R-O." },
+
+  // ============================================================
+  // ORTOGRAFIA — 7º ao 9º ANO (avançado)
+  // ============================================================
+  { id: "ORT-026", ano: [7,8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["acerca", "à cerca", "a cerca", "haserca"], correta: 0,
+    explicacao: "Acerca (junto) significa 'sobre'. 'A cerca' (separado) é a cerca da fazenda." },
+
+  { id: "ORT-027", ano: [7,8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["consciência", "consiência", "consciencia", "consceência"], correta: 0,
+    explicacao: "Consciência tem SC (digrama) e cedilha não. Acento no Ê (3ª paroxítona terminada em ditongo)." },
+
+  { id: "ORT-028", ano: [7,8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["pisicologia", "psicologia", "psycologia", "ipisicologia"], correta: 1,
+    explicacao: "Psicologia começa com PS (do grego psyché = alma). Não se pronuncia o P." },
+
+  { id: "ORT-029", ano: [7,8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["xicara", "xícara", "chícara", "shícara"], correta: 1,
+    explicacao: "Xícara escreve-se com X e leva acento agudo no Í (proparoxítona)." },
+
+  { id: "ORT-030", ano: [7,8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["pretensioso", "pretencioso", "pertencioso", "pretemcioso"], correta: 1,
+    explicacao: "Pretencioso escreve-se com C (não S). De pretensão → pretencioso." },
+
+  { id: "ORT-031", ano: [7,8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["paralisar", "paralizar", "paralisação", "paralização"], correta: 0,
+    explicacao: "Paralisar escreve-se com S. Substantivos derivados: paralisação, análise → analisar." },
+
+  { id: "ORT-032", ano: [7,8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["beneficente", "beneficente", "beneficiente", "beneficiosa"], correta: 0,
+    explicacao: "Beneficente, sem o I extra após o C. Erro comum: confundir com 'beneficiar'." },
+
+  { id: "ORT-033", ano: [7,8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["esplêndido", "expêndido", "expêndedo", "esplendido"], correta: 0,
+    explicacao: "Esplêndido com S (e não X) e acento no Ê (proparoxítona)." },
+
+  { id: "ORT-034", ano: [8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["concorrência", "concorrencia", "concurrência", "concorrênsia"], correta: 0,
+    explicacao: "Concorrência tem dois R e leva acento no Ê (paroxítona terminada em ditongo)." },
+
+  { id: "ORT-035", ano: [8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["misericórdia", "misericordia", "miçericórdia", "missericórdia"], correta: 0,
+    explicacao: "Misericórdia: S simples, acento agudo no Ó (proparoxítona)." },
+
+  { id: "ORT-036", ano: [8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["asterisco", "asterístico", "asterístco", "asteristco"], correta: 0,
+    explicacao: "Asterisco (sem til/acento na penúltima sílaba). Erro comum: 'asterístico' não existe." },
+
+  { id: "ORT-037", ano: [8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["em vez de", "em vez de", "ao invés de", "depende do contexto"], correta: 3,
+    explicacao: "Em vez de = no lugar de. Ao invés de = ao contrário de. As duas existem, com sentidos diferentes." },
+
+  { id: "ORT-038", ano: [8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["mau humorado", "mal humorado", "mal-humorado", "malhumorado"], correta: 2,
+    explicacao: "Mal-humorado leva hífen. Mal aqui é advérbio (oposto de bem)." },
+
+  { id: "ORT-039", ano: [8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["ascender", "acender", "depende", "as duas existem"], correta: 3,
+    explicacao: "Ascender = subir (ascensão). Acender = pôr fogo (acendedor). Existem as duas, com sentidos diferentes." },
+
+  { id: "ORT-040", ano: [8,9], area: "ortografia", tipo: "digitar", dificuldade: 3,
+    enunciado: "Escreva corretamente o substantivo derivado de 'analisar': aná__se",
+    resposta: "análise",
+    explicacao: "Análise tem S (não Z). Verbo: analisar. Substantivo: análise." },
+
+  // ============================================================
+  // GRAMÁTICA — 4º ao 6º ANO (classes de palavras)
+  // ============================================================
+  { id: "GRA-001", ano: [3,4,5], area: "gramatica", tipo: "multipla", dificuldade: 1,
+    enunciado: "Qual destas palavras é um SUBSTANTIVO?",
+    alternativas: ["correr", "casa", "bonito", "rapidamente"], correta: 1,
+    explicacao: "Substantivo é o nome de seres ou coisas. Casa é substantivo. Correr é verbo, bonito é adjetivo, rapidamente é advérbio." },
+
+  { id: "GRA-002", ano: [3,4,5], area: "gramatica", tipo: "multipla", dificuldade: 1,
+    enunciado: "Qual destas palavras é um VERBO?",
+    alternativas: ["mesa", "azul", "cantar", "lápis"], correta: 2,
+    explicacao: "Verbo indica ação, estado ou fenômeno. Cantar é verbo (ação)." },
+
+  { id: "GRA-003", ano: [4,5], area: "gramatica", tipo: "multipla", dificuldade: 1,
+    enunciado: "Qual destas palavras é um ADJETIVO?",
+    alternativas: ["pular", "alegre", "menino", "rapidamente"], correta: 1,
+    explicacao: "Adjetivo qualifica o substantivo. Alegre é adjetivo (qualidade)." },
+
+  { id: "GRA-004", ano: [4,5], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Em 'O cachorro corre rápido', a palavra RÁPIDO é:",
+    alternativas: ["substantivo", "verbo", "adjetivo", "advérbio"], correta: 3,
+    explicacao: "Rápido aqui modifica o verbo CORRE, então é advérbio (de modo)." },
+
+  { id: "GRA-005", ano: [4,5], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é o plural de 'cidadão'?",
+    alternativas: ["cidadões", "cidadãos", "cidadãis", "cidadães"], correta: 1,
+    explicacao: "Cidadão → cidadãos (plural irregular)." },
+
+  { id: "GRA-006", ano: [4,5], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é o plural de 'pão'?",
+    alternativas: ["pãos", "pães", "pões", "pãoes"], correta: 1,
+    explicacao: "Pão → pães (plural em -ães)." },
+
+  { id: "GRA-007", ano: [4,5], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é o feminino de 'cavalo'?",
+    alternativas: ["cavala", "égua", "cavalinha", "cavale"], correta: 1,
+    explicacao: "O feminino de cavalo é égua (forma diferente, não derivada)." },
+
+  { id: "GRA-008", ano: [4,5,6], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual destas palavras é um PRONOME?",
+    alternativas: ["correr", "ela", "bonito", "muito"], correta: 1,
+    explicacao: "Ela é pronome pessoal (substitui um nome)." },
+
+  { id: "GRA-009", ano: [4,5,6], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Em 'Maria estuda muito', MUITO é:",
+    alternativas: ["substantivo", "adjetivo", "advérbio", "verbo"], correta: 2,
+    explicacao: "Muito aqui modifica o verbo ESTUDA, então é advérbio (de intensidade)." },
+
+  { id: "GRA-010", ano: [5,6], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual artigo é definido?",
+    alternativas: ["um", "uma", "o", "uns"], correta: 2,
+    explicacao: "Artigos definidos: o, a, os, as. Os outros são indefinidos." },
+
+  { id: "GRA-011", ano: [5,6], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Em 'O carro de João é vermelho', a palavra DE é:",
+    alternativas: ["preposição", "conjunção", "advérbio", "pronome"], correta: 0,
+    explicacao: "DE é preposição (liga palavras: carro DE João)." },
+
+  { id: "GRA-012", ano: [5,6], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é a forma correta do verbo no presente?",
+    alternativas: ["Eu *trago* o livro.", "Eu *trazo* o livro.", "Eu *traio* o livro.", "Eu *trazi* o livro."], correta: 0,
+    explicacao: "Trazer no presente: eu trago, tu trazes, ele traz." },
+
+  { id: "GRA-013", ano: [5,6], area: "gramatica", tipo: "digitar", dificuldade: 2,
+    enunciado: "Complete: Ontem eu __ ao mercado. (verbo IR no passado, 1ª pessoa)",
+    resposta: "fui",
+    explicacao: "Ir no pretérito perfeito: eu fui, tu foste, ele foi." },
+
+  { id: "GRA-014", ano: [5,6], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual frase tem ERRO de concordância?",
+    alternativas: ["As crianças brincam.", "O menino chegou.", "Os meninos chegou.", "Elas estão felizes."], correta: 2,
+    explicacao: "'Os meninos chegou' está errado. O correto: 'Os meninos chegaram' (verbo concorda com o sujeito plural)." },
+
+  { id: "GRA-015", ano: [5,6], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é o gênero de 'cama'?",
+    alternativas: ["masculino", "feminino", "neutro", "comum"], correta: 1,
+    explicacao: "A cama → feminino. O artigo A indica o gênero feminino." },
+
+  // ============================================================
+  // GRAMÁTICA — 6º ao 9º ANO (sintaxe)
+  // ============================================================
+  { id: "GRA-016", ano: [6,7], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Em 'O menino comprou um livro', qual é o sujeito?",
+    alternativas: ["comprou", "um livro", "O menino", "livro"], correta: 2,
+    explicacao: "Sujeito é quem pratica a ação. Quem comprou? O menino." },
+
+  { id: "GRA-017", ano: [6,7], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Em 'Choveu muito ontem', o sujeito é:",
+    alternativas: ["choveu", "muito", "ontem", "inexistente (oração sem sujeito)"], correta: 3,
+    explicacao: "Verbos que indicam fenômenos da natureza (chover, nevar) formam oração sem sujeito." },
+
+  { id: "GRA-018", ano: [6,7], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Em 'Estudo todos os dias', o sujeito é:",
+    alternativas: ["todos os dias", "estudo", "eu (oculto/desinencial)", "não há sujeito"], correta: 2,
+    explicacao: "O sujeito 'eu' está oculto (também chamado de elíptico ou desinencial), identificado pela terminação do verbo: estudo → eu estudo." },
+
+  { id: "GRA-019", ano: [6,7], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Em 'Os alunos leram o livro', o predicado é:",
+    alternativas: ["Os alunos", "leram", "leram o livro", "o livro"], correta: 2,
+    explicacao: "Predicado é tudo que se diz sobre o sujeito. Sujeito: Os alunos. Predicado: leram o livro." },
+
+  { id: "GRA-020", ano: [6,7], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase tem objeto direto?",
+    alternativas: ["Ele dorme.", "Ela chegou cedo.", "Eu comprei um carro.", "O sol brilha."], correta: 2,
+    explicacao: "Objeto direto completa o sentido do verbo sem preposição: comprei (o quê?) um carro." },
+
+  { id: "GRA-021", ano: [7,8], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'Gosto de música', a expressão DE MÚSICA é:",
+    alternativas: ["objeto direto", "objeto indireto", "sujeito", "adjunto adverbial"], correta: 1,
+    explicacao: "Verbo gostar exige preposição DE: objeto indireto = de música." },
+
+  { id: "GRA-022", ano: [7,8], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual é a função sintática de 'BONITO' em 'O carro é bonito'?",
+    alternativas: ["sujeito", "objeto direto", "predicativo do sujeito", "adjunto adnominal"], correta: 2,
+    explicacao: "Após verbo de ligação (ser, estar, parecer), o adjetivo é predicativo do sujeito." },
+
+  { id: "GRA-023", ano: [7,8], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'Comprei um livro NOVO', a palavra NOVO é:",
+    alternativas: ["adjunto adverbial", "adjunto adnominal", "predicativo", "objeto indireto"], correta: 1,
+    explicacao: "Adjetivo que modifica substantivo direto na frase é adjunto adnominal: livro novo." },
+
+  { id: "GRA-024", ano: [7,8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase está na voz PASSIVA?",
+    alternativas: ["O cachorro mordeu o garoto.", "O garoto foi mordido pelo cachorro.", "O cachorro está latindo.", "O garoto mordeu o lápis."], correta: 1,
+    explicacao: "Voz passiva: sujeito sofre a ação. 'Foi mordido' = passiva. O agente é 'pelo cachorro'." },
+
+  { id: "GRA-025", ano: [8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual é o tempo verbal em 'Quando eu CHEGAR, te aviso'?",
+    alternativas: ["pretérito perfeito", "presente do indicativo", "futuro do subjuntivo", "imperativo"], correta: 2,
+    explicacao: "CHEGAR (forma com R no fim, em oração subordinada com QUANDO) é futuro do subjuntivo." },
+
+  { id: "GRA-026", ano: [8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'Espero que você ESTUDE', a forma verbal é:",
+    alternativas: ["presente do indicativo", "presente do subjuntivo", "imperativo", "infinitivo"], correta: 1,
+    explicacao: "Após 'espero que', o verbo vai no subjuntivo (modo da incerteza/desejo). Indicativo seria 'estuda'." },
+
+  { id: "GRA-027", ano: [8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'Os livros que comprei são caros', QUE é:",
+    alternativas: ["pronome relativo", "conjunção integrante", "advérbio", "preposição"], correta: 0,
+    explicacao: "QUE retoma 'os livros' (antecedente) e introduz oração subordinada adjetiva: pronome relativo." },
+
+  { id: "GRA-028", ano: [8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase usa CRASE corretamente?",
+    alternativas: ["Vou à escola.", "Vou a escola.", "Vou ao escola.", "Vou às escola."], correta: 0,
+    explicacao: "Vou à escola: crase obrigatória (vou A + A escola = à escola). Verbos de movimento + lugar feminino." },
+
+  { id: "GRA-029", ano: [8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual é a regência correta?",
+    alternativas: ["Assisti o filme.", "Assisti ao filme.", "Assisti no filme.", "Assisti do filme."], correta: 1,
+    explicacao: "Assistir no sentido de 'ver' é transitivo indireto: assistir A algo. Assisti ao filme." },
+
+  { id: "GRA-030", ano: [9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase tem oração subordinada substantiva?",
+    alternativas: ["O menino que estuda passa.", "Estudo para passar.", "É necessário que você estude.", "Estudei e passei."], correta: 2,
+    explicacao: "'Que você estude' é oração subordinada substantiva subjetiva (funciona como sujeito de 'É necessário')." },
+
+  // ============================================================
+  // GRAMÁTICA — Acentuação
+  // ============================================================
+  { id: "GRA-031", ano: [4,5,6], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual palavra é OXÍTONA?",
+    alternativas: ["casa", "café", "lâmpada", "livro"], correta: 1,
+    explicacao: "Oxítona: sílaba tônica é a última. CA-FÉ (tônica em FÉ)." },
+
+  { id: "GRA-032", ano: [4,5,6], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual palavra é PROPAROXÍTONA?",
+    alternativas: ["sofá", "amor", "lâmpada", "livro"], correta: 2,
+    explicacao: "Proparoxítona: tônica é a antepenúltima. LÂM-pa-da (tônica em LÂM). Todas levam acento." },
+
+  { id: "GRA-033", ano: [5,6,7], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual deve receber acento?",
+    alternativas: ["casa", "amor", "facil", "livro"], correta: 2,
+    explicacao: "Fácil é paroxítona terminada em L → leva acento. As paroxítonas terminadas em A, E, O, EM, ENS NÃO recebem." },
+
+  { id: "GRA-034", ano: [6,7], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está acentuada corretamente?",
+    alternativas: ["pôde", "pode", "depende do contexto", "as duas existem"], correta: 3,
+    explicacao: "Pôde (passado, com acento) e pode (presente, sem acento) existem com sentidos diferentes." },
+
+  { id: "GRA-035", ano: [7,8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Pelo Novo Acordo Ortográfico, qual perdeu o acento?",
+    alternativas: ["água", "ideia (antes idéia)", "café", "história"], correta: 1,
+    explicacao: "Pelo acordo de 2009, ditongos abertos EI e OI em paroxítonas perderam o acento: ideia, joia, heroico." },
+
+  // ============================================================
+  // INTERPRETAÇÃO DE TEXTO
+  // ============================================================
+  { id: "INT-001", ano: [3,4], area: "interpretacao", tipo: "multipla", dificuldade: 1,
+    enunciado: "Leia: 'João foi ao parque com sua bola vermelha'. De que cor era a bola?",
+    alternativas: ["azul", "verde", "vermelha", "amarela"], correta: 2,
+    explicacao: "O texto diz claramente 'sua bola vermelha'." },
+
+  { id: "INT-002", ano: [3,4], area: "interpretacao", tipo: "multipla", dificuldade: 1,
+    enunciado: "Leia: 'Maria gosta de ler livros de aventura'. O que Maria gosta?",
+    alternativas: ["esportes", "ler livros", "desenhar", "cantar"], correta: 1,
+    explicacao: "O texto diz que Maria gosta de ler livros (especificamente, de aventura)." },
+
+  { id: "INT-003", ano: [4,5], area: "interpretacao", tipo: "multipla", dificuldade: 1,
+    enunciado: "Leia: 'Estava chovendo, então não saímos de casa'. Por que não saíram?",
+    alternativas: ["estavam doentes", "estava frio", "estava chovendo", "era tarde"], correta: 2,
+    explicacao: "O 'então' indica causa-consequência: choveu → não saíram." },
+
+  { id: "INT-004", ano: [4,5], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'Pedro estuda muito porque quer ser médico'. Qual é o objetivo de Pedro?",
+    alternativas: ["estudar pouco", "ser médico", "trabalhar", "passar de ano"], correta: 1,
+    explicacao: "'Porque quer ser médico' explica o objetivo dos estudos." },
+
+  { id: "INT-005", ano: [5,6], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'O céu estava cinzento e o vento forte. Logo começou a chover'. O texto sugere:",
+    alternativas: ["um dia ensolarado", "que ia chover", "que era noite", "que fazia calor"], correta: 1,
+    explicacao: "Céu cinzento + vento forte são pistas que sugerem chuva, confirmada na frase seguinte." },
+
+  { id: "INT-006", ano: [5,6], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'Apesar de cansada, Ana continuou estudando para a prova'. Ana:",
+    alternativas: ["desistiu", "estava descansada", "persistiu mesmo cansada", "não estudou"], correta: 2,
+    explicacao: "'Apesar de' indica contraste: estava cansada, MAS continuou. Persistência." },
+
+  { id: "INT-007", ano: [6,7], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'Os alunos chegaram cedo, mas a aula foi cancelada'. O que aconteceu?",
+    alternativas: ["a aula ocorreu normalmente", "os alunos chegaram tarde", "não houve aula", "os alunos faltaram"], correta: 2,
+    explicacao: "Mesmo chegando cedo, a aula foi cancelada. Logo, não houve aula." },
+
+  { id: "INT-008", ano: [6,7], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'Carlos diz que sempre fala a verdade'. Esta afirmação:",
+    alternativas: ["é prova de que Carlos é honesto", "não prova nada por si só", "garante que ele nunca mente", "é uma definição de honestidade"], correta: 1,
+    explicacao: "Alguém dizer que fala a verdade não prova que fala. Pensamento crítico." },
+
+  { id: "INT-009", ano: [7,8], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'A reunião foi adiada para amanhã, devido ao mau tempo'. Qual a causa do adiamento?",
+    alternativas: ["amanhã será melhor", "o mau tempo", "alguém pediu", "todos estavam ocupados"], correta: 1,
+    explicacao: "'Devido ao' indica causa: o mau tempo causou o adiamento." },
+
+  { id: "INT-010", ano: [7,8], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'Embora rico, ele vivia simplesmente'. O texto sugere que ele:",
+    alternativas: ["era pobre", "tinha dinheiro mas vida modesta", "gastava tudo", "fingia ser pobre"], correta: 1,
+    explicacao: "'Embora' = mesmo sendo rico, vida modesta. Contraste entre situação e estilo de vida." },
+
+  { id: "INT-011", ano: [8,9], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'Não basta querer, é preciso agir'. A frase defende que:",
+    alternativas: ["querer é o suficiente", "ação é mais importante que vontade isolada", "ninguém deve querer", "agir sem querer é ideal"], correta: 1,
+    explicacao: "A frase contrasta vontade (querer) com prática (agir): vontade só não basta, precisa ação." },
+
+  { id: "INT-012", ano: [8,9], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'A leitura, segundo pesquisas, amplia o vocabulário'. A função da expressão 'segundo pesquisas' é:",
+    alternativas: ["dar opinião pessoal", "criticar a leitura", "dar credibilidade à afirmação", "duvidar do fato"], correta: 2,
+    explicacao: "'Segundo pesquisas' apoia a afirmação em fonte externa, dando credibilidade." },
+
+  { id: "INT-013", ano: [8,9], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'Ela disse que, talvez, viesse à festa'. A palavra TALVEZ indica:",
+    alternativas: ["certeza", "negação", "dúvida/possibilidade", "afirmação"], correta: 2,
+    explicacao: "TALVEZ é advérbio de dúvida: indica possibilidade, não certeza." },
+
+  { id: "INT-014", ano: [8,9], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'Aquele professor é um leão em sala de aula', há uma:",
+    alternativas: ["comparação", "metáfora", "ironia", "antítese"], correta: 1,
+    explicacao: "Metáfora: comparação implícita (sem 'como'). Professor é leão = é firme/imponente como leão." },
+
+  { id: "INT-015", ano: [8,9], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'Que bela bagunça você fez!' (após alguém quebrar tudo), há:",
+    alternativas: ["elogio sincero", "ironia", "metáfora", "comparação"], correta: 1,
+    explicacao: "Ironia: dizer o oposto do que se quer dizer. 'Bela' significa o contrário aqui." },
+
+  // ============================================================
+  // VOCÁBULO (sinônimos / antônimos)
+  // ============================================================
+  { id: "VOC-001", ano: [3,4,5], area: "vocabulo", tipo: "multipla", dificuldade: 1,
+    enunciado: "Qual é o SINÔNIMO de 'feliz'?",
+    alternativas: ["triste", "alegre", "bravo", "cansado"], correta: 1,
+    explicacao: "Sinônimo = mesmo sentido. Feliz e alegre têm sentido próximo." },
+
+  { id: "VOC-002", ano: [3,4,5], area: "vocabulo", tipo: "multipla", dificuldade: 1,
+    enunciado: "Qual é o ANTÔNIMO de 'grande'?",
+    alternativas: ["enorme", "alto", "pequeno", "largo"], correta: 2,
+    explicacao: "Antônimo = sentido oposto. Grande × pequeno." },
+
+  { id: "VOC-003", ano: [3,4,5], area: "vocabulo", tipo: "multipla", dificuldade: 1,
+    enunciado: "Qual é o SINÔNIMO de 'bonito'?",
+    alternativas: ["feio", "lindo", "alto", "magro"], correta: 1,
+    explicacao: "Bonito e lindo são sinônimos." },
+
+  { id: "VOC-004", ano: [3,4,5], area: "vocabulo", tipo: "multipla", dificuldade: 1,
+    enunciado: "Qual é o ANTÔNIMO de 'rápido'?",
+    alternativas: ["veloz", "ligeiro", "lento", "ágil"], correta: 2,
+    explicacao: "Antônimo de rápido é lento. Os outros são sinônimos." },
+
+  { id: "VOC-005", ano: [4,5,6], area: "vocabulo", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é o SINÔNIMO de 'iniciar'?",
+    alternativas: ["terminar", "começar", "parar", "fechar"], correta: 1,
+    explicacao: "Iniciar e começar têm o mesmo sentido." },
+
+  { id: "VOC-006", ano: [4,5,6], area: "vocabulo", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é o ANTÔNIMO de 'corajoso'?",
+    alternativas: ["valente", "destemido", "covarde", "forte"], correta: 2,
+    explicacao: "Corajoso × covarde. Valente e destemido são sinônimos." },
+
+  { id: "VOC-007", ano: [5,6,7], area: "vocabulo", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é o SINÔNIMO de 'efêmero'?",
+    alternativas: ["eterno", "passageiro", "constante", "imutável"], correta: 1,
+    explicacao: "Efêmero significa de curta duração, passageiro." },
+
+  { id: "VOC-008", ano: [5,6,7], area: "vocabulo", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é o ANTÔNIMO de 'verdade'?",
+    alternativas: ["honestidade", "mentira", "fato", "realidade"], correta: 1,
+    explicacao: "Verdade × mentira são opostos." },
+
+  { id: "VOC-009", ano: [6,7,8], area: "vocabulo", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é o SINÔNIMO de 'perspicaz'?",
+    alternativas: ["distraído", "esperto/sagaz", "lento", "tímido"], correta: 1,
+    explicacao: "Perspicaz = sagaz, esperto, observador." },
+
+  { id: "VOC-010", ano: [6,7,8], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual é o ANTÔNIMO de 'altruísta'?",
+    alternativas: ["generoso", "egoísta", "solidário", "humano"], correta: 1,
+    explicacao: "Altruísta (pensa nos outros) × egoísta (pensa só em si)." },
+
+  { id: "VOC-011", ano: [7,8,9], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual é o SINÔNIMO de 'paradoxo'?",
+    alternativas: ["clareza", "contradição", "afirmação", "concordância"], correta: 1,
+    explicacao: "Paradoxo é uma contradição aparente." },
+
+  { id: "VOC-012", ano: [7,8,9], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual é o SINÔNIMO de 'ínclito'?",
+    alternativas: ["humilde", "ilustre/notável", "simples", "comum"], correta: 1,
+    explicacao: "Ínclito = ilustre, célebre, renomado." },
+
+  { id: "VOC-013", ano: [7,8,9], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual é o ANTÔNIMO de 'lúcido'?",
+    alternativas: ["claro", "consciente", "confuso", "racional"], correta: 2,
+    explicacao: "Lúcido (claro de raciocínio) × confuso (sem clareza)." },
+
+  { id: "VOC-014", ano: [4,5,6], area: "vocabulo", tipo: "digitar", dificuldade: 2,
+    enunciado: "Escreva um SINÔNIMO de 'assustado' (começa com A): a______o",
+    resposta: "amedrontado",
+    explicacao: "Amedrontado = com medo, assustado." },
+
+  { id: "VOC-015", ano: [5,6,7], area: "vocabulo", tipo: "digitar", dificuldade: 2,
+    enunciado: "Escreva o ANTÔNIMO de 'difícil' (começa com F): f____",
+    resposta: "fácil",
+    explicacao: "Difícil × fácil são opostos." },
+
+  // ============================================================
+  // ORTOGRAFIA — adicional (questões digitar)
+  // ============================================================
+  { id: "ORT-041", ano: [3,4], area: "ortografia", tipo: "digitar", dificuldade: 2,
+    enunciado: "Escreva corretamente: 'A b___ja voa de flor em flor.' (inseto)",
+    resposta: "abelha",
+    explicacao: "Abelha tem LH (não LI ou L)." },
+
+  { id: "ORT-042", ano: [3,4,5], area: "ortografia", tipo: "digitar", dificuldade: 2,
+    enunciado: "Escreva corretamente: 'O m___no foi à escola.' (sexo masculino criança)",
+    resposta: "menino",
+    explicacao: "Menino: M-E-N-I-N-O." },
+
+  { id: "ORT-043", ano: [4,5,6], area: "ortografia", tipo: "digitar", dificuldade: 2,
+    enunciado: "Escreva corretamente: 'Ela pegou o ___' (objeto para escrever)",
+    resposta: "lápis",
+    explicacao: "Lápis: paroxítona terminada em IS, leva acento." },
+
+  { id: "ORT-044", ano: [4,5,6], area: "ortografia", tipo: "digitar", dificuldade: 2,
+    enunciado: "Complete: 'A ár___ é grande.' (planta com tronco)",
+    resposta: "árvore",
+    explicacao: "Árvore: proparoxítona, leva acento agudo no Á." },
+
+  { id: "ORT-045", ano: [5,6,7], area: "ortografia", tipo: "digitar", dificuldade: 2,
+    enunciado: "Complete: 'Eu fui ao h___tal.' (lugar onde se trata doentes)",
+    resposta: "hospital",
+    explicacao: "Hospital começa com H (mudo)." },
+
+  { id: "ORT-046", ano: [5,6,7], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["chuchu", "xuxu", "tchutchu", "xhuxhu"], correta: 0,
+    explicacao: "Chuchu escreve-se com CH (apesar do som)." },
+
+  { id: "ORT-047", ano: [5,6,7], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["bandeija", "bandeja", "bandêja", "bamdeja"], correta: 1,
+    explicacao: "Bandeja: B-A-N-D-E-J-A (sem I)." },
+
+  { id: "ORT-048", ano: [6,7,8], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["seje", "seja", "seije", "sêje"], correta: 1,
+    explicacao: "Seja é a forma correta do verbo ser no presente do subjuntivo." },
+
+  { id: "ORT-049", ano: [6,7,8], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["proibido", "proíbido", "prohibido", "proíbido"], correta: 0,
+    explicacao: "Proibido (sem acento, pelo Novo Acordo, pois OI em paroxítona perdeu o acento)." },
+
+  { id: "ORT-050", ano: [6,7,8], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["frequência", "freqüência", "frenquência", "frecuência"], correta: 0,
+    explicacao: "Frequência sem trema (Novo Acordo, 2009 aboliu o trema, exceto em nomes próprios)." },
+
+  // ============================================================
+  // GRAMÁTICA — adicional
+  // ============================================================
+  { id: "GRA-036", ano: [4,5], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é o aumentativo de 'casa'?",
+    alternativas: ["casinha", "casarão", "casita", "casebre"], correta: 1,
+    explicacao: "Aumentativo: casa → casarão. Casinha é diminutivo." },
+
+  { id: "GRA-037", ano: [4,5], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é o diminutivo de 'flor'?",
+    alternativas: ["florzão", "florzinha", "florista", "floração"], correta: 1,
+    explicacao: "Diminutivo: flor → florzinha." },
+
+  { id: "GRA-038", ano: [5,6,7], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual frase usa MAS corretamente?",
+    alternativas: ["Estudei mais não passei.", "Estudei mas não passei.", "Estudei más não passei.", "Estudei mais passou."], correta: 1,
+    explicacao: "MAS = porém (conjunção adversativa). MAIS = quantidade." },
+
+  { id: "GRA-039", ano: [5,6,7], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual frase usa POR QUE corretamente?",
+    alternativas: ["Por que você chegou tarde?", "Porque você chegou tarde?", "Porquê você chegou tarde?", "Por quê você chegou tarde?"], correta: 0,
+    explicacao: "POR QUE (separado, sem acento) inicia perguntas." },
+
+  { id: "GRA-040", ano: [6,7,8], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase usa PORQUÊ corretamente?",
+    alternativas: ["Não entendo o porquê de tudo isso.", "Porquê você não veio?", "Estudo porquê quero passar.", "Porquê está chovendo?"], correta: 0,
+    explicacao: "PORQUÊ (junto, com acento) é substantivo (= motivo, razão), antecedido por artigo." },
+
+  { id: "GRA-041", ano: [6,7,8], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Em 'Eu o vi ontem', a palavra O é:",
+    alternativas: ["artigo", "pronome oblíquo", "preposição", "substantivo"], correta: 1,
+    explicacao: "O substitui um nome (objeto direto): pronome oblíquo átono." },
+
+  { id: "GRA-042", ano: [7,8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'Houveram muitos problemas', há erro porque:",
+    alternativas: ["está tudo certo", "haver no sentido de existir é impessoal: HOUVE muitos problemas", "deveria ser TINHAM", "deveria ser EXISTIRAM"], correta: 1,
+    explicacao: "HAVER no sentido de existir é impessoal, vai sempre no singular: HOUVE muitos problemas." },
+
+  { id: "GRA-043", ano: [7,8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase está correta?",
+    alternativas: ["Faz dois anos que não o vejo.", "Fazem dois anos que não o vejo.", "Fazes dois anos que não o vejo.", "Fará dois anos que não o vejo."], correta: 0,
+    explicacao: "FAZER no sentido de tempo decorrido é impessoal (singular): faz dois anos." },
+
+  { id: "GRA-044", ano: [7,8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'Vou cumprimentá-lo', a forma correta vem porque:",
+    alternativas: ["é só convenção", "verbo terminado em R/S/Z perde a letra final ao receber LO/LA", "é regra do plural", "não há regra clara"], correta: 1,
+    explicacao: "Cumprimentar + lo: cumprimentar perde o R, vira cumprimentá-lo." },
+
+  { id: "GRA-045", ano: [8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual é o particípio irregular de PEGAR?",
+    alternativas: ["pegado", "pego", "ambos existem (pegado/pego)", "pegou"], correta: 2,
+    explicacao: "Pegar tem dois particípios: pegado (com ter/haver) e pego (com ser/estar). Verbo abundante." },
+
+  { id: "GRA-046", ano: [8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'Se eu SOUBESSE, te avisaria', SOUBESSE é:",
+    alternativas: ["pretérito imperfeito do indicativo", "pretérito imperfeito do subjuntivo", "futuro do subjuntivo", "presente do subjuntivo"], correta: 1,
+    explicacao: "Após SE (condição), em frases hipotéticas: pretérito imperfeito do subjuntivo. Combina com FUTURO DO PRETÉRITO (avisaria)." },
+
+  { id: "GRA-047", ano: [8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase usa MIM corretamente?",
+    alternativas: ["Para mim fazer isso é difícil.", "Para mim, isso é difícil.", "Mim fiz a tarefa.", "Entre você e mim deu certo."], correta: 1,
+    explicacao: "MIM não pode ser sujeito de verbo. 'Para mim, isso é difícil' está certo (mim não é sujeito de verbo)." },
+
+  { id: "GRA-048", ano: [8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'A reunião está marcada para o dia 5 de maio', há vírgula obrigatória?",
+    alternativas: ["sim, antes de PARA", "não, está correta como está", "sim, depois de MARCADA", "sim, antes de DIA"], correta: 1,
+    explicacao: "A frase está correta sem vírgula. Não se separa adjunto adverbial curto e essencial à compreensão." },
+
+  { id: "GRA-049", ano: [9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase tem oração subordinada adverbial CAUSAL?",
+    alternativas: ["Estudou para passar.", "Estudou porque queria passar.", "Estudou e passou.", "Estudou se queria passar."], correta: 1,
+    explicacao: "PORQUE introduz causa: oração subordinada adverbial causal. PARA (final), E (coordenada), SE (condicional)." },
+
+  { id: "GRA-050", ano: [9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'Quando ele chegou, todos saíram', a oração QUANDO ELE CHEGOU é:",
+    alternativas: ["principal", "subordinada adverbial temporal", "subordinada substantiva", "coordenada"], correta: 1,
+    explicacao: "QUANDO indica tempo: oração subordinada adverbial temporal." },
+
+  // ============================================================
+  // INTERPRETAÇÃO — adicional
+  // ============================================================
+  { id: "INT-016", ano: [3,4], area: "interpretacao", tipo: "multipla", dificuldade: 1,
+    enunciado: "Leia: 'O sol brilha forte e o céu está azul'. Que dia parece ser?",
+    alternativas: ["chuvoso", "nublado", "ensolarado", "à noite"], correta: 2,
+    explicacao: "Sol forte + céu azul = dia ensolarado." },
+
+  { id: "INT-017", ano: [4,5], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'Lúcia foi ao mercado e comprou frutas, legumes e pão'. O que Lúcia NÃO comprou?",
+    alternativas: ["frutas", "legumes", "pão", "leite"], correta: 3,
+    explicacao: "O texto não menciona leite, só frutas, legumes e pão." },
+
+  { id: "INT-018", ano: [5,6], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'Se chover, ficaremos em casa'. A frase indica:",
+    alternativas: ["certeza de chuva", "uma condição (se = se acontecer)", "que está chovendo", "que choveu ontem"], correta: 1,
+    explicacao: "SE indica condição: caso aconteça (chover), então (ficaremos em casa)." },
+
+  { id: "INT-019", ano: [5,6], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'Quem ri por último ri melhor'. O ditado significa:",
+    alternativas: ["é melhor rir antes", "vence quem persiste até o fim", "rir é sempre ruim", "nunca se deve rir"], correta: 1,
+    explicacao: "O ditado ensina sobre persistência: o vitorioso é quem chega ao fim." },
+
+  { id: "INT-020", ano: [6,7], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'João estuda muito; portanto, deverá ir bem na prova'. PORTANTO indica:",
+    alternativas: ["causa", "condição", "conclusão/consequência", "tempo"], correta: 2,
+    explicacao: "PORTANTO introduz consequência/conclusão: estuda muito → vai bem." },
+
+  { id: "INT-021", ano: [7,8], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'A vida é uma caixa de bombons: você nunca sabe o que vai pegar'. A frase usa:",
+    alternativas: ["ironia", "metáfora", "oxímoro", "hipérbole"], correta: 1,
+    explicacao: "Compara vida a caixa de bombons (sem usar 'como'): metáfora." },
+
+  { id: "INT-022", ano: [7,8], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'Estou morrendo de fome'. A frase é exemplo de:",
+    alternativas: ["metonímia", "hipérbole (exagero)", "antítese", "personificação"], correta: 1,
+    explicacao: "HIPÉRBOLE é exagero proposital. Ninguém morre literalmente de fome ao dizer isso." },
+
+  { id: "INT-023", ano: [8,9], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'O sorriso triste daquela mulher'. Há aqui um(a):",
+    alternativas: ["sinônimo", "antítese (palavras de sentido oposto juntas)", "comparação", "metonímia"], correta: 1,
+    explicacao: "Sorriso (alegria) + triste = palavras de sentidos opostos = antítese." },
+
+  { id: "INT-024", ano: [8,9], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'Bebi a cerveja toda'. Aqui há:",
+    alternativas: ["metonímia (cerveja por copo de cerveja)", "metáfora", "ironia", "hipérbole"], correta: 0,
+    explicacao: "Bebeu o líquido, não a marca. Substituição parte/todo: METONÍMIA." },
+
+  { id: "INT-025", ano: [8,9], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'O vento sussurrava entre as árvores'. Há aqui:",
+    alternativas: ["personificação (vento como humano)", "comparação", "hipérbole", "metonímia"], correta: 0,
+    explicacao: "Atribuir ação humana (sussurrar) a algo não humano (vento) = personificação ou prosopopeia." },
+
+  // ============================================================
+  // VOCÁBULO — adicional
+  // ============================================================
+  { id: "VOC-016", ano: [4,5,6], area: "vocabulo", tipo: "multipla", dificuldade: 2,
+    enunciado: "O que significa 'sucinto'?",
+    alternativas: ["longo", "breve, conciso", "complicado", "alegre"], correta: 1,
+    explicacao: "Sucinto = breve, resumido, direto." },
+
+  { id: "VOC-017", ano: [4,5,6], area: "vocabulo", tipo: "multipla", dificuldade: 2,
+    enunciado: "O que significa 'lúdico'?",
+    alternativas: ["sério", "relativo a jogo/brincadeira", "triste", "religioso"], correta: 1,
+    explicacao: "Lúdico = relativo ao brincar, ao jogo. Atividade lúdica é atividade de brincar." },
+
+  { id: "VOC-018", ano: [5,6,7], area: "vocabulo", tipo: "multipla", dificuldade: 2,
+    enunciado: "O que significa 'iminente'?",
+    alternativas: ["importante", "que está prestes a acontecer", "famoso", "urgente"], correta: 1,
+    explicacao: "Iminente = prestes a acontecer (com I). Não confundir com EMINENTE (importante, com E)." },
+
+  { id: "VOC-019", ano: [6,7,8], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "O que significa 'eminente'?",
+    alternativas: ["prestes a acontecer", "ilustre, importante", "estranho", "perigoso"], correta: 1,
+    explicacao: "Eminente = ilustre, distinto. Ex: cientista eminente. Não confundir com IMINENTE." },
+
+  { id: "VOC-020", ano: [6,7,8], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "O que significa 'parcimônia'?",
+    alternativas: ["abundância", "moderação, economia", "rapidez", "alegria"], correta: 1,
+    explicacao: "Parcimônia = moderação, comedimento, uso econômico." },
+
+  { id: "VOC-021", ano: [7,8,9], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "O que significa 'idiossincrasia'?",
+    alternativas: ["doença mental", "característica peculiar de alguém", "preconceito", "ignorância"], correta: 1,
+    explicacao: "Idiossincrasia = jeito particular de cada pessoa, peculiaridade pessoal." },
+
+  { id: "VOC-022", ano: [7,8,9], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "O que significa 'sinergia'?",
+    alternativas: ["conflito", "ação conjunta com efeito superior à soma das partes", "energia individual", "sinal energético"], correta: 1,
+    explicacao: "Sinergia = ação conjunta com efeito potencializado. 1 + 1 vira mais que 2." },
+
+  { id: "VOC-023", ano: [4,5,6], area: "vocabulo", tipo: "digitar", dificuldade: 2,
+    enunciado: "Escreva o ANTÔNIMO de 'aberto' (começa com F): f______",
+    resposta: "fechado",
+    explicacao: "Aberto × fechado." },
+
+  { id: "VOC-024", ano: [5,6,7], area: "vocabulo", tipo: "digitar", dificuldade: 2,
+    enunciado: "Escreva o SINÔNIMO de 'limpo' (começa com A): a____",
+    resposta: "asseado",
+    explicacao: "Asseado é sinônimo de limpo (limpo, higienizado)." },
+
+  { id: "VOC-025", ano: [6,7,8], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual palavra significa 'que está fora do normal'?",
+    alternativas: ["regular", "atípico", "comum", "habitual"], correta: 1,
+    explicacao: "Atípico = fora do padrão, não usual. Os outros são sinônimos de comum." },
+
+  // Adicional — Concordância e Crase para 8º/9º
+  { id: "GRA-051", ano: [8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase tem CRASE corretamente?",
+    alternativas: ["Refiro-me à você.", "Cheguei à casa cedo.", "Cheguei a casa cedo.", "Vou à pé."], correta: 2,
+    explicacao: "'Cheguei a casa cedo' está correto (sem crase, pois 'casa' aqui é o lar, sem especificação). Não se usa crase antes de pronome pessoal (você) nem antes de palavra masculina (pé)." },
+
+  { id: "GRA-052", ano: [8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'Comprei dois quilos de carne', QUILOS é:",
+    alternativas: ["sujeito", "objeto direto", "adjunto adnominal", "predicativo"], correta: 1,
+    explicacao: "Comprei (o quê?) dois quilos. Objeto direto." },
+
+  { id: "GRA-053", ano: [9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase tem oração coordenada adversativa?",
+    alternativas: ["Estudei e passei.", "Estudei, mas não passei.", "Estudei porque queria passar.", "Quem estuda passa."], correta: 1,
+    explicacao: "MAS é conjunção coordenativa adversativa (oposição/contraste)." },
+
+  { id: "GRA-054", ano: [9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'Trabalho muito, logo descansarei', LOGO é:",
+    alternativas: ["adversativa", "conclusiva", "alternativa", "explicativa"], correta: 1,
+    explicacao: "LOGO indica conclusão/consequência: oração coordenada conclusiva." },
+
+  { id: "GRA-055", ano: [9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase está correta quanto à colocação pronominal?",
+    alternativas: ["Me dê o livro.", "Dê-me o livro.", "Dê me o livro.", "Me dê-me o livro."], correta: 1,
+    explicacao: "Início de frase com verbo no imperativo: ênclise (pronome depois do verbo): Dê-me." },
+
+  // Mais ortografia (uso de S/Z, X/CH)
+  { id: "ORT-051", ano: [4,5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["analizar", "analisar", "analizão", "analizando"], correta: 1,
+    explicacao: "Analisar com S. Substantivos terminados em SE (análise) viram verbos com S." },
+
+  { id: "ORT-052", ano: [4,5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["organização", "organisação", "horganização", "horganisação"], correta: 0,
+    explicacao: "Organização: O-R-G-A-N-I-Z-A-Ç-Ã-O (com Z, sem H)." },
+
+  { id: "ORT-053", ano: [5,6,7], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["caxorro", "cachorro", "kachorro", "caxoro"], correta: 1,
+    explicacao: "Cachorro com CH (não X) e dois R." },
+
+  { id: "ORT-054", ano: [5,6,7], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["graxa", "gracha", "gradja", "ghraxa"], correta: 0,
+    explicacao: "Graxa com X. A regra geral: após ditongo, usa-se X (caixa, frouxo, graxa)." },
+
+  { id: "ORT-055", ano: [6,7,8], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["pretensão", "pretenção", "pretençaõ", "pretemção"], correta: 0,
+    explicacao: "Pretensão escreve-se com S. Verbo: pretender. Substantivo: pretensão (não pretenção)." },
+
+  // 5 últimas para fechar 200
+  { id: "INT-026", ano: [4,5,6], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'Devagar se vai ao longe'. O ditado defende:",
+    alternativas: ["pressa", "paciência e persistência", "que devagar é ruim", "que longe é difícil"], correta: 1,
+    explicacao: "O ditado valoriza paciência: indo aos poucos, chega-se longe." },
+
+  { id: "INT-027", ano: [5,6,7], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'Quem espera sempre alcança'. A mensagem é sobre:",
+    alternativas: ["pressa", "paciência", "preguiça", "azar"], correta: 1,
+    explicacao: "O ditado valoriza a paciência: quem é paciente consegue o que quer." },
+
+  { id: "VOC-026", ano: [3,4,5], area: "vocabulo", tipo: "multipla", dificuldade: 1,
+    enunciado: "Qual é o SINÔNIMO de 'difícil'?",
+    alternativas: ["fácil", "complicado", "simples", "claro"], correta: 1,
+    explicacao: "Difícil e complicado têm o mesmo sentido (oposto de fácil)." },
+
+  { id: "VOC-027", ano: [3,4,5], area: "vocabulo", tipo: "multipla", dificuldade: 1,
+    enunciado: "Qual é o ANTÔNIMO de 'cheio'?",
+    alternativas: ["lotado", "vazio", "abarrotado", "repleto"], correta: 1,
+    explicacao: "Cheio × vazio são opostos." },
+
+  { id: "GRA-056", ano: [4,5,6], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é a forma plural de 'troféu'?",
+    alternativas: ["troféus", "troféuis", "troféos", "troféias"], correta: 0,
+    explicacao: "Troféu → troféus (basta acrescentar S nos terminados em -EU)." },
+
+  // ============================================================
+  // BLOCO COMPLEMENTAR — para fechar 200 questões
+  // ============================================================
+
+  // Ortografia complementar
+  { id: "ORT-056", ano: [3,4,5], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["enchente", "enxente", "enchênte", "ehnchente"], correta: 0,
+    explicacao: "Enchente com CH. Vem de 'encher' (com CH)." },
+
+  { id: "ORT-057", ano: [4,5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["esibir", "exibir", "ezibir", "exhibir"], correta: 1,
+    explicacao: "Exibir começa com EX (e não ES ou EZ)." },
+
+  { id: "ORT-058", ano: [4,5,6], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["paisagem", "paizagem", "paisajem", "paissagem"], correta: 0,
+    explicacao: "Paisagem com S e G (não Z nem J)." },
+
+  { id: "ORT-059", ano: [5,6,7], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["viajem (eu viajo de carro)", "viagem (eu viajo de carro)", "as duas existem com sentidos diferentes", "nenhuma está correta"], correta: 2,
+    explicacao: "Viagem (substantivo, com G): a viagem foi boa. Viajem (verbo viajar, com J): que eles viajem em paz." },
+
+  { id: "ORT-060", ano: [5,6,7], area: "ortografia", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual está correta?",
+    alternativas: ["geito", "jeito", "jeyto", "geyto"], correta: 1,
+    explicacao: "Jeito com J. Embora o som seja de G, escreve-se com J." },
+
+  { id: "ORT-061", ano: [6,7,8], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["rabugento", "rabujento", "rabugênto", "rabuhento"], correta: 0,
+    explicacao: "Rabugento com G (não J). Vem de 'rabugem'." },
+
+  { id: "ORT-062", ano: [6,7,8], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["sutil", "sútil", "subtil", "sotil"], correta: 0,
+    explicacao: "Sutil (sem acento, oxítona terminada em IL)." },
+
+  { id: "ORT-063", ano: [7,8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["caos", "kaos", "cahos", "khaos"], correta: 0,
+    explicacao: "Caos: simples e direto. C-A-O-S." },
+
+  { id: "ORT-064", ano: [7,8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["zelar", "selar", "as duas existem com sentidos diferentes", "celar"], correta: 2,
+    explicacao: "Zelar (cuidar, ter zelo). Selar (fechar, marcar com sinete). Existem as duas, com sentidos diferentes." },
+
+  { id: "ORT-065", ano: [7,8,9], area: "ortografia", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual está correta?",
+    alternativas: ["cessão", "seção", "sessão", "todas existem com sentidos diferentes"], correta: 3,
+    explicacao: "Cessão (ato de ceder). Seção (parte/setor). Sessão (reunião, sessão de cinema). Existem as três." },
+
+  { id: "ORT-066", ano: [4,5,6], area: "ortografia", tipo: "digitar", dificuldade: 2,
+    enunciado: "Escreva a palavra: substantivo feminino para o homem que cuida de animais doentes (vet___)",
+    resposta: "veterinária",
+    explicacao: "Veterinária (feminina). Veterinário (masculino)." },
+
+  { id: "ORT-067", ano: [5,6,7], area: "ortografia", tipo: "digitar", dificuldade: 2,
+    enunciado: "Escreva: A criança usou o dicion___ para encontrar o significado.",
+    resposta: "dicionário",
+    explicacao: "Dicionário leva acento agudo no Á (paroxítona terminada em ditongo IO)." },
+
+  // Gramática complementar
+  { id: "GRA-057", ano: [4,5,6], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Em 'A casa azul é minha', AZUL é:",
+    alternativas: ["substantivo", "verbo", "adjetivo", "advérbio"], correta: 2,
+    explicacao: "Azul qualifica o substantivo CASA: adjetivo." },
+
+  { id: "GRA-058", ano: [4,5,6], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é o pronome possessivo?",
+    alternativas: ["ele", "meu", "este", "aqui"], correta: 1,
+    explicacao: "MEU indica posse: pronome possessivo. ELE = pessoal. ESTE = demonstrativo. AQUI = advérbio." },
+
+  { id: "GRA-059", ano: [5,6], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é a sílaba tônica de 'computador'?",
+    alternativas: ["com", "pu", "ta", "dor"], correta: 3,
+    explicacao: "Computador: COM-PU-TA-DOR. Tônica é DOR (oxítona)." },
+
+  { id: "GRA-060", ano: [6,7], area: "gramatica", tipo: "multipla", dificuldade: 2,
+    enunciado: "Em 'O LIVRO está na mesa', a palavra LIVRO exerce a função de:",
+    alternativas: ["sujeito", "objeto", "predicado", "verbo"], correta: 0,
+    explicacao: "O livro pratica/sofre a ação do verbo ESTAR: sujeito." },
+
+  { id: "GRA-061", ano: [7,8], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase tem CONJUNÇÃO?",
+    alternativas: ["O sol brilha.", "Eu estudo e aprendo.", "Cheguei rápido.", "Vou amanhã."], correta: 1,
+    explicacao: "E é conjunção coordenativa aditiva: liga 'estudo' e 'aprendo'." },
+
+  { id: "GRA-062", ano: [7,8], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual é o particípio de ABRIR?",
+    alternativas: ["abrindo", "abriu", "aberto", "abrir"], correta: 2,
+    explicacao: "Particípio irregular de abrir: aberto (não 'abrido')." },
+
+  { id: "GRA-063", ano: [8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase tem ERRO?",
+    alternativas: ["Faz dois anos que estudo aqui.", "Há muitos alunos na sala.", "Houveram problemas ontem.", "Existem soluções."], correta: 2,
+    explicacao: "HAVER no sentido de existir é impessoal (singular): HOUVE problemas (não houveram)." },
+
+  { id: "GRA-064", ano: [8,9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Em 'Nós o vimos ontem', VIMOS é tempo:",
+    alternativas: ["presente do indicativo", "pretérito perfeito", "futuro", "imperativo"], correta: 1,
+    explicacao: "Vimos = passado/pretérito perfeito do verbo ver. Presente seria 'vemos'." },
+
+  { id: "GRA-065", ano: [9], area: "gramatica", tipo: "multipla", dificuldade: 3,
+    enunciado: "Qual frase tem oração subordinada adverbial CONDICIONAL?",
+    alternativas: ["Estudo porque quero.", "Estudo para passar.", "Se estudar, passarei.", "Estudo quando posso."], correta: 2,
+    explicacao: "SE introduz condição: oração subordinada adverbial condicional. Porque=causal, Para=final, Quando=temporal." },
+
+  // Interpretação complementar
+  { id: "INT-028", ano: [3,4,5], area: "interpretacao", tipo: "multipla", dificuldade: 1,
+    enunciado: "Leia: 'O bolo está pronto, vamos comer'. O texto sugere que:",
+    alternativas: ["o bolo está cru", "o bolo está pronto para comer", "ninguém quer bolo", "vão fazer o bolo"], correta: 1,
+    explicacao: "O texto diz 'está pronto' e 'vamos comer': hora de comer o bolo." },
+
+  { id: "INT-029", ano: [4,5,6], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'Apesar do calor, ele estava de blusa'. Por que ele estava de blusa?",
+    alternativas: ["porque estava frio", "o texto não explica, só mostra contraste", "porque chovia", "porque estava em casa"], correta: 1,
+    explicacao: "'Apesar do' indica contraste: era inesperado (calor + blusa), mas o texto não dá motivo." },
+
+  { id: "INT-030", ano: [5,6,7], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'Sem trabalho, não há dinheiro'. A frase indica relação de:",
+    alternativas: ["adição", "causa-consequência", "tempo", "comparação"], correta: 1,
+    explicacao: "Sem trabalho (causa) → não há dinheiro (consequência)." },
+
+  { id: "INT-031", ano: [6,7,8], area: "interpretacao", tipo: "multipla", dificuldade: 2,
+    enunciado: "Leia: 'O tempo é o melhor remédio'. A frase é:",
+    alternativas: ["literal (tempo cura como remédio)", "metafórica (tempo ajuda a passar dor)", "irônica", "técnica"], correta: 1,
+    explicacao: "Metáfora: tempo não é remédio literalmente, mas ajuda a superar coisas como remédio cura." },
+
+  { id: "INT-032", ano: [7,8,9], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'Embora estudasse, ele duvidava de si'. O 'embora' aqui indica:",
+    alternativas: ["causa", "consequência", "concessão (apesar de)", "tempo"], correta: 2,
+    explicacao: "EMBORA = apesar de (concessão). Mesmo estudando, ele tinha dúvida — situação inesperada." },
+
+  { id: "INT-033", ano: [7,8,9], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'Ninguém é perfeito, todos têm defeitos'. A frase defende:",
+    alternativas: ["perfeição é possível", "humanidade tem limites e falhas", "defeitos não existem", "ninguém tem mérito"], correta: 1,
+    explicacao: "A frase afirma que TODOS têm defeitos: humanidade tem falhas, ninguém é perfeito." },
+
+  { id: "INT-034", ano: [8,9], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'Liderou um exército inteiro com mil homens'. EXÉRCITO INTEIRO aqui é:",
+    alternativas: ["literal (todo o exército do país)", "hipérbole (exagero, eram só mil)", "antítese", "metonímia"], correta: 1,
+    explicacao: "Mil homens é pouco para 'exército inteiro' — exagero proposital = hipérbole." },
+
+  { id: "INT-035", ano: [8,9], area: "interpretacao", tipo: "multipla", dificuldade: 3,
+    enunciado: "Leia: 'Brasília tomou as decisões'. BRASÍLIA aqui é:",
+    alternativas: ["a cidade física", "metonímia (governo federal)", "metáfora", "hipérbole"], correta: 1,
+    explicacao: "Brasília (cidade) representa o governo federal: metonímia (lugar pela instituição)." },
+
+  // Vocábulo complementar
+  { id: "VOC-028", ano: [4,5,6], area: "vocabulo", tipo: "multipla", dificuldade: 2,
+    enunciado: "O que significa 'efêmero'?",
+    alternativas: ["eterno", "passageiro, breve", "constante", "antigo"], correta: 1,
+    explicacao: "Efêmero = de curta duração, passageiro." },
+
+  { id: "VOC-029", ano: [5,6,7], area: "vocabulo", tipo: "multipla", dificuldade: 2,
+    enunciado: "Qual é o ANTÔNIMO de 'sábio'?",
+    alternativas: ["inteligente", "tolo", "esperto", "experiente"], correta: 1,
+    explicacao: "Sábio (sabe muito) × tolo (sem juízo)." },
+
+  { id: "VOC-030", ano: [6,7,8], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "O que significa 'efígie'?",
+    alternativas: ["sombra", "imagem/retrato (ex: na moeda)", "lembrança", "ícone digital"], correta: 1,
+    explicacao: "Efígie = imagem ou retrato de uma pessoa, normalmente em moedas, selos ou estátuas." },
+
+  { id: "VOC-031", ano: [6,7,8], area: "vocabulo", tipo: "digitar", dificuldade: 2,
+    enunciado: "Escreva o ANTÔNIMO de 'pobre' (começa com R): r__o",
+    resposta: "rico",
+    explicacao: "Pobre × rico." },
+
+  { id: "VOC-032", ano: [7,8,9], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "O que significa 'inerente'?",
+    alternativas: ["alheio, externo", "que pertence à própria natureza de algo", "inexistente", "indireto"], correta: 1,
+    explicacao: "Inerente = próprio, intrínseco, parte da natureza de algo. Ex: o erro é inerente ao ser humano." },
+
+  { id: "VOC-033", ano: [7,8,9], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "O que significa 'pertinente'?",
+    alternativas: ["irrelevante", "que cabe, é apropriado/relevante", "atrasado", "duvidoso"], correta: 1,
+    explicacao: "Pertinente = adequado, oportuno, que tem relação direta com o assunto." },
+
+  { id: "VOC-034", ano: [8,9], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "O que significa 'exacerbar'?",
+    alternativas: ["acalmar", "agravar, intensificar", "ignorar", "explicar"], correta: 1,
+    explicacao: "Exacerbar = agravar, tornar mais intenso. Ex: o calor exacerba o problema." },
+
+  { id: "VOC-035", ano: [8,9], area: "vocabulo", tipo: "multipla", dificuldade: 3,
+    enunciado: "O que significa 'verossímil'?",
+    alternativas: ["falso, irreal", "que parece verdadeiro, plausível", "comprovado", "duvidoso"], correta: 1,
+    explicacao: "Verossímil = parece verdadeiro (vero + similar), plausível, crível." }
+];
+
+
+// ===================== SELEÇÃO DE QUESTÕES ==================
+// Mantém histórico de IDs já sorteados na partida atual para evitar repetição
+const QUESTOES_USADAS = { azul: new Set(), vermelho: new Set() };
+
+function filtrarBanco() {
+  const c = STATE.config;
+  let candidatas = BANCO_PORTUGUES.slice();
+
+  // Filtro por ano BNCC (se selecionado)
+  if (c.conteudo === 'bncc' && c.bnccAno) {
+    candidatas = candidatas.filter(q => q.ano.includes(c.bnccAno));
+  }
+
+  // Filtro por área (Modo Livre permite escolher áreas)
+  if (c.conteudo === 'livre') {
+    const areasAtivas = getAreasAtivas();
+    if (areasAtivas.length > 0) {
+      candidatas = candidatas.filter(q => areasAtivas.includes(q.area));
+    }
+    // Filtro por dificuldade: aceita questões de dificuldade igual ou inferior
+    const dif = c.faixa === 'facil' ? 1 : c.faixa === 'medio' ? 2 : 3;
+    candidatas = candidatas.filter(q => q.dificuldade <= dif);
+  }
+
+  return candidatas;
+}
+
+function getAreasAtivas() {
+  const areas = [];
+  if (document.getElementById('area-ortografia')?.checked) areas.push('ortografia');
+  if (document.getElementById('area-gramatica')?.checked) areas.push('gramatica');
+  if (document.getElementById('area-interpretacao')?.checked) areas.push('interpretacao');
+  if (document.getElementById('area-vocabulo')?.checked) areas.push('vocabulo');
+  return areas;
+}
+
+function sortearQuestao(time) {
+  let candidatas = filtrarBanco();
+  if (candidatas.length === 0) {
+    // Fallback: pega qualquer questão
+    candidatas = BANCO_PORTUGUES.slice();
+  }
+
+  // Evita repetição: filtra IDs já usados pelo time
+  const naoUsadas = candidatas.filter(q => !QUESTOES_USADAS[time].has(q.id));
+  const pool = naoUsadas.length > 0 ? naoUsadas : candidatas;
+
+  const escolhida = pool[Math.floor(Math.random() * pool.length)];
+  QUESTOES_USADAS[time].add(escolhida.id);
+
+  // Para múltipla escolha, embaralha as alternativas (e ajusta o índice da correta)
+  if (escolhida.tipo === 'multipla') {
+    return embaralharAlternativas(escolhida);
+  }
+  return Object.assign({}, escolhida);
+}
+
+function embaralharAlternativas(q) {
+  const indices = q.alternativas.map((_, i) => i);
+  // Embaralha índices (Fisher-Yates)
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  const novasAlternativas = indices.map(i => q.alternativas[i]);
+  const novoCorreta = indices.indexOf(q.correta);
+  return Object.assign({}, q, { alternativas: novasAlternativas, correta: novoCorreta });
+}
+
+function novaOperacao(time) {
+  const q = sortearQuestao(time);
+  STATE.jogo.operacao[time] = q;
+  STATE.jogo.resposta[time] = '';
+
+  renderizarQuestao(time, q);
+}
+
+function renderizarQuestao(time, q) {
+  const elOp = document.getElementById(`op-${time}`);
+  const elResp = document.getElementById(`resp-${time}`);
+  const areaAlts = document.getElementById(`alternativas-${time}`);
+  const areaTeclado = document.getElementById(`teclado-${time}`);
+
+  // Indicador de área (badge)
+  const areasMap = {
+    ortografia: { label: '📝 Ortografia', cor: '#FBBF24' },
+    gramatica: { label: '📚 Gramática', cor: '#A78BFA' },
+    interpretacao: { label: '💭 Interpretação', cor: '#34D399' },
+    vocabulo: { label: '🔤 Vocábulo', cor: '#F472B6' },
+  };
+  const ar = areasMap[q.area] || { label: '', cor: '#FBBF24' };
+
+  elOp.innerHTML = `
+    <div class="questao-area-badge" style="background:${ar.cor}; color:#1E1B4B;">${ar.label}</div>
+    <div class="questao-enunciado">${q.enunciado}</div>
+  `;
+
+  if (q.tipo === 'multipla') {
+    // Mostra alternativas, esconde teclado
+    areaAlts.classList.remove('hidden');
+    areaTeclado.classList.add('hidden');
+    areaAlts.innerHTML = '';
+    const letras = ['A', 'B', 'C', 'D', 'E'];
+    q.alternativas.forEach((alt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'alternativa-btn';
+      btn.innerHTML = `<span class="letra">${letras[i]}</span><span class="texto">${alt}</span>`;
+      btn.onclick = () => responderMultipla(time, i);
+      areaAlts.appendChild(btn);
+    });
+    elResp.textContent = 'Toque em uma alternativa';
+    elResp.classList.add('aguardando');
+  } else {
+    // Mostra teclado, esconde alternativas
+    areaAlts.classList.add('hidden');
+    areaTeclado.classList.remove('hidden');
+    elResp.textContent = '_';
+    elResp.classList.remove('aguardando');
+  }
+  elResp.classList.remove('error', 'success');
+}
+
+// ===================== LOBBY ================================
+function selecionarModo(modo) {
+  STATE.config.modo = modo;
+  document.querySelectorAll('[data-modo]').forEach(el => el.classList.toggle('active', el.dataset.modo === modo));
+}
+
+function selecionarConteudo(c) {
+  STATE.config.conteudo = c;
+  document.querySelectorAll('[data-conteudo]').forEach(el => el.classList.toggle('active', el.dataset.conteudo === c));
+  document.getElementById('painel-livre').classList.toggle('hidden', c !== 'livre');
+  document.getElementById('painel-bncc').classList.toggle('hidden', c !== 'bncc');
+}
+
+function selecionarFaixa(f) {
+  STATE.config.faixa = f;
+  document.querySelectorAll('[data-faixa]').forEach(el => el.classList.toggle('active', el.dataset.faixa === f));
+}
+
+function selecionarSom(s) {
+  STATE.config.som = (s === 'on');
+  document.querySelectorAll('[data-som]').forEach(el => el.classList.toggle('active', el.dataset.som === s));
+}
+
+function popularBNCC() {
+  const grid = document.getElementById('bncc-anos');
+  grid.innerHTML = '';
+  for (let i = 1; i <= 9; i++) {
+    const div = document.createElement('div');
+    div.className = 'chip-sm';
+    div.textContent = `${i}º`;
+    div.onclick = () => selecionarBNCCAno(i);
+    div.dataset.ano = i;
+    grid.appendChild(div);
+  }
+}
+
+function selecionarBNCCAno(ano) {
+  STATE.config.bnccAno = ano;
+  document.querySelectorAll('[data-ano]').forEach(el => el.classList.toggle('active', parseInt(el.dataset.ano) === ano));
+  const desc = BNCC[ano];
+  document.getElementById('bncc-descricao').innerHTML = `<strong>${desc.titulo}:</strong> ${desc.desc}`;
+}
+
+// ===================== INÍCIO DA BATALHA ====================
+function lerConfiguracoesDoLobby() {
+  STATE.config.pontos = parseInt(document.getElementById('cfg-pontos').value);
+  STATE.config.tempo = parseInt(document.getElementById('cfg-tempo').value);
+  STATE.config.vidas = parseInt(document.getElementById('cfg-vidas').value);
+  STATE.config.nomes.azul = document.getElementById('cfg-nome-azul').value || 'Time Azul';
+  STATE.config.nomes.vermelho = document.getElementById('cfg-nome-vermelho').value || 'Time Vermelho';
+  STATE.config.escola = document.getElementById('cfg-escola').value;
+  STATE.config.turma = document.getElementById('cfg-turma').value;
+  STATE.config.professor = document.getElementById('cfg-professor').value;
+  STATE.config.areas = {
+    ortografia: document.getElementById('area-ortografia').checked,
+    gramatica: document.getElementById('area-gramatica').checked,
+    interpretacao: document.getElementById('area-interpretacao').checked,
+    vocabulo: document.getElementById('area-vocabulo').checked,
+  };
+  salvarConfig();
+}
+
+function iniciarBatalha() {
+  lerConfiguracoesDoLobby();
+  if (STATE.config.conteudo === 'bncc' && !STATE.config.bnccAno) {
+    alert('Selecione um ano escolar BNCC antes de iniciar.');
+    return;
+  }
+  if (STATE.config.conteudo === 'livre' && !Object.values(STATE.config.areas).some(v => v)) {
+    alert('Selecione ao menos uma área de estudo no Modo Livre.');
+    return;
+  }
+  STATE.jogo.treino = false;
+  configurarPartida();
+}
+
+function iniciarTreino() {
+  lerConfiguracoesDoLobby();
+  if (STATE.config.conteudo === 'bncc' && !STATE.config.bnccAno) {
+    alert('Selecione um ano escolar BNCC.');
+    return;
+  }
+  STATE.jogo.treino = true;
+  configurarPartida();
+  document.getElementById('treino-badge').classList.remove('hidden');
+}
+
+function configurarPartida() {
+  // Reset estado de jogo
+  STATE.jogo.ativo = true;
+  STATE.jogo.morteSubita = false;
+  STATE.jogo.rodada = 1;
+  STATE.jogo.timeDaVez = Math.random() < 0.5 ? 'azul' : 'vermelho';
+  STATE.jogo.pontos = { azul: 0, vermelho: 0 };
+  STATE.jogo.vidas = { azul: STATE.config.vidas, vermelho: STATE.config.vidas };
+  STATE.jogo.acertosSeguidos = { azul: 0, vermelho: 0 };
+  STATE.jogo.historico = [];
+  STATE.jogo.inicioPartida = Date.now();
+
+  // Atualiza UI estática
+  document.getElementById('titulo-azul').innerHTML = `💙 ${STATE.config.nomes.azul}`;
+  document.getElementById('titulo-vermelho').innerHTML = `❤️ ${STATE.config.nomes.vermelho}`;
+  document.getElementById('label-azul').innerHTML = `💙 ${STATE.config.nomes.azul}`;
+  document.getElementById('label-vermelho').innerHTML = `${STATE.config.nomes.vermelho} ❤️`;
+  document.getElementById('nome-azul-header').textContent = '💙';
+  document.getElementById('nome-vermelho-header').textContent = '❤️';
+
+  // Vai para tela de batalha
+  document.getElementById('tela-lobby').classList.add('hidden');
+  document.getElementById('tela-batalha').classList.remove('hidden');
+  document.getElementById('treino-badge').classList.toggle('hidden', !STATE.jogo.treino);
+
+  atualizarVidasUI();
+  atualizarPlacarUI();
+  atualizarRopeUI();
+
+  // Gera primeira operação só pro time da vez
+  novaOperacao(STATE.jogo.timeDaVez);
+  // O outro time recebe placeholder
+  document.getElementById(`op-${outro(STATE.jogo.timeDaVez)}`).innerHTML = '⏳ Aguarde...';
+  document.getElementById(`resp-${outro(STATE.jogo.timeDaVez)}`).textContent = '_';
+
+  atualizarTurnoUI();
+  iniciarTimer();
+  reportarAlturaParent();
+}
+
+function outro(time) { return time === 'azul' ? 'vermelho' : 'azul'; }
+
+// ===================== TURNO E TIMER ========================
+function atualizarTurnoUI() {
+  const t = STATE.jogo.timeDaVez;
+  document.getElementById(`card-azul`).classList.toggle('active', t === 'azul');
+  document.getElementById(`card-azul`).classList.toggle('inactive', t !== 'azul');
+  document.getElementById(`card-vermelho`).classList.toggle('active', t === 'vermelho');
+  document.getElementById(`card-vermelho`).classList.toggle('inactive', t !== 'vermelho');
+  document.getElementById('status-azul').classList.toggle('hidden', t !== 'azul');
+  document.getElementById('status-vermelho').classList.toggle('hidden', t !== 'vermelho');
+  document.getElementById('time-da-vez').textContent = STATE.config.nomes[t];
+  document.getElementById('rodada-info').innerHTML = `Rodada ${STATE.jogo.rodada} · Vez do <strong>${STATE.config.nomes[t]}</strong>`;
+}
+
+function iniciarTimer() {
+  if (STATE.jogo.timer) clearInterval(STATE.jogo.timer);
+  STATE.jogo.tempoRestante = STATE.config.tempo;
+  STATE.jogo.inicioRodada = Date.now();
+  document.getElementById('timer-valor').textContent = STATE.jogo.tempoRestante;
+  document.getElementById('timer').classList.remove('danger');
+
+  STATE.jogo.timer = setInterval(() => {
+    STATE.jogo.tempoRestante--;
+    document.getElementById('timer-valor').textContent = STATE.jogo.tempoRestante;
+    if (STATE.jogo.tempoRestante <= 5) {
+      document.getElementById('timer').classList.add('danger');
+    }
+    if (STATE.jogo.tempoRestante <= 0) {
+      clearInterval(STATE.jogo.timer);
+      tempoEsgotado();
+    }
+  }, 1000);
+}
+
+function pararTimer() {
+  if (STATE.jogo.timer) {
+    clearInterval(STATE.jogo.timer);
+    STATE.jogo.timer = null;
+  }
+}
+
+function tempoEsgotado() {
+  const t = STATE.jogo.timeDaVez;
+  registrarHistorico(t, '(tempo esgotado)', false, STATE.config.tempo);
+  if (!STATE.jogo.treino) {
+    perderVida(t);
+  } else {
+    flashErro(t);
+  }
+  STATE.jogo.acertosSeguidos[t] = 0;
+  atualizarComboUI(t);
+
+  if (STATE.jogo.morteSubita) {
+    finalizarMorteSubita(outro(t));
+    return;
+  }
+
+  if (verificarFimDeJogo()) return;
+  passarTurno();
+}
+
+// ===================== INPUT ================================
+function digitar(time, letra) {
+  if (time !== STATE.jogo.timeDaVez || !STATE.jogo.ativo) return;
+  const q = STATE.jogo.operacao[time];
+  if (!q || q.tipo !== 'digitar') return;
+  if (STATE.jogo.resposta[time].length >= 30) return;
+  STATE.jogo.resposta[time] += letra;
+  atualizarRespUI(time);
+  tocarSom('click');
+}
+
+function limpar(time) {
+  if (time !== STATE.jogo.timeDaVez || !STATE.jogo.ativo) return;
+  STATE.jogo.resposta[time] = STATE.jogo.resposta[time].slice(0, -1);
+  atualizarRespUI(time);
+}
+
+function atualizarRespUI(time) {
+  const r = STATE.jogo.resposta[time];
+  const display = r === '' ? '_' : r;
+  const el = document.getElementById(`resp-${time}`);
+  el.textContent = display;
+  el.classList.remove('error', 'success', 'aguardando');
+}
+
+function confirmar(time) {
+  if (time !== STATE.jogo.timeDaVez || !STATE.jogo.ativo) return;
+  const q = STATE.jogo.operacao[time];
+  if (!q || q.tipo !== 'digitar') return;
+  const respStr = STATE.jogo.resposta[time].trim();
+  if (respStr === '') return;
+
+  const tempoGasto = (Date.now() - STATE.jogo.inicioRodada) / 1000;
+  const correto = compararRespostas(respStr, q.resposta);
+
+  if (correto) {
+    acerto(time, tempoGasto, respStr);
+  } else {
+    erro(time, tempoGasto, respStr);
+  }
+}
+
+function responderMultipla(time, indice) {
+  if (time !== STATE.jogo.timeDaVez || !STATE.jogo.ativo) return;
+  const q = STATE.jogo.operacao[time];
+  if (!q || q.tipo !== 'multipla') return;
+
+  const tempoGasto = (Date.now() - STATE.jogo.inicioRodada) / 1000;
+  const respStr = q.alternativas[indice];
+
+  // Marca visualmente a alternativa escolhida
+  document.querySelectorAll(`#alternativas-${time} .alternativa-btn`).forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === indice) btn.classList.add(indice === q.correta ? 'alt-correta' : 'alt-errada');
+    if (i === q.correta && indice !== q.correta) btn.classList.add('alt-correta-revelada');
+  });
+
+  if (indice === q.correta) {
+    acerto(time, tempoGasto, respStr);
+  } else {
+    erro(time, tempoGasto, respStr);
+  }
+}
+
+// Comparação de respostas digitadas (case-insensitive, ignora acentos como tolerância)
+function compararRespostas(dada, correta) {
+  const norm = s => s.toString().toLowerCase().trim()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  return norm(dada) === norm(correta);
+}
+
+function acerto(time, tempoGasto, respDada) {
+  pararTimer();
+  const q = STATE.jogo.operacao[time];
+  const respCorreta = q.tipo === 'multipla' ? q.alternativas[q.correta] : q.resposta;
+  registrarHistorico(time, q.enunciado, true, tempoGasto, respCorreta, respDada);
+
+  STATE.jogo.acertosSeguidos[time]++;
+  const seq = STATE.jogo.acertosSeguidos[time];
+  let multiplicador = 1;
+  if (seq >= 5) multiplicador = 3;
+  else if (seq >= 3) multiplicador = 2;
+
+  if (!STATE.jogo.treino) {
+    STATE.jogo.pontos[time] += multiplicador;
+  }
+
+  // Visual
+  document.getElementById(`resp-${time}`).classList.add('success');
+  flashAcerto(time, multiplicador);
+  tocarSom('acerto');
+
+  if (STATE.jogo.morteSubita) {
+    setTimeout(() => finalizarMorteSubita(time), 800);
+    return;
+  }
+
+  atualizarPlacarUI();
+  atualizarRopeUI();
+  atualizarComboUI(time);
+
+  if (verificarFimDeJogo()) return;
+
+  setTimeout(() => passarTurno(), 1200);
+}
+
+function erro(time, tempoGasto, respDada) {
+  const q = STATE.jogo.operacao[time];
+  const respCorreta = q.tipo === 'multipla' ? q.alternativas[q.correta] : q.resposta;
+  registrarHistorico(time, q.enunciado, false, tempoGasto, respCorreta, respDada);
+
+  STATE.jogo.acertosSeguidos[time] = 0;
+  atualizarComboUI(time);
+
+  document.getElementById(`resp-${time}`).classList.add('error');
+  document.getElementById(`card-${time}`).classList.add('pde-shake');
+  setTimeout(() => document.getElementById(`card-${time}`).classList.remove('pde-shake'), 400);
+
+  if (!STATE.jogo.treino) {
+    perderVida(time);
+    tocarSom('erro');
+  } else {
+    flashErro(time);
+  }
+
+  STATE.jogo.resposta[time] = '';
+
+  if (STATE.jogo.morteSubita) {
+    setTimeout(() => finalizarMorteSubita(outro(time)), 1500);
+    return;
+  }
+
+  // Mostra explicação pedagógica antes de passar o turno (3.5s)
+  mostrarExplicacao(time, q, respCorreta);
+
+  if (verificarFimDeJogo()) return;
+
+  setTimeout(() => passarTurno(), 3500);
+}
+
+function mostrarExplicacao(time, q, respCorreta) {
+  const elOp = document.getElementById(`op-${time}`);
+  if (!elOp) return;
+  // Garante posicionamento relativo no display da questão
+  elOp.style.position = 'relative';
+  let painel = document.getElementById(`explicacao-${time}`);
+  if (!painel) {
+    painel = document.createElement('div');
+    painel.id = `explicacao-${time}`;
+    painel.className = 'explicacao-painel';
+    elOp.appendChild(painel);
+  }
+  painel.innerHTML = `
+    <div class="exp-header">💡 Resposta correta: <strong>${respCorreta}</strong></div>
+    <div class="exp-corpo">${q.explicacao || ''}</div>
+  `;
+  // Força reflow para garantir que a transição rode
+  void painel.offsetWidth;
+  painel.classList.add('visivel');
+  setTimeout(() => {
+    painel.classList.remove('visivel');
+    setTimeout(() => { if (painel.parentNode) painel.remove(); }, 400);
+  }, 3300);
+}
+
+function passarTurno() {
+  STATE.jogo.timeDaVez = outro(STATE.jogo.timeDaVez);
+  STATE.jogo.rodada++;
+
+  const t = STATE.jogo.timeDaVez;
+  novaOperacao(t);
+
+  // Time inativo recebe "aguarde"
+  const elOpInativo = document.getElementById(`op-${outro(t)}`);
+  elOpInativo.innerHTML = '<div style="font-size: 1.5rem; opacity: 0.6;">⏳ Aguarde sua vez...</div>';
+  document.getElementById(`resp-${outro(t)}`).textContent = '_';
+  document.getElementById(`alternativas-${outro(t)}`).classList.add('hidden');
+  document.getElementById(`teclado-${outro(t)}`).classList.add('hidden');
+  STATE.jogo.resposta[outro(t)] = '';
+
+  document.getElementById(`card-${t}`).classList.add('slide-enter');
+  setTimeout(() => document.getElementById(`card-${t}`).classList.remove('slide-enter'), 400);
+
+  atualizarTurnoUI();
+  iniciarTimer();
+}
+
+// ===================== VIDAS / PLACAR / COMBO ===============
+function perderVida(time) {
+  STATE.jogo.vidas[time] = Math.max(0, STATE.jogo.vidas[time] - 1);
+  atualizarVidasUI();
+}
+
+function atualizarVidasUI() {
+  ['azul','vermelho'].forEach(t => {
+    const el = document.getElementById(`vidas-${t}`);
+    el.innerHTML = '';
+    for (let i = 0; i < STATE.config.vidas; i++) {
+      const v = document.createElement('span');
+      v.className = 'vida';
+      v.textContent = '❤️';
+      if (i >= STATE.jogo.vidas[t]) v.classList.add('perdida');
+      el.appendChild(v);
+    }
+  });
+}
+
+function atualizarPlacarUI() {
+  document.getElementById('pontos-azul').textContent = STATE.jogo.pontos.azul;
+  document.getElementById('pontos-vermelho').textContent = STATE.jogo.pontos.vermelho;
+  document.getElementById('mob-pts-azul').textContent = STATE.jogo.pontos.azul;
+  document.getElementById('mob-pts-vermelho').textContent = STATE.jogo.pontos.vermelho;
+}
+
+function atualizarRopeUI() {
+  const total = STATE.config.pontos;
+  const diff = STATE.jogo.pontos.azul - STATE.jogo.pontos.vermelho;
+  // 50% = neutro, vai pra direita = azul vence (avança pro lado vermelho)
+  // Convenção: azul à esquerda. Se azul tá ganhando, marker vai pro lado vermelho (direita)
+  let pos = 50 + (diff / total) * 40;
+  pos = Math.max(10, Math.min(90, pos));
+  document.getElementById('rope-marker').style.left = `${pos}%`;
+}
+
+function atualizarComboUI(time) {
+  const seq = STATE.jogo.acertosSeguidos[time];
+  const el = document.getElementById(`combo-${time}`);
+  if (seq >= 3) {
+    const mult = seq >= 5 ? 3 : 2;
+    el.classList.remove('hidden');
+    el.querySelector('.combo-mult').textContent = mult;
+  } else {
+    el.classList.add('hidden');
+  }
+}
+
+function flashAcerto(time, multiplicador) {
+  const card = document.getElementById(`card-${time}`);
+  const ponto = document.createElement('div');
+  ponto.className = 'float-points';
+  ponto.style.left = '50%';
+  ponto.style.top = '40%';
+  ponto.style.color = '#FFD700';
+  ponto.textContent = multiplicador > 1 ? `+${multiplicador} 🔥` : '+1';
+  card.style.position = 'relative';
+  card.appendChild(ponto);
+  setTimeout(() => ponto.remove(), 1200);
+}
+
+function flashErro(time) {
+  document.getElementById(`card-${time}`).classList.add('pde-shake');
+  setTimeout(() => document.getElementById(`card-${time}`).classList.remove('pde-shake'), 400);
+}
+
+// ===================== HISTÓRICO ============================
+function registrarHistorico(time, operacao, certo, tempoGasto, correta = null, dada = null) {
+  STATE.jogo.historico.push({
+    rodada: STATE.jogo.rodada,
+    time,
+    nomeTime: STATE.config.nomes[time],
+    operacao,
+    certo,
+    tempoGasto: Math.round(tempoGasto * 10) / 10,
+    respostaCorreta: correta,
+    respostaDada: dada,
+    timestamp: Date.now()
+  });
+}
+
+// ===================== FIM DE JOGO ==========================
+function verificarFimDeJogo() {
+  if (STATE.jogo.treino) return false;
+
+  if (STATE.jogo.vidas.azul <= 0) {
+    finalizarJogo('vermelho', 'sem_vidas');
+    return true;
+  }
+  if (STATE.jogo.vidas.vermelho <= 0) {
+    finalizarJogo('azul', 'sem_vidas');
+    return true;
+  }
+  if (STATE.jogo.pontos.azul >= STATE.config.pontos) {
+    finalizarJogo('azul', 'pontos');
+    return true;
+  }
+  if (STATE.jogo.pontos.vermelho >= STATE.config.pontos) {
+    finalizarJogo('vermelho', 'pontos');
+    return true;
+  }
+  return false;
+}
+
+function finalizarJogo(vencedor, motivo) {
+  pararTimer();
+  STATE.jogo.ativo = false;
+
+  // Verifica empate raro (não deveria ocorrer com essa lógica, mas por segurança)
+  if (vencedor === null && STATE.jogo.pontos.azul === STATE.jogo.pontos.vermelho) {
+    abrirEmpate();
+    return;
+  }
+
+  const config = STATE.config;
+  const cor = vencedor === 'azul' ? '#1E40AF' : '#B91C1C';
+  document.getElementById('vitoria-time').innerHTML = `${vencedor === 'azul' ? '💙' : '❤️'} ${config.nomes[vencedor]}`;
+  document.getElementById('vitoria-time').style.color = cor;
+
+  let textoMotivo = '';
+  if (motivo === 'sem_vidas') textoMotivo = `O adversário ficou sem vidas!`;
+  else if (motivo === 'pontos') textoMotivo = `Atingiu ${config.pontos} pontos primeiro!`;
+  else if (motivo === 'morte_subita') textoMotivo = `Acertou primeiro na morte súbita!`;
+  document.getElementById('vitoria-motivo').textContent = textoMotivo;
+
+  // Resumo
+  const acertosA = STATE.jogo.historico.filter(h => h.time === 'azul' && h.certo).length;
+  const errosA = STATE.jogo.historico.filter(h => h.time === 'azul' && !h.certo).length;
+  const acertosV = STATE.jogo.historico.filter(h => h.time === 'vermelho' && h.certo).length;
+  const errosV = STATE.jogo.historico.filter(h => h.time === 'vermelho' && !h.certo).length;
+  const totalRodadas = STATE.jogo.historico.length;
+  const duracaoMin = Math.round((Date.now() - STATE.jogo.inicioPartida) / 60000 * 10) / 10;
+
+  document.getElementById('vitoria-resumo').innerHTML = `
+    <div class="flex justify-between"><span>💙 ${config.nomes.azul}:</span><strong>${STATE.jogo.pontos.azul} pts · ${acertosA}✓ / ${errosA}✗</strong></div>
+    <div class="flex justify-between"><span>❤️ ${config.nomes.vermelho}:</span><strong>${STATE.jogo.pontos.vermelho} pts · ${acertosV}✓ / ${errosV}✗</strong></div>
+    <div class="flex justify-between"><span>Total de rodadas:</span><strong>${totalRodadas}</strong></div>
+    <div class="flex justify-between"><span>Duração:</span><strong>${duracaoMin} min</strong></div>
+  `;
+
+  abrirModal('modal-vitoria');
+  criarConfetes();
+  tocarSom('vitoria');
+  reportarAlturaParent();
+}
+
+function abrirEmpate() {
+  abrirModal('modal-empate');
+}
+
+function iniciarMorteSubita() {
+  fecharModal('modal-empate');
+  STATE.jogo.morteSubita = true;
+  STATE.jogo.ativo = true;
+  STATE.jogo.timeDaVez = Math.random() < 0.5 ? 'azul' : 'vermelho';
+  novaOperacao('azul');
+  novaOperacao('vermelho');
+  // Em morte súbita, ambos veem operações ao mesmo tempo? Não — mantém turno
+  document.getElementById(`op-${outro(STATE.jogo.timeDaVez)}`).innerHTML = '⏳ Aguarde...';
+  STATE.jogo.tempoRestante = 15; // tempo curto para morte súbita
+  STATE.config.tempo = 15;
+  atualizarTurnoUI();
+  iniciarTimer();
+}
+
+function finalizarMorteSubita(vencedor) {
+  STATE.jogo.morteSubita = false;
+  pararTimer();
+  finalizarJogo(vencedor, 'morte_subita');
+}
+
+// ===================== MODAIS / NAVEGAÇÃO ===================
+function abrirModal(id) {
+  document.getElementById(id).classList.add('active');
+  pedirScrollTopParent();
+}
+
+function fecharModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+function abrirAjuda() { abrirModal('modal-ajuda'); }
+
+function confirmarSair() {
+  if (STATE.jogo.ativo) {
+    abrirModal('modal-sair');
+  } else {
+    voltarLobby();
+  }
+}
+
+function voltarLobby() {
+  fecharModal('modal-sair');
+  fecharModal('modal-vitoria');
+  pararTimer();
+  STATE.jogo.ativo = false;
+  document.getElementById('tela-batalha').classList.add('hidden');
+  document.getElementById('tela-lobby').classList.remove('hidden');
+  document.getElementById('treino-badge').classList.add('hidden');
+  reportarAlturaParent();
+  pedirScrollTopParent();
+}
+
+function reiniciar() {
+  fecharModal('modal-vitoria');
+  if (STATE.jogo.treino) {
+    iniciarTreino();
+  } else {
+    configurarPartida();
+  }
+}
+
+// ===================== TECLADO FÍSICO =======================
+document.addEventListener('keydown', (e) => {
+  if (!STATE.jogo.ativo) return;
+  if (document.activeElement && ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+
+  const t = STATE.jogo.timeDaVez;
+  const q = STATE.jogo.operacao[t];
+  if (!q) return;
+
+  // Múltipla escolha: A/B/C/D ou 1/2/3/4 selecionam alternativa
+  if (q.tipo === 'multipla') {
+    let idx = -1;
+    const k = e.key.toLowerCase();
+    if (k === 'a') idx = 0;
+    else if (k === 'b') idx = 1;
+    else if (k === 'c') idx = 2;
+    else if (k === 'd') idx = 3;
+    else if (k === 'e') idx = 4;
+    else if (e.key >= '1' && e.key <= '5') idx = parseInt(e.key) - 1;
+
+    if (idx >= 0 && idx < (q.alternativas || []).length) {
+      responderMultipla(t, idx);
+      e.preventDefault();
+    }
+    return;
+  }
+
+  // Digitar texto: aceita letras, acentos, Enter, Backspace
+  if (q.tipo === 'digitar') {
+    if (e.key === 'Enter') {
+      confirmar(t);
+      e.preventDefault();
+    } else if (e.key === 'Backspace') {
+      limpar(t);
+      e.preventDefault();
+    } else if (e.key.length === 1 && /^[a-zA-ZáéíóúâêîôûãõàçÁÉÍÓÚÂÊÎÔÛÃÕÀÇ\s\-']$/.test(e.key)) {
+      digitar(t, e.key.toLowerCase());
+      e.preventDefault();
+    }
+  }
+});
+
+// ===================== CONFETES + SOM =======================
+function criarConfetes() {
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#A78BFA', '#FBBF24', '#FFD700', '#FF8C00', '#4C1D95', '#EF4444'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 1.5 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    cont.appendChild(c);
+  }
+}
+
+// Sons sintetizados (Web Audio) para evitar arquivos externos
+let audioCtx = null;
+function tocarSom(tipo) {
+  if (!STATE.config.som) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.connect(g); g.connect(audioCtx.destination);
+    g.gain.setValueAtTime(0.06, audioCtx.currentTime);
+    if (tipo === 'click') {
+      o.frequency.value = 600; o.type = 'square';
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+      o.start(); o.stop(audioCtx.currentTime + 0.05);
+    } else if (tipo === 'acerto') {
+      o.frequency.setValueAtTime(523, audioCtx.currentTime);
+      o.frequency.setValueAtTime(659, audioCtx.currentTime + 0.1);
+      o.frequency.setValueAtTime(784, audioCtx.currentTime + 0.2);
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+      o.start(); o.stop(audioCtx.currentTime + 0.3);
+    } else if (tipo === 'erro') {
+      o.frequency.setValueAtTime(220, audioCtx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.3);
+      o.type = 'sawtooth';
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+      o.start(); o.stop(audioCtx.currentTime + 0.3);
+    } else if (tipo === 'vitoria') {
+      [523, 659, 784, 1047].forEach((f, i) => {
+        const oo = audioCtx.createOscillator();
+        const gg = audioCtx.createGain();
+        oo.connect(gg); gg.connect(audioCtx.destination);
+        oo.frequency.value = f;
+        gg.gain.setValueAtTime(0.05, audioCtx.currentTime + i * 0.12);
+        gg.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.12 + 0.4);
+        oo.start(audioCtx.currentTime + i * 0.12);
+        oo.stop(audioCtx.currentTime + i * 0.12 + 0.4);
+      });
+    }
+  } catch (e) { /* navegadores antigos */ }
+}
+
+// ===================== EXPORTAÇÃO PDF =======================
+function exportarPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const cfg = STATE.config;
+  const j = STATE.jogo;
+  const dataAgora = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+  // Header NEWPC
+  doc.setFillColor(30, 50, 74);
+  doc.rect(0, 0, 210, 25, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('NEWPC · Portal do Educador', 14, 11);
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Relatório da Batalha de Português', 14, 18);
+
+  doc.setTextColor(30, 50, 74);
+  doc.setFontSize(10);
+  let y = 33;
+
+  // Dados gerais
+  doc.setFont('helvetica', 'bold');
+  doc.text('Dados da Atividade', 14, y); y += 6;
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Data: ${dataAgora}`, 14, y); y += 5;
+  if (cfg.escola) { doc.text(`Escola: ${cfg.escola}`, 14, y); y += 5; }
+  if (cfg.turma) { doc.text(`Turma: ${cfg.turma}`, 14, y); y += 5; }
+  if (cfg.professor) { doc.text(`Professor(a): ${cfg.professor}`, 14, y); y += 5; }
+  doc.text(`Modo: ${cfg.conteudo === 'bncc' ? 'BNCC ' + BNCC[cfg.bnccAno].titulo : 'Modo Livre · faixa ' + cfg.faixa}`, 14, y); y += 5;
+  doc.text(`Pontos para vencer: ${cfg.pontos} · Vidas: ${cfg.vidas} · Tempo: ${cfg.tempo}s`, 14, y); y += 8;
+
+  // Resultado
+  doc.setFont('helvetica', 'bold');
+  doc.setFillColor(182, 215, 82);
+  doc.rect(14, y, 182, 8, 'F');
+  doc.text(`Placar Final: ${cfg.nomes.azul} ${j.pontos.azul} × ${j.pontos.vermelho} ${cfg.nomes.vermelho}`, 16, y + 5.5);
+  y += 14;
+
+  // Estatísticas
+  const acertosA = j.historico.filter(h => h.time === 'azul' && h.certo).length;
+  const errosA = j.historico.filter(h => h.time === 'azul' && !h.certo).length;
+  const acertosV = j.historico.filter(h => h.time === 'vermelho' && h.certo).length;
+  const errosV = j.historico.filter(h => h.time === 'vermelho' && !h.certo).length;
+  const totalA = acertosA + errosA;
+  const totalV = acertosV + errosV;
+  const aprovA = totalA > 0 ? Math.round(acertosA / totalA * 100) : 0;
+  const aprovV = totalV > 0 ? Math.round(acertosV / totalV * 100) : 0;
+  const tempoMedioA = totalA > 0 ? (j.historico.filter(h => h.time === 'azul').reduce((s,h) => s+h.tempoGasto, 0) / totalA).toFixed(1) : '—';
+  const tempoMedioV = totalV > 0 ? (j.historico.filter(h => h.time === 'vermelho').reduce((s,h) => s+h.tempoGasto, 0) / totalV).toFixed(1) : '—';
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('Desempenho dos Times', 14, y); y += 6;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+
+  // Tabela de stats
+  doc.setFillColor(240, 244, 248);
+  doc.rect(14, y, 182, 7, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.text('Time', 16, y + 5);
+  doc.text('Pontos', 60, y + 5);
+  doc.text('Acertos', 85, y + 5);
+  doc.text('Erros', 110, y + 5);
+  doc.text('Aprov.', 135, y + 5);
+  doc.text('Tempo médio', 160, y + 5);
+  y += 7;
+  doc.setFont('helvetica', 'normal');
+  doc.text(cfg.nomes.azul, 16, y + 5);
+  doc.text(`${j.pontos.azul}`, 60, y + 5);
+  doc.text(`${acertosA}`, 85, y + 5);
+  doc.text(`${errosA}`, 110, y + 5);
+  doc.text(`${aprovA}%`, 135, y + 5);
+  doc.text(`${tempoMedioA}s`, 160, y + 5);
+  y += 7;
+  doc.text(cfg.nomes.vermelho, 16, y + 5);
+  doc.text(`${j.pontos.vermelho}`, 60, y + 5);
+  doc.text(`${acertosV}`, 85, y + 5);
+  doc.text(`${errosV}`, 110, y + 5);
+  doc.text(`${aprovV}%`, 135, y + 5);
+  doc.text(`${tempoMedioV}s`, 160, y + 5);
+  y += 12;
+
+  // Histórico de questões
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Histórico de Rodadas', 14, y); y += 6;
+  doc.setFontSize(8);
+  doc.setFillColor(76, 29, 149);
+  doc.setTextColor(255, 255, 255);
+  doc.rect(14, y, 182, 6, 'F');
+  doc.text('#', 16, y + 4);
+  doc.text('Time', 22, y + 4);
+  doc.text('Questão', 56, y + 4);
+  doc.text('Resp. Correta', 130, y + 4);
+  doc.text('Tempo', 165, y + 4);
+  doc.text('Status', 184, y + 4);
+  y += 6;
+  doc.setTextColor(30, 50, 74);
+
+  j.historico.forEach((h, i) => {
+    if (y > 280) {
+      doc.addPage();
+      y = 20;
+    }
+    if (i % 2 === 0) {
+      doc.setFillColor(248, 250, 252);
+      doc.rect(14, y, 182, 5, 'F');
+    }
+    const enunciadoLimpo = (h.operacao || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    doc.text(`${h.rodada}`, 16, y + 3.5);
+    doc.text(h.nomeTime.substring(0, 14), 22, y + 3.5);
+    doc.text(enunciadoLimpo.substring(0, 42), 56, y + 3.5);
+    const respC = (h.respostaCorreta ?? '—').toString().substring(0, 16);
+    doc.text(respC, 130, y + 3.5);
+    doc.text(`${h.tempoGasto}s`, 165, y + 3.5);
+    if (h.certo) { doc.setTextColor(22, 163, 74); doc.text('✓', 186, y + 3.5); }
+    else { doc.setTextColor(220, 38, 38); doc.text('✗', 186, y + 3.5); }
+    doc.setTextColor(30, 50, 74);
+    y += 5;
+  });
+
+  // Rodapé
+  const totalPaginas = doc.internal.getNumberOfPages();
+  for (let p = 1; p <= totalPaginas; p++) {
+    doc.setPage(p);
+    doc.setFontSize(7);
+    doc.setTextColor(120, 120, 120);
+    doc.text(`Gerado em ${dataAgora} · NEWPC Tecnologia · portaldoeducador.com.br`, 14, 290);
+    doc.text(`Página ${p} de ${totalPaginas}`, 180, 290);
+  }
+
+  const nome = `BatalhaPortugues_${(cfg.turma || 'turma').replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`;
+  doc.save(nome);
+}
+
+// ===================== PERSISTÊNCIA LOCAL ===================
+function salvarConfig() {
+  try {
+    localStorage.setItem('pde_batalha_config', JSON.stringify({
+      conteudo: STATE.config.conteudo,
+      bnccAno: STATE.config.bnccAno,
+      faixa: STATE.config.faixa,
+      pontos: STATE.config.pontos,
+      tempo: STATE.config.tempo,
+      vidas: STATE.config.vidas,
+      som: STATE.config.som,
+      nomes: STATE.config.nomes,
+      escola: STATE.config.escola,
+      professor: STATE.config.professor,
+    }));
+  } catch (e) { /* localStorage indisponível */ }
+}
+
+function carregarConfig() {
+  try {
+    const raw = localStorage.getItem('pde_batalha_config');
+    if (!raw) return;
+    const cfg = JSON.parse(raw);
+    if (cfg.conteudo) selecionarConteudo(cfg.conteudo);
+    if (cfg.bnccAno) selecionarBNCCAno(cfg.bnccAno);
+    if (cfg.faixa) selecionarFaixa(cfg.faixa);
+    if (cfg.som !== undefined) selecionarSom(cfg.som ? 'on' : 'off');
+    if (cfg.pontos) { document.getElementById('cfg-pontos').value = cfg.pontos; document.getElementById('lbl-pontos').textContent = cfg.pontos; }
+    if (cfg.tempo) { document.getElementById('cfg-tempo').value = cfg.tempo; document.getElementById('lbl-tempo').textContent = cfg.tempo; }
+    if (cfg.vidas) { document.getElementById('cfg-vidas').value = cfg.vidas; document.getElementById('lbl-vidas').textContent = cfg.vidas; }
+    if (cfg.nomes?.azul) document.getElementById('cfg-nome-azul').value = cfg.nomes.azul;
+    if (cfg.nomes?.vermelho) document.getElementById('cfg-nome-vermelho').value = cfg.nomes.vermelho;
+    if (cfg.escola) document.getElementById('cfg-escola').value = cfg.escola;
+    if (cfg.professor) document.getElementById('cfg-professor').value = cfg.professor;
+  } catch (e) { /* ok */ }
+}
+
+// ===================== EMBED WEBNODE ========================
+function reportarAlturaParent() {
+  if (window.self === window.top) return;
+  try {
+    // Calcula altura baseada apenas no #pde-painel (não no body, evita inflação por modais fixed)
+    requestAnimationFrame(() => {
+      const painel = document.getElementById('pde-painel');
+      const altura = Math.max(painel.scrollHeight, painel.offsetHeight);
+      window.parent.postMessage({ tipo: 'pde-altura', altura: altura + 40 }, '*');
+    });
+  } catch (e) {}
+}
+
+function pedirScrollTopParent() {
+  if (window.self === window.top) return;
+  try {
+    window.parent.postMessage({ tipo: 'pde-scroll-top' }, '*');
+  } catch (e) {}
+}
+
+// ResizeObserver para reportar altura automaticamente
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => reportarAlturaParent());
+  ro.observe(document.getElementById('pde-painel'));
+}
+
+// ===================== INICIALIZAÇÃO ========================
+window.addEventListener('DOMContentLoaded', () => {
+  popularBNCC();
+  carregarConfig();
+  document.getElementById('cfg-data').value = new Date().toLocaleDateString('pt-BR');
+  reportarAlturaParent();
+});
+
+window.addEventListener('load', reportarAlturaParent);
+window.addEventListener('resize', reportarAlturaParent);
+
+/* Auto-injeta selos BNCC quando modal de fim abrir */
+(function() {
+  const MODAIS_SELOS = ["modal-vitoria", "modal-empate"];
+  function observarModais() {
+    MODAIS_SELOS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto') || el.classList.contains('active')) {
+          inserirSelosNoModal(id);
+        }
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observarModais);
+  else observarModais();
+})();
+
+
+/* === SISTEMA A11Y NEWPC === */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  if (!p) return;
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    // Escala SEMPRE inicia em 'normal' (não persistir entre sessões; vários alunos compartilham dispositivo)
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+function abrirAcessibilidade() {
+  renderizarA11y();
+  if (typeof abrirModal === 'function') abrirModal('modal-a11y');
+  else document.getElementById('modal-a11y')?.classList.add('aberto');
+}
+// Carrega no init
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', carregarA11y);
+} else {
+  carregarA11y();
+}
+/* === FIM SISTEMA A11Y === */
+
+</script>
+
+<button class="btn-admin" onclick="confirmarSair()" title="Voltar / Configurações" id="btn-admin-flutuante" style="display:none">⚙️</button>
+
+</body>
+</html>

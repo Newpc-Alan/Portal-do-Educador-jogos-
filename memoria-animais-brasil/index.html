@@ -1,0 +1,2121 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Memória dos Animais Brasileiros · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #1E324A);
+  padding: 6px clamp(6px, 1.5vw, 12px) 10px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  --pde-cor-texto: #1E324A;
+  background: linear-gradient(180deg, #FEF3C7 0%, #BBF7D0 50%, #15803D 100%);
+  border-radius: 12px;
+}
+
+/* === A11Y === */
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-jogo,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .nivel-card,
+#pde-painel.alto-contraste .bioma-card { background: #000 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .nivel-card.selecionado,
+#pde-painel.alto-contraste .bioma-card.selecionado { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .carta { background: #000 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .carta.virada .carta-frente { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .carta .carta-verso { background: #000 !important; border-color: #FBBF24 !important; color: #FBBF24 !important; }
+#pde-painel.alto-contraste .carta.casada .carta-frente { background: #16A34A !important; color: #FFF !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+
+#pde-painel.daltonico .carta.casada .carta-frente { background: linear-gradient(135deg,#3B82F6,#1E40AF) !important; color: white !important; border-color: #1E3A8A !important; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#15803D 0%,#14532D 100%);
+  border-radius: 10px;
+  padding: 6px 10px;
+  color: white;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 6px rgba(20,83,45,0.25);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 14px;
+  padding: 10px;
+  border: 2px solid #15803D;
+  box-shadow: 0 3px 8px rgba(21,128,61,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #DCFCE7 0%, #84CC16 100%);
+  border-radius: 10px;
+  padding: 7px 10px;
+  margin-bottom: 8px;
+  border: 2px solid #14532D;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 64px; height: 64px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 10px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #1E324A;
+  font-size: 0.85rem;
+  line-height: 1.25;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: ''; position: absolute;
+  left: -8px; top: 18px;
+  width: 0; height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #14532D;
+  font-size: 0.95rem;
+  margin-bottom: 1px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 5px; padding: 8px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 70px; height: 70px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+#pde-painel .secao-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #14532D;
+  font-size: 0.95rem;
+  margin: 8px 0 5px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* NÍVEIS */
+#pde-painel .nivel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+}
+#pde-painel .nivel-card {
+  background: white;
+  border: 2px solid #BBF7D0;
+  border-radius: 10px;
+  padding: 7px 5px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #14532D;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #14532D;
+}
+#pde-painel .nivel-card:hover { transform: translateY(-2px); box-shadow: 0 4px 0 #14532D; }
+#pde-painel .nivel-card.selecionado {
+  background: linear-gradient(135deg,#15803D 0%,#14532D 100%);
+  color: white;
+  border-color: #14532D;
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #14532D;
+}
+#pde-painel .nivel-card .emoji-niv { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .nivel-card .nome-niv { font-size: 0.88rem; }
+#pde-painel .nivel-card .desc-niv { display: block; font-size: 0.66rem; font-weight: 500; opacity: 0.85; margin-top: 1px; }
+
+/* BIOMAS */
+#pde-painel .bioma-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+}
+@media (max-width: 480px) {
+  #pde-painel .bioma-grid { grid-template-columns: repeat(2, 1fr); }
+}
+#pde-painel .bioma-card {
+  background: white;
+  border: 2px solid #FDE68A;
+  border-radius: 10px;
+  padding: 7px 5px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #92400E;
+}
+#pde-painel .bioma-card:hover { transform: translateY(-2px); box-shadow: 0 4px 0 #92400E; }
+#pde-painel .bioma-card.selecionado {
+  background: linear-gradient(135deg,#FBBF24 0%,#92400E 100%);
+  color: white;
+  border-color: #451A03;
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #451A03;
+}
+#pde-painel .bioma-card .emoji-bio { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .bioma-card .nome-bio { font-size: 0.85rem; }
+#pde-painel .bioma-card .qtd-bio { display: block; font-size: 0.66rem; font-weight: 500; opacity: 0.85; margin-top: 1px; }
+
+#pde-painel .btn-comecar {
+  width: 100%;
+  background: linear-gradient(135deg,#15803D 0%,#14532D 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #14532D, 0 4px 10px rgba(20,83,45,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #14532D;
+  margin-top: 6px;
+}
+#pde-painel .btn-comecar:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #14532D, 0 2px 6px rgba(20,83,45,0.25);
+}
+#pde-painel .btn-comecar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* JOGO */
+#pde-painel .jogo-grid {
+  display: grid; gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #pde-painel .jogo-grid { grid-template-columns: 1fr !important; gap: 8px; }
+  #pde-painel .area-jogo { order: 1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+#pde-painel .area-jogo {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 3px solid #15803D;
+  box-shadow: 0 2px 6px rgba(21,128,61,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+#pde-painel .painel-info {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 10px;
+  border: 3px solid #14532D;
+  box-shadow: 0 2px 6px rgba(20,83,45,0.12);
+  min-width: 0;
+}
+
+/* INFO LATERAL */
+#pde-painel .info-jogo {
+  display: flex; flex-direction: column; gap: 4px;
+  background: linear-gradient(135deg,#DCFCE7 0%,#BBF7D0 100%);
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 2px solid #14532D;
+}
+#pde-painel .info-jogo .linha {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.78rem;
+  color: #14532D;
+}
+#pde-painel .info-jogo .linha .label { font-weight: 600; }
+#pde-painel .info-jogo .linha .valor { font-weight: 700; color: #15803D; }
+#pde-painel .info-jogo .cronometro {
+  text-align: center;
+  font-family: 'Baloo 2','Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #14532D;
+  background: white;
+  border-radius: 6px;
+  padding: 2px;
+  border: 2px solid #FBBF24;
+  letter-spacing: 1px;
+}
+
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg,#FEF3C7 0%,#FDE68A 100%);
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 2px solid #92400E;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 38px; height: 38px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #1E324A;
+  line-height: 1.2;
+  min-width: 0;
+  word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #92400E; font-weight: 700; }
+
+/* TABULEIRO */
+#pde-painel .tabuleiro-cab {
+  background: linear-gradient(135deg, #15803D 0%, #14532D 100%);
+  border-radius: 10px;
+  padding: 6px 12px;
+  color: white;
+  text-align: center;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+#pde-painel .tabuleiro-cab .info-cab {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+#pde-painel .tabuleiro-cab .titulo-cab {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-top: 2px;
+}
+
+#pde-painel .tabuleiro {
+  display: grid;
+  gap: 6px;
+  margin: 0 auto;
+  max-width: 720px;
+  width: 100%;
+}
+#pde-painel .tabuleiro.cols-3 { grid-template-columns: repeat(3, 1fr); }
+#pde-painel .tabuleiro.cols-4 { grid-template-columns: repeat(4, 1fr); }
+#pde-painel .tabuleiro.cols-6 { grid-template-columns: repeat(6, 1fr); }
+@media (max-width: 480px) {
+  #pde-painel .tabuleiro.cols-6 { grid-template-columns: repeat(4, 1fr); }
+  #pde-painel .tabuleiro.cols-4 { grid-template-columns: repeat(3, 1fr); }
+}
+
+#pde-painel .carta {
+  position: relative;
+  aspect-ratio: 1;
+  cursor: pointer;
+  perspective: 800px;
+  transition: transform 0.15s;
+}
+#pde-painel .carta:hover:not(.casada):not(.virada) { transform: translateY(-3px); }
+#pde-painel .carta.casada { cursor: default; }
+
+#pde-painel .carta-flip {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+#pde-painel .carta.virada .carta-flip,
+#pde-painel .carta.casada .carta-flip {
+  transform: rotateY(180deg);
+}
+
+#pde-painel .carta-frente, #pde-painel .carta-verso {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #14532D;
+  box-shadow: 0 3px 0 #14532D;
+}
+
+#pde-painel .carta-verso {
+  background: linear-gradient(135deg, #FBBF24 0%, #92400E 100%);
+  color: white;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.4rem, 5vw, 2.2rem);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+#pde-painel .carta-frente {
+  background: white;
+  transform: rotateY(180deg);
+  flex-direction: column;
+  padding: 4px;
+}
+#pde-painel .carta-frente svg {
+  width: 90%;
+  height: 90%;
+  display: block;
+}
+#pde-painel .carta.casada .carta-frente {
+  background: linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%);
+  border-color: #15803D;
+  box-shadow: 0 3px 0 #15803D;
+  animation: pulseAcerto 0.5s ease;
+}
+@keyframes pulseAcerto { 0%,100% { transform: rotateY(180deg) scale(1); } 50% { transform: rotateY(180deg) scale(1.06); } }
+
+#pde-painel .carta.errou .carta-frente {
+  background: #FECACA;
+  border-color: #991B1B;
+  animation: shake 0.4s;
+}
+@keyframes shake { 0%,100% { transform: rotateY(180deg) translateX(0); } 25% { transform: rotateY(180deg) translateX(-4px); } 75% { transform: rotateY(180deg) translateX(4px); } }
+
+/* CARD DE INFO PEDAGÓGICA (ao casar par) */
+#pde-painel .card-info {
+  background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+  border: 2px solid #1E40AF;
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin-top: 2px;
+  animation: aparecerFb 0.3s ease-out;
+}
+@keyframes aparecerFb { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+#pde-painel .card-info h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #1E40AF;
+  font-size: 1rem;
+  margin: 0 0 4px;
+  display: flex; align-items: center; gap: 6px;
+}
+#pde-painel .card-info .grid-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  font-size: 0.78rem;
+  margin: 4px 0;
+}
+@media (max-width: 720px) {
+  #pde-painel .card-info .grid-info { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  #pde-painel .card-info .grid-info { grid-template-columns: 1fr; }
+}
+#pde-painel .card-info .grid-info .item-info {
+  display: flex; flex-direction: column;
+  background: white; padding: 4px 6px; border-radius: 6px;
+  min-width: 0;
+}
+#pde-painel .card-info .grid-info .item-info .label {
+  font-size: 0.62rem; color: #64748B; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+}
+#pde-painel .card-info .grid-info .item-info .valor {
+  font-size: 0.82rem; color: #14532D; font-weight: 700;
+  word-wrap: break-word; overflow-wrap: anywhere;
+}
+#pde-painel .card-info .curiosidade {
+  font-size: 0.78rem;
+  color: #1E40AF;
+  line-height: 1.3;
+  margin-top: 4px;
+  background: white;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border-left: 3px solid #FBBF24;
+}
+#pde-painel .card-info .curiosidade b { color: #92400E; }
+#pde-painel .btn-continuar {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  background: linear-gradient(135deg,#15803D 0%,#14532D 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #14532D, 0 4px 10px rgba(20,83,45,0.2);
+  outline: 2px solid #14532D;
+  transition: transform 0.08s, box-shadow 0.08s;
+}
+#pde-painel .btn-continuar:hover { transform: translateY(-1px); }
+#pde-painel .btn-continuar:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #14532D, 0 2px 6px rgba(20,83,45,0.2);
+}
+
+#pde-painel .progresso-pares {
+  display: flex; gap: 3px; flex-wrap: wrap;
+  background: #FFF9E6;
+  border-radius: 8px;
+  padding: 4px 6px;
+  border: 2px solid #FBBF24;
+  margin-top: 2px;
+  justify-content: center;
+}
+#pde-painel .progresso-pares .pegada {
+  font-size: 0.9rem;
+  color: #CBD5E1;
+  transition: color 0.3s;
+  line-height: 1;
+}
+#pde-painel .progresso-pares .pegada.encontrada { color: #15803D; }
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(20,83,45,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #15803D;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal { width: 100px; height: 100px; margin: 0 auto 8px; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #14532D;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #14532D; font-size: 0.95rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#86EFAC 0%,#22C55E 100%);
+  color: white; border: 3px solid #15803D;
+  box-shadow: 0 4px 0 #15803D;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .estrelas-conquistadas { font-size: 2.6rem; letter-spacing: 8px; margin: 10px 0; }
+#pde-painel .estrelas-conquistadas .ativa {
+  color: #FBBF24; display: inline-block; transform: scale(0);
+  text-shadow: 0 0 12px rgba(251,191,36,0.7);
+  animation: estrelaPopFinal 0.6s ease-out forwards;
+}
+#pde-painel .estrelas-conquistadas .ativa:nth-child(1) { animation-delay: 0.2s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(2) { animation-delay: 0.5s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(3) { animation-delay: 0.8s; }
+#pde-painel .estrelas-conquistadas .vazia { color: #E2E8F0; }
+@keyframes estrelaPopFinal {
+  0% { transform: scale(0) rotate(-180deg); }
+  60% { transform: scale(1.4) rotate(15deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #14532D;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #1E324A; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+
+#pde-painel .a11y-grupo { background: #DCFCE7; border: 3px solid #15803D; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #14532D; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #15803D; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#15803D 0%,#14532D 100%); color: white; border-color: #14532D; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #15803D; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#86EFAC 0%,#22C55E 100%); color: white; border-color: #15803D; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #15803D; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #15803D;
+  border: 2px solid #15803D; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #15803D; color: white; }
+
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #FBBF24; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #14532D; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#15803D,#14532D); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.ciencias { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #14532D; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #14532D; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #E2E8F0; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FBBF24; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #14532D; }
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 8px clamp(10px, 1.5vw, 18px) 14px; }
+  #pde-painel .lobby-card { padding: 14px; }
+  #pde-painel .area-jogo { padding: 12px 16px; }
+  #pde-painel .painel-info { padding: 10px 12px; }
+  #pde-painel .jogo-grid { grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .modal-conteudo h2 { font-size: 1.5rem; }
+  #pde-painel .modal-conteudo p { font-size: 1rem; }
+  #pde-painel .header h1 { font-size: 1.2rem; }
+  #pde-painel .btn-header { font-size: 0.85rem; padding: 6px 12px; }
+  #pde-painel .btn-comecar { font-size: 1.05rem; padding: 11px 20px; }
+  #pde-painel .tabuleiro { max-width: 800px; gap: 8px; }
+  #pde-painel .nivel-card { padding: 10px 6px; font-size: 0.95rem; }
+  #pde-painel .nivel-card .emoji-niv { font-size: 1.7rem; }
+  #pde-painel .bioma-card { padding: 10px 6px; font-size: 0.95rem; }
+  #pde-painel .bioma-card .emoji-bio { font-size: 1.7rem; }
+  #pde-painel .info-jogo .cronometro { font-size: 1.4rem; padding: 4px; }
+  #pde-painel .card-info { padding: 10px 14px; }
+  #pde-painel .card-info h3 { font-size: 1.15rem; }
+}
+@media (min-width: 1440px) {
+  #pde-painel { max-width: 1400px; }
+}
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>🐾 Memória dos Animais Brasileiros</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Oi! Sou o Bichinho-do-Mato! 🌿</strong>
+        <span>Vamos descobrir os animais do Brasil? Escolha o tamanho do jogo e o bioma!</span>
+      </div>
+    </div>
+
+    <div class="secao-titulo">🎯 Tamanho do desafio</div>
+    <div class="nivel-grid" id="nivel-grid"></div>
+
+    <div class="secao-titulo">🌳 Em qual bioma?</div>
+    <div class="bioma-grid" id="bioma-grid"></div>
+
+    <button class="btn-comecar" id="btn-comecar" onclick="comecarJogo()" disabled>🐾 Começar o jogo!</button>
+  </div>
+
+  <div id="jogo" class="jogo-grid hidden">
+    <div class="area-jogo">
+      <div class="tabuleiro-cab">
+        <div class="info-cab" id="info-cab">—</div>
+        <div class="titulo-cab" id="titulo-cab">Encontre os pares!</div>
+      </div>
+      <div class="tabuleiro" id="tabuleiro"></div>
+      <div id="card-info"></div>
+      <div class="progresso-pares" id="progresso-pares"></div>
+    </div>
+
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Boa caçada!</div>
+      </div>
+      <div class="info-jogo">
+        <div class="linha"><span class="label">⏱️ Tempo</span><span class="valor" id="tempo-info">0:00</span></div>
+        <div class="cronometro" id="cronometro">0:00</div>
+        <div class="linha"><span class="label">🎯 Pares</span><span class="valor" id="pares-info">0/0</span></div>
+        <div class="linha"><span class="label">🔄 Jogadas</span><span class="valor" id="jogadas-info">0</span></div>
+        <div class="linha"><span class="label">🌳 Bioma</span><span class="valor" id="bioma-info">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-fim">
+    <div class="modal-conteudo">
+      <svg class="mascote-modal" viewBox="0 0 100 100" id="svg-mascote-fim"></svg>
+      <h2 id="fim-titulo">🎉 Você completou!</h2>
+      <p id="fim-msg">Parabéns!</p>
+      <div class="estrelas-conquistadas" id="fim-estrelas"></div>
+      <p id="fim-detalhes" style="font-style:italic; color:#94A3B8;"></p>
+      <div class="acoes" id="fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🐾 Como brincar com o Bichinho-do-Mato</h2>
+      <h3>🎯 Objetivo</h3>
+      <p>Encontrar todos os pares de animais brasileiros! Vire 2 cartas, se forem iguais ficam abertas, se não, viram de novo.</p>
+
+      <h3>🎮 Tamanhos do jogo</h3>
+      <ul>
+        <li><b>🌱 Fácil:</b> 12 cartas (6 pares) - 1º e 2º ano</li>
+        <li><b>🌳 Médio:</b> 16 cartas (8 pares) - 3º ano</li>
+        <li><b>🌲 Difícil:</b> 24 cartas (12 pares) - 4º e 5º ano</li>
+      </ul>
+
+      <h3>🌳 Biomas disponíveis</h3>
+      <ul>
+        <li><b>🌴 Amazônia:</b> floresta úmida do norte</li>
+        <li><b>🌾 Cerrado:</b> savana brasileira</li>
+        <li><b>💧 Pantanal:</b> planície alagada do Centro-Oeste</li>
+        <li><b>🇧🇷 Todos:</b> animais de todos os biomas misturados</li>
+      </ul>
+
+      <h3>💡 Dica pedagógica</h3>
+      <p>A cada par encontrado, aparece um card com informações sobre o animal: bioma, alimentação e uma curiosidade. Use isso para conversar com a turma!</p>
+
+      <h3>📚 BNCC Ciências</h3>
+      <ul>
+        <li>EF02CI04 (características dos animais)</li>
+        <li>EF03CI04 (animais e habitats)</li>
+        <li>EF04CI04 (cadeias alimentares)</li>
+      </ul>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-ajuda')">Bora brincar!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script id="script-jogo">
+/* ANIMAIS BRASILEIROS - PARTE 1
+ * 18 SVGs distribuídos em 3 biomas (6 cada)
+ * ViewBox padrão 100x100, otimizado para cards quadrados
+ */
+
+const ANIMAIS_SVG = {
+
+/* ===== AMAZÔNIA (6) ===== */
+
+onca_pintada: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fundo verde floresta -->
+  <rect width="100" height="100" fill="#DCFCE7" rx="4"/>
+  <!-- Corpo -->
+  <ellipse cx="50" cy="62" rx="28" ry="18" fill="#F59E0B"/>
+  <!-- Pintas -->
+  <circle cx="38" cy="55" r="3" fill="#7C2D12" opacity="0.85"/>
+  <circle cx="50" cy="58" r="3" fill="#7C2D12" opacity="0.85"/>
+  <circle cx="62" cy="55" r="3" fill="#7C2D12" opacity="0.85"/>
+  <circle cx="44" cy="68" r="3" fill="#7C2D12" opacity="0.85"/>
+  <circle cx="56" cy="68" r="3" fill="#7C2D12" opacity="0.85"/>
+  <circle cx="32" cy="62" r="2.5" fill="#7C2D12" opacity="0.85"/>
+  <circle cx="68" cy="62" r="2.5" fill="#7C2D12" opacity="0.85"/>
+  <!-- Patas -->
+  <rect x="34" y="74" width="6" height="8" rx="2" fill="#D97706"/>
+  <rect x="44" y="76" width="6" height="8" rx="2" fill="#D97706"/>
+  <rect x="54" y="76" width="6" height="8" rx="2" fill="#D97706"/>
+  <rect x="64" y="74" width="6" height="8" rx="2" fill="#D97706"/>
+  <!-- Rabo -->
+  <path d="M 76 60 Q 86 50 84 38" stroke="#F59E0B" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <circle cx="78" cy="56" r="2" fill="#7C2D12"/>
+  <!-- Cabeça -->
+  <circle cx="32" cy="42" r="14" fill="#F59E0B"/>
+  <!-- Orelhas -->
+  <path d="M 22 32 L 26 26 L 30 32 Z" fill="#F59E0B"/>
+  <path d="M 38 30 L 42 24 L 46 32 Z" fill="#F59E0B"/>
+  <path d="M 24 30 L 27 28 L 28 30" fill="#FB923C"/>
+  <path d="M 40 28 L 43 26 L 44 30" fill="#FB923C"/>
+  <!-- Pintinhas na cabeça -->
+  <circle cx="28" cy="38" r="1.5" fill="#7C2D12"/>
+  <circle cx="38" cy="40" r="1.5" fill="#7C2D12"/>
+  <circle cx="32" cy="48" r="1.5" fill="#7C2D12"/>
+  <!-- Olhos -->
+  <circle cx="28" cy="42" r="2.2" fill="white"/>
+  <circle cx="38" cy="42" r="2.2" fill="white"/>
+  <circle cx="28.5" cy="42.5" r="1.3" fill="#1F2937"/>
+  <circle cx="38.5" cy="42.5" r="1.3" fill="#1F2937"/>
+  <!-- Focinho -->
+  <ellipse cx="33" cy="48" rx="3" ry="2" fill="#FB923C"/>
+  <ellipse cx="33" cy="47" rx="1.2" ry="0.8" fill="#1F2937"/>
+  <path d="M 31 50 Q 33 52 35 50" stroke="#1F2937" stroke-width="0.8" fill="none"/>
+</svg>`,
+
+arara_azul: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#DBEAFE" rx="4"/>
+  <!-- Galho -->
+  <rect x="10" y="78" width="80" height="5" fill="#92400E" rx="2"/>
+  <!-- Corpo azul -->
+  <ellipse cx="50" cy="50" rx="20" ry="26" fill="#2563EB"/>
+  <!-- Asa -->
+  <path d="M 30 45 Q 22 55 28 68 Q 38 64 36 50 Z" fill="#1E40AF"/>
+  <ellipse cx="32" cy="56" rx="3" ry="6" fill="#1D4ED8"/>
+  <!-- Barriga -->
+  <ellipse cx="56" cy="58" rx="10" ry="14" fill="#3B82F6"/>
+  <!-- Cabeça -->
+  <circle cx="55" cy="32" r="14" fill="#2563EB"/>
+  <!-- Bico amarelo curvo -->
+  <path d="M 64 32 Q 78 32 74 42 Q 70 40 66 38 Z" fill="#1F2937"/>
+  <path d="M 64 32 Q 76 33 72 40 Q 68 38 66 36 Z" fill="#FBBF24"/>
+  <!-- Área ao redor do olho (clara) -->
+  <ellipse cx="55" cy="32" rx="4" ry="3" fill="#FBBF24" opacity="0.9"/>
+  <!-- Olho -->
+  <circle cx="55" cy="32" r="2.5" fill="white"/>
+  <circle cx="55" cy="32" r="1.5" fill="#1F2937"/>
+  <!-- Patas no galho -->
+  <line x1="44" y1="74" x2="44" y2="80" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
+  <line x1="54" y1="74" x2="54" y2="80" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
+  <!-- Cauda longa -->
+  <path d="M 36 70 Q 26 84 18 86" stroke="#1E40AF" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M 40 72 Q 30 86 22 90" stroke="#2563EB" stroke-width="5" fill="none" stroke-linecap="round"/>
+</svg>`,
+
+preguica: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#DCFCE7" rx="4"/>
+  <!-- Galho -->
+  <rect x="0" y="20" width="100" height="6" fill="#92400E" rx="2"/>
+  <ellipse cx="20" cy="22" rx="3" ry="2" fill="#15803D"/>
+  <ellipse cx="80" cy="22" rx="3" ry="2" fill="#15803D"/>
+  <!-- Braços pendurados -->
+  <path d="M 30 26 Q 25 35 32 45" stroke="#A16207" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M 70 26 Q 75 35 68 45" stroke="#A16207" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- Garras -->
+  <circle cx="32" cy="46" r="3" fill="#78350F"/>
+  <circle cx="68" cy="46" r="3" fill="#78350F"/>
+  <line x1="30" y1="44" x2="29" y2="49" stroke="#1F2937" stroke-width="1"/>
+  <line x1="33" y1="44" x2="34" y2="49" stroke="#1F2937" stroke-width="1"/>
+  <line x1="66" y1="44" x2="65" y2="49" stroke="#1F2937" stroke-width="1"/>
+  <line x1="70" y1="44" x2="71" y2="49" stroke="#1F2937" stroke-width="1"/>
+  <!-- Corpo (de cabeça pra baixo) -->
+  <ellipse cx="50" cy="60" rx="20" ry="22" fill="#A16207"/>
+  <!-- Cara mais clara -->
+  <ellipse cx="50" cy="60" rx="13" ry="15" fill="#FED7AA"/>
+  <!-- Mancha escura ao redor dos olhos -->
+  <ellipse cx="44" cy="58" rx="4" ry="3" fill="#78350F" opacity="0.6" transform="rotate(15 44 58)"/>
+  <ellipse cx="56" cy="58" rx="4" ry="3" fill="#78350F" opacity="0.6" transform="rotate(-15 56 58)"/>
+  <!-- Olhos -->
+  <circle cx="44" cy="58" r="2" fill="#1F2937"/>
+  <circle cx="56" cy="58" r="2" fill="#1F2937"/>
+  <!-- Sorriso -->
+  <path d="M 46 67 Q 50 70 54 67" stroke="#1F2937" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+  <!-- Patas inferiores também penduradas -->
+  <path d="M 40 78 Q 38 86 42 90" stroke="#A16207" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M 60 78 Q 62 86 58 90" stroke="#A16207" stroke-width="6" fill="none" stroke-linecap="round"/>
+</svg>`,
+
+sucuri: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#DBEAFE" rx="4"/>
+  <!-- Água -->
+  <path d="M 0 75 Q 25 72 50 75 Q 75 78 100 75 L 100 100 L 0 100 Z" fill="#60A5FA" opacity="0.4"/>
+  <!-- Corpo serpentino -->
+  <path d="M 12 78 Q 25 65 35 70 Q 45 75 55 65 Q 65 55 75 60 Q 85 65 88 50" stroke="#15803D" stroke-width="11" fill="none" stroke-linecap="round"/>
+  <path d="M 12 78 Q 25 65 35 70 Q 45 75 55 65 Q 65 55 75 60 Q 85 65 88 50" stroke="#16A34A" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.5"/>
+  <!-- Manchas no corpo -->
+  <circle cx="22" cy="73" r="3" fill="#14532D"/>
+  <circle cx="36" cy="69" r="2.5" fill="#14532D"/>
+  <circle cx="50" cy="68" r="3" fill="#14532D"/>
+  <circle cx="64" cy="60" r="2.5" fill="#14532D"/>
+  <circle cx="78" cy="58" r="3" fill="#14532D"/>
+  <!-- Cabeça -->
+  <ellipse cx="88" cy="48" rx="9" ry="7" fill="#15803D"/>
+  <!-- Olho -->
+  <circle cx="88" cy="46" r="2" fill="#FBBF24"/>
+  <circle cx="88" cy="46" r="1" fill="#1F2937"/>
+  <!-- Língua bifurcada -->
+  <path d="M 95 48 L 100 48 M 95 48 Q 99 50 100 52 M 95 48 Q 99 46 100 44" stroke="#DC2626" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+</svg>`,
+
+tucano: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#DCFCE7" rx="4"/>
+  <!-- Galho -->
+  <rect x="55" y="78" width="40" height="4" fill="#92400E" rx="2"/>
+  <!-- Corpo preto -->
+  <ellipse cx="48" cy="55" rx="20" ry="22" fill="#1F2937"/>
+  <!-- Peito branco/amarelo -->
+  <ellipse cx="50" cy="50" rx="13" ry="11" fill="#FEF3C7"/>
+  <!-- Cabeça preta -->
+  <circle cx="48" cy="34" r="13" fill="#1F2937"/>
+  <!-- BICO ENORME laranja com preto -->
+  <path d="M 56 34 Q 88 28 88 36 Q 86 42 60 42 Z" fill="#F97316"/>
+  <path d="M 56 34 Q 88 28 88 36 Q 86 42 60 42 Z" fill="none" stroke="#1F2937" stroke-width="1.5"/>
+  <!-- Detalhes do bico -->
+  <path d="M 70 32 Q 78 31 84 33" stroke="#FBBF24" stroke-width="2" fill="none"/>
+  <path d="M 84 36 Q 86 38 86 40" stroke="#1F2937" stroke-width="1.2" fill="none"/>
+  <!-- Olho com aro azul -->
+  <circle cx="48" cy="32" r="3.5" fill="#3B82F6"/>
+  <circle cx="48" cy="32" r="2.5" fill="white"/>
+  <circle cx="48" cy="32" r="1.5" fill="#1F2937"/>
+  <!-- Patas -->
+  <line x1="42" y1="75" x2="42" y2="80" stroke="#F97316" stroke-width="3" stroke-linecap="round"/>
+  <line x1="54" y1="75" x2="54" y2="80" stroke="#F97316" stroke-width="3" stroke-linecap="round"/>
+  <!-- Cauda -->
+  <path d="M 32 65 Q 22 70 18 78" stroke="#1F2937" stroke-width="6" fill="none" stroke-linecap="round"/>
+</svg>`,
+
+boto_cor_de_rosa: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#DBEAFE" rx="4"/>
+  <!-- Água com ondas -->
+  <path d="M 0 30 Q 25 26 50 30 Q 75 34 100 30 L 100 100 L 0 100 Z" fill="#60A5FA" opacity="0.4"/>
+  <path d="M 0 38 Q 25 34 50 38 Q 75 42 100 38" stroke="#3B82F6" stroke-width="1" fill="none" opacity="0.5"/>
+  <!-- Corpo rosa do boto -->
+  <ellipse cx="50" cy="58" rx="32" ry="14" fill="#F9A8D4"/>
+  <!-- Barriga mais clara -->
+  <ellipse cx="50" cy="64" rx="26" ry="6" fill="#FBCFE8"/>
+  <!-- Cabeça mais arredondada -->
+  <ellipse cx="22" cy="56" rx="14" ry="12" fill="#F9A8D4"/>
+  <!-- Bico longo característico do boto -->
+  <path d="M 8 58 Q 12 54 22 56 Q 18 60 8 60 Z" fill="#FBCFE8"/>
+  <!-- Boca -->
+  <line x1="8" y1="58" x2="20" y2="58" stroke="#BE185D" stroke-width="0.8"/>
+  <!-- Olho pequeno -->
+  <circle cx="22" cy="52" r="1.8" fill="#1F2937"/>
+  <circle cx="22.5" cy="51.5" r="0.6" fill="white"/>
+  <!-- Nadadeira dorsal pequena -->
+  <path d="M 50 44 L 55 38 L 58 44 Z" fill="#EC4899"/>
+  <!-- Nadadeira lateral -->
+  <ellipse cx="42" cy="68" rx="6" ry="3" fill="#EC4899" transform="rotate(20 42 68)"/>
+  <!-- Cauda -->
+  <path d="M 80 56 Q 92 50 90 44 M 80 60 Q 92 64 90 70" stroke="#F9A8D4" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M 80 58 Q 95 58 92 50" fill="#EC4899"/>
+  <path d="M 80 58 Q 95 58 92 66" fill="#EC4899"/>
+  <!-- Borrifo d'água em cima -->
+  <circle cx="56" cy="35" r="2" fill="white" opacity="0.7"/>
+  <circle cx="60" cy="32" r="1.5" fill="white" opacity="0.7"/>
+  <circle cx="52" cy="33" r="1.2" fill="white" opacity="0.7"/>
+</svg>`,
+
+/* ===== CERRADO (6) ===== */
+
+lobo_guara: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#FEF3C7" rx="4"/>
+  <!-- Pernas longas (característica do lobo-guará) -->
+  <rect x="34" y="58" width="6" height="28" rx="2" fill="#1F2937"/>
+  <rect x="44" y="58" width="6" height="28" rx="2" fill="#1F2937"/>
+  <rect x="54" y="58" width="6" height="28" rx="2" fill="#1F2937"/>
+  <rect x="64" y="58" width="6" height="28" rx="2" fill="#1F2937"/>
+  <!-- Patas (claras embaixo das pernas pretas) -->
+  <ellipse cx="37" cy="86" rx="3.5" ry="2" fill="#1F2937"/>
+  <ellipse cx="47" cy="86" rx="3.5" ry="2" fill="#1F2937"/>
+  <ellipse cx="57" cy="86" rx="3.5" ry="2" fill="#1F2937"/>
+  <ellipse cx="67" cy="86" rx="3.5" ry="2" fill="#1F2937"/>
+  <!-- Corpo ruivo -->
+  <ellipse cx="50" cy="52" rx="26" ry="14" fill="#DC2626"/>
+  <!-- Barriga mais clara -->
+  <ellipse cx="50" cy="60" rx="20" ry="6" fill="#FB923C"/>
+  <!-- Cabeça -->
+  <ellipse cx="24" cy="42" rx="12" ry="10" fill="#DC2626"/>
+  <!-- Focinho -->
+  <ellipse cx="14" cy="46" rx="6" ry="4" fill="#EF4444"/>
+  <circle cx="11" cy="45" r="1.5" fill="#1F2937"/>
+  <!-- Orelhas pontudas -->
+  <path d="M 20 32 L 22 24 L 26 32 Z" fill="#DC2626"/>
+  <path d="M 28 32 L 32 26 L 34 34 Z" fill="#DC2626"/>
+  <path d="M 22 30 L 23 28 L 25 30" fill="#7C2D12"/>
+  <path d="M 30 32 L 32 30 L 33 32" fill="#7C2D12"/>
+  <!-- Olho -->
+  <circle cx="22" cy="40" r="1.8" fill="#FBBF24"/>
+  <circle cx="22" cy="40" r="1" fill="#1F2937"/>
+  <!-- Rabo peludo -->
+  <ellipse cx="80" cy="48" rx="6" ry="14" fill="#DC2626" transform="rotate(30 80 48)"/>
+  <ellipse cx="82" cy="44" rx="4" ry="6" fill="white" transform="rotate(30 82 44)"/>
+  <!-- Crina escura nas costas -->
+  <path d="M 38 40 Q 50 36 62 40" stroke="#1F2937" stroke-width="3" fill="none"/>
+</svg>`,
+
+tamandua: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#FEF3C7" rx="4"/>
+  <!-- Corpo -->
+  <ellipse cx="50" cy="55" rx="28" ry="16" fill="#FCD34D"/>
+  <!-- Faixa preta característica em V -->
+  <path d="M 38 48 L 52 70 L 66 48 L 64 44 L 52 62 L 40 44 Z" fill="#1F2937"/>
+  <!-- Patas -->
+  <rect x="32" y="66" width="6" height="14" rx="2" fill="#92400E"/>
+  <rect x="42" y="66" width="6" height="14" rx="2" fill="#92400E"/>
+  <rect x="56" y="66" width="6" height="14" rx="2" fill="#92400E"/>
+  <rect x="66" y="66" width="6" height="14" rx="2" fill="#92400E"/>
+  <!-- Garras grandes (característica do tamanduá) -->
+  <path d="M 32 80 L 33 84 L 34 80 M 36 80 L 37 84 L 38 80" stroke="#1F2937" stroke-width="1.5"/>
+  <path d="M 56 80 L 57 84 L 58 80 M 60 80 L 61 84 L 62 80" stroke="#1F2937" stroke-width="1.5"/>
+  <!-- Focinho LONGO -->
+  <path d="M 28 50 Q 12 52 6 56 Q 10 60 24 58 Z" fill="#92400E"/>
+  <!-- Ponta do focinho -->
+  <circle cx="8" cy="56" r="2" fill="#1F2937"/>
+  <!-- Cabeça (fundida com o corpo) -->
+  <ellipse cx="32" cy="48" rx="10" ry="9" fill="#FCD34D"/>
+  <!-- Orelha pequena -->
+  <ellipse cx="34" cy="40" rx="3" ry="4" fill="#FCD34D"/>
+  <!-- Olho pequeno -->
+  <circle cx="30" cy="48" r="1.5" fill="#1F2937"/>
+  <!-- Cauda peluda longa -->
+  <path d="M 76 50 Q 92 40 88 26" stroke="#FCD34D" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <path d="M 76 50 Q 92 40 88 26" stroke="#92400E" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.4"/>
+</svg>`,
+
+tatu_bola: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#FEF3C7" rx="4"/>
+  <!-- Chão -->
+  <path d="M 0 82 Q 50 80 100 82 L 100 100 L 0 100 Z" fill="#A16207" opacity="0.3"/>
+  <!-- Corpo principal (carapaça) -->
+  <ellipse cx="50" cy="60" rx="32" ry="22" fill="#92400E"/>
+  <!-- Linhas das placas da carapaça -->
+  <path d="M 24 50 Q 50 38 76 50" stroke="#451A03" stroke-width="2" fill="none"/>
+  <path d="M 22 58 Q 50 48 78 58" stroke="#451A03" stroke-width="2" fill="none"/>
+  <path d="M 22 66 Q 50 58 78 66" stroke="#451A03" stroke-width="2" fill="none"/>
+  <path d="M 24 74 Q 50 68 76 74" stroke="#451A03" stroke-width="2" fill="none"/>
+  <!-- Texturas -->
+  <circle cx="30" cy="54" r="1.5" fill="#451A03" opacity="0.4"/>
+  <circle cx="45" cy="50" r="1.5" fill="#451A03" opacity="0.4"/>
+  <circle cx="60" cy="52" r="1.5" fill="#451A03" opacity="0.4"/>
+  <circle cx="70" cy="56" r="1.5" fill="#451A03" opacity="0.4"/>
+  <!-- Cabeça destacada -->
+  <ellipse cx="22" cy="56" rx="10" ry="8" fill="#A16207"/>
+  <!-- Olho -->
+  <circle cx="20" cy="54" r="1.8" fill="#1F2937"/>
+  <circle cx="20.5" cy="53.5" r="0.6" fill="white"/>
+  <!-- Focinho -->
+  <ellipse cx="14" cy="58" rx="3" ry="2" fill="#78350F"/>
+  <circle cx="13" cy="58" r="1" fill="#1F2937"/>
+  <!-- Orelha pequena -->
+  <ellipse cx="26" cy="48" rx="2" ry="3" fill="#A16207"/>
+  <!-- Patinhas -->
+  <ellipse cx="36" cy="80" rx="3" ry="2" fill="#451A03"/>
+  <ellipse cx="50" cy="82" rx="3" ry="2" fill="#451A03"/>
+  <ellipse cx="64" cy="80" rx="3" ry="2" fill="#451A03"/>
+  <!-- Cauda -->
+  <path d="M 80 64 Q 88 68 90 76" stroke="#92400E" stroke-width="5" fill="none" stroke-linecap="round"/>
+</svg>`,
+
+ema: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#FEF3C7" rx="4"/>
+  <!-- Chão -->
+  <path d="M 0 90 L 100 90 L 100 100 L 0 100 Z" fill="#A16207" opacity="0.3"/>
+  <!-- Pernas longas (característica da ema) -->
+  <line x1="42" y1="58" x2="40" y2="88" stroke="#78350F" stroke-width="4" stroke-linecap="round"/>
+  <line x1="58" y1="58" x2="60" y2="88" stroke="#78350F" stroke-width="4" stroke-linecap="round"/>
+  <!-- Pés -->
+  <path d="M 35 88 L 40 88 L 43 90 M 40 88 L 38 92" stroke="#1F2937" stroke-width="1.5" fill="none"/>
+  <path d="M 57 88 L 60 88 L 65 90 M 60 88 L 62 92" stroke="#1F2937" stroke-width="1.5" fill="none"/>
+  <!-- Corpo redondo cinza -->
+  <ellipse cx="50" cy="48" rx="26" ry="22" fill="#9CA3AF"/>
+  <!-- Penas (textura) -->
+  <path d="M 30 42 Q 35 38 38 44" stroke="#6B7280" stroke-width="1.5" fill="none"/>
+  <path d="M 42 38 Q 47 34 50 40" stroke="#6B7280" stroke-width="1.5" fill="none"/>
+  <path d="M 54 38 Q 59 34 62 40" stroke="#6B7280" stroke-width="1.5" fill="none"/>
+  <path d="M 32 56 Q 38 52 42 58" stroke="#6B7280" stroke-width="1.5" fill="none"/>
+  <path d="M 50 58 Q 56 54 60 60" stroke="#6B7280" stroke-width="1.5" fill="none"/>
+  <!-- Pescoço longo -->
+  <path d="M 36 36 Q 28 28 24 18" stroke="#9CA3AF" stroke-width="9" fill="none" stroke-linecap="round"/>
+  <!-- Cabeça pequena -->
+  <ellipse cx="22" cy="14" rx="7" ry="6" fill="#9CA3AF"/>
+  <!-- Olho -->
+  <circle cx="19" cy="13" r="1.5" fill="#1F2937"/>
+  <circle cx="19.3" cy="12.7" r="0.5" fill="white"/>
+  <!-- Bico -->
+  <path d="M 15 14 L 10 13 L 12 16 Z" fill="#374151"/>
+  <!-- Topete -->
+  <path d="M 22 8 L 23 4 L 26 6 L 24 9" fill="#6B7280"/>
+</svg>`,
+
+veado_campeiro: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#FEF3C7" rx="4"/>
+  <!-- Chão -->
+  <path d="M 0 88 L 100 88 L 100 100 L 0 100 Z" fill="#A16207" opacity="0.3"/>
+  <!-- Pernas -->
+  <rect x="32" y="60" width="5" height="26" rx="2" fill="#78350F"/>
+  <rect x="42" y="60" width="5" height="26" rx="2" fill="#78350F"/>
+  <rect x="54" y="60" width="5" height="26" rx="2" fill="#78350F"/>
+  <rect x="64" y="60" width="5" height="26" rx="2" fill="#78350F"/>
+  <!-- Cascos -->
+  <rect x="32" y="84" width="5" height="4" fill="#1F2937"/>
+  <rect x="42" y="84" width="5" height="4" fill="#1F2937"/>
+  <rect x="54" y="84" width="5" height="4" fill="#1F2937"/>
+  <rect x="64" y="84" width="5" height="4" fill="#1F2937"/>
+  <!-- Corpo -->
+  <ellipse cx="50" cy="50" rx="24" ry="14" fill="#D97706"/>
+  <!-- Barriga mais clara -->
+  <ellipse cx="50" cy="58" rx="18" ry="5" fill="#FBBF24"/>
+  <!-- Manchinhas brancas -->
+  <circle cx="42" cy="50" r="1.5" fill="white" opacity="0.7"/>
+  <circle cx="56" cy="48" r="1.5" fill="white" opacity="0.7"/>
+  <circle cx="62" cy="54" r="1.5" fill="white" opacity="0.7"/>
+  <!-- Pescoço e cabeça -->
+  <path d="M 28 46 L 24 36 Q 22 30 24 26" stroke="#D97706" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <ellipse cx="22" cy="22" rx="10" ry="8" fill="#D97706"/>
+  <!-- Focinho -->
+  <ellipse cx="14" cy="24" rx="5" ry="3" fill="#FBBF24"/>
+  <circle cx="11" cy="24" r="1.2" fill="#1F2937"/>
+  <!-- Olho -->
+  <circle cx="22" cy="20" r="1.8" fill="#1F2937"/>
+  <circle cx="22.3" cy="19.7" r="0.5" fill="white"/>
+  <!-- Orelhas -->
+  <ellipse cx="26" cy="14" rx="3" ry="5" fill="#D97706" transform="rotate(20 26 14)"/>
+  <ellipse cx="26" cy="14" rx="1.5" ry="3" fill="#FB923C" transform="rotate(20 26 14)"/>
+  <!-- Chifres ramificados (característica do veado-campeiro) -->
+  <path d="M 18 14 L 14 6 M 14 6 L 10 8 M 14 6 L 13 2" stroke="#78350F" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M 22 12 L 18 4 M 18 4 L 14 6 M 18 4 L 17 0" stroke="#78350F" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Rabinho -->
+  <ellipse cx="74" cy="44" rx="3" ry="5" fill="white" transform="rotate(20 74 44)"/>
+</svg>`,
+
+seriema: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#FEF3C7" rx="4"/>
+  <!-- Chão -->
+  <path d="M 0 90 L 100 90 L 100 100 L 0 100 Z" fill="#A16207" opacity="0.3"/>
+  <!-- Pernas longas amareladas -->
+  <line x1="44" y1="58" x2="42" y2="90" stroke="#F59E0B" stroke-width="3" stroke-linecap="round"/>
+  <line x1="56" y1="58" x2="58" y2="90" stroke="#F59E0B" stroke-width="3" stroke-linecap="round"/>
+  <!-- Pés -->
+  <path d="M 38 90 L 42 90 L 46 92 M 42 90 L 40 93" stroke="#92400E" stroke-width="1.5" fill="none"/>
+  <path d="M 54 90 L 58 90 L 62 92 M 58 90 L 60 93" stroke="#92400E" stroke-width="1.5" fill="none"/>
+  <!-- Corpo cinza claro -->
+  <ellipse cx="50" cy="50" rx="22" ry="16" fill="#D1D5DB"/>
+  <!-- Asa -->
+  <path d="M 36 46 Q 28 52 32 64 Q 42 60 42 50 Z" fill="#9CA3AF"/>
+  <!-- Penas detalhes -->
+  <line x1="36" y1="54" x2="40" y2="60" stroke="#6B7280" stroke-width="1"/>
+  <line x1="40" y1="48" x2="44" y2="56" stroke="#6B7280" stroke-width="1"/>
+  <!-- Pescoço longo curvado -->
+  <path d="M 36 38 Q 30 22 28 12" stroke="#D1D5DB" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <!-- Cabeça -->
+  <ellipse cx="27" cy="10" rx="7" ry="6" fill="#D1D5DB"/>
+  <!-- Topete característico da seriema (em pé na cabeça) -->
+  <path d="M 25 4 L 23 -2 M 28 4 L 28 -2 M 31 4 L 33 -1" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Olho com aro vermelho -->
+  <circle cx="24" cy="10" r="2.5" fill="#DC2626"/>
+  <circle cx="24" cy="10" r="1.5" fill="#FBBF24"/>
+  <circle cx="24" cy="10" r="0.8" fill="#1F2937"/>
+  <!-- Bico curvado -->
+  <path d="M 20 10 Q 14 11 16 14 L 18 12 Z" fill="#DC2626"/>
+  <!-- Cauda comprida -->
+  <path d="M 70 50 L 90 56 M 70 52 L 90 60 M 70 54 L 90 64" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+</svg>`
+
+};
+/* ANIMAIS BRASILEIROS - PARTE 2: PANTANAL (6) */
+
+Object.assign(ANIMAIS_SVG, {
+
+capivara: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#DBEAFE" rx="4"/>
+  <!-- Água -->
+  <path d="M 0 78 Q 25 75 50 78 Q 75 81 100 78 L 100 100 L 0 100 Z" fill="#60A5FA" opacity="0.4"/>
+  <!-- Corpo robusto -->
+  <ellipse cx="50" cy="55" rx="32" ry="18" fill="#92400E"/>
+  <!-- Pelo textura -->
+  <ellipse cx="40" cy="50" rx="18" ry="10" fill="#A16207"/>
+  <ellipse cx="60" cy="58" rx="18" ry="10" fill="#A16207"/>
+  <!-- Patas pequenas -->
+  <rect x="32" y="68" width="6" height="10" rx="2" fill="#78350F"/>
+  <rect x="44" y="70" width="6" height="10" rx="2" fill="#78350F"/>
+  <rect x="56" y="70" width="6" height="10" rx="2" fill="#78350F"/>
+  <rect x="68" y="68" width="6" height="10" rx="2" fill="#78350F"/>
+  <!-- Cabeça grande retangular -->
+  <ellipse cx="22" cy="46" rx="14" ry="11" fill="#92400E"/>
+  <!-- Focinho largo -->
+  <ellipse cx="10" cy="50" rx="6" ry="4" fill="#78350F"/>
+  <circle cx="8" cy="49" r="1.5" fill="#1F2937"/>
+  <circle cx="11" cy="51" r="1.5" fill="#1F2937"/>
+  <!-- Olhos pequenos -->
+  <circle cx="22" cy="42" r="2" fill="#1F2937"/>
+  <circle cx="22.3" cy="41.7" r="0.7" fill="white"/>
+  <!-- Orelhas pequenas e redondas -->
+  <ellipse cx="28" cy="36" rx="3" ry="2.5" fill="#92400E"/>
+  <ellipse cx="28" cy="36" rx="1.5" ry="1.3" fill="#451A03"/>
+</svg>`,
+
+jacare: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#DBEAFE" rx="4"/>
+  <!-- Água -->
+  <path d="M 0 60 Q 25 56 50 60 Q 75 64 100 60 L 100 100 L 0 100 Z" fill="#60A5FA" opacity="0.4"/>
+  <!-- Corpo longo verde escuro -->
+  <ellipse cx="50" cy="64" rx="36" ry="11" fill="#15803D"/>
+  <!-- Detalhes da pele (escamas) -->
+  <path d="M 18 60 L 22 56 L 26 60 M 28 58 L 32 54 L 36 58 M 40 56 L 44 52 L 48 56 M 52 56 L 56 52 L 60 56 M 64 58 L 68 54 L 72 58" stroke="#14532D" stroke-width="1.2" fill="none"/>
+  <!-- Cabeça achatada -->
+  <ellipse cx="20" cy="62" rx="14" ry="6" fill="#16A34A"/>
+  <!-- Focinho -->
+  <ellipse cx="10" cy="63" rx="6" ry="3" fill="#15803D"/>
+  <!-- Dentes -->
+  <path d="M 7 64 L 8 67 L 9 64 M 11 64 L 12 67 L 13 64 M 15 64 L 16 67 L 17 64" stroke="white" stroke-width="0.8" fill="white"/>
+  <!-- Olhos altos (característica do jacaré) -->
+  <ellipse cx="22" cy="56" rx="2.5" ry="3" fill="#FBBF24"/>
+  <circle cx="22" cy="56" r="1.5" fill="#1F2937"/>
+  <circle cx="22.3" cy="55.7" r="0.6" fill="white"/>
+  <!-- Outro olho menor (perspectiva) -->
+  <ellipse cx="18" cy="58" rx="1.8" ry="2.2" fill="#FBBF24"/>
+  <circle cx="18" cy="58" r="1" fill="#1F2937"/>
+  <!-- Patas curtas -->
+  <rect x="36" y="72" width="5" height="6" rx="1" fill="#14532D"/>
+  <rect x="58" y="72" width="5" height="6" rx="1" fill="#14532D"/>
+  <!-- Cauda forte com listras -->
+  <path d="M 80 64 Q 92 60 92 50" stroke="#15803D" stroke-width="9" fill="none" stroke-linecap="round"/>
+  <path d="M 82 60 L 86 56 M 86 60 L 90 56" stroke="#14532D" stroke-width="1.5"/>
+</svg>`,
+
+tuiuiu: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#DBEAFE" rx="4"/>
+  <!-- Água -->
+  <path d="M 0 80 L 100 80 L 100 100 L 0 100 Z" fill="#60A5FA" opacity="0.4"/>
+  <!-- Pernas longas -->
+  <line x1="44" y1="56" x2="42" y2="80" stroke="#374151" stroke-width="3" stroke-linecap="round"/>
+  <line x1="56" y1="56" x2="58" y2="80" stroke="#374151" stroke-width="3" stroke-linecap="round"/>
+  <!-- Pés palmados -->
+  <path d="M 38 80 L 46 80 M 42 80 L 42 84" stroke="#374151" stroke-width="2"/>
+  <path d="M 54 80 L 62 80 M 58 80 L 58 84" stroke="#374151" stroke-width="2"/>
+  <!-- Corpo branco -->
+  <ellipse cx="50" cy="48" rx="22" ry="14" fill="white" stroke="#9CA3AF" stroke-width="1"/>
+  <!-- Asa -->
+  <path d="M 36 44 Q 28 50 32 62 Q 42 58 42 48 Z" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
+  <!-- Pescoço LONGO preto -->
+  <path d="M 36 38 Q 28 24 24 14" stroke="#1F2937" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- Colar vermelho característico do tuiuiú -->
+  <path d="M 30 28 Q 36 26 38 32" stroke="#DC2626" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- Cabeça preta -->
+  <ellipse cx="24" cy="12" rx="6" ry="5" fill="#1F2937"/>
+  <!-- Bico grande preto -->
+  <path d="M 18 12 L 6 11 L 10 14 Z" fill="#1F2937"/>
+  <!-- Olho amarelo -->
+  <circle cx="22" cy="11" r="1.3" fill="#FBBF24"/>
+  <circle cx="22" cy="11" r="0.6" fill="#1F2937"/>
+  <!-- Cauda -->
+  <path d="M 70 50 L 84 54 M 70 54 L 84 58" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 70 50 L 84 54 M 70 54 L 84 58" stroke="#9CA3AF" stroke-width="1" stroke-linecap="round"/>
+</svg>`,
+
+ararinha: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#DCFCE7" rx="4"/>
+  <!-- Galho -->
+  <rect x="10" y="78" width="80" height="5" fill="#92400E" rx="2"/>
+  <!-- Corpo amarelo brilhante (papagaio/ararinha) -->
+  <ellipse cx="50" cy="50" rx="20" ry="24" fill="#FBBF24"/>
+  <!-- Asa verde -->
+  <path d="M 32 46 Q 22 56 28 68 Q 38 64 38 50 Z" fill="#16A34A"/>
+  <ellipse cx="34" cy="58" rx="3" ry="6" fill="#15803D"/>
+  <!-- Barriga clara -->
+  <ellipse cx="54" cy="58" rx="10" ry="12" fill="#FCD34D"/>
+  <!-- Cabeça -->
+  <circle cx="55" cy="34" r="13" fill="#FBBF24"/>
+  <!-- Bico curvado -->
+  <path d="M 62 34 Q 72 34 70 42 Q 67 41 64 39 Z" fill="#1F2937"/>
+  <!-- Olho -->
+  <circle cx="55" cy="32" r="2.5" fill="white"/>
+  <circle cx="55" cy="32" r="1.5" fill="#1F2937"/>
+  <!-- Patinhas no galho -->
+  <line x1="44" y1="74" x2="44" y2="80" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
+  <line x1="54" y1="74" x2="54" y2="80" stroke="#92400E" stroke-width="3" stroke-linecap="round"/>
+  <!-- Cauda colorida -->
+  <path d="M 36 72 Q 28 84 22 86" stroke="#16A34A" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M 40 72 Q 32 84 26 88" stroke="#FBBF24" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>`,
+
+cervo_pantanal: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#FEF3C7" rx="4"/>
+  <!-- Água/lama no chão (pantanal) -->
+  <path d="M 0 90 Q 25 87 50 90 Q 75 93 100 90 L 100 100 L 0 100 Z" fill="#60A5FA" opacity="0.3"/>
+  <!-- Pernas longas -->
+  <rect x="30" y="58" width="5" height="32" rx="2" fill="#78350F"/>
+  <rect x="40" y="58" width="5" height="32" rx="2" fill="#78350F"/>
+  <rect x="54" y="58" width="5" height="32" rx="2" fill="#78350F"/>
+  <rect x="64" y="58" width="5" height="32" rx="2" fill="#78350F"/>
+  <!-- Cascos -->
+  <rect x="30" y="86" width="5" height="4" fill="#1F2937"/>
+  <rect x="40" y="86" width="5" height="4" fill="#1F2937"/>
+  <rect x="54" y="86" width="5" height="4" fill="#1F2937"/>
+  <rect x="64" y="86" width="5" height="4" fill="#1F2937"/>
+  <!-- Corpo grande marrom-avermelhado -->
+  <ellipse cx="50" cy="48" rx="26" ry="16" fill="#B45309"/>
+  <!-- Barriga clara -->
+  <ellipse cx="50" cy="56" rx="20" ry="6" fill="#FCD34D"/>
+  <!-- Pescoço e cabeça -->
+  <path d="M 26 42 L 18 30 Q 14 22 16 16" stroke="#B45309" stroke-width="9" fill="none" stroke-linecap="round"/>
+  <ellipse cx="14" cy="12" rx="9" ry="7" fill="#B45309"/>
+  <!-- Focinho -->
+  <ellipse cx="6" cy="14" rx="5" ry="3" fill="#FCD34D"/>
+  <circle cx="4" cy="14" r="1.2" fill="#1F2937"/>
+  <!-- Olho -->
+  <circle cx="14" cy="10" r="1.8" fill="#1F2937"/>
+  <circle cx="14.3" cy="9.7" r="0.5" fill="white"/>
+  <!-- Orelhas grandes -->
+  <ellipse cx="20" cy="4" rx="3" ry="5" fill="#B45309" transform="rotate(20 20 4)"/>
+  <ellipse cx="20" cy="4" rx="1.5" ry="3" fill="#FB923C" transform="rotate(20 20 4)"/>
+  <!-- Galhada GRANDE e ramificada (característica do cervo-do-pantanal) -->
+  <path d="M 10 4 L 4 -4 M 4 -4 L 0 -2 M 4 -4 L 6 -8" stroke="#451A03" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M 16 2 L 12 -6 M 12 -6 L 8 -4 M 12 -6 L 14 -10 M 12 -6 L 16 -10" stroke="#451A03" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Rabinho -->
+  <ellipse cx="76" cy="42" rx="3" ry="5" fill="white" transform="rotate(20 76 42)"/>
+</svg>`,
+
+garca_branca: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#DCFCE7" rx="4"/>
+  <!-- Galho -->
+  <rect x="50" y="80" width="50" height="4" fill="#92400E" rx="2"/>
+  <!-- Corpo da garça branca -->
+  <ellipse cx="50" cy="50" rx="18" ry="22" fill="white" stroke="#9CA3AF" stroke-width="1"/>
+  <!-- Asa -->
+  <path d="M 36 46 Q 28 54 32 66 Q 42 62 42 50 Z" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
+  <!-- Pescoço LONGO em S (característica da garça) -->
+  <path d="M 50 30 Q 40 22 44 12 Q 48 6 52 8" stroke="white" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M 50 30 Q 40 22 44 12 Q 48 6 52 8" stroke="#9CA3AF" stroke-width="0.8" fill="none"/>
+  <!-- Cabeça -->
+  <ellipse cx="52" cy="6" rx="5" ry="4" fill="white" stroke="#9CA3AF" stroke-width="1"/>
+  <!-- Bico amarelo longo -->
+  <path d="M 56 6 L 68 4 L 64 8 Z" fill="#FBBF24"/>
+  <!-- Olho amarelo -->
+  <circle cx="50" cy="5" r="1.3" fill="#FBBF24"/>
+  <circle cx="50" cy="5" r="0.6" fill="#1F2937"/>
+  <!-- Pernas longas pretas -->
+  <line x1="46" y1="70" x2="44" y2="84" stroke="#1F2937" stroke-width="3" stroke-linecap="round"/>
+  <line x1="54" y1="70" x2="56" y2="84" stroke="#1F2937" stroke-width="3" stroke-linecap="round"/>
+  <!-- Penas decorativas atrás -->
+  <path d="M 64 50 Q 78 46 82 38" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M 64 54 Q 78 52 84 46" stroke="#F3F4F6" stroke-width="3" fill="none" stroke-linecap="round"/>
+</svg>`
+
+});
+/* ============================================================
+ * MEMÓRIA DOS ANIMAIS BRASILEIROS · Portal do Educador NEWPC
+ * Mascote: Bichinho-do-Mato (filhote de capivara)
+ * ============================================================ */
+
+/* MASCOTE BICHINHO-DO-MATO - filhote de capivara fofo */
+function svgMascote(expressao = 'normal') {
+  let olhos;
+  if (expressao === 'feliz') {
+    olhos = `
+      <path d="M 36 46 Q 42 41, 48 46" fill="none" stroke="#451A03" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 52 46 Q 58 41, 64 46" fill="none" stroke="#451A03" stroke-width="2.5" stroke-linecap="round"/>
+    `;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <circle cx="42" cy="48" r="2.8" fill="#451A03"/>
+      <circle cx="58" cy="48" r="2.8" fill="#451A03"/>
+    `;
+  } else {
+    olhos = `
+      <ellipse cx="42" cy="48" rx="3.5" ry="4.5" fill="white" stroke="#451A03" stroke-width="1"/>
+      <ellipse cx="58" cy="48" rx="3.5" ry="4.5" fill="white" stroke="#451A03" stroke-width="1"/>
+      <circle cx="42.5" cy="49" r="2.2" fill="#451A03"/>
+      <circle cx="58.5" cy="49" r="2.2" fill="#451A03"/>
+      <circle cx="43.5" cy="48" r="0.8" fill="white"/>
+      <circle cx="59.5" cy="48" r="0.8" fill="white"/>
+    `;
+  }
+
+  let boca;
+  if (expressao === 'feliz') {
+    boca = `<path d="M 42 64 Q 50 70, 58 64" fill="#FB7185" stroke="#9F1239" stroke-width="1.2"/>`;
+  } else if (expressao === 'pensando') {
+    boca = `<line x1="46" y1="64" x2="54" y2="64" stroke="#451A03" stroke-width="2" stroke-linecap="round"/>`;
+  } else {
+    boca = `<path d="M 44 62 Q 50 66, 56 62" fill="none" stroke="#451A03" stroke-width="2" stroke-linecap="round"/>`;
+  }
+
+  return `
+    <!-- Sombra -->
+    <ellipse cx="50" cy="93" rx="30" ry="2.5" fill="rgba(0,0,0,0.18)"/>
+    <!-- Patinhas (capivara tem patas curtas) -->
+    <ellipse cx="35" cy="86" rx="6" ry="4" fill="#78350F"/>
+    <ellipse cx="65" cy="86" rx="6" ry="4" fill="#78350F"/>
+    <ellipse cx="36" cy="87" rx="2.5" ry="1.5" fill="#451A03"/>
+    <ellipse cx="64" cy="87" rx="2.5" ry="1.5" fill="#451A03"/>
+    <!-- Corpo redondinho (filhote = corpo proporcionalmente menor) -->
+    <ellipse cx="50" cy="72" rx="25" ry="16" fill="#A16207"/>
+    <!-- Barriguinha clara -->
+    <ellipse cx="50" cy="78" rx="18" ry="8" fill="#D97706"/>
+    <!-- Manchinhas de filhote nas costas -->
+    <circle cx="38" cy="65" r="2" fill="#FCD34D" opacity="0.7"/>
+    <circle cx="52" cy="63" r="2" fill="#FCD34D" opacity="0.7"/>
+    <circle cx="62" cy="68" r="2" fill="#FCD34D" opacity="0.7"/>
+    <!-- Cabeça GRANDE proporcionalmente (filhote) -->
+    <ellipse cx="50" cy="44" rx="22" ry="20" fill="#A16207"/>
+    <!-- Focinho largo (característico da capivara) -->
+    <ellipse cx="50" cy="58" rx="12" ry="8" fill="#92400E"/>
+    <!-- Narinas -->
+    <ellipse cx="46" cy="56" rx="1.5" ry="2" fill="#1F2937"/>
+    <ellipse cx="54" cy="56" rx="1.5" ry="2" fill="#1F2937"/>
+    <!-- Orelhinhas pequenas e redondas -->
+    <ellipse cx="32" cy="28" rx="5" ry="6" fill="#A16207"/>
+    <ellipse cx="68" cy="28" rx="5" ry="6" fill="#A16207"/>
+    <ellipse cx="32" cy="29" rx="2.5" ry="3.5" fill="#451A03"/>
+    <ellipse cx="68" cy="29" rx="2.5" ry="3.5" fill="#451A03"/>
+    <!-- Topetinho de pelos -->
+    <path d="M 44 24 Q 46 18 50 20 Q 54 18 56 24" stroke="#92400E" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- Bochechinhas rosadas -->
+    <ellipse cx="32" cy="52" rx="3.5" ry="2.5" fill="#FB7185" opacity="0.4"/>
+    <ellipse cx="68" cy="52" rx="3.5" ry="2.5" fill="#FB7185" opacity="0.4"/>
+    <!-- Olhos -->
+    ${olhos}
+    <!-- Boca -->
+    ${boca}
+    <!-- Folhinha de mato na orelha (toque do "do-mato") -->
+    <ellipse cx="28" cy="22" rx="3" ry="1.5" fill="#15803D" transform="rotate(-30 28 22)"/>
+    <ellipse cx="30" cy="20" rx="2" ry="1" fill="#16A34A" transform="rotate(-30 30 20)"/>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* DADOS DOS 18 ANIMAIS */
+const ANIMAIS = {
+  /* AMAZÔNIA (6) */
+  onca_pintada:    { nome: 'Onça-pintada',     bioma: 'Amazônia', alimentacao: 'Carnívora', tipo: 'Mamífero',  curio: 'É o maior felino das Américas. Pode pesar até 130 kg!' },
+  arara_azul:      { nome: 'Arara-azul',       bioma: 'Amazônia', alimentacao: 'Frutos e sementes', tipo: 'Ave', curio: 'É a maior arara do mundo e está ameaçada de extinção.' },
+  preguica:        { nome: 'Preguiça',         bioma: 'Amazônia', alimentacao: 'Folhas', tipo: 'Mamífero',  curio: 'Pode passar quase toda a vida na mesma árvore. Desce ao chão só uma vez por semana.' },
+  sucuri:          { nome: 'Sucuri',           bioma: 'Amazônia', alimentacao: 'Carnívora', tipo: 'Réptil',  curio: 'É a maior cobra das Américas, pode ter mais de 5 metros.' },
+  tucano:          { nome: 'Tucano',           bioma: 'Amazônia', alimentacao: 'Frutos e insetos', tipo: 'Ave', curio: 'O bico colorido é leve e cheio de canais ocos. Serve para alcançar frutos longe.' },
+  boto_cor_de_rosa:{ nome: 'Boto-cor-de-rosa', bioma: 'Amazônia', alimentacao: 'Peixes', tipo: 'Mamífero',  curio: 'É um golfinho de água doce que vive nos rios amazônicos. Sua cor rosa fica mais forte quando ele está agitado.' },
+
+  /* CERRADO (6) */
+  lobo_guara:      { nome: 'Lobo-guará',       bioma: 'Cerrado',  alimentacao: 'Onívora', tipo: 'Mamífero',  curio: 'Tem pernas muito longas para enxergar acima do capim alto do Cerrado.' },
+  tamandua:        { nome: 'Tamanduá-bandeira', bioma: 'Cerrado', alimentacao: 'Formigas e cupins', tipo: 'Mamífero', curio: 'Sua língua tem até 60 cm e pode pegar 35 mil formigas por dia!' },
+  tatu_bola:       { nome: 'Tatu-bola',        bioma: 'Cerrado',  alimentacao: 'Insetos e frutos', tipo: 'Mamífero', curio: 'Quando se sente em perigo, se enrola formando uma bola perfeita!' },
+  ema:             { nome: 'Ema',              bioma: 'Cerrado',  alimentacao: 'Onívora', tipo: 'Ave',  curio: 'É a maior ave do Brasil. Não voa, mas corre a 60 km/h!' },
+  veado_campeiro:  { nome: 'Veado-campeiro',   bioma: 'Cerrado',  alimentacao: 'Herbívora', tipo: 'Mamífero',  curio: 'Vive em pequenos grupos nos campos abertos do Cerrado.' },
+  seriema:         { nome: 'Seriema',          bioma: 'Cerrado',  alimentacao: 'Insetos e cobras', tipo: 'Ave', curio: 'Caça cobras venenosas batendo elas no chão antes de comer!' },
+
+  /* PANTANAL (6) */
+  capivara:        { nome: 'Capivara',         bioma: 'Pantanal', alimentacao: 'Herbívora', tipo: 'Mamífero', curio: 'É o maior roedor do mundo! Adora ficar na água.' },
+  jacare:          { nome: 'Jacaré-do-Pantanal', bioma: 'Pantanal', alimentacao: 'Carnívora', tipo: 'Réptil', curio: 'No Pantanal vivem milhões deles. Os olhos altos servem para vigiar acima da água.' },
+  tuiuiu:          { nome: 'Tuiuiú',           bioma: 'Pantanal', alimentacao: 'Peixes e moluscos', tipo: 'Ave', curio: 'É o símbolo do Pantanal! O colar vermelho do pescoço é sua marca registrada.' },
+  ararinha:        { nome: 'Periquito',        bioma: 'Pantanal', alimentacao: 'Frutos e sementes', tipo: 'Ave', curio: 'Vive em grandes bandos coloridos. É muito barulhento!' },
+  cervo_pantanal:  { nome: 'Cervo-do-Pantanal', bioma: 'Pantanal', alimentacao: 'Herbívora', tipo: 'Mamífero', curio: 'É o maior cervo da América do Sul. Suas pernas longas ajudam a atravessar áreas alagadas.' },
+  garca_branca:    { nome: 'Garça-branca',     bioma: 'Pantanal', alimentacao: 'Peixes', tipo: 'Ave',  curio: 'Fica imóvel na água esperando o peixe passar para dar o bote certeiro.' }
+};
+
+const BIOMAS = {
+  Amazonia:  { nome: 'Amazônia', emoji: '🌴', cor: '#15803D', ids: ['onca_pintada','arara_azul','preguica','sucuri','tucano','boto_cor_de_rosa'] },
+  Cerrado:   { nome: 'Cerrado',  emoji: '🌾', cor: '#D97706', ids: ['lobo_guara','tamandua','tatu_bola','ema','veado_campeiro','seriema'] },
+  Pantanal:  { nome: 'Pantanal', emoji: '💧', cor: '#0EA5E9', ids: ['capivara','jacare','tuiuiu','ararinha','cervo_pantanal','garca_branca'] },
+  Todos:     { nome: 'Todos',    emoji: '🇧🇷', cor: '#FBBF24', ids: Object.keys(ANIMAIS) }
+};
+
+const NIVEIS = {
+  facil:    { nome: 'Fácil',   emoji: '🌱', pares: 6,  cols: 4, desc: '6 pares · 1º-2º ano' },
+  medio:    { nome: 'Médio',   emoji: '🌳', pares: 8,  cols: 4, desc: '8 pares · 3º ano' },
+  dificil:  { nome: 'Difícil', emoji: '🌲', pares: 12, cols: 6, desc: '12 pares · 4º-5º ano' }
+};
+
+const ELOGIOS = ['Mandou bem!', 'Você é fera!', 'Boa memória!', 'Achou o par!', 'Excelente!', 'Show!'];
+const INCENTIVOS = ['Quase! Tente lembrar!', 'Concentre-se!', 'Você consegue!', 'Vamos lá!'];
+
+const STATE = {
+  nivel: null,
+  bioma: null,
+  jogo: {
+    ativo: false,
+    cartas: [],           // [{animalId, virada, casada}]
+    primeira: null,
+    segunda: null,
+    pares: 0,
+    paresTotal: 0,
+    jogadas: 0,
+    bloqueado: false,
+    inicio: 0,
+    timer: null
+  }
+};
+
+function salvar() {
+  try {
+    localStorage.setItem('pde_memoria_dados', JSON.stringify({
+      nivel: STATE.nivel,
+      bioma: STATE.bioma
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_memoria_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    STATE.nivel = d.nivel || null;
+    STATE.bioma = d.bioma || null;
+  } catch (e) {}
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function elogio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivo() { return INCENTIVOS[Math.floor(Math.random() * INCENTIVOS.length)]; }
+
+/* LOBBY */
+function renderLobby() {
+  // Níveis
+  const nivCont = document.getElementById('nivel-grid');
+  nivCont.innerHTML = '';
+  Object.entries(NIVEIS).forEach(([key, niv]) => {
+    const card = document.createElement('div');
+    card.className = 'nivel-card' + (STATE.nivel === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="emoji-niv">${niv.emoji}</span>
+      <span class="nome-niv">${niv.nome}</span>
+      <span class="desc-niv">${niv.desc}</span>
+    `;
+    card.onclick = () => { STATE.nivel = key; salvar(); renderLobby(); };
+    nivCont.appendChild(card);
+  });
+
+  // Biomas
+  const bioCont = document.getElementById('bioma-grid');
+  bioCont.innerHTML = '';
+  Object.entries(BIOMAS).forEach(([key, bio]) => {
+    const card = document.createElement('div');
+    card.className = 'bioma-card' + (STATE.bioma === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="emoji-bio">${bio.emoji}</span>
+      <span class="nome-bio">${bio.nome}</span>
+      <span class="qtd-bio">${bio.ids.length} animais</span>
+    `;
+    card.onclick = () => { STATE.bioma = key; salvar(); renderLobby(); };
+    bioCont.appendChild(card);
+  });
+
+  // Botão começar
+  const btn = document.getElementById('btn-comecar');
+  if (STATE.nivel && STATE.bioma) {
+    btn.disabled = false;
+    btn.textContent = `🐾 Jogar ${NIVEIS[STATE.nivel].nome} · ${BIOMAS[STATE.bioma].nome}`;
+  } else {
+    btn.disabled = true;
+    btn.textContent = '🐾 Escolha tamanho e bioma';
+  }
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+
+/* INICIAR JOGO */
+function comecarJogo() {
+  if (!STATE.nivel || !STATE.bioma) return;
+  const niv = NIVEIS[STATE.nivel];
+  const bioma = BIOMAS[STATE.bioma];
+
+  // Se o bioma tem menos animais que o nível pede, ajustar
+  let animaisDisp = bioma.ids.slice();
+  let paresUsar = niv.pares;
+  if (animaisDisp.length < paresUsar) {
+    paresUsar = animaisDisp.length;
+  }
+
+  // Selecionar N animais aleatórios
+  const escolhidos = shuffle(animaisDisp).slice(0, paresUsar);
+
+  // Criar cartas (cada animal aparece 2 vezes)
+  const cartas = [];
+  escolhidos.forEach((id, idx) => {
+    cartas.push({ id: `${id}_a`, animalId: id, virada: false, casada: false, par: idx });
+    cartas.push({ id: `${id}_b`, animalId: id, virada: false, casada: false, par: idx });
+  });
+
+  STATE.jogo.cartas = shuffle(cartas);
+  STATE.jogo.paresTotal = paresUsar;
+  STATE.jogo.pares = 0;
+  STATE.jogo.jogadas = 0;
+  STATE.jogo.primeira = null;
+  STATE.jogo.segunda = null;
+  STATE.jogo.bloqueado = false;
+  STATE.jogo.ativo = true;
+  STATE.jogo.inicio = Date.now();
+
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('jogo').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+  document.getElementById('bioma-info').textContent = bioma.emoji + ' ' + bioma.nome;
+  document.getElementById('info-cab').textContent = `${niv.nome} · ${bioma.nome} · ${paresUsar} pares`;
+  document.getElementById('titulo-cab').textContent = 'Encontre os pares!';
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Bichinho:</b> Boa caçada!`;
+
+  renderMascote('svg-mascote-painel', 'normal');
+  renderTabuleiro();
+  renderProgresso();
+  iniciarCronometro();
+  atualizarUI();
+}
+
+function renderTabuleiro() {
+  const tab = document.getElementById('tabuleiro');
+  const niv = NIVEIS[STATE.nivel];
+  // Definir colunas baseado em quantas cartas (paresTotal * 2)
+  const total = STATE.jogo.paresTotal * 2;
+  let cols;
+  if (total <= 12) cols = 4;       // 12 cartas: 4x3
+  else if (total <= 16) cols = 4;  // 16 cartas: 4x4
+  else cols = 6;                   // 24 cartas: 6x4
+  tab.className = 'tabuleiro cols-' + cols;
+  tab.innerHTML = '';
+
+  STATE.jogo.cartas.forEach((carta, idx) => {
+    const div = document.createElement('div');
+    div.className = 'carta';
+    if (carta.virada) div.classList.add('virada');
+    if (carta.casada) div.classList.add('casada');
+    div.dataset.idx = idx;
+    div.innerHTML = `
+      <div class="carta-flip">
+        <div class="carta-verso">?</div>
+        <div class="carta-frente">${ANIMAIS_SVG[carta.animalId] || ''}</div>
+      </div>
+    `;
+    div.addEventListener('click', () => clicarCarta(idx));
+    tab.appendChild(div);
+  });
+}
+
+function clicarCarta(idx) {
+  if (STATE.jogo.bloqueado) return;
+  const carta = STATE.jogo.cartas[idx];
+  if (carta.virada || carta.casada) return;
+
+  // Virar carta
+  carta.virada = true;
+  const cardEl = document.querySelector(`.carta[data-idx="${idx}"]`);
+  if (cardEl) cardEl.classList.add('virada');
+
+  if (STATE.jogo.primeira === null) {
+    STATE.jogo.primeira = idx;
+  } else if (STATE.jogo.segunda === null) {
+    STATE.jogo.segunda = idx;
+    STATE.jogo.jogadas++;
+    atualizarUI();
+    verificarPar();
+  }
+}
+
+function verificarPar() {
+  STATE.jogo.bloqueado = true;
+  const c1 = STATE.jogo.cartas[STATE.jogo.primeira];
+  const c2 = STATE.jogo.cartas[STATE.jogo.segunda];
+
+  if (c1.animalId === c2.animalId) {
+    // PAR ENCONTRADO
+    setTimeout(() => {
+      c1.casada = true;
+      c2.casada = true;
+      const el1 = document.querySelector(`.carta[data-idx="${STATE.jogo.primeira}"]`);
+      const el2 = document.querySelector(`.carta[data-idx="${STATE.jogo.segunda}"]`);
+      if (el1) el1.classList.add('casada');
+      if (el2) el2.classList.add('casada');
+      STATE.jogo.pares++;
+      tocarSom('acerto');
+      renderMascote('svg-mascote-painel', 'feliz');
+      document.getElementById('balao-fala-painel').innerHTML = `<b>Bichinho:</b> ${elogio()}`;
+
+      mostrarCardInfo(c1.animalId);
+
+      STATE.jogo.primeira = null;
+      STATE.jogo.segunda = null;
+      // bloqueado só desbloqueia ao clicar "Continuar"
+
+      renderProgresso();
+      atualizarUI();
+    }, 600);
+  } else {
+    // ERROU
+    const el1 = document.querySelector(`.carta[data-idx="${STATE.jogo.primeira}"]`);
+    const el2 = document.querySelector(`.carta[data-idx="${STATE.jogo.segunda}"]`);
+    if (el1) el1.classList.add('errou');
+    if (el2) el2.classList.add('errou');
+    tocarSom('erro');
+    renderMascote('svg-mascote-painel', 'pensando');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Bichinho:</b> ${incentivo()}`;
+
+    setTimeout(() => {
+      c1.virada = false;
+      c2.virada = false;
+      if (el1) { el1.classList.remove('virada','errou'); }
+      if (el2) { el2.classList.remove('virada','errou'); }
+      STATE.jogo.primeira = null;
+      STATE.jogo.segunda = null;
+      STATE.jogo.bloqueado = false;
+    }, 1200);
+  }
+}
+
+function mostrarCardInfo(animalId) {
+  const an = ANIMAIS[animalId];
+  if (!an) return;
+  const ultimoPar = STATE.jogo.pares >= STATE.jogo.paresTotal;
+  const labelBotao = ultimoPar ? '🎉 Ver resultado' : '➡️ Continuar';
+
+  const cardInfo = document.getElementById('card-info');
+  cardInfo.innerHTML = `
+    <div class="card-info">
+      <h3>🐾 ${an.nome}</h3>
+      <div class="grid-info">
+        <div class="item-info"><span class="label">🌳 Bioma</span><span class="valor">${an.bioma}</span></div>
+        <div class="item-info"><span class="label">🍃 Alimentação</span><span class="valor">${an.alimentacao}</span></div>
+        <div class="item-info"><span class="label">🦴 Tipo</span><span class="valor">${an.tipo}</span></div>
+      </div>
+      <div class="curiosidade"><b>💡 Curiosidade:</b> ${an.curio}</div>
+      <button class="btn-continuar" onclick="continuarJogo()">${labelBotao}</button>
+    </div>
+  `;
+}
+
+function continuarJogo() {
+  document.getElementById('card-info').innerHTML = '';
+  if (STATE.jogo.pares >= STATE.jogo.paresTotal) {
+    finalizarJogo();
+  } else {
+    STATE.jogo.bloqueado = false;
+  }
+}
+
+function renderProgresso() {
+  const cont = document.getElementById('progresso-pares');
+  cont.innerHTML = '';
+  for (let i = 0; i < STATE.jogo.paresTotal; i++) {
+    const e = document.createElement('span');
+    e.className = 'pegada';
+    if (i < STATE.jogo.pares) e.classList.add('encontrada');
+    e.textContent = '🐾';
+    cont.appendChild(e);
+  }
+}
+
+function atualizarUI() {
+  document.getElementById('pares-info').textContent = `${STATE.jogo.pares}/${STATE.jogo.paresTotal}`;
+  document.getElementById('jogadas-info').textContent = STATE.jogo.jogadas;
+}
+
+/* CRONÔMETRO */
+function iniciarCronometro() {
+  if (STATE.jogo.timer) clearInterval(STATE.jogo.timer);
+  STATE.jogo.timer = setInterval(() => {
+    if (!STATE.jogo.ativo) {
+      clearInterval(STATE.jogo.timer);
+      return;
+    }
+    const seg = Math.floor((Date.now() - STATE.jogo.inicio) / 1000);
+    const m = Math.floor(seg / 60);
+    const s = seg % 60;
+    const txt = `${m}:${String(s).padStart(2, '0')}`;
+    document.getElementById('cronometro').textContent = txt;
+    document.getElementById('tempo-info').textContent = txt;
+  }, 1000);
+}
+
+/* FINALIZAR */
+function finalizarJogo() {
+  STATE.jogo.ativo = false;
+  if (STATE.jogo.timer) clearInterval(STATE.jogo.timer);
+
+  const segundos = Math.floor((Date.now() - STATE.jogo.inicio) / 1000);
+  const m = Math.floor(segundos / 60);
+  const s = segundos % 60;
+  const tempoTxt = `${m}:${String(s).padStart(2, '0')}`;
+
+  // Estrelas baseadas em jogadas vs paresTotal mínimo
+  // Mínimo de jogadas = paresTotal (perfeito sem errar)
+  // 3 estrelas: até 1.3x o mínimo
+  // 2 estrelas: até 1.8x
+  // 1 estrela: acima
+  const minimo = STATE.jogo.paresTotal;
+  const ratio = STATE.jogo.jogadas / minimo;
+  let estrelas;
+  if (ratio <= 1.3) estrelas = 3;
+  else if (ratio <= 1.8) estrelas = 2;
+  else estrelas = 1;
+
+  document.getElementById('fim-titulo').textContent = estrelas === 3 ? '🏆 Memória de capivara!' : (estrelas === 2 ? '🎉 Muito bem!' : '💪 Boa tentativa!');
+  document.getElementById('fim-msg').innerHTML = `Nível: <b>${NIVEIS[STATE.nivel].nome}</b> · Bioma: <b>${BIOMAS[STATE.bioma].nome}</b>`;
+  document.getElementById('fim-detalhes').textContent = `${STATE.jogo.pares} pares em ${STATE.jogo.jogadas} jogadas · ${tempoTxt}`;
+
+  let estrelasHtml = '';
+  for (let i = 0; i < 3; i++) {
+    estrelasHtml += i < estrelas ? '<span class="ativa">★</span>' : '<span class="vazia">★</span>';
+  }
+  document.getElementById('fim-estrelas').innerHTML = estrelasHtml;
+
+  const acoes = document.getElementById('fim-acoes');
+  acoes.innerHTML = '';
+  const btnNovo = document.createElement('button');
+  btnNovo.className = 'btn-confirmar';
+  btnNovo.textContent = '↻ Jogar de novo';
+  btnNovo.onclick = () => { fecharModal('modal-fim'); comecarJogo(); };
+  acoes.appendChild(btnNovo);
+  const btnLobby = document.createElement('button');
+  btnLobby.className = 'btn-cancelar';
+  btnLobby.textContent = '🏠 Mudar bioma';
+  btnLobby.onclick = () => { fecharModal('modal-fim'); voltarLobby(); };
+  acoes.appendChild(btnLobby);
+
+  renderMascote('svg-mascote-fim', 'feliz');
+  document.getElementById('modal-fim').classList.add('aberto');
+  if (estrelas >= 2) criarConfetes();
+}
+
+function voltarLobby() {
+  if (STATE.jogo.ativo && STATE.jogo.pares > 0) {
+    if (!confirm('Voltar ao menu? Sua partida será perdida.')) return;
+  }
+  STATE.jogo.ativo = false;
+  if (STATE.jogo.timer) clearInterval(STATE.jogo.timer);
+  document.getElementById('jogo').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-fim');
+  renderLobby();
+}
+
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+
+/* SOM */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'acerto') {
+      const notas = [523, 659, 784, 1047];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t0 = c.currentTime + i * 0.07;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.18);
+        o.start(t0); o.stop(t0 + 0.2);
+      });
+    } else {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 320; o.type = 'sine';
+      g.gain.setValueAtTime(0.08, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.25);
+      o.frequency.exponentialRampToValueAtTime(180, c.currentTime + 0.25);
+      o.start(); o.stop(c.currentTime + 0.27);
+    }
+  } catch (e) {}
+}
+
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#15803D','#FBBF24','#FB923C','#1E40AF','#FDD835','#16A34A'];
+  for (let i = 0; i < 50; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* A11Y */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* WEBNODE EMBED */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => reportarAltura());
+  ro.observe(document.getElementById('pde-painel'));
+}
+
+/* SELOS BNCC */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'ciencias',
+      icone: 'CI',
+      titulo: 'BNCC Ciências da Natureza · Vida e Evolução',
+      itens: [
+        { cod: 'EF02CI04', desc: 'Descrever características de plantas e animais (tamanho, forma, cor, fase da vida, local onde se desenvolvem etc.) que fazem parte de seu cotidiano e relacioná-las ao ambiente em que eles vivem.' },
+        { cod: 'EF03CI04', desc: 'Identificar características sobre o modo de vida (o que comem, como se reproduzem, como se deslocam etc.) dos animais mais comuns no ambiente próximo.' },
+        { cod: 'EF04CI04', desc: 'Analisar e construir cadeias alimentares simples, reconhecendo a posição ocupada pelos seres vivos nessas cadeias.' },
+        { cod: 'EF05CI03', desc: 'Selecionar argumentos que justifiquem por que os sistemas digestório e respiratório são considerados corresponsáveis pelo processo de nutrição do organismo.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Cultura Digital',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-fim'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+/* INIT */
+carregar();
+carregarA11y();
+renderLobby();
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+
+</script>
+</body>
+</html>

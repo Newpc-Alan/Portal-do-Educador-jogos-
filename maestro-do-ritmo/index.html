@@ -1,0 +1,2239 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Maestro do Ritmo · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #1A0F2E);
+  padding: 8px clamp(6px, 2vw, 16px) 16px;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  --pde-escala: 1;
+  --pde-cor-texto: #1A0F2E;
+  font-size: calc(1rem * var(--pde-escala));
+  background: linear-gradient(180deg, #FEF3C7 0%, #FBBF24 60%, #DC2626 100%);
+  border-radius: 16px;
+}
+
+#pde-painel.txt-grande   { --pde-escala: 1.18; }
+#pde-painel.txt-enorme   { --pde-escala: 1.42; }
+#pde-painel.txt-gigante  { --pde-escala: 1.72; }
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-treino,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .instrumento-btn { background: #1A1A1A !important; color: #FFF !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+
+#pde-painel.daltonico .instrumento-btn.ativo { background: linear-gradient(135deg,#3B82F6,#1E3A8A) !important; color: white !important; border-color: #1E3A8A !important; }
+#pde-painel.daltonico .feedback.acerto { background: linear-gradient(135deg,#3B82F6,#1E3A8A); color: white; border-color: #1E3A8A; }
+#pde-painel.daltonico .feedback.erro { background: #FFEDD5; color: #9A3412; border-color: #FB923C; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#1A0F2E 0%,#581C87 100%);
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: white;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 8px rgba(26,15,46,0.25);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.95rem, 2.2vw, 1.3rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 18px;
+  padding: 14px;
+  border: 3px solid #DC2626;
+  box-shadow: 0 4px 12px rgba(220,38,38,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, #FBBF24 0%, #DC2626 50%, #1A0F2E 100%);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 2px solid #581C87;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 80px; height: 80px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1;
+  background: white;
+  padding: 9px 12px;
+  border-radius: 12px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #1A0F2E;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: '';
+  position: absolute;
+  left: -10px; top: 24px;
+  width: 0; height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 12px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #DC2626;
+  font-size: 1.05rem;
+  margin-bottom: 2px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 6px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 90px; height: 90px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes batucar {
+  0%,100% { transform: rotate(0deg); }
+  25% { transform: rotate(-2deg); }
+  75% { transform: rotate(2deg); }
+}
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+#pde-painel .input-nome {
+  width: 100%;
+  border: 3px solid #DC2626;
+  border-radius: 14px;
+  padding: 11px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  background: white;
+  color: #1A0F2E;
+  margin-bottom: 12px;
+}
+#pde-painel .input-nome:focus { outline: none; border-color: #991B1B; box-shadow: 0 0 0 4px rgba(220,38,38,0.25); }
+
+/* MAPA NO LOBBY */
+#pde-painel .mapa-aventura {
+  background: linear-gradient(180deg,#FBBF24 0%,#F59E0B 100%);
+  border-radius: 16px;
+  padding: 14px 12px;
+  margin-bottom: 12px;
+  border: 3px solid #B45309;
+}
+#pde-painel .mapa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr));
+  gap: 6px;
+}
+@media (max-width: 480px) {
+  #pde-painel .mapa-grid { grid-template-columns: repeat(2, 1fr); }
+}
+#pde-painel .mapa-etapa {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.12s;
+  border: 2px solid #FED7AA;
+  position: relative;
+}
+#pde-painel .mapa-etapa:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.12); }
+#pde-painel .mapa-etapa .circulo {
+  width: 36px; height: 36px;
+  background: #DC2626;
+  border: 2px solid #991B1B;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 4px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: white;
+}
+#pde-painel .mapa-etapa .emoji-lugar { font-size: 1.7rem; line-height: 1; display: block; margin-bottom: 2px; }
+#pde-painel .mapa-etapa .nome-lugar {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.74rem;
+  color: #1A0F2E;
+  line-height: 1.1;
+  display: block;
+}
+#pde-painel .mapa-etapa .estrelas-lugar { margin-top: 2px; font-size: 0.78rem; letter-spacing: 1px; }
+#pde-painel .mapa-etapa .estrelas-lugar .ativa { color: #FBBF24; }
+#pde-painel .mapa-etapa .estrelas-lugar .vazia { color: #CBD5E1; }
+#pde-painel .mapa-etapa.feita { background: linear-gradient(135deg,#A8E6CF 0%,#7FC8A9 100%); border-color: #5BA084; }
+#pde-painel .mapa-etapa.feita .circulo { background: #6BCB77; color: white; border-color: #4DA85A; }
+#pde-painel .mapa-etapa.atual { background: linear-gradient(135deg,#FFD54F 0%,#FFA726 100%); border-color: #FB8C00; box-shadow: 0 4px 12px rgba(251,140,0,0.3); }
+#pde-painel .mapa-etapa.atual .circulo { background: #581C87; color: white; border-color: #1A0F2E; }
+#pde-painel .mapa-etapa.bloqueada { background: #E2E8F0; cursor: not-allowed; opacity: 0.7; }
+#pde-painel .mapa-etapa.bloqueada::after { content: '🔒'; position: absolute; top: 4px; right: 6px; font-size: 1rem; }
+#pde-painel .mapa-etapa.bloqueada .circulo { background: #94A3B8; color: #475569; border-color: #64748B; }
+
+#pde-painel .btn-comecar-aventura {
+  width: 100%;
+  background: linear-gradient(135deg,#DC2626 0%,#1A0F2E 100%);
+  color: white;
+  border: 3px solid white;
+  border-radius: 14px;
+  padding: 12px 20px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #581C87, 0 6px 12px rgba(88,28,135,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #581C87;
+}
+#pde-painel .btn-comecar-aventura:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #581C87, 0 3px 6px rgba(88,28,135,0.25);
+}
+
+/* TELA DE TREINO */
+#pde-painel .treino-grid {
+  display: grid; gap: 12px;
+  grid-template-columns: 240px minmax(0, 1fr);
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #pde-painel .treino-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  #pde-painel .area-treino { order: -1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+#pde-painel .painel-info {
+  background: white;
+  border-radius: 16px;
+  padding: 12px;
+  border: 3px solid #581C87;
+  box-shadow: 0 2px 8px rgba(88,28,135,0.12);
+  min-width: 0;
+}
+#pde-painel .area-treino {
+  background: white;
+  border-radius: 16px;
+  padding: 10px;
+  border: 3px solid #DC2626;
+  box-shadow: 0 2px 8px rgba(220,38,38,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg,#FEF3C7 0%,#FBBF24 100%);
+  border-radius: 12px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 2px solid #DC2626;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 44px; height: 44px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #1A0F2E;
+  line-height: 1.25;
+  min-width: 0;
+  word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #DC2626; font-weight: 700; }
+
+#pde-painel .etapa-titulo-grande {
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #DC2626;
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+}
+#pde-painel .etapa-titulo-grande .emoji-lugar { font-size: 1.3rem; margin-right: 4px; }
+
+#pde-painel .estrelinhas-prog {
+  display: flex; flex-wrap: wrap; gap: 3px;
+  justify-content: center;
+  background: #FFF9E6;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 2px solid #FBBF24;
+}
+#pde-painel .estrelinhas-prog .estrelinha {
+  font-size: 1.1rem;
+  color: #CBD5E1;
+  transition: color 0.3s;
+}
+#pde-painel .estrelinhas-prog .estrelinha.ativa { color: #FBBF24; text-shadow: 0 0 6px rgba(251,191,36,0.5); }
+
+#pde-painel .mini-mapa { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+#pde-painel .mini-mapa-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #1A0F2E;
+  font-size: 0.78rem;
+  margin-bottom: 2px;
+}
+#pde-painel .mini-mapa-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px; border-radius: 8px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.74rem;
+  color: #94A3B8;
+  background: #F8FAFC;
+}
+#pde-painel .mini-mapa-item .num-mini {
+  width: 18px; height: 18px;
+  background: #CBD5E1;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  color: white;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+#pde-painel .mini-mapa-item.feita { color: #6BCB77; background: #E0F7E9; }
+#pde-painel .mini-mapa-item.feita .num-mini { background: #6BCB77; }
+#pde-painel .mini-mapa-item.atual {
+  color: white;
+  background: linear-gradient(135deg,#DC2626 0%,#1A0F2E 100%);
+  font-weight: 700;
+}
+#pde-painel .mini-mapa-item.atual .num-mini { background: #FBBF24; color: #1A0F2E; }
+
+/* PERGUNTA */
+#pde-painel .pergunta-grande {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.95rem, 4vw, 1.15rem);
+  color: #DC2626;
+  text-align: center;
+  margin-bottom: 4px;
+  padding: 0 4px;
+  word-wrap: break-word;
+}
+
+/* INSTRUMENTOS BRASILEIROS */
+#pde-painel .instrumentos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+#pde-painel .instrumento-btn {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FBBF24 100%);
+  border: 4px solid #DC2626;
+  border-radius: 16px;
+  padding: 10px 6px;
+  cursor: pointer;
+  transition: transform 0.08s, box-shadow 0.08s;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #1A0F2E;
+  box-shadow: 0 4px 0 #991B1B;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-height: 90px;
+}
+#pde-painel .instrumento-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #991B1B; }
+#pde-painel .instrumento-btn:active,
+#pde-painel .instrumento-btn.tocando {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #991B1B;
+}
+#pde-painel .instrumento-btn.demonstrando {
+  background: linear-gradient(135deg,#DC2626 0%,#7F1D1D 100%) !important;
+  color: white !important;
+  border-color: #FCD34D !important;
+  animation: pulseDemonstra 0.4s;
+}
+@keyframes pulseDemonstra {
+  0%,100% { transform: scale(1); }
+  40% { transform: scale(1.15); box-shadow: 0 0 0 8px rgba(252,211,77,0.4); }
+}
+#pde-painel .instrumento-btn .icone-instr {
+  font-size: 2rem;
+  line-height: 1;
+}
+#pde-painel .instrumento-btn .nome-instr {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* BOTÕES DE CONTROLE */
+#pde-painel .controles {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+#pde-painel .btn-ctrl {
+  background: linear-gradient(135deg,#581C87 0%,#1A0F2E 100%);
+  color: white;
+  border: 3px solid white;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #1A0F2E;
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #1A0F2E;
+}
+#pde-painel .btn-ctrl:hover { transform: translateY(-2px); box-shadow: 0 5px 0 #1A0F2E; }
+#pde-painel .btn-ctrl:active { transform: translateY(2px); box-shadow: 0 1px 0 #1A0F2E; }
+#pde-painel .btn-ctrl:disabled {
+  background: #94A3B8;
+  outline-color: #64748B;
+  box-shadow: 0 3px 0 #64748B;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+#pde-painel .btn-ctrl.success {
+  background: linear-gradient(135deg,#16A34A 0%,#14532D 100%);
+  outline-color: #14532D;
+  box-shadow: 0 3px 0 #14532D;
+}
+
+/* SEQUENCIA VISUAL DE TOQUES */
+#pde-painel .sequencia-visual {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  background: #1A0F2E;
+  padding: 10px;
+  border-radius: 12px;
+  border: 3px solid #FBBF24;
+  min-height: 56px;
+  align-items: center;
+}
+#pde-painel .seq-passo {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: #581C87;
+  color: white;
+  border: 2px solid #FBBF24;
+  transition: all 0.2s;
+}
+#pde-painel .seq-passo.acertou { background: #16A34A; border-color: #4ADE80; }
+#pde-painel .seq-passo.errou { background: #DC2626; border-color: #FCA5A5; animation: shake 0.4s; }
+#pde-painel .seq-passo.atual {
+  background: #FBBF24;
+  border-color: #FCD34D;
+  color: #1A0F2E;
+  box-shadow: 0 0 0 4px rgba(251,191,36,0.5);
+  animation: pulsoAtual 0.6s ease-in-out infinite;
+}
+@keyframes pulsoAtual {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* MODO ACOMPANHAMENTO - ALVOS QUE DESCEM */
+#pde-painel .pista-musica {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(180deg, #1A0F2E 0%, #581C87 100%);
+  border: 4px solid #FBBF24;
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+#pde-painel .pista-musica .linha-acerto {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #FBBF24, #DC2626, #FBBF24);
+  box-shadow: 0 0 12px rgba(251,191,36,0.6);
+  z-index: 5;
+}
+#pde-painel .pista-musica .alvo-descendo {
+  position: absolute;
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+  border: 3px solid white;
+  box-shadow: 0 0 12px rgba(255,255,255,0.4);
+  top: -60px;
+  transition: top linear;
+}
+#pde-painel .pista-musica .alvo-descendo.atabaque { background: #DC2626; }
+#pde-painel .pista-musica .alvo-descendo.pandeiro { background: #FBBF24; color: #1A0F2E; }
+#pde-painel .pista-musica .alvo-descendo.agogo { background: #16A34A; }
+#pde-painel .pista-musica .alvo-descendo.recoreco { background: #581C87; }
+#pde-painel .pista-musica .alvo-descendo.acerto {
+  animation: explodirAcerto 0.4s ease-out forwards;
+}
+#pde-painel .pista-musica .alvo-descendo.errou {
+  animation: explodirErro 0.4s ease-out forwards;
+}
+@keyframes explodirAcerto {
+  to { transform: scale(2.5); opacity: 0; box-shadow: 0 0 40px rgba(74,222,128,0.8); }
+}
+@keyframes explodirErro {
+  to { transform: scale(0); opacity: 0; }
+}
+
+#pde-painel .pista-musica .placar-mini {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: rgba(0,0,0,0.4);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  z-index: 10;
+}
+
+/* COMPOSITOR */
+#pde-painel .compositor-grid {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 6px;
+  margin: 8px 0;
+}
+#pde-painel .trilha-instrumento {
+  display: flex;
+  flex-direction: column;
+  background: #1A0F2E;
+  border: 2px solid #581C87;
+  border-radius: 8px;
+  padding: 4px 6px;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: white;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+}
+#pde-painel .trilha-passos {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 3px;
+}
+#pde-painel .passo-cel {
+  aspect-ratio: 1;
+  background: #F1F5F9;
+  border: 2px solid #CBD5E1;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.12s;
+  min-height: 28px;
+}
+#pde-painel .passo-cel:hover { background: #FED7AA; border-color: #FB923C; }
+#pde-painel .passo-cel.ativo { background: linear-gradient(135deg,#DC2626,#7F1D1D); border-color: #991B1B; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+#pde-painel .passo-cel.atabaque.ativo { background: linear-gradient(135deg,#DC2626,#7F1D1D); }
+#pde-painel .passo-cel.pandeiro.ativo { background: linear-gradient(135deg,#FBBF24,#D97706); }
+#pde-painel .passo-cel.agogo.ativo { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .passo-cel.recoreco.ativo { background: linear-gradient(135deg,#581C87,#1A0F2E); }
+#pde-painel .passo-cel.tocando-agora { box-shadow: 0 0 0 3px #FBBF24, 0 0 12px rgba(251,191,36,0.6); }
+
+/* Feedback */
+#pde-painel .feedback {
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px;
+  animation: aparecerFeedback 0.3s ease-out;
+}
+@keyframes aparecerFeedback { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+#pde-painel .feedback.acerto {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  color: white;
+  border: 3px solid #2E7D32;
+}
+#pde-painel .feedback.erro {
+  background: linear-gradient(135deg,#FFCDD2 0%,#EF9A9A 100%);
+  color: #6B1414;
+  border: 3px solid #C62828;
+}
+#pde-painel .feedback.info {
+  background: linear-gradient(135deg,#FEF3C7,#FBBF24);
+  color: #1A0F2E;
+  border: 3px solid #D97706;
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(26,15,46,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #DC2626;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal { width: 100px; height: 100px; margin: 0 auto 8px; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #DC2626;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #1A0F2E; font-size: 0.95rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  color: white; border: 3px solid #2E7D32;
+  box-shadow: 0 4px 0 #2E7D32;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .estrelas-conquistadas { font-size: 2.6rem; letter-spacing: 8px; margin: 10px 0; }
+#pde-painel .estrelas-conquistadas .ativa {
+  color: #FBBF24; display: inline-block; transform: scale(0);
+  text-shadow: 0 0 12px rgba(251,191,36,0.7);
+  animation: estrelaPopFinal 0.6s ease-out forwards;
+}
+#pde-painel .estrelas-conquistadas .ativa:nth-child(1) { animation-delay: 0.2s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(2) { animation-delay: 0.5s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(3) { animation-delay: 0.8s; }
+#pde-painel .estrelas-conquistadas .vazia { color: #E2E8F0; }
+@keyframes estrelaPopFinal {
+  0% { transform: scale(0) rotate(-180deg); }
+  60% { transform: scale(1.4) rotate(15deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #DC2626;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #1A0F2E; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+
+#pde-painel .a11y-grupo { background: #FEF3C7; border: 3px solid #DC2626; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #DC2626; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #DC2626; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#DC2626 0%,#1A0F2E 100%); color: white; border-color: #581C87; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #DC2626; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%); color: white; border-color: #2E7D32; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #2E7D32; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #DC2626;
+  border: 2px solid #DC2626; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #DC2626; color: white; }
+
+/* Confetes */
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #FBBF24; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #DC2626; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#37B1DA,#1E324A); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.musica { background: linear-gradient(135deg,#DC2626,#7F1D1D); }
+#pde-painel .selos-bncc .selo-icone.afro { background: linear-gradient(135deg,#16A34A,#FBBF24); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #1A0F2E; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #1A0F2E; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #E2E8F0; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FBBF24; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #DC2626; }
+
+@media (max-width: 380px) {
+  #pde-painel { padding: 6px 4px 12px; }
+  #pde-painel .header h1 { font-size: 0.9rem; }
+  #pde-painel .btn-header { font-size: 0.7rem; padding: 4px 7px; }
+  #pde-painel .lobby-card,
+  #pde-painel .area-treino,
+  #pde-painel .painel-info { padding: 10px; border-width: 2px; }
+  #pde-painel .instrumento-btn { min-height: 80px; padding: 8px 4px; }
+  #pde-painel .instrumento-btn .icone-instr { font-size: 1.6rem; }
+  #pde-painel .instrumento-btn .nome-instr { font-size: 0.65rem; }
+}
+
+/* ============================================ */
+/* PATCH UNIFICADO v2                            */
+/* 1. Acessibilidade: escala de texto FUNCIONAL  */
+/* 2. Desktop-wide: aproveita tela grande        */
+/* ============================================ */
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 12px clamp(12px, 2vw, 24px) 24px; }
+  #pde-painel .lobby-card { padding: 18px; }
+  #pde-painel .area-treino { padding: 16px; }
+  #pde-painel .painel-info { padding: 16px; }
+  #pde-painel .treino-grid { grid-template-columns: 280px minmax(0, 1fr); gap: 18px; }
+  #pde-painel .opcoes-grid {
+    max-width: 900px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  #pde-painel .fases-grid {
+    max-width: 1100px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  #pde-painel .fase-card { min-height: 170px; padding: 14px 8px; }
+  #pde-painel .fase-card .svg-fase { width: 110px; height: 110px; }
+  #pde-painel .fase-card .nome-fase { font-size: 0.92rem; }
+  #pde-painel .cores-grid {
+    max-width: 800px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .instrumentos-grid {
+    max-width: 720px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  #pde-painel .instrumento-btn { min-height: 110px; }
+  #pde-painel .instrumento-btn .icone-instr { font-size: 2.6rem; }
+  #pde-painel .instrumento-btn .nome-instr { font-size: 0.85rem; }
+  #pde-painel .mapa-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .mapa-etapa { padding: 12px 8px; }
+  #pde-painel .mapa-etapa .emoji-lugar { font-size: 2.2rem; }
+  #pde-painel .mapa-etapa .nome-lugar { font-size: 0.85rem; }
+  #pde-painel .pergunta-grande { font-size: 1.35rem; padding: 0 8px; margin-bottom: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .modal-conteudo h2 { font-size: 1.65rem; }
+  #pde-painel .modal-conteudo p { font-size: 1.05rem; }
+  #pde-painel .opcao-btn { min-height: 64px; font-size: 1.05rem; padding: 14px 12px; }
+  #pde-painel .area-mistura { max-width: 420px; }
+  #pde-painel .pista-musica { height: 280px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  #pde-painel .compositor-grid { grid-template-columns: 90px 1fr; max-width: 900px; margin: 0 auto; }
+  #pde-painel .passo-cel { min-height: 38px; }
+  #pde-painel .seq-progresso { padding: 14px; max-width: 720px; margin: 8px auto; }
+  #pde-painel .seq-progresso .seq-passo { width: 44px; height: 44px; font-size: 1.6rem; }
+  #pde-painel .estrelinhas-prog { padding: 12px; }
+  #pde-painel .header h1 { font-size: 1.45rem; }
+  #pde-painel .btn-header { font-size: 0.92rem; padding: 7px 14px; }
+  #pde-painel .input-nome { font-size: 1.1rem; padding: 14px 18px; }
+  #pde-painel .btn-comecar-aventura { font-size: 1.2rem; padding: 14px 24px; }
+  #pde-painel .quiz-pergunta { padding: 18px; }
+  #pde-painel .quiz-pergunta .qsvg { width: 160px; height: 160px; }
+  #pde-painel .quiz-pergunta .qtext { font-size: 1.25rem; }
+  #pde-painel .info-fase { padding: 14px 18px; max-width: 900px; margin-left: auto; margin-right: auto; }
+  #pde-painel .alvo-info { max-width: 480px; padding: 12px 18px; font-size: 1.05rem; }
+  #pde-painel .pote-cor { width: 100px; height: 100px; }
+  #pde-painel .balde { width: 130px; height: 130px; }
+  #pde-painel .escolha-dupla { max-width: 480px; gap: 14px; }
+  #pde-painel .opcao-dupla { font-size: 1.2rem; min-height: 90px; padding: 22px 12px; }
+  #pde-painel .cor-mostra { width: 200px; height: 200px; }
+  #pde-painel .svg-ilustracao { width: 280px; height: 280px; }
+  #pde-painel .mapa-jogo-wrap { max-width: 900px; margin: 0 auto; }
+}
+@media (min-width: 1440px) {
+  #pde-painel { max-width: 1400px; }
+  #pde-painel .opcoes-grid { max-width: 1000px; }
+  #pde-painel .fases-grid { max-width: 1240px; }
+}
+/* === FIM PATCH UNIFICADO v2 === */
+
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>🥁 Maestro do Ritmo · com Mestre Bumbo</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="resetarProgresso()" title="Recomeçar">↻</button>
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <!-- LOBBY -->
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>E aí, parceiro! Eu sou o Mestre Bumbo! 🥁</strong>
+        <span id="balao-saudacao">Vamos aprender ritmos brasileiros tocando juntos?</span>
+      </div>
+    </div>
+
+    <input type="text" id="nome-aluno" class="input-nome" placeholder="✏️ Qual é o seu nome?" maxlength="30" autocomplete="off">
+
+    <div class="mapa-aventura">
+      <div class="mapa-grid" id="mapa-grid"></div>
+    </div>
+
+    <button class="btn-comecar-aventura" id="btn-comecar" onclick="comecarEtapaAtual()">🚀 Começar a Aventura!</button>
+  </div>
+
+  <!-- TREINO -->
+  <div id="treino" class="treino-grid hidden">
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Vamos lá!</div>
+      </div>
+      <div class="etapa-titulo-grande" id="etapa-titulo">
+        <span class="emoji-lugar" id="etapa-emoji">🎵</span>
+        <span id="etapa-nome">—</span>
+      </div>
+      <div class="estrelinhas-prog" id="estrelinhas-prog"></div>
+      <div class="mini-mapa">
+        <div class="mini-mapa-titulo">🎼 Sua jornada</div>
+        <div id="mini-mapa-itens"></div>
+      </div>
+    </div>
+
+    <div class="area-treino">
+      <div id="arena"></div>
+      <div id="feedback" class="feedback hidden"></div>
+    </div>
+  </div>
+
+  <!-- MODAIS -->
+  <div class="modal-overlay" id="modal-etapa-fim">
+    <div class="modal-conteudo">
+      <svg class="mascote-modal" viewBox="0 0 100 100" id="svg-mascote-modal"></svg>
+      <h2 id="etapa-fim-titulo">Atividade concluída!</h2>
+      <p id="etapa-fim-msg">Muito bem!</p>
+      <div class="estrelas-conquistadas" id="etapa-fim-estrelas"></div>
+      <p id="etapa-fim-detalhes" style="font-style:italic; color:#94A3B8;"></p>
+      <div class="acoes" id="etapa-fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-trilha-completa">
+    <div class="modal-conteudo">
+      <svg class="mascote-modal" viewBox="0 0 100 100" id="svg-mascote-trofeu"></svg>
+      <h2>🏆 Maestro Mestre!</h2>
+      <p>Parabéns! Você dominou as 6 aventuras do ritmo!</p>
+      <div class="estrelas-conquistadas">
+        <span class="ativa">★</span><span class="ativa">★</span><span class="ativa">★</span>
+      </div>
+      <p style="font-weight:700; color:#DC2626; font-size:1.05rem; font-family:'Fredoka',sans-serif;">🥁 Você é um Maestro do Ritmo Brasileiro!</p>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="voltarLobby()">Voltar ao mapa</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🥁 Como Brincar com Mestre Bumbo</h2>
+      <h3>🎯 Objetivo</h3>
+      <p>Aprender ritmo, percussão e instrumentos brasileiros em 6 aventuras com o Mestre Bumbo.</p>
+
+      <h3>🎵 Os 4 instrumentos brasileiros</h3>
+      <ul>
+        <li><b>🥁 Atabaque:</b> som grave, base do samba e candomblé.</li>
+        <li><b>🪘 Pandeiro:</b> som agudo com chocalho, símbolo do samba.</li>
+        <li><b>🔔 Agogô:</b> dois sinos, ritmo afro-brasileiro.</li>
+        <li><b>🎋 Reco-reco:</b> som raspado, marcação do choro.</li>
+      </ul>
+
+      <h3>📚 As 6 aventuras</h3>
+      <ul>
+        <li><b>🎶 Conhecendo os Sons:</b> ouça e identifique cada instrumento.</li>
+        <li><b>🥁 Memória Curta:</b> repita 2-3 sons na ordem certa.</li>
+        <li><b>🎼 Memória Avançada:</b> repita 4-5 sons na ordem certa.</li>
+        <li><b>⏱️ Bateu Junto:</b> toque no tempo certo (notas descendo).</li>
+        <li><b>🎹 Compor Livre:</b> crie sua própria música!</li>
+        <li><b>✨ Maestro Final:</b> tudo o que aprendeu!</li>
+      </ul>
+
+      <h3>📱 Atenção mobile</h3>
+      <p>No celular, toque uma vez na tela antes de começar pra liberar o som.</p>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-ajuda')">Bora batucar!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script>
+/* MASCOTE MESTRE BUMBO - tambor falante com baquetas */
+function svgMascote(expressao = 'normal') {
+  let olhos;
+  if (expressao === 'feliz') {
+    olhos = `
+      <path d="M 36 38 Q 41 33, 46 38" fill="none" stroke="#1A0F2E" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 54 38 Q 59 33, 64 38" fill="none" stroke="#1A0F2E" stroke-width="2.5" stroke-linecap="round"/>
+    `;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <circle cx="41" cy="40" r="3" fill="#1A0F2E"/>
+      <circle cx="59" cy="40" r="3" fill="#1A0F2E"/>
+    `;
+  } else {
+    olhos = `
+      <circle cx="41" cy="40" r="5" fill="white" stroke="#1A0F2E" stroke-width="1.5"/>
+      <circle cx="59" cy="40" r="5" fill="white" stroke="#1A0F2E" stroke-width="1.5"/>
+      <circle cx="42" cy="41" r="2.5" fill="#1A0F2E"/>
+      <circle cx="60" cy="41" r="2.5" fill="#1A0F2E"/>
+      <circle cx="43" cy="40" r="0.8" fill="white"/>
+      <circle cx="61" cy="40" r="0.8" fill="white"/>
+    `;
+  }
+
+  let boca;
+  if (expressao === 'feliz') {
+    boca = `<path d="M 38 50 Q 50 60, 62 50" fill="#DC2626" stroke="#7F1D1D" stroke-width="1.5"/>`;
+  } else if (expressao === 'pensando') {
+    boca = `<line x1="46" y1="52" x2="54" y2="52" stroke="#1A0F2E" stroke-width="2" stroke-linecap="round"/>`;
+  } else {
+    boca = `<path d="M 42 50 Q 50 56, 58 50" fill="none" stroke="#1A0F2E" stroke-width="2" stroke-linecap="round"/>`;
+  }
+
+  return `
+    <!-- Sombra -->
+    <ellipse cx="50" cy="93" rx="28" ry="3" fill="rgba(0,0,0,0.18)"/>
+
+    <!-- BAQUETAS atrás (formato cruz) -->
+    <line x1="14" y1="34" x2="2" y2="14" stroke="#8B4513" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="2" cy="14" r="3" fill="#D2691E" stroke="#5C3317" stroke-width="1"/>
+    <line x1="86" y1="34" x2="98" y2="14" stroke="#8B4513" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="98" cy="14" r="3" fill="#D2691E" stroke="#5C3317" stroke-width="1"/>
+
+    <!-- CORPO PRINCIPAL: tambor cilíndrico -->
+    <!-- Sombra interna inferior -->
+    <ellipse cx="50" cy="78" rx="32" ry="9" fill="#7F1D1D"/>
+    <!-- Lateral do tambor (cilindro) -->
+    <rect x="18" y="35" width="64" height="45" fill="#DC2626" stroke="#7F1D1D" stroke-width="2"/>
+    <!-- Cordas do tambor (zigzag) -->
+    <path d="M 18 45 L 26 50 L 18 55 L 26 60 L 18 65 L 26 70 L 18 75" fill="none" stroke="#FCD34D" stroke-width="1.5"/>
+    <path d="M 82 45 L 74 50 L 82 55 L 74 60 L 82 65 L 74 70 L 82 75" fill="none" stroke="#FCD34D" stroke-width="1.5"/>
+
+    <!-- Topo do tambor (couro esticado) -->
+    <ellipse cx="50" cy="35" rx="32" ry="10" fill="#FEF3C7" stroke="#7F1D1D" stroke-width="2"/>
+    <ellipse cx="50" cy="34" rx="29" ry="8" fill="#F5F5DC"/>
+
+    <!-- BRACINHOS saindo dos lados -->
+    <line x1="18" y1="58" x2="8" y2="68" stroke="#D2691E" stroke-width="3.5" stroke-linecap="round"/>
+    <line x1="82" y1="58" x2="92" y2="68" stroke="#D2691E" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- Mãos brancas (luvas) -->
+    <circle cx="8" cy="68" r="4" fill="white" stroke="#1A0F2E" stroke-width="1.5"/>
+    <circle cx="92" cy="68" r="4" fill="white" stroke="#1A0F2E" stroke-width="1.5"/>
+
+    <!-- Olhos no topo do tambor -->
+    ${olhos}
+
+    <!-- Boca -->
+    ${boca}
+
+    <!-- Brilho no topo (highlight) -->
+    <ellipse cx="40" cy="32" rx="14" ry="4" fill="white" opacity="0.3"/>
+
+    <!-- Detalhe das aros do tambor -->
+    <ellipse cx="50" cy="35" rx="32" ry="10" fill="none" stroke="#FCD34D" stroke-width="1" opacity="0.7"/>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* === SISTEMA DE ÁUDIO BRASILEIRO === */
+let audioCtx = null;
+function inicializarAudio() {
+  if (!audioCtx) {
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (e) {}
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+/* Sons sintéticos inspirados em instrumentos brasileiros */
+function tocarInstrumento(instr) {
+  inicializarAudio();
+  if (!audioCtx) return;
+  const c = audioCtx;
+  const t0 = c.currentTime;
+
+  if (instr === 'atabaque') {
+    // Tambor grave - kick + ressonância
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(120, t0);
+    o.frequency.exponentialRampToValueAtTime(40, t0 + 0.15);
+    g.gain.setValueAtTime(0.6, t0);
+    g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.3);
+    o.connect(g); g.connect(c.destination);
+    o.start(t0); o.stop(t0 + 0.3);
+    // Click inicial
+    const o2 = c.createOscillator();
+    const g2 = c.createGain();
+    o2.type = 'square';
+    o2.frequency.value = 200;
+    g2.gain.setValueAtTime(0.15, t0);
+    g2.gain.exponentialRampToValueAtTime(0.01, t0 + 0.05);
+    o2.connect(g2); g2.connect(c.destination);
+    o2.start(t0); o2.stop(t0 + 0.05);
+  } else if (instr === 'pandeiro') {
+    // Agudo + chocalho metálico
+    // Membrana
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(450, t0);
+    o.frequency.exponentialRampToValueAtTime(200, t0 + 0.1);
+    g.gain.setValueAtTime(0.3, t0);
+    g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.15);
+    o.connect(g); g.connect(c.destination);
+    o.start(t0); o.stop(t0 + 0.15);
+    // Chocalho (ruído branco filtrado)
+    const buf = c.createBuffer(1, c.sampleRate * 0.2, c.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
+    const noise = c.createBufferSource();
+    noise.buffer = buf;
+    const filter = c.createBiquadFilter();
+    filter.type = 'highpass';
+    filter.frequency.value = 4000;
+    const gn = c.createGain();
+    gn.gain.setValueAtTime(0.3, t0);
+    gn.gain.exponentialRampToValueAtTime(0.01, t0 + 0.2);
+    noise.connect(filter); filter.connect(gn); gn.connect(c.destination);
+    noise.start(t0); noise.stop(t0 + 0.2);
+  } else if (instr === 'agogo') {
+    // Dois sinos em sequência rápida
+    const f1 = 880, f2 = 660;
+    [[f1, t0], [f2, t0 + 0.08]].forEach(([f, ti]) => {
+      const o = c.createOscillator();
+      const g = c.createGain();
+      o.type = 'triangle';
+      o.frequency.value = f;
+      g.gain.setValueAtTime(0.4, ti);
+      g.gain.exponentialRampToValueAtTime(0.01, ti + 0.18);
+      // Filtrar pra dar timbre metálico
+      const filter = c.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = f;
+      filter.Q.value = 8;
+      o.connect(filter); filter.connect(g); g.connect(c.destination);
+      o.start(ti); o.stop(ti + 0.2);
+    });
+  } else if (instr === 'recoreco') {
+    // Som raspado - múltiplos cliques rápidos
+    for (let i = 0; i < 6; i++) {
+      const ti = t0 + i * 0.025;
+      const buf = c.createBuffer(1, c.sampleRate * 0.02, c.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let j = 0; j < data.length; j++) data[j] = (Math.random() * 2 - 1) * (1 - j / data.length);
+      const src = c.createBufferSource();
+      src.buffer = buf;
+      const filter = c.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 2000 + i * 200;
+      filter.Q.value = 5;
+      const g = c.createGain();
+      g.gain.value = 0.25;
+      src.connect(filter); filter.connect(g); g.connect(c.destination);
+      src.start(ti); src.stop(ti + 0.02);
+    }
+  }
+}
+
+function tocarSom(tipo) {
+  inicializarAudio();
+  if (!audioCtx) return;
+  const c = audioCtx;
+  if (tipo === 'acerto') {
+    const notas = [523, 659, 784, 1047];
+    notas.forEach((f, i) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = f; o.type = 'sine';
+      const t0 = c.currentTime + i * 0.07;
+      g.gain.setValueAtTime(0.13, t0);
+      g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.18);
+      o.start(t0); o.stop(t0 + 0.2);
+    });
+  } else if (tipo === 'erro') {
+    const o = c.createOscillator(), g = c.createGain();
+    o.connect(g); g.connect(c.destination);
+    o.frequency.value = 320; o.type = 'sine';
+    g.gain.setValueAtTime(0.1, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.3);
+    o.frequency.exponentialRampToValueAtTime(180, c.currentTime + 0.3);
+    o.start(); o.stop(c.currentTime + 0.32);
+  }
+}
+
+/* === DADOS === */
+const INSTRUMENTOS = [
+  { id: 'atabaque', nome: 'Atabaque', icone: '🥁', cor: '#DC2626' },
+  { id: 'pandeiro', nome: 'Pandeiro', icone: '🪘', cor: '#FBBF24' },
+  { id: 'agogo',    nome: 'Agogô',    icone: '🔔', cor: '#16A34A' },
+  { id: 'recoreco', nome: 'Reco-reco',icone: '🎋', cor: '#581C87' },
+];
+
+const ETAPAS = [
+  { id: 1, tipo: 'sons',     titulo: 'Conhecendo os Sons',  emoji: '🎶', total: 4,
+    instrucao: 'Ouça e identifique cada instrumento brasileiro!',
+    fala_inicio: 'Vamos conhecer 4 instrumentos!',
+    fala_sucesso: 'Você tem ouvido afiado!' },
+  { id: 2, tipo: 'memcurta', titulo: 'Memória Curta',       emoji: '🥁', total: 4,
+    instrucao: 'Memorize a sequência de 2-3 sons e repita!',
+    fala_inicio: 'Hora da memória!',
+    fala_sucesso: 'Que memória boa!' },
+  { id: 3, tipo: 'memlonga', titulo: 'Memória Avançada',    emoji: '🎼', total: 4,
+    instrucao: 'Agora 4-5 sons em ordem!',
+    fala_inicio: 'Subindo o nível!',
+    fala_sucesso: 'Maestria pura!' },
+  { id: 4, tipo: 'tempo',    titulo: 'Bateu Junto',         emoji: '⏱️', total: 1,
+    instrucao: 'Toque nos instrumentos quando as notas tocarem na linha!',
+    fala_inicio: 'Foco no tempo!',
+    fala_sucesso: 'No ritmo certo!' },
+  { id: 5, tipo: 'compor',   titulo: 'Compor Livre',        emoji: '🎹', total: 1,
+    instrucao: 'Crie sua própria música!',
+    fala_inicio: 'Liberdade total!',
+    fala_sucesso: 'Você é compositor!' },
+  { id: 6, tipo: 'final',    titulo: 'Maestro Final',       emoji: '✨', total: 5,
+    instrucao: 'Mistura de tudo que aprendeu!',
+    fala_inicio: 'Reta final!',
+    fala_sucesso: 'Maestro consagrado!' },
+];
+
+const ELOGIOS = ['Mandou bem!', 'Você é demais!', 'Que ritmo!', 'Show!', 'Brilhou!', 'Acertou em cheio!'];
+const INCENTIVOS = ['Quase! Tente outra vez!', 'Ouve com calma!', 'Você consegue!', 'Foco no som!'];
+
+/* === ESTADO === */
+const STATE = {
+  nomeAluno: '',
+  etapaAtual: 1,
+  estrelasPorEtapa: {},
+  jogo: {
+    etapa: null,
+    progresso: 0,
+    acertos: 0,
+    erros: 0,
+    bloqueado: false,
+    ativo: false,
+    sequenciaAlvo: [],
+    sequenciaAluno: [],
+    timer: null
+  }
+};
+
+/* PERSISTÊNCIA */
+function salvar() {
+  try {
+    localStorage.setItem('pde_maestro_dados', JSON.stringify({
+      nomeAluno: STATE.nomeAluno,
+      etapaAtual: STATE.etapaAtual,
+      estrelasPorEtapa: STATE.estrelasPorEtapa
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_maestro_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    STATE.nomeAluno = d.nomeAluno || '';
+    STATE.etapaAtual = d.etapaAtual || 1;
+    STATE.estrelasPorEtapa = d.estrelasPorEtapa || {};
+    if (STATE.nomeAluno) document.getElementById('nome-aluno').value = STATE.nomeAluno;
+  } catch (e) {}
+}
+
+/* LOBBY */
+function renderLobby() {
+  const balaoSaud = document.getElementById('balao-saudacao');
+  const feitas = Object.keys(STATE.estrelasPorEtapa).length;
+  if (balaoSaud) {
+    if (feitas === 0) balaoSaud.textContent = 'Vamos aprender ritmos brasileiros tocando juntos?';
+    else if (feitas === ETAPAS.length) balaoSaud.textContent = 'Você é Maestro completo! 🏆';
+    else balaoSaud.textContent = `Você já fez ${feitas} de 6 aventuras. Vamos!`;
+  }
+
+  const cont = document.getElementById('mapa-grid');
+  cont.innerHTML = '';
+  ETAPAS.forEach((e, idx) => {
+    const card = document.createElement('div');
+    const feita = !!STATE.estrelasPorEtapa[e.id];
+    const atual = e.id === STATE.etapaAtual && !feita;
+    const anterior = idx === 0 ? true : !!STATE.estrelasPorEtapa[ETAPAS[idx-1].id];
+    const bloqueada = !feita && !atual && !anterior;
+
+    card.className = 'mapa-etapa' + (feita ? ' feita' : '') + (atual ? ' atual' : '') + (bloqueada ? ' bloqueada' : '');
+
+    let estrelasMini = '';
+    const obtidas = STATE.estrelasPorEtapa[e.id] || 0;
+    for (let i = 0; i < 3; i++) estrelasMini += i < obtidas ? '<span class="ativa">★</span>' : '<span class="vazia">★</span>';
+
+    card.innerHTML = `
+      <div class="circulo">${e.id}</div>
+      <span class="emoji-lugar">${e.emoji}</span>
+      <span class="nome-lugar">${e.titulo}</span>
+      <div class="estrelas-lugar">${estrelasMini}</div>
+    `;
+    if (!bloqueada) {
+      card.onclick = () => { STATE.etapaAtual = e.id; comecarEtapaAtual(); };
+    }
+    cont.appendChild(card);
+  });
+
+  const btn = document.getElementById('btn-comecar');
+  if (feitas === ETAPAS.length) {
+    btn.textContent = '🏆 Aventura completa! Recomeçar';
+    btn.onclick = () => {
+      if (confirm('Recomeçar a aventura? Seu progresso será apagado.')) {
+        STATE.estrelasPorEtapa = {};
+        STATE.etapaAtual = 1;
+        salvar();
+        renderLobby();
+      }
+    };
+  } else {
+    const proxima = ETAPAS.find(e => !STATE.estrelasPorEtapa[e.id]);
+    if (proxima) {
+      STATE.etapaAtual = proxima.id;
+      btn.textContent = `🚀 ${proxima.emoji} ${proxima.titulo}`;
+      btn.onclick = comecarEtapaAtual;
+    }
+  }
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+
+function resetarProgresso() {
+  if (!confirm('Recomeçar a aventura? Seu progresso será apagado.')) return;
+  STATE.estrelasPorEtapa = {};
+  STATE.etapaAtual = 1;
+  salvar();
+  renderLobby();
+}
+
+/* UTILS */
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function elogio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivo() { return INCENTIVOS[Math.floor(Math.random() * INCENTIVOS.length)]; }
+function dormir(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* COMEÇAR ETAPA */
+function comecarEtapaAtual() {
+  STATE.nomeAluno = document.getElementById('nome-aluno').value.trim();
+  inicializarAudio();
+  salvar();
+  const etapa = ETAPAS.find(e => e.id === STATE.etapaAtual);
+  if (!etapa) return;
+  STATE.jogo.etapa = etapa;
+  STATE.jogo.progresso = 0;
+  STATE.jogo.acertos = 0;
+  STATE.jogo.erros = 0;
+  STATE.jogo.ativo = true;
+  STATE.jogo.bloqueado = false;
+  if (STATE.jogo.timer) { clearInterval(STATE.jogo.timer); STATE.jogo.timer = null; }
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('treino').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+  document.getElementById('etapa-emoji').textContent = etapa.emoji;
+  document.getElementById('etapa-nome').textContent = etapa.titulo;
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Mestre Bumbo:</b> ${etapa.instrucao}`;
+  renderMascote('svg-mascote-painel', 'feliz');
+  atualizarUI();
+  renderMiniMapa();
+  iniciarExercicio();
+}
+
+function renderMiniMapa() {
+  const cont = document.getElementById('mini-mapa-itens');
+  cont.innerHTML = '';
+  ETAPAS.forEach(e => {
+    const div = document.createElement('div');
+    const feita = !!STATE.estrelasPorEtapa[e.id];
+    const atual = e.id === STATE.etapaAtual;
+    div.className = 'mini-mapa-item' + (feita ? ' feita' : '') + (atual ? ' atual' : '');
+    div.innerHTML = `<div class="num-mini">${e.id}</div><span>${e.emoji} ${e.titulo}</span>`;
+    cont.appendChild(div);
+  });
+}
+
+function atualizarUI() {
+  const cont = document.getElementById('estrelinhas-prog');
+  cont.innerHTML = '';
+  for (let i = 0; i < STATE.jogo.etapa.total; i++) {
+    const e = document.createElement('span');
+    e.className = 'estrelinha' + (i < STATE.jogo.progresso ? ' ativa' : '');
+    e.textContent = '★';
+    cont.appendChild(e);
+  }
+}
+
+function limparFeedback() {
+  const fb = document.getElementById('feedback');
+  fb.classList.add('hidden');
+  fb.className = 'feedback hidden';
+}
+function mostrarFeedback(tipo, texto) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback ' + tipo;
+  fb.innerHTML = texto;
+  fb.classList.remove('hidden');
+}
+
+/* HELPER: render dos 4 instrumentos como botões */
+function renderInstrumentos(onTouch) {
+  let html = '<div class="instrumentos-grid">';
+  INSTRUMENTOS.forEach(i => {
+    html += `<button class="instrumento-btn" data-instr="${i.id}">
+      <span class="icone-instr">${i.icone}</span>
+      <span class="nome-instr">${i.nome}</span>
+    </button>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+/* DISPATCH */
+function iniciarExercicio() {
+  STATE.jogo.bloqueado = false;
+  limparFeedback();
+  const arena = document.getElementById('arena');
+  arena.innerHTML = '';
+  const tipo = STATE.jogo.etapa.tipo;
+  if (tipo === 'sons')      exSons();
+  else if (tipo === 'memcurta') exMemoria(2 + Math.floor(STATE.jogo.progresso / 2));
+  else if (tipo === 'memlonga') exMemoria(4 + Math.floor(STATE.jogo.progresso / 2));
+  else if (tipo === 'tempo')    exTempo();
+  else if (tipo === 'compor')   exCompor();
+  else if (tipo === 'final')    exFinal();
+}
+
+/* ATIVIDADE 1: CONHECENDO OS SONS */
+function exSons() {
+  const alvo = INSTRUMENTOS[Math.floor(Math.random() * INSTRUMENTOS.length)];
+  const arena = document.getElementById('arena');
+  arena.innerHTML = `
+    <div class="pergunta-grande">Que instrumento é esse?</div>
+    <div class="controles">
+      <button class="btn-ctrl" id="btn-tocar-alvo">▶ Tocar Som</button>
+    </div>
+    ${renderInstrumentos()}
+  `;
+  document.getElementById('btn-tocar-alvo').onclick = () => {
+    tocarInstrumento(alvo.id);
+    const btn = document.querySelector(`.instrumento-btn[data-instr="${alvo.id}"]`);
+    if (btn) {
+      btn.classList.add('demonstrando');
+      setTimeout(() => btn.classList.remove('demonstrando'), 400);
+    }
+  };
+  // Auto-toca primeiro
+  setTimeout(() => document.getElementById('btn-tocar-alvo').click(), 400);
+
+  arena.querySelectorAll('.instrumento-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      if (STATE.jogo.bloqueado) return;
+      const escolhido = b.dataset.instr;
+      tocarInstrumento(escolhido);
+      b.classList.add('tocando');
+      setTimeout(() => b.classList.remove('tocando'), 200);
+      const correto = escolhido === alvo.id;
+      STATE.jogo.bloqueado = true;
+      if (correto) {
+        b.style.background = 'linear-gradient(135deg,#16A34A,#14532D)';
+        b.style.color = 'white';
+        b.style.borderColor = '#14532D';
+      } else {
+        b.style.background = '#FECACA';
+        b.style.borderColor = '#991B1B';
+        // Destacar correto
+        const btnCerto = document.querySelector(`.instrumento-btn[data-instr="${alvo.id}"]`);
+        if (btnCerto) {
+          btnCerto.style.background = 'linear-gradient(135deg,#FBBF24,#D97706)';
+          btnCerto.style.borderColor = '#D97706';
+        }
+      }
+      arena.querySelectorAll('.instrumento-btn').forEach(x => x.disabled = true);
+      finalizarComum(correto, alvo.nome);
+    });
+  });
+}
+
+/* ATIVIDADE 2-3: MEMÓRIA */
+function exMemoria(tamanho) {
+  STATE.jogo.sequenciaAlvo = [];
+  for (let i = 0; i < tamanho; i++) {
+    STATE.jogo.sequenciaAlvo.push(INSTRUMENTOS[Math.floor(Math.random() * INSTRUMENTOS.length)].id);
+  }
+  STATE.jogo.sequenciaAluno = [];
+  STATE.jogo.bloqueado = true;
+
+  const arena = document.getElementById('arena');
+  arena.innerHTML = `
+    <div class="pergunta-grande">Memorize a sequência! 🎵</div>
+    <div class="sequencia-visual" id="seq-visual"></div>
+    <div class="controles">
+      <button class="btn-ctrl" id="btn-tocar-seq">▶ Ouvir de novo</button>
+    </div>
+    ${renderInstrumentos()}
+  `;
+  renderSequenciaVisual();
+
+  setTimeout(() => tocarSequenciaAlvo(), 600);
+
+  document.getElementById('btn-tocar-seq').onclick = () => {
+    if (STATE.jogo.sequenciaAluno.length > 0) return;
+    tocarSequenciaAlvo();
+  };
+
+  arena.querySelectorAll('.instrumento-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      if (STATE.jogo.bloqueado) return;
+      const escolhido = b.dataset.instr;
+      tocarInstrumento(escolhido);
+      b.classList.add('tocando');
+      setTimeout(() => b.classList.remove('tocando'), 200);
+      processarPassoMemoria(escolhido);
+    });
+  });
+}
+
+function renderSequenciaVisual() {
+  const cont = document.getElementById('seq-visual');
+  if (!cont) return;
+  cont.innerHTML = '';
+  const alvo = STATE.jogo.sequenciaAlvo;
+  const aluno = STATE.jogo.sequenciaAluno;
+  alvo.forEach((id, idx) => {
+    const div = document.createElement('div');
+    div.className = 'seq-passo';
+    div.dataset.idx = idx;
+    const instr = INSTRUMENTOS.find(i => i.id === id);
+    if (idx < aluno.length) {
+      div.textContent = instr.icone;
+      if (aluno[idx] === id) div.classList.add('acertou');
+      else div.classList.add('errou');
+    } else if (idx === aluno.length) {
+      div.textContent = '?';
+      div.classList.add('atual');
+    } else {
+      div.textContent = '?';
+    }
+    cont.appendChild(div);
+  });
+}
+
+async function tocarSequenciaAlvo() {
+  STATE.jogo.bloqueado = true;
+  const seq = STATE.jogo.sequenciaAlvo;
+  for (let i = 0; i < seq.length; i++) {
+    tocarInstrumento(seq[i]);
+    const btn = document.querySelector(`.instrumento-btn[data-instr="${seq[i]}"]`);
+    if (btn) {
+      btn.classList.add('demonstrando');
+      setTimeout(() => btn.classList.remove('demonstrando'), 400);
+    }
+    await dormir(550);
+  }
+  STATE.jogo.bloqueado = false;
+}
+
+function processarPassoMemoria(escolhido) {
+  STATE.jogo.sequenciaAluno.push(escolhido);
+  renderSequenciaVisual();
+  const idx = STATE.jogo.sequenciaAluno.length - 1;
+  const correto = STATE.jogo.sequenciaAluno[idx] === STATE.jogo.sequenciaAlvo[idx];
+
+  if (!correto) {
+    STATE.jogo.bloqueado = true;
+    document.querySelectorAll('.instrumento-btn').forEach(b => b.disabled = true);
+    finalizarComum(false, INSTRUMENTOS.find(i => i.id === STATE.jogo.sequenciaAlvo[idx]).nome);
+    return;
+  }
+
+  if (STATE.jogo.sequenciaAluno.length === STATE.jogo.sequenciaAlvo.length) {
+    STATE.jogo.bloqueado = true;
+    document.querySelectorAll('.instrumento-btn').forEach(b => b.disabled = true);
+    finalizarComum(true, null);
+  }
+}
+
+/* ATIVIDADE 4: TEMPO (notas descendo) */
+function exTempo() {
+  const arena = document.getElementById('arena');
+  arena.innerHTML = `
+    <div class="pergunta-grande">Toque o instrumento quando a nota cruzar a linha amarela!</div>
+    <div class="pista-musica" id="pista-musica">
+      <div class="placar-mini" id="placar-mini">0/0</div>
+      <div class="linha-acerto"></div>
+    </div>
+    ${renderInstrumentos()}
+  `;
+  iniciarPistaTempo();
+
+  arena.querySelectorAll('.instrumento-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      const escolhido = b.dataset.instr;
+      tocarInstrumento(escolhido);
+      b.classList.add('tocando');
+      setTimeout(() => b.classList.remove('tocando'), 200);
+      verificarAcertoTempo(escolhido);
+    });
+  });
+}
+
+const TEMPO_TOTAL_NOTAS = 12;
+const PISTA_ALTURA = 200;
+const LINHA_ACERTO_Y = PISTA_ALTURA - 30;
+const TOLERANCIA_PX = 35;
+const VELOCIDADE_PX_S = 90;
+
+function iniciarPistaTempo() {
+  STATE.jogo._tempo = {
+    acertos: 0,
+    erros: 0,
+    notasGeradas: 0,
+    notasAtivas: [], // {el, instr, nascido, tocado}
+    intervalo: null,
+    raf: null,
+    finalizada: false
+  };
+  atualizarPlacarTempo();
+  const proxNota = () => {
+    if (STATE.jogo._tempo.finalizada) return;
+    if (STATE.jogo._tempo.notasGeradas >= TEMPO_TOTAL_NOTAS) {
+      // espera as notas em voo terminarem
+      const ultimaTermina = setInterval(() => {
+        if (STATE.jogo._tempo.notasAtivas.length === 0) {
+          clearInterval(ultimaTermina);
+          finalizarTempo();
+        }
+      }, 200);
+      return;
+    }
+    gerarNota();
+    STATE.jogo._tempo.notasGeradas++;
+    setTimeout(proxNota, 1100 + Math.random() * 400);
+  };
+  setTimeout(proxNota, 800);
+  STATE.jogo._tempo.raf = requestAnimationFrame(loopTempo);
+}
+
+function gerarNota() {
+  const pista = document.getElementById('pista-musica');
+  if (!pista) return;
+  const instr = INSTRUMENTOS[Math.floor(Math.random() * INSTRUMENTOS.length)];
+  const el = document.createElement('div');
+  el.className = 'alvo-descendo ' + instr.id;
+  el.textContent = instr.icone;
+  // posição horizontal: 4 colunas
+  const colX = 0.15 + 0.7 * INSTRUMENTOS.findIndex(i => i.id === instr.id) / 3;
+  el.style.left = `calc(${(colX * 100).toFixed(1)}% - 25px)`;
+  el.style.top = '-60px';
+  pista.appendChild(el);
+  STATE.jogo._tempo.notasAtivas.push({
+    el, instr: instr.id,
+    nascido: performance.now(),
+    tocado: false
+  });
+}
+
+function loopTempo(now) {
+  if (STATE.jogo._tempo.finalizada) return;
+  STATE.jogo._tempo.notasAtivas = STATE.jogo._tempo.notasAtivas.filter(n => {
+    const dt = (now - n.nascido) / 1000;
+    const y = -60 + dt * VELOCIDADE_PX_S;
+    n.el.style.top = y + 'px';
+    if (y > PISTA_ALTURA + 20) {
+      // saiu sem ser tocada
+      if (!n.tocado) {
+        STATE.jogo._tempo.erros++;
+        atualizarPlacarTempo();
+      }
+      n.el.remove();
+      return false;
+    }
+    return true;
+  });
+  STATE.jogo._tempo.raf = requestAnimationFrame(loopTempo);
+}
+
+function verificarAcertoTempo(instr) {
+  if (STATE.jogo._tempo.finalizada) return;
+  // Encontra nota mais próxima da linha entre as do instrumento clicado
+  let melhor = null;
+  let melhorDist = Infinity;
+  STATE.jogo._tempo.notasAtivas.forEach(n => {
+    if (n.tocado) return;
+    if (n.instr !== instr) return;
+    const y = parseFloat(n.el.style.top) || 0;
+    const dist = Math.abs(y - LINHA_ACERTO_Y + 25);
+    if (dist < melhorDist) {
+      melhorDist = dist;
+      melhor = n;
+    }
+  });
+  if (melhor && melhorDist < TOLERANCIA_PX) {
+    melhor.tocado = true;
+    melhor.el.classList.add('acerto');
+    STATE.jogo._tempo.acertos++;
+  } else {
+    STATE.jogo._tempo.erros++;
+  }
+  atualizarPlacarTempo();
+}
+
+function atualizarPlacarTempo() {
+  const el = document.getElementById('placar-mini');
+  if (el) el.textContent = `${STATE.jogo._tempo.acertos}/${STATE.jogo._tempo.acertos + STATE.jogo._tempo.erros}`;
+}
+
+function finalizarTempo() {
+  STATE.jogo._tempo.finalizada = true;
+  if (STATE.jogo._tempo.raf) cancelAnimationFrame(STATE.jogo._tempo.raf);
+  const acertos = STATE.jogo._tempo.acertos;
+  const erros = STATE.jogo._tempo.erros;
+  STATE.jogo.acertos = acertos;
+  STATE.jogo.erros = erros;
+  STATE.jogo.progresso = STATE.jogo.etapa.total;
+  atualizarUI();
+  setTimeout(() => finalizarEtapa(), 800);
+}
+
+/* ATIVIDADE 5: COMPOSITOR */
+function exCompor() {
+  // Grid 4 instr x 8 passos
+  const arena = document.getElementById('arena');
+  let trilhas = '';
+  INSTRUMENTOS.forEach(i => {
+    trilhas += `<div class="trilha-instrumento">${i.icone}</div><div class="trilha-passos" data-instr="${i.id}">`;
+    for (let p = 0; p < 8; p++) {
+      trilhas += `<div class="passo-cel ${i.id}" data-instr="${i.id}" data-passo="${p}"></div>`;
+    }
+    trilhas += '</div>';
+  });
+  arena.innerHTML = `
+    <div class="pergunta-grande">🎹 Crie sua música! Toque os quadradinhos para programar.</div>
+    <div class="compositor-grid">${trilhas}</div>
+    <div class="controles">
+      <button class="btn-ctrl success" id="btn-tocar-comp">▶ Tocar minha música</button>
+      <button class="btn-ctrl" id="btn-limpar-comp">🗑️ Limpar</button>
+      <button class="btn-ctrl" id="btn-finalizar-comp">✓ Finalizar</button>
+    </div>
+  `;
+
+  // Estado da composição
+  const comp = {};
+  INSTRUMENTOS.forEach(i => { comp[i.id] = new Array(8).fill(false); });
+
+  arena.querySelectorAll('.passo-cel').forEach(c => {
+    c.addEventListener('click', () => {
+      const instr = c.dataset.instr;
+      const passo = parseInt(c.dataset.passo, 10);
+      comp[instr][passo] = !comp[instr][passo];
+      c.classList.toggle('ativo', comp[instr][passo]);
+      if (comp[instr][passo]) tocarInstrumento(instr);
+    });
+  });
+
+  let tocandoComp = false;
+  document.getElementById('btn-tocar-comp').onclick = async () => {
+    if (tocandoComp) return;
+    tocandoComp = true;
+    for (let p = 0; p < 8; p++) {
+      // marca passo atual
+      arena.querySelectorAll('.passo-cel').forEach(c => c.classList.remove('tocando-agora'));
+      arena.querySelectorAll(`.passo-cel[data-passo="${p}"]`).forEach(c => c.classList.add('tocando-agora'));
+      // toca cada instr ativado
+      INSTRUMENTOS.forEach(i => {
+        if (comp[i.id][p]) tocarInstrumento(i.id);
+      });
+      await dormir(280);
+    }
+    arena.querySelectorAll('.passo-cel').forEach(c => c.classList.remove('tocando-agora'));
+    tocandoComp = false;
+  };
+  document.getElementById('btn-limpar-comp').onclick = () => {
+    INSTRUMENTOS.forEach(i => { comp[i.id] = new Array(8).fill(false); });
+    arena.querySelectorAll('.passo-cel').forEach(c => c.classList.remove('ativo'));
+  };
+  document.getElementById('btn-finalizar-comp').onclick = () => {
+    // Verificar se tem pelo menos algumas notas pra contar como atividade feita
+    let totalNotas = 0;
+    INSTRUMENTOS.forEach(i => { totalNotas += comp[i.id].filter(x => x).length; });
+    if (totalNotas < 4) {
+      mostrarFeedback('info', 'Coloque pelo menos 4 notas pra finalizar! 🎵');
+      return;
+    }
+    // Compositor é livre - sempre passa com 3 estrelas
+    STATE.jogo.acertos = STATE.jogo.etapa.total;
+    STATE.jogo.erros = 0;
+    STATE.jogo.progresso = STATE.jogo.etapa.total;
+    atualizarUI();
+    finalizarEtapa();
+  };
+}
+
+/* ATIVIDADE 6: FINAL (mistura) */
+function exFinal() {
+  const tipos = ['sons', 'memcurta', 'memlonga'];
+  const tipo = tipos[Math.floor(Math.random() * tipos.length)];
+  if (tipo === 'sons') exSons();
+  else if (tipo === 'memcurta') exMemoria(3);
+  else exMemoria(4);
+}
+
+/* FINALIZAR EXERCÍCIO COMUM */
+function finalizarComum(correto, respCorretaTxt) {
+  if (correto) {
+    STATE.jogo.acertos++;
+    tocarSom('acerto');
+    mostrarFeedback('acerto', `🎉 ${elogio()}`);
+    renderMascote('svg-mascote-painel', 'feliz');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Mestre Bumbo:</b> ${STATE.jogo.etapa.fala_sucesso} ✨`;
+  } else {
+    STATE.jogo.erros++;
+    tocarSom('erro');
+    const txt = respCorretaTxt ? `🤗 ${incentivo()} Era <b>${respCorretaTxt}</b>.` : `🤗 ${incentivo()}`;
+    mostrarFeedback('erro', txt);
+    renderMascote('svg-mascote-painel', 'pensando');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Mestre Bumbo:</b> Bora pra próxima!`;
+  }
+  STATE.jogo.progresso++;
+  atualizarUI();
+  setTimeout(() => {
+    if (STATE.jogo.progresso >= STATE.jogo.etapa.total) finalizarEtapa();
+    else iniciarExercicio();
+  }, correto ? 1500 : 2200);
+}
+
+/* FINALIZAR ETAPA + TRANSIÇÃO */
+function finalizarEtapa() {
+  STATE.jogo.ativo = false;
+  if (STATE.jogo.timer) { clearInterval(STATE.jogo.timer); STATE.jogo.timer = null; }
+  const etapa = STATE.jogo.etapa;
+  const total = STATE.jogo.acertos + STATE.jogo.erros;
+  const aprov = total > 0 ? STATE.jogo.acertos / total : 0;
+
+  let estrelas;
+  // Compositor sempre dá 3
+  if (etapa.tipo === 'compor') estrelas = 3;
+  else if (aprov >= 0.95) estrelas = 3;
+  else if (aprov >= 0.75) estrelas = 2;
+  else estrelas = 1;
+  if (etapa.tipo !== 'compor' && STATE.jogo.erros > STATE.jogo.acertos) estrelas = 1;
+
+  const anterior = STATE.estrelasPorEtapa[etapa.id] || 0;
+  STATE.estrelasPorEtapa[etapa.id] = Math.max(anterior, estrelas);
+  if (STATE.etapaAtual === etapa.id && STATE.etapaAtual < ETAPAS.length) STATE.etapaAtual++;
+  salvar();
+
+  const todasFeitas = ETAPAS.every(e => STATE.estrelasPorEtapa[e.id]);
+  const proxima = ETAPAS.find(e => e.id > etapa.id);
+
+  if (todasFeitas) {
+    renderMascote('svg-mascote-trofeu', 'feliz');
+    document.getElementById('modal-trilha-completa').classList.add('aberto');
+    criarConfetes();
+    return;
+  }
+
+  if (estrelas === 1) {
+    renderMascote('svg-mascote-modal', 'pensando');
+    document.getElementById('etapa-fim-titulo').textContent = '💪 Vamos tentar de novo?';
+    document.getElementById('etapa-fim-msg').textContent = 'Praticar mais um pouquinho ajuda a aprender!';
+    let estrelasHtml = '';
+    for (let i = 0; i < 3; i++) {
+      estrelasHtml += i < estrelas ? '<span class="ativa">★</span>' : '<span class="vazia">★</span>';
+    }
+    document.getElementById('etapa-fim-estrelas').innerHTML = estrelasHtml;
+    document.getElementById('etapa-fim-detalhes').textContent = `${STATE.jogo.acertos} acerto${STATE.jogo.acertos !== 1 ? 's' : ''} · ${STATE.jogo.erros} erro${STATE.jogo.erros !== 1 ? 's' : ''}`;
+    const acoes = document.getElementById('etapa-fim-acoes');
+    acoes.innerHTML = '';
+    const btnRepetir = document.createElement('button');
+    btnRepetir.className = 'btn-confirmar';
+    btnRepetir.textContent = '↻ Repetir';
+    btnRepetir.onclick = () => { fecharModal('modal-etapa-fim'); comecarEtapaAtual(); };
+    acoes.appendChild(btnRepetir);
+    const btnAvancar = document.createElement('button');
+    btnAvancar.className = 'btn-cancelar';
+    btnAvancar.textContent = proxima ? '➡ Próxima' : '🏠 Voltar';
+    btnAvancar.onclick = () => {
+      fecharModal('modal-etapa-fim');
+      if (proxima) { STATE.etapaAtual = proxima.id; comecarEtapaAtual(); }
+      else voltarLobby();
+    };
+    acoes.appendChild(btnAvancar);
+    document.getElementById('modal-etapa-fim').classList.add('aberto');
+    return;
+  }
+
+  if (proxima) mostrarTransicaoAutomatica(estrelas, etapa, proxima);
+  else voltarLobby();
+}
+
+function mostrarTransicaoAutomatica(estrelas, etapaAtual, proxima) {
+  const overlay = document.createElement('div');
+  overlay.id = 'transicao-overlay';
+  overlay.style.cssText = `
+    position: fixed; inset: 0;
+    background: rgba(26,15,46,0.85);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999999;
+    backdrop-filter: blur(4px);
+    animation: transicaoFadeIn 0.3s ease-out;
+  `;
+  const card = document.createElement('div');
+  card.style.cssText = `
+    background: white;
+    border-radius: 20px;
+    padding: 24px 28px;
+    max-width: 420px;
+    text-align: center;
+    border: 4px solid #DC2626;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    animation: transicaoCardIn 0.4s ease-out;
+  `;
+  let estrelasHtml = '';
+  for (let i = 0; i < 3; i++) {
+    estrelasHtml += i < estrelas
+      ? '<span style="color:#FBBF24;">★</span>'
+      : '<span style="color:#E2E8F0;">★</span>';
+  }
+  card.innerHTML = `
+    <div style="font-size:3rem; line-height:1; margin-bottom:6px;">🥁</div>
+    <h2 style="font-family:'Fredoka',sans-serif; font-weight:700; color:#DC2626; font-size:1.4rem; margin:0 0 4px;">
+      ${estrelas === 3 ? 'Perfeito!' : 'Muito bom!'}
+    </h2>
+    <p style="font-family:'Fredoka',sans-serif; font-weight:500; color:#1A0F2E; font-size:0.95rem; margin:0 0 8px;">
+      Você passou da <b>${etapaAtual.titulo}</b>!
+    </p>
+    <div style="font-size:2rem; letter-spacing:8px; margin:8px 0;">${estrelasHtml}</div>
+    <div style="background:#FFF9E6; border:2px dashed #FBBF24; border-radius:12px; padding:10px; margin-top:10px;">
+      <div style="font-family:'Fredoka',sans-serif; font-weight:600; color:#475569; font-size:0.82rem;">Próxima aventura:</div>
+      <div style="font-family:'Fredoka',sans-serif; font-weight:700; color:#DC2626; font-size:1.05rem;">
+        ${proxima.emoji} ${proxima.titulo}
+      </div>
+    </div>
+  `;
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+  tocarSom('acerto');
+  setTimeout(() => {
+    overlay.style.animation = 'transicaoFadeOut 0.3s ease-out forwards';
+    setTimeout(() => {
+      overlay.remove();
+      STATE.etapaAtual = proxima.id;
+      comecarEtapaAtual();
+    }, 300);
+  }, 2500);
+}
+
+function voltarLobby() {
+  if (STATE.jogo.ativo && (STATE.jogo.acertos + STATE.jogo.erros) > 0) {
+    if (!confirm('Voltar ao mapa? Seu progresso da aventura atual será perdido.')) return;
+  }
+  STATE.jogo.ativo = false;
+  if (STATE.jogo._tempo) STATE.jogo._tempo.finalizada = true;
+  if (STATE.jogo.timer) { clearInterval(STATE.jogo.timer); STATE.jogo.timer = null; }
+  document.getElementById('treino').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-etapa-fim');
+  fecharModal('modal-trilha-completa');
+  renderLobby();
+}
+
+/* MODAIS */
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+
+/* CONFETES */
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#DC2626','#FBBF24','#581C87','#16A34A','#FEF3C7','#1A0F2E'];
+  for (let i = 0; i < 50; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* ACESSIBILIDADE COMPARTILHADA */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    // Escala SEMPRE inicia em 'normal' (não persistir entre sessões; vários alunos compartilham dispositivo)
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* WEBNODE EMBED */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+const ro = new ResizeObserver(() => reportarAltura());
+ro.observe(document.getElementById('pde-painel'));
+
+/* SELOS BNCC */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'musica',
+      icone: 'MUS',
+      titulo: 'BNCC Arte · Música',
+      itens: [
+        { cod: 'EF15AR13', desc: 'Identificar e apreciar criticamente diversas formas e gêneros de expressão musical, reconhecendo e analisando os usos e as funções da música em diversos contextos.' },
+        { cod: 'EF15AR14', desc: 'Perceber e explorar os elementos constitutivos da música (altura, intensidade, timbre, duração) por meio de jogos, brincadeiras e práticas diversas.' },
+        { cod: 'EF15AR15', desc: 'Explorar fontes sonoras diversas, como as existentes no próprio corpo (palmas, voz, percussão corporal), na natureza e em objetos cotidianos.' },
+        { cod: 'EF15AR16', desc: 'Experimentar improvisações, composições e sonorização de cenas, explorando recursos tecnológicos e fontes sonoras acústicas e digitais.' },
+        { cod: 'EF15AR17', desc: 'Experimentar improvisações, composições e sonorização em apresentações coletivas.' }
+      ]
+    },
+    {
+      tipo: 'afro',
+      icone: 'AFR',
+      titulo: 'Lei 10.639/2003 · Cultura Afro-Brasileira',
+      itens: [
+        { cod: 'Lei 10.639', desc: 'Atende a obrigatoriedade do ensino de história e cultura afro-brasileira, com instrumentos de matriz africana (atabaque, agogô) presentes no samba, candomblé e capoeira.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Cultura Digital',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-etapa-fim', 'modal-trilha-completa'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+const styleTransicao = document.createElement('style');
+styleTransicao.textContent = `
+@keyframes transicaoFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes transicaoFadeOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes transicaoCardIn {
+  0% { transform: scale(0.7) translateY(20px); opacity: 0; }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}`;
+document.head.appendChild(styleTransicao);
+
+/* INICIALIZAÇÃO */
+carregar();
+carregarA11y();
+renderLobby();
+
+// Inicializar áudio no primeiro toque
+['click','touchstart'].forEach(ev => {
+  document.addEventListener(ev, () => inicializarAudio(), { once: false });
+});
+
+document.getElementById('nome-aluno').addEventListener('input', (e) => {
+  STATE.nomeAluno = e.target.value;
+  salvar();
+});
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+</script>
+
+</body>
+</html>

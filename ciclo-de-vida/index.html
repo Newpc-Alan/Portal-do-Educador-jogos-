@@ -1,0 +1,2452 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Ciclo de Vida Vivo · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #14532D);
+  padding: 8px clamp(6px, 2vw, 16px) 16px;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  --pde-escala: 1;
+  --pde-cor-texto: #14532D;
+  font-size: calc(1rem * var(--pde-escala));
+  background: linear-gradient(180deg, #DCFCE7 0%, #86EFAC 100%);
+  border-radius: 16px;
+}
+
+#pde-painel.txt-grande   { --pde-escala: 1.18; }
+#pde-painel.txt-enorme   { --pde-escala: 1.42; }
+#pde-painel.txt-gigante  { --pde-escala: 1.72; }
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-treino,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .fase-card { background: #1A1A1A !important; color: #FFF !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .fase-card.acertado { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .fase-card.errado { background: #450A0A !important; color: #FCA5A5 !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+
+#pde-painel.daltonico .fase-card.acertado { background: linear-gradient(135deg,#3B82F6,#1E3A8A) !important; color: white !important; border-color: #1E3A8A !important; }
+#pde-painel.daltonico .fase-card.acertado::before { content: " ✓ "; }
+#pde-painel.daltonico .fase-card.errado { background: #FFEDD5 !important; color: #9A3412 !important; border-color: #FB923C !important; }
+#pde-painel.daltonico .fase-card.errado::before { content: " ✗ "; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#15803D 0%,#166534 100%);
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: white;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 8px rgba(21,128,61,0.2);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.95rem, 2.2vw, 1.3rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 18px;
+  padding: 14px;
+  border: 3px solid #16A34A;
+  box-shadow: 0 4px 12px rgba(22,163,74,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, #BBF7D0 0%, #86EFAC 50%, #4ADE80 100%);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 2px solid #15803D;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 80px; height: 80px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1;
+  background: white;
+  padding: 9px 12px;
+  border-radius: 12px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #14532D;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: '';
+  position: absolute;
+  left: -10px; top: 24px;
+  width: 0; height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 12px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #15803D;
+  font-size: 1.05rem;
+  margin-bottom: 2px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 6px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 90px; height: 90px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+#pde-painel .input-nome {
+  width: 100%;
+  border: 3px solid #16A34A;
+  border-radius: 14px;
+  padding: 11px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  background: white;
+  color: #14532D;
+  margin-bottom: 12px;
+}
+#pde-painel .input-nome:focus { outline: none; border-color: #15803D; box-shadow: 0 0 0 4px rgba(22,163,74,0.25); }
+
+/* MAPA NO LOBBY */
+#pde-painel .mapa-aventura {
+  background: linear-gradient(180deg,#FBBF24 0%,#F59E0B 100%);
+  border-radius: 16px;
+  padding: 14px 12px;
+  margin-bottom: 12px;
+  border: 3px solid #B45309;
+}
+#pde-painel .mapa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr));
+  gap: 6px;
+}
+@media (max-width: 480px) {
+  #pde-painel .mapa-grid { grid-template-columns: repeat(2, 1fr); }
+}
+#pde-painel .mapa-etapa {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.12s;
+  border: 2px solid #FED7AA;
+  position: relative;
+}
+#pde-painel .mapa-etapa:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.12); }
+#pde-painel .mapa-etapa .circulo {
+  width: 36px; height: 36px;
+  background: #16A34A;
+  border: 2px solid #15803D;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 4px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: white;
+}
+#pde-painel .mapa-etapa .emoji-lugar { font-size: 1.7rem; line-height: 1; display: block; margin-bottom: 2px; }
+#pde-painel .mapa-etapa .nome-lugar {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.74rem;
+  color: #14532D;
+  line-height: 1.1;
+  display: block;
+}
+#pde-painel .mapa-etapa .estrelas-lugar { margin-top: 2px; font-size: 0.78rem; letter-spacing: 1px; }
+#pde-painel .mapa-etapa .estrelas-lugar .ativa { color: #FBBF24; }
+#pde-painel .mapa-etapa .estrelas-lugar .vazia { color: #CBD5E1; }
+#pde-painel .mapa-etapa.feita { background: linear-gradient(135deg,#A8E6CF 0%,#7FC8A9 100%); border-color: #5BA084; }
+#pde-painel .mapa-etapa.feita .circulo { background: #6BCB77; color: white; border-color: #4DA85A; }
+#pde-painel .mapa-etapa.atual { background: linear-gradient(135deg,#FFD54F 0%,#FFA726 100%); border-color: #FB8C00; box-shadow: 0 4px 12px rgba(251,140,0,0.3); }
+#pde-painel .mapa-etapa.atual .circulo { background: #15803D; color: white; border-color: #14532D; }
+#pde-painel .mapa-etapa.bloqueada { background: #E2E8F0; cursor: not-allowed; opacity: 0.7; }
+#pde-painel .mapa-etapa.bloqueada::after { content: '🔒'; position: absolute; top: 4px; right: 6px; font-size: 1rem; }
+#pde-painel .mapa-etapa.bloqueada .circulo { background: #94A3B8; color: #475569; border-color: #64748B; }
+
+#pde-painel .btn-comecar-aventura {
+  width: 100%;
+  background: linear-gradient(135deg,#16A34A 0%,#14532D 100%);
+  color: white;
+  border: 3px solid white;
+  border-radius: 14px;
+  padding: 12px 20px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #14532D, 0 6px 12px rgba(20,83,45,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #14532D;
+}
+#pde-painel .btn-comecar-aventura:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #14532D, 0 3px 6px rgba(20,83,45,0.25);
+}
+
+/* TELA DE TREINO */
+#pde-painel .treino-grid {
+  display: grid; gap: 12px;
+  grid-template-columns: 240px minmax(0, 1fr);
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #pde-painel .treino-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  #pde-painel .area-treino { order: -1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+#pde-painel .painel-info {
+  background: white;
+  border-radius: 16px;
+  padding: 12px;
+  border: 3px solid #15803D;
+  box-shadow: 0 2px 8px rgba(21,128,61,0.12);
+  min-width: 0;
+}
+#pde-painel .area-treino {
+  background: white;
+  border-radius: 16px;
+  padding: 10px;
+  border: 3px solid #16A34A;
+  box-shadow: 0 2px 8px rgba(22,163,74,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg,#DCFCE7 0%,#BBF7D0 100%);
+  border-radius: 12px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 2px solid #15803D;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 44px; height: 44px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #14532D;
+  line-height: 1.25;
+  min-width: 0;
+  word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #15803D; font-weight: 700; }
+
+#pde-painel .etapa-titulo-grande {
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #15803D;
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+}
+#pde-painel .etapa-titulo-grande .emoji-lugar { font-size: 1.3rem; margin-right: 4px; }
+
+#pde-painel .estrelinhas-prog {
+  display: flex; flex-wrap: wrap; gap: 3px;
+  justify-content: center;
+  background: #FFF9E6;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 2px solid #FBBF24;
+}
+#pde-painel .estrelinhas-prog .estrelinha {
+  font-size: 1.1rem;
+  color: #CBD5E1;
+  transition: color 0.3s;
+}
+#pde-painel .estrelinhas-prog .estrelinha.ativa { color: #FBBF24; text-shadow: 0 0 6px rgba(251,191,36,0.5); }
+
+#pde-painel .mini-mapa { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+#pde-painel .mini-mapa-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #14532D;
+  font-size: 0.78rem;
+  margin-bottom: 2px;
+}
+#pde-painel .mini-mapa-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px; border-radius: 8px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.74rem;
+  color: #94A3B8;
+  background: #F8FAFC;
+}
+#pde-painel .mini-mapa-item .num-mini {
+  width: 18px; height: 18px;
+  background: #CBD5E1;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  color: white;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+#pde-painel .mini-mapa-item.feita { color: #6BCB77; background: #E0F7E9; }
+#pde-painel .mini-mapa-item.feita .num-mini { background: #6BCB77; }
+#pde-painel .mini-mapa-item.atual {
+  color: white;
+  background: linear-gradient(135deg,#16A34A 0%,#14532D 100%);
+  font-weight: 700;
+}
+#pde-painel .mini-mapa-item.atual .num-mini { background: #FBBF24; color: #14532D; }
+
+/* PERGUNTA */
+#pde-painel .pergunta-grande {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.95rem, 4vw, 1.15rem);
+  color: #15803D;
+  text-align: center;
+  margin-bottom: 4px;
+  padding: 0 4px;
+  word-wrap: break-word;
+}
+
+/* GRID DE FASES (para clicar em ordem) */
+#pde-painel .fases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+}
+#pde-painel .fase-card {
+  background: white;
+  border: 3px solid #16A34A;
+  border-radius: 14px;
+  padding: 10px 6px;
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s, background 0.2s;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #14532D;
+  box-shadow: 0 3px 0 #15803D;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-height: 130px;
+  position: relative;
+  overflow: hidden;
+}
+#pde-painel .fase-card:hover:not(:disabled):not(.acertado):not(.errado) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #15803D;
+}
+#pde-painel .fase-card:active:not(:disabled):not(.acertado):not(.errado) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #15803D;
+}
+#pde-painel .fase-card .svg-fase {
+  width: clamp(60px, 18vw, 80px);
+  height: clamp(60px, 18vw, 80px);
+  display: block;
+}
+#pde-painel .fase-card .svg-fase svg {
+  width: 100%; height: 100%;
+}
+#pde-painel .fase-card .nome-fase {
+  font-size: 0.78rem;
+  text-align: center;
+  line-height: 1.2;
+}
+#pde-painel .fase-card.acertado {
+  background: linear-gradient(135deg,#86EFAC 0%,#22C55E 100%);
+  border-color: #15803D;
+  box-shadow: 0 3px 0 #14532D;
+  animation: pulseAcerto 0.4s;
+}
+#pde-painel .fase-card.acertado .nome-fase { color: white; }
+#pde-painel .fase-card.errado {
+  background: #FECACA;
+  border-color: #991B1B;
+  animation: shake 0.4s;
+}
+#pde-painel .fase-card.alvo-revelado {
+  background: #FFF59D;
+  border-color: #F57F17;
+  animation: piscarAlvo 0.6s ease-in-out 2;
+}
+@keyframes piscarAlvo {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+#pde-painel .fase-card .badge-ordem {
+  position: absolute;
+  top: 4px; left: 4px;
+  background: #FBBF24;
+  color: #14532D;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: 2px solid #14532D;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* SEQUÊNCIA VISUAL DE PROGRESSO */
+#pde-painel .seq-progresso {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  background: #14532D;
+  padding: 10px;
+  border-radius: 12px;
+  border: 3px solid #FBBF24;
+  min-height: 56px;
+  align-items: center;
+  margin: 6px 0;
+}
+#pde-painel .seq-progresso .seq-passo {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  background: #166534;
+  color: white;
+  border: 2px solid #FBBF24;
+  transition: all 0.2s;
+}
+#pde-painel .seq-progresso .seq-passo.feito { background: #FBBF24; color: #14532D; }
+#pde-painel .seq-progresso .seq-passo.atual {
+  background: white;
+  border-color: #FBBF24;
+  color: #14532D;
+  box-shadow: 0 0 0 4px rgba(251,191,36,0.5);
+  animation: pulsoAtual 0.6s ease-in-out infinite;
+}
+@keyframes pulsoAtual {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* QUIZ FINAL (etapa 6) */
+#pde-painel .quiz-pergunta {
+  background: linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%);
+  border: 3px solid #16A34A;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+#pde-painel .quiz-pergunta .qsvg {
+  width: clamp(80px, 22vw, 120px);
+  height: clamp(80px, 22vw, 120px);
+  margin: 0 auto 6px;
+  display: block;
+}
+#pde-painel .quiz-pergunta .qtext {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #14532D;
+  font-size: clamp(0.95rem, 4vw, 1.15rem);
+  margin: 4px 0;
+}
+#pde-painel .opcoes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+}
+#pde-painel .opcao-btn {
+  background: white;
+  border: 3px solid #16A34A;
+  border-radius: 12px;
+  padding: 12px 8px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.92rem, 3.5vw, 1.05rem);
+  color: #14532D;
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s;
+  box-shadow: 0 3px 0 #15803D;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-wrap: break-word;
+  line-height: 1.2;
+}
+#pde-painel .opcao-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 0 #15803D; }
+#pde-painel .opcao-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 #15803D; }
+#pde-painel .opcao-btn:disabled { cursor: default; }
+#pde-painel .opcao-btn.acerto {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  color: white;
+  border-color: #4DA85A;
+  box-shadow: 0 3px 0 #2E7D32;
+  animation: pulseAcerto 0.4s;
+}
+@keyframes pulseAcerto { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+#pde-painel .opcao-btn.erro {
+  background: #FFCDD2;
+  color: #C62828;
+  border-color: #C62828;
+  animation: shake 0.4s;
+}
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+#pde-painel .opcao-btn.alt-correta {
+  background: #FFF59D;
+  color: #E65100;
+  border-color: #F57F17;
+}
+
+/* Card de informação após acerto/erro */
+#pde-painel .info-fase {
+  background: linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%);
+  border: 2px solid #15803D;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-top: 8px;
+}
+#pde-painel .info-fase h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #14532D;
+  font-size: 1rem;
+  margin: 0 0 4px;
+}
+#pde-painel .info-fase .descricao {
+  font-size: 0.85rem;
+  color: #166534;
+  line-height: 1.4;
+}
+
+/* Feedback */
+#pde-painel .feedback {
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px;
+  animation: aparecerFeedback 0.3s ease-out;
+}
+@keyframes aparecerFeedback { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+#pde-painel .feedback.acerto {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  color: white;
+  border: 3px solid #2E7D32;
+}
+#pde-painel .feedback.erro {
+  background: linear-gradient(135deg,#FFCDD2 0%,#EF9A9A 100%);
+  color: #6B1414;
+  border: 3px solid #C62828;
+}
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(20,83,45,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #16A34A;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal { width: 100px; height: 100px; margin: 0 auto 8px; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #15803D;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #14532D; font-size: 0.95rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  color: white; border: 3px solid #2E7D32;
+  box-shadow: 0 4px 0 #2E7D32;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .estrelas-conquistadas { font-size: 2.6rem; letter-spacing: 8px; margin: 10px 0; }
+#pde-painel .estrelas-conquistadas .ativa {
+  color: #FBBF24; display: inline-block; transform: scale(0);
+  text-shadow: 0 0 12px rgba(251,191,36,0.7);
+  animation: estrelaPopFinal 0.6s ease-out forwards;
+}
+#pde-painel .estrelas-conquistadas .ativa:nth-child(1) { animation-delay: 0.2s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(2) { animation-delay: 0.5s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(3) { animation-delay: 0.8s; }
+#pde-painel .estrelas-conquistadas .vazia { color: #E2E8F0; }
+@keyframes estrelaPopFinal {
+  0% { transform: scale(0) rotate(-180deg); }
+  60% { transform: scale(1.4) rotate(15deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #15803D;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #14532D; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+
+#pde-painel .a11y-grupo { background: #DCFCE7; border: 3px solid #16A34A; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #15803D; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #16A34A; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#16A34A 0%,#14532D 100%); color: white; border-color: #14532D; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #16A34A; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%); color: white; border-color: #2E7D32; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #2E7D32; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #15803D;
+  border: 2px solid #15803D; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #15803D; color: white; }
+
+/* Confetes */
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #FBBF24; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #15803D; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#37B1DA,#1E324A); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.ciencias { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #14532D; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #14532D; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #E2E8F0; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FBBF24; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #15803D; }
+
+@media (max-width: 380px) {
+  #pde-painel { padding: 6px 4px 12px; }
+  #pde-painel .header h1 { font-size: 0.9rem; }
+  #pde-painel .btn-header { font-size: 0.7rem; padding: 4px 7px; }
+  #pde-painel .lobby-card,
+  #pde-painel .area-treino,
+  #pde-painel .painel-info { padding: 10px; border-width: 2px; }
+  #pde-painel .fase-card { min-height: 110px; padding: 8px 4px; }
+}
+
+
+
+/* ============================================ */
+/* PATCH UNIFICADO v2                            */
+/* 1. Acessibilidade: escala de texto FUNCIONAL  */
+/* 2. Desktop-wide: aproveita tela grande        */
+/* ============================================ */
+
+/* === FIX A11Y: zoom CSS em vez de --pde-escala === */
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+/* Fallback: se navegador não suporta zoom (Firefox <126), usa transform:scale */
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+/* === DESKTOP-WIDE === */
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 12px clamp(12px, 2vw, 24px) 24px; }
+  #pde-painel .lobby-card { padding: 18px; }
+  #pde-painel .area-treino { padding: 16px; }
+  #pde-painel .painel-info { padding: 16px; }
+  #pde-painel .treino-grid { grid-template-columns: 280px minmax(0, 1fr); gap: 18px; }
+  #pde-painel .opcoes-grid {
+    max-width: 900px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  #pde-painel .fases-grid {
+    max-width: 1100px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  #pde-painel .fase-card { min-height: 170px; padding: 14px 8px; }
+  #pde-painel .fase-card .svg-fase { width: 110px; height: 110px; }
+  #pde-painel .fase-card .nome-fase { font-size: 0.92rem; }
+  #pde-painel .cores-grid {
+    max-width: 800px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .instrumentos-grid {
+    max-width: 720px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  #pde-painel .instrumento-btn { min-height: 110px; }
+  #pde-painel .instrumento-btn .icone-instr { font-size: 2.6rem; }
+  #pde-painel .instrumento-btn .nome-instr { font-size: 0.85rem; }
+  #pde-painel .mapa-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .mapa-etapa { padding: 12px 8px; }
+  #pde-painel .mapa-etapa .emoji-lugar { font-size: 2.2rem; }
+  #pde-painel .mapa-etapa .nome-lugar { font-size: 0.85rem; }
+  #pde-painel .pergunta-grande { font-size: 1.35rem; padding: 0 8px; margin-bottom: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .modal-conteudo h2 { font-size: 1.65rem; }
+  #pde-painel .modal-conteudo p { font-size: 1.05rem; }
+  #pde-painel .opcao-btn { min-height: 64px; font-size: 1.05rem; padding: 14px 12px; }
+  #pde-painel .area-mistura { max-width: 420px; }
+  #pde-painel .pista-musica { height: 280px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  #pde-painel .compositor-grid { grid-template-columns: 90px 1fr; max-width: 900px; margin: 0 auto; }
+  #pde-painel .passo-cel { min-height: 38px; }
+  #pde-painel .seq-progresso { padding: 14px; max-width: 720px; margin: 8px auto; }
+  #pde-painel .seq-progresso .seq-passo { width: 44px; height: 44px; font-size: 1.6rem; }
+  #pde-painel .estrelinhas-prog { padding: 12px; }
+  #pde-painel .header h1 { font-size: 1.45rem; }
+  #pde-painel .btn-header { font-size: 0.92rem; padding: 7px 14px; }
+  #pde-painel .input-nome { font-size: 1.1rem; padding: 14px 18px; }
+  #pde-painel .btn-comecar-aventura { font-size: 1.2rem; padding: 14px 24px; }
+  #pde-painel .quiz-pergunta { padding: 18px; }
+  #pde-painel .quiz-pergunta .qsvg { width: 160px; height: 160px; }
+  #pde-painel .quiz-pergunta .qtext { font-size: 1.25rem; }
+  #pde-painel .info-fase { padding: 14px 18px; max-width: 900px; margin-left: auto; margin-right: auto; }
+  #pde-painel .alvo-info { max-width: 480px; padding: 12px 18px; font-size: 1.05rem; }
+  #pde-painel .pote-cor { width: 100px; height: 100px; }
+  #pde-painel .balde { width: 130px; height: 130px; }
+  #pde-painel .escolha-dupla { max-width: 480px; gap: 14px; }
+  #pde-painel .opcao-dupla { font-size: 1.2rem; min-height: 90px; padding: 22px 12px; }
+  #pde-painel .cor-mostra { width: 200px; height: 200px; }
+  #pde-painel .svg-ilustracao { width: 280px; height: 280px; }
+  #pde-painel .mapa-jogo-wrap { max-width: 900px; margin: 0 auto; }
+}
+@media (min-width: 1440px) {
+  #pde-painel { max-width: 1400px; }
+  #pde-painel .opcoes-grid { max-width: 1000px; }
+  #pde-painel .fases-grid { max-width: 1240px; }
+}
+/* === FIM PATCH UNIFICADO v2 === */
+
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>🌱 Ciclo de Vida Vivo · com Verdinho</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="resetarProgresso()" title="Recomeçar">↻</button>
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Oi, eu sou o Verdinho! 🌱</strong>
+        <span id="balao-saudacao">Vamos descobrir como tudo cresce na natureza?</span>
+      </div>
+    </div>
+
+    <input type="text" id="nome-aluno" class="input-nome" placeholder="✏️ Qual é o seu nome?" maxlength="30" autocomplete="off">
+
+    <div class="mapa-aventura">
+      <div class="mapa-grid" id="mapa-grid"></div>
+    </div>
+
+    <button class="btn-comecar-aventura" id="btn-comecar" onclick="comecarEtapaAtual()">🚀 Começar a Aventura!</button>
+  </div>
+
+  <div id="treino" class="treino-grid hidden">
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Vamos lá!</div>
+      </div>
+      <div class="etapa-titulo-grande" id="etapa-titulo">
+        <span class="emoji-lugar" id="etapa-emoji">🌱</span>
+        <span id="etapa-nome">—</span>
+      </div>
+      <div class="estrelinhas-prog" id="estrelinhas-prog"></div>
+      <div class="mini-mapa">
+        <div class="mini-mapa-titulo">🌿 Sua jornada</div>
+        <div id="mini-mapa-itens"></div>
+      </div>
+    </div>
+
+    <div class="area-treino">
+      <div id="arena"></div>
+      <div id="feedback" class="feedback hidden"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-etapa-fim">
+    <div class="modal-conteudo">
+      <svg class="mascote-modal" viewBox="0 0 100 100" id="svg-mascote-modal"></svg>
+      <h2 id="etapa-fim-titulo">Atividade concluída!</h2>
+      <p id="etapa-fim-msg">Muito bem!</p>
+      <div class="estrelas-conquistadas" id="etapa-fim-estrelas"></div>
+      <p id="etapa-fim-detalhes" style="font-style:italic; color:#94A3B8;"></p>
+      <div class="acoes" id="etapa-fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-trilha-completa">
+    <div class="modal-conteudo">
+      <svg class="mascote-modal" viewBox="0 0 100 100" id="svg-mascote-trofeu"></svg>
+      <h2>🏆 Mestre da Vida!</h2>
+      <p>Parabéns! Você descobriu como nasce, cresce e se transforma a vida!</p>
+      <div class="estrelas-conquistadas">
+        <span class="ativa">★</span><span class="ativa">★</span><span class="ativa">★</span>
+      </div>
+      <p style="font-weight:700; color:#15803D; font-size:1.05rem; font-family:'Fredoka',sans-serif;">🌱 Você é um Mestre dos Ciclos da Vida!</p>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="voltarLobby()">Voltar ao mapa</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🌱 Como Brincar com Verdinho</h2>
+      <h3>🎯 Objetivo</h3>
+      <p>Descobrir como cresce e se transforma cada ser vivo em 6 aventuras com o Verdinho.</p>
+
+      <h3>📚 As 6 aventuras</h3>
+      <ul>
+        <li><b>🌱 Planta:</b> da semente ao fruto</li>
+        <li><b>🦋 Borboleta:</b> do ovo à borboleta (metamorfose completa)</li>
+        <li><b>🐸 Sapo:</b> do ovo ao sapo (metamorfose aquática)</li>
+        <li><b>🐔 Galinha:</b> do ovo à galinha</li>
+        <li><b>👶 Ser Humano:</b> do bebê ao idoso</li>
+        <li><b>✨ Desafio Final:</b> tudo o que aprendeu!</li>
+      </ul>
+
+      <h3>🖱️ Como jogar</h3>
+      <ul>
+        <li>Verdinho mostra as fases do ciclo <b>fora de ordem</b>.</li>
+        <li>Você toca em cada fase <b>na ordem certa</b> (1ª, 2ª, 3ª...).</li>
+        <li>Acertou: a fase fica verde com o número da ordem.</li>
+        <li>Errou: tente lembrar qual vem primeiro!</li>
+      </ul>
+
+      <h3>⭐ Pontuação</h3>
+      <ul>
+        <li><b>3 estrelas:</b> 95% de aproveitamento ou mais</li>
+        <li><b>2 estrelas:</b> 75% a 94%</li>
+        <li><b>1 estrela:</b> abaixo de 75% (oferecemos repetir)</li>
+      </ul>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-ajuda')">Bora crescer!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script>
+/* MASCOTE VERDINHO - brotinho com olhos grandes */
+function svgMascote(expressao = 'normal') {
+  let olhos;
+  if (expressao === 'feliz') {
+    olhos = `
+      <path d="M 38 56 Q 43 51, 48 56" fill="none" stroke="#14532D" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 52 56 Q 57 51, 62 56" fill="none" stroke="#14532D" stroke-width="2.5" stroke-linecap="round"/>
+    `;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <circle cx="43" cy="58" r="3" fill="#14532D"/>
+      <circle cx="57" cy="58" r="3" fill="#14532D"/>
+    `;
+  } else {
+    olhos = `
+      <ellipse cx="43" cy="58" rx="5" ry="6" fill="white" stroke="#14532D" stroke-width="1.5"/>
+      <ellipse cx="57" cy="58" rx="5" ry="6" fill="white" stroke="#14532D" stroke-width="1.5"/>
+      <circle cx="44" cy="59" r="2.5" fill="#14532D"/>
+      <circle cx="58" cy="59" r="2.5" fill="#14532D"/>
+      <circle cx="45" cy="58" r="0.8" fill="white"/>
+      <circle cx="59" cy="58" r="0.8" fill="white"/>
+    `;
+  }
+
+  let boca;
+  if (expressao === 'feliz') {
+    boca = `<path d="M 42 72 Q 50 80, 58 72" fill="#DC2626" stroke="#7F1D1D" stroke-width="1.5"/>`;
+  } else if (expressao === 'pensando') {
+    boca = `<line x1="46" y1="74" x2="54" y2="74" stroke="#14532D" stroke-width="2" stroke-linecap="round"/>`;
+  } else {
+    boca = `<path d="M 44 72 Q 50 78, 56 72" fill="none" stroke="#14532D" stroke-width="2" stroke-linecap="round"/>`;
+  }
+
+  return `
+    <!-- Sombra -->
+    <ellipse cx="50" cy="92" rx="22" ry="3" fill="rgba(0,0,0,0.18)"/>
+
+    <!-- Terra (vasinho de terra) -->
+    <ellipse cx="50" cy="88" rx="20" ry="6" fill="#78350F" stroke="#451A03" stroke-width="1.5"/>
+    <ellipse cx="50" cy="86" rx="18" ry="4" fill="#92400E"/>
+
+    <!-- Caule -->
+    <rect x="46" y="78" width="8" height="14" fill="#16A34A" stroke="#14532D" stroke-width="1"/>
+    <!-- Linha decorativa do caule -->
+    <line x1="48" y1="80" x2="48" y2="90" stroke="#14532D" stroke-width="0.6" opacity="0.5"/>
+    <line x1="52" y1="80" x2="52" y2="90" stroke="#14532D" stroke-width="0.6" opacity="0.5"/>
+
+    <!-- Folhinha esquerda (saindo do caule) -->
+    <path d="M 46 80 Q 30 75, 25 65 Q 28 80, 46 84 Z" fill="#22C55E" stroke="#15803D" stroke-width="1.5"/>
+    <!-- Folhinha direita -->
+    <path d="M 54 80 Q 70 75, 75 65 Q 72 80, 54 84 Z" fill="#22C55E" stroke="#15803D" stroke-width="1.5"/>
+    <!-- Veias das folhas -->
+    <path d="M 46 80 Q 35 75, 28 68" fill="none" stroke="#14532D" stroke-width="0.6" opacity="0.5"/>
+    <path d="M 54 80 Q 65 75, 72 68" fill="none" stroke="#14532D" stroke-width="0.6" opacity="0.5"/>
+
+    <!-- CABEÇA do brotinho (broto principal verde) -->
+    <ellipse cx="50" cy="55" rx="22" ry="26" fill="#22C55E" stroke="#15803D" stroke-width="2"/>
+    <!-- Brilho no broto -->
+    <ellipse cx="42" cy="46" rx="6" ry="9" fill="white" opacity="0.3"/>
+
+    <!-- Folhinhas no topo da cabeça (broto novinho) -->
+    <path d="M 40 30 Q 35 18, 42 22" fill="#16A34A" stroke="#14532D" stroke-width="1"/>
+    <path d="M 50 28 Q 50 15, 50 26" fill="#16A34A" stroke="#14532D" stroke-width="1"/>
+    <path d="M 60 30 Q 65 18, 58 22" fill="#16A34A" stroke="#14532D" stroke-width="1"/>
+
+    <!-- Bochechinhas rosadas -->
+    <ellipse cx="33" cy="65" rx="4" ry="3" fill="#FB7185" opacity="0.6"/>
+    <ellipse cx="67" cy="65" rx="4" ry="3" fill="#FB7185" opacity="0.6"/>
+
+    <!-- Olhos -->
+    ${olhos}
+
+    <!-- Boca -->
+    ${boca}
+
+    <!-- Bracinhos finos -->
+    <line x1="28" y1="62" x2="22" y2="68" stroke="#15803D" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="72" y1="62" x2="78" y2="68" stroke="#15803D" stroke-width="2.5" stroke-linecap="round"/>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* SVGs DAS FASES DOS CICLOS */
+const SVG_FASES = {
+  // === PLANTA ===
+  semente: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="30" ry="4" fill="rgba(0,0,0,0.15)"/>
+    <ellipse cx="50" cy="60" rx="14" ry="22" fill="#78350F" stroke="#451A03" stroke-width="2"/>
+    <line x1="50" y1="42" x2="50" y2="78" stroke="#451A03" stroke-width="1.5" opacity="0.6"/>
+    <ellipse cx="48" cy="55" rx="3" ry="5" fill="#92400E" opacity="0.6"/>
+  </svg>`,
+
+  semente_terra: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="30" ry="4" fill="rgba(0,0,0,0.18)"/>
+    <rect x="10" y="60" width="80" height="32" fill="#78350F"/>
+    <rect x="10" y="60" width="80" height="6" fill="#92400E"/>
+    <ellipse cx="50" cy="75" rx="10" ry="14" fill="#5C3317" stroke="#451A03" stroke-width="1.5"/>
+    <line x1="50" y1="63" x2="50" y2="85" stroke="#451A03" stroke-width="1" opacity="0.5"/>
+    <!-- gotinhas de água -->
+    <path d="M 25 30 Q 20 20, 25 18 Q 30 20, 25 30" fill="#3B82F6"/>
+    <path d="M 75 35 Q 70 25, 75 23 Q 80 25, 75 35" fill="#3B82F6"/>
+    <circle cx="40" cy="22" r="2" fill="#60A5FA"/>
+  </svg>`,
+
+  muda: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="30" ry="4" fill="rgba(0,0,0,0.18)"/>
+    <rect x="10" y="65" width="80" height="27" fill="#78350F"/>
+    <rect x="46" y="40" width="8" height="30" fill="#16A34A" stroke="#14532D" stroke-width="1"/>
+    <ellipse cx="42" cy="42" rx="8" ry="4" fill="#22C55E" stroke="#14532D" stroke-width="1" transform="rotate(-30 42 42)"/>
+    <ellipse cx="58" cy="42" rx="8" ry="4" fill="#22C55E" stroke="#14532D" stroke-width="1" transform="rotate(30 58 42)"/>
+  </svg>`,
+
+  planta_jovem: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="32" ry="4" fill="rgba(0,0,0,0.18)"/>
+    <rect x="10" y="68" width="80" height="24" fill="#78350F"/>
+    <rect x="46" y="20" width="8" height="50" fill="#16A34A" stroke="#14532D" stroke-width="1"/>
+    <!-- folhas em níveis -->
+    <ellipse cx="38" cy="55" rx="14" ry="6" fill="#22C55E" stroke="#14532D" stroke-width="1" transform="rotate(-25 38 55)"/>
+    <ellipse cx="62" cy="55" rx="14" ry="6" fill="#22C55E" stroke="#14532D" stroke-width="1" transform="rotate(25 62 55)"/>
+    <ellipse cx="36" cy="38" rx="14" ry="6" fill="#22C55E" stroke="#14532D" stroke-width="1" transform="rotate(-25 36 38)"/>
+    <ellipse cx="64" cy="38" rx="14" ry="6" fill="#22C55E" stroke="#14532D" stroke-width="1" transform="rotate(25 64 38)"/>
+    <ellipse cx="50" cy="22" rx="10" ry="5" fill="#22C55E" stroke="#14532D" stroke-width="1"/>
+  </svg>`,
+
+  planta_flor: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="32" ry="4" fill="rgba(0,0,0,0.18)"/>
+    <rect x="10" y="70" width="80" height="22" fill="#78350F"/>
+    <rect x="47" y="30" width="6" height="42" fill="#16A34A"/>
+    <ellipse cx="38" cy="55" rx="10" ry="5" fill="#22C55E" transform="rotate(-25 38 55)"/>
+    <ellipse cx="62" cy="55" rx="10" ry="5" fill="#22C55E" transform="rotate(25 62 55)"/>
+    <!-- Flor -->
+    ${[0, 72, 144, 216, 288].map(ang => {
+      const x = 50 + Math.cos(ang * Math.PI / 180) * 13;
+      const y = 25 + Math.sin(ang * Math.PI / 180) * 13;
+      return `<ellipse cx="${x}" cy="${y}" rx="9" ry="13" fill="#EC4899" stroke="#9F1239" stroke-width="1.5" transform="rotate(${ang} ${x} ${y})"/>`;
+    }).join('')}
+    <circle cx="50" cy="25" r="6" fill="#FBBF24" stroke="#92400E" stroke-width="1.5"/>
+  </svg>`,
+
+  planta_fruto: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="32" ry="4" fill="rgba(0,0,0,0.18)"/>
+    <rect x="10" y="70" width="80" height="22" fill="#78350F"/>
+    <rect x="47" y="30" width="6" height="42" fill="#16A34A"/>
+    <ellipse cx="35" cy="50" rx="11" ry="6" fill="#22C55E" transform="rotate(-25 35 50)"/>
+    <ellipse cx="65" cy="50" rx="11" ry="6" fill="#22C55E" transform="rotate(25 65 50)"/>
+    <ellipse cx="40" cy="32" rx="9" ry="5" fill="#22C55E" transform="rotate(-25 40 32)"/>
+    <ellipse cx="60" cy="32" rx="9" ry="5" fill="#22C55E" transform="rotate(25 60 32)"/>
+    <!-- Frutos -->
+    <circle cx="38" cy="62" r="7" fill="#DC2626" stroke="#7F1D1D" stroke-width="1.5"/>
+    <circle cx="62" cy="62" r="7" fill="#DC2626" stroke="#7F1D1D" stroke-width="1.5"/>
+    <circle cx="50" cy="46" r="6" fill="#DC2626" stroke="#7F1D1D" stroke-width="1.5"/>
+    <!-- brilho nos frutos -->
+    <circle cx="36" cy="60" r="2" fill="white" opacity="0.6"/>
+    <circle cx="60" cy="60" r="2" fill="white" opacity="0.6"/>
+    <line x1="50" y1="46" x2="50" y2="40" stroke="#16A34A" stroke-width="1.5"/>
+  </svg>`,
+
+  // === BORBOLETA ===
+  ovo_borboleta: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="28" ry="3" fill="rgba(0,0,0,0.15)"/>
+    <!-- folha de fundo -->
+    <ellipse cx="50" cy="60" rx="36" ry="22" fill="#16A34A" stroke="#14532D" stroke-width="1.5"/>
+    <line x1="20" y1="70" x2="80" y2="50" stroke="#14532D" stroke-width="1" opacity="0.5"/>
+    <!-- ovos pequenos -->
+    <ellipse cx="40" cy="52" rx="3" ry="4" fill="#FEF3C7" stroke="#78350F" stroke-width="1"/>
+    <ellipse cx="48" cy="48" rx="3" ry="4" fill="#FEF3C7" stroke="#78350F" stroke-width="1"/>
+    <ellipse cx="56" cy="52" rx="3" ry="4" fill="#FEF3C7" stroke="#78350F" stroke-width="1"/>
+    <ellipse cx="44" cy="60" rx="3" ry="4" fill="#FEF3C7" stroke="#78350F" stroke-width="1"/>
+    <ellipse cx="52" cy="60" rx="3" ry="4" fill="#FEF3C7" stroke="#78350F" stroke-width="1"/>
+    <ellipse cx="60" cy="56" rx="3" ry="4" fill="#FEF3C7" stroke="#78350F" stroke-width="1"/>
+  </svg>`,
+
+  lagarta: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="32" ry="3" fill="rgba(0,0,0,0.15)"/>
+    <!-- corpo segmentado -->
+    <circle cx="20" cy="65" r="8" fill="#84CC16" stroke="#365314" stroke-width="1.5"/>
+    <circle cx="32" cy="68" r="9" fill="#A3E635" stroke="#365314" stroke-width="1.5"/>
+    <circle cx="44" cy="70" r="9" fill="#84CC16" stroke="#365314" stroke-width="1.5"/>
+    <circle cx="56" cy="68" r="9" fill="#A3E635" stroke="#365314" stroke-width="1.5"/>
+    <circle cx="68" cy="65" r="9" fill="#84CC16" stroke="#365314" stroke-width="1.5"/>
+    <!-- Cabeça (maior, com olhos) -->
+    <circle cx="80" cy="60" r="11" fill="#65A30D" stroke="#365314" stroke-width="1.5"/>
+    <circle cx="78" cy="58" r="2" fill="white"/>
+    <circle cx="83" cy="58" r="2" fill="white"/>
+    <circle cx="78" cy="58" r="1" fill="#1A1A1A"/>
+    <circle cx="83" cy="58" r="1" fill="#1A1A1A"/>
+    <path d="M 78 64 Q 81 67, 84 64" fill="none" stroke="#1A1A1A" stroke-width="1.2"/>
+    <!-- Antenas -->
+    <line x1="76" y1="50" x2="73" y2="42" stroke="#365314" stroke-width="1.5"/>
+    <line x1="84" y1="50" x2="87" y2="42" stroke="#365314" stroke-width="1.5"/>
+    <circle cx="73" cy="42" r="1.5" fill="#365314"/>
+    <circle cx="87" cy="42" r="1.5" fill="#365314"/>
+  </svg>`,
+
+  casulo: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="20" ry="3" fill="rgba(0,0,0,0.15)"/>
+    <!-- Galho -->
+    <line x1="20" y1="20" x2="80" y2="22" stroke="#451A03" stroke-width="3" stroke-linecap="round"/>
+    <!-- Fio do casulo -->
+    <line x1="50" y1="22" x2="50" y2="32" stroke="#451A03" stroke-width="1"/>
+    <!-- Casulo -->
+    <ellipse cx="50" cy="55" rx="14" ry="22" fill="#92400E" stroke="#451A03" stroke-width="2"/>
+    <!-- Texturas/fios -->
+    <path d="M 36 40 Q 50 38, 64 40" fill="none" stroke="#451A03" stroke-width="0.8" opacity="0.6"/>
+    <path d="M 36 50 Q 50 48, 64 50" fill="none" stroke="#451A03" stroke-width="0.8" opacity="0.6"/>
+    <path d="M 36 60 Q 50 58, 64 60" fill="none" stroke="#451A03" stroke-width="0.8" opacity="0.6"/>
+    <path d="M 36 70 Q 50 68, 64 70" fill="none" stroke="#451A03" stroke-width="0.8" opacity="0.6"/>
+    <ellipse cx="44" cy="48" rx="5" ry="8" fill="white" opacity="0.2"/>
+  </svg>`,
+
+  borboleta: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="28" ry="3" fill="rgba(0,0,0,0.15)"/>
+    <!-- Asa esquerda superior -->
+    <ellipse cx="28" cy="42" rx="20" ry="22" fill="#EC4899" stroke="#9F1239" stroke-width="2" transform="rotate(-20 28 42)"/>
+    <!-- Asa direita superior -->
+    <ellipse cx="72" cy="42" rx="20" ry="22" fill="#EC4899" stroke="#9F1239" stroke-width="2" transform="rotate(20 72 42)"/>
+    <!-- Asa esquerda inferior -->
+    <ellipse cx="32" cy="68" rx="14" ry="16" fill="#F472B6" stroke="#9F1239" stroke-width="2" transform="rotate(-30 32 68)"/>
+    <!-- Asa direita inferior -->
+    <ellipse cx="68" cy="68" rx="14" ry="16" fill="#F472B6" stroke="#9F1239" stroke-width="2" transform="rotate(30 68 68)"/>
+    <!-- Detalhes nas asas -->
+    <circle cx="25" cy="40" r="4" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
+    <circle cx="75" cy="40" r="4" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
+    <circle cx="30" cy="68" r="3" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
+    <circle cx="70" cy="68" r="3" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
+    <!-- Corpo -->
+    <ellipse cx="50" cy="55" rx="4" ry="22" fill="#1F2937" stroke="#000" stroke-width="1"/>
+    <!-- Cabeça -->
+    <circle cx="50" cy="32" r="5" fill="#1F2937" stroke="#000" stroke-width="1"/>
+    <!-- Antenas -->
+    <line x1="48" y1="30" x2="44" y2="22" stroke="#000" stroke-width="1.5"/>
+    <line x1="52" y1="30" x2="56" y2="22" stroke="#000" stroke-width="1.5"/>
+    <circle cx="44" cy="22" r="1.5" fill="#000"/>
+    <circle cx="56" cy="22" r="1.5" fill="#000"/>
+  </svg>`,
+
+  // === SAPO ===
+  ovo_sapo: `<svg viewBox="0 0 100 100">
+    <!-- Água -->
+    <rect width="100" height="100" fill="#BFDBFE"/>
+    <!-- Ondinhas -->
+    <path d="M 0 30 Q 25 25, 50 30 T 100 30" fill="none" stroke="#60A5FA" stroke-width="1" opacity="0.6"/>
+    <path d="M 0 50 Q 25 45, 50 50 T 100 50" fill="none" stroke="#60A5FA" stroke-width="1" opacity="0.6"/>
+    <!-- Ovos com gel -->
+    <ellipse cx="50" cy="60" rx="35" ry="22" fill="rgba(255,255,255,0.5)" stroke="#60A5FA" stroke-width="1.5"/>
+    <!-- Ovos individuais (pretos com membrana) -->
+    <g>
+      <circle cx="35" cy="55" r="5" fill="rgba(255,255,255,0.7)" stroke="#3B82F6" stroke-width="0.8"/>
+      <circle cx="35" cy="55" r="2.5" fill="#1F2937"/>
+      <circle cx="48" cy="50" r="5" fill="rgba(255,255,255,0.7)" stroke="#3B82F6" stroke-width="0.8"/>
+      <circle cx="48" cy="50" r="2.5" fill="#1F2937"/>
+      <circle cx="60" cy="55" r="5" fill="rgba(255,255,255,0.7)" stroke="#3B82F6" stroke-width="0.8"/>
+      <circle cx="60" cy="55" r="2.5" fill="#1F2937"/>
+      <circle cx="42" cy="65" r="5" fill="rgba(255,255,255,0.7)" stroke="#3B82F6" stroke-width="0.8"/>
+      <circle cx="42" cy="65" r="2.5" fill="#1F2937"/>
+      <circle cx="55" cy="65" r="5" fill="rgba(255,255,255,0.7)" stroke="#3B82F6" stroke-width="0.8"/>
+      <circle cx="55" cy="65" r="2.5" fill="#1F2937"/>
+      <circle cx="65" cy="62" r="5" fill="rgba(255,255,255,0.7)" stroke="#3B82F6" stroke-width="0.8"/>
+      <circle cx="65" cy="62" r="2.5" fill="#1F2937"/>
+    </g>
+  </svg>`,
+
+  girino: `<svg viewBox="0 0 100 100">
+    <rect width="100" height="100" fill="#BFDBFE"/>
+    <path d="M 0 30 Q 25 25, 50 30 T 100 30" fill="none" stroke="#60A5FA" stroke-width="1" opacity="0.6"/>
+    <path d="M 0 80 Q 25 75, 50 80 T 100 80" fill="none" stroke="#60A5FA" stroke-width="1" opacity="0.6"/>
+    <!-- Bolhas -->
+    <circle cx="20" cy="55" r="2" fill="white" opacity="0.6"/>
+    <circle cx="85" cy="40" r="3" fill="white" opacity="0.6"/>
+    <!-- Corpo do girino -->
+    <ellipse cx="55" cy="55" rx="18" ry="14" fill="#1F2937" stroke="#000" stroke-width="1.5"/>
+    <!-- Cauda -->
+    <path d="M 73 55 Q 90 55, 95 50 Q 92 60, 95 65 Q 88 60, 73 60 Z" fill="#374151" stroke="#000" stroke-width="1.5"/>
+    <!-- Olhos -->
+    <circle cx="48" cy="50" r="4" fill="white"/>
+    <circle cx="48" cy="50" r="2" fill="#1F2937"/>
+    <circle cx="49" cy="49" r="0.6" fill="white"/>
+  </svg>`,
+
+  girino_pernas: `<svg viewBox="0 0 100 100">
+    <rect width="100" height="100" fill="#BFDBFE"/>
+    <path d="M 0 30 Q 25 25, 50 30 T 100 30" fill="none" stroke="#60A5FA" stroke-width="1" opacity="0.6"/>
+    <!-- Plantas aquáticas -->
+    <path d="M 10 100 Q 12 80, 8 65 Q 12 78, 14 100" fill="#15803D"/>
+    <!-- Corpo -->
+    <ellipse cx="50" cy="55" rx="18" ry="13" fill="#15803D" stroke="#14532D" stroke-width="1.5"/>
+    <!-- Cauda menor -->
+    <path d="M 65 55 Q 80 55, 82 52 Q 80 58, 82 62 Q 78 58, 65 60 Z" fill="#16A34A" stroke="#14532D" stroke-width="1.5"/>
+    <!-- Pernas traseiras (pequenas) -->
+    <ellipse cx="42" cy="68" rx="3" ry="6" fill="#16A34A" stroke="#14532D" stroke-width="1" transform="rotate(-25 42 68)"/>
+    <ellipse cx="58" cy="68" rx="3" ry="6" fill="#16A34A" stroke="#14532D" stroke-width="1" transform="rotate(25 58 68)"/>
+    <!-- Olhos -->
+    <circle cx="42" cy="48" r="4" fill="white"/>
+    <circle cx="42" cy="48" r="2" fill="#1F2937"/>
+    <!-- Manchinhas -->
+    <circle cx="55" cy="50" r="2" fill="#14532D" opacity="0.5"/>
+    <circle cx="60" cy="56" r="1.5" fill="#14532D" opacity="0.5"/>
+  </svg>`,
+
+  sapo: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="34" ry="4" fill="rgba(0,0,0,0.2)"/>
+    <!-- Pernas traseiras grandes -->
+    <ellipse cx="22" cy="75" rx="9" ry="14" fill="#15803D" stroke="#14532D" stroke-width="1.5" transform="rotate(-30 22 75)"/>
+    <ellipse cx="78" cy="75" rx="9" ry="14" fill="#15803D" stroke="#14532D" stroke-width="1.5" transform="rotate(30 78 75)"/>
+    <!-- Pés -->
+    <ellipse cx="14" cy="86" rx="8" ry="3" fill="#16A34A" stroke="#14532D" stroke-width="1.5"/>
+    <ellipse cx="86" cy="86" rx="8" ry="3" fill="#16A34A" stroke="#14532D" stroke-width="1.5"/>
+    <!-- Corpo redondinho -->
+    <ellipse cx="50" cy="60" rx="26" ry="22" fill="#22C55E" stroke="#14532D" stroke-width="2"/>
+    <!-- Barriga clara -->
+    <ellipse cx="50" cy="68" rx="18" ry="12" fill="#FEF3C7"/>
+    <!-- Pernas dianteiras -->
+    <ellipse cx="32" cy="78" rx="4" ry="8" fill="#16A34A" stroke="#14532D" stroke-width="1"/>
+    <ellipse cx="68" cy="78" rx="4" ry="8" fill="#16A34A" stroke="#14532D" stroke-width="1"/>
+    <!-- Olhos saltados -->
+    <circle cx="38" cy="42" r="9" fill="#22C55E" stroke="#14532D" stroke-width="1.5"/>
+    <circle cx="62" cy="42" r="9" fill="#22C55E" stroke="#14532D" stroke-width="1.5"/>
+    <circle cx="38" cy="42" r="6" fill="white"/>
+    <circle cx="62" cy="42" r="6" fill="white"/>
+    <circle cx="38" cy="43" r="3.5" fill="#1F2937"/>
+    <circle cx="62" cy="43" r="3.5" fill="#1F2937"/>
+    <circle cx="39" cy="42" r="1" fill="white"/>
+    <circle cx="63" cy="42" r="1" fill="white"/>
+    <!-- Boca grande -->
+    <path d="M 32 60 Q 50 70, 68 60" fill="none" stroke="#14532D" stroke-width="2" stroke-linecap="round"/>
+    <!-- Manchinhas -->
+    <circle cx="40" cy="58" r="2" fill="#14532D" opacity="0.4"/>
+    <circle cx="60" cy="58" r="2" fill="#14532D" opacity="0.4"/>
+  </svg>`,
+
+  // === GALINHA ===
+  ovo_galinha: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="26" ry="3" fill="rgba(0,0,0,0.15)"/>
+    <!-- Palha -->
+    <line x1="15" y1="80" x2="35" y2="78" stroke="#FBBF24" stroke-width="1.5"/>
+    <line x1="65" y1="78" x2="85" y2="80" stroke="#FBBF24" stroke-width="1.5"/>
+    <line x1="20" y1="85" x2="40" y2="83" stroke="#D97706" stroke-width="1.5"/>
+    <line x1="60" y1="83" x2="80" y2="85" stroke="#D97706" stroke-width="1.5"/>
+    <!-- Ovo -->
+    <ellipse cx="50" cy="55" rx="22" ry="28" fill="#FEF3C7" stroke="#92400E" stroke-width="2"/>
+    <!-- Brilho -->
+    <ellipse cx="42" cy="42" rx="6" ry="10" fill="white" opacity="0.6"/>
+  </svg>`,
+
+  pintinho: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="26" ry="3" fill="rgba(0,0,0,0.18)"/>
+    <!-- Casca quebrada -->
+    <path d="M 30 85 L 35 78 L 38 84 L 42 76 L 46 84 L 50 76" fill="none" stroke="#92400E" stroke-width="1.5"/>
+    <path d="M 50 76 L 54 84 L 58 76 L 62 84 L 65 78 L 70 85" fill="none" stroke="#92400E" stroke-width="1.5"/>
+    <ellipse cx="30" cy="85" rx="5" ry="3" fill="#FEF3C7" stroke="#92400E" stroke-width="1"/>
+    <ellipse cx="70" cy="85" rx="5" ry="3" fill="#FEF3C7" stroke="#92400E" stroke-width="1"/>
+    <!-- Corpo do pintinho -->
+    <ellipse cx="50" cy="55" rx="22" ry="20" fill="#FCD34D" stroke="#D97706" stroke-width="1.5"/>
+    <!-- Cabecinha -->
+    <circle cx="50" cy="35" r="14" fill="#FCD34D" stroke="#D97706" stroke-width="1.5"/>
+    <!-- Bico -->
+    <polygon points="50,40 44,44 50,48 56,44" fill="#FB923C" stroke="#9A3412" stroke-width="1"/>
+    <!-- Olhos -->
+    <circle cx="44" cy="33" r="2.5" fill="#1F2937"/>
+    <circle cx="56" cy="33" r="2.5" fill="#1F2937"/>
+    <circle cx="44.5" cy="32" r="0.7" fill="white"/>
+    <circle cx="56.5" cy="32" r="0.7" fill="white"/>
+    <!-- Asinha -->
+    <ellipse cx="35" cy="55" rx="6" ry="10" fill="#FBBF24" stroke="#D97706" stroke-width="1"/>
+    <!-- Pés -->
+    <line x1="44" y1="73" x2="40" y2="80" stroke="#FB923C" stroke-width="2" stroke-linecap="round"/>
+    <line x1="56" y1="73" x2="60" y2="80" stroke="#FB923C" stroke-width="2" stroke-linecap="round"/>
+    <path d="M 36 80 L 40 80 L 44 80 M 56 80 L 60 80 L 64 80" stroke="#FB923C" stroke-width="1.5" fill="none"/>
+  </svg>`,
+
+  frango: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="32" ry="4" fill="rgba(0,0,0,0.18)"/>
+    <!-- Corpo -->
+    <ellipse cx="55" cy="55" rx="28" ry="24" fill="#FEF3C7" stroke="#92400E" stroke-width="1.5"/>
+    <!-- Asas -->
+    <ellipse cx="40" cy="55" rx="12" ry="18" fill="#FCD34D" stroke="#D97706" stroke-width="1.5"/>
+    <!-- Cabeça -->
+    <circle cx="32" cy="35" r="14" fill="#FEF3C7" stroke="#92400E" stroke-width="1.5"/>
+    <!-- Crista pequena -->
+    <path d="M 26 22 Q 30 18, 32 22 Q 34 18, 38 22" fill="#DC2626" stroke="#7F1D1D" stroke-width="1"/>
+    <!-- Bico -->
+    <polygon points="20,38 14,40 20,44" fill="#FB923C" stroke="#9A3412" stroke-width="1"/>
+    <!-- Olho -->
+    <circle cx="28" cy="33" r="2.5" fill="#1F2937"/>
+    <circle cx="28" cy="32" r="0.7" fill="white"/>
+    <!-- Cauda -->
+    <path d="M 80 50 Q 90 45, 88 35 Q 95 50, 88 60 Z" fill="#D97706" stroke="#7C2D12" stroke-width="1"/>
+    <!-- Pernas -->
+    <line x1="48" y1="78" x2="46" y2="88" stroke="#FB923C" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="62" y1="78" x2="64" y2="88" stroke="#FB923C" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 42 88 L 46 88 L 50 88 M 60 88 L 64 88 L 68 88" stroke="#FB923C" stroke-width="2" fill="none"/>
+  </svg>`,
+
+  galinha: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="36" ry="4" fill="rgba(0,0,0,0.18)"/>
+    <!-- Corpo grande -->
+    <ellipse cx="55" cy="55" rx="32" ry="26" fill="#FFFBEB" stroke="#78350F" stroke-width="2"/>
+    <!-- Asa -->
+    <ellipse cx="42" cy="58" rx="14" ry="20" fill="#FBBF24" stroke="#92400E" stroke-width="1.5"/>
+    <!-- Detalhe asa -->
+    <path d="M 32 50 L 50 55 M 32 58 L 50 60 M 34 66 L 50 68" stroke="#92400E" stroke-width="0.8" opacity="0.6"/>
+    <!-- Cabeça -->
+    <circle cx="28" cy="32" r="16" fill="#FFFBEB" stroke="#78350F" stroke-width="1.5"/>
+    <!-- CRISTA grande -->
+    <path d="M 18 16 Q 22 8, 26 14 Q 30 6, 34 14 Q 38 8, 40 16 Q 36 22, 28 22 Q 20 22, 18 16 Z" fill="#DC2626" stroke="#7F1D1D" stroke-width="1.5"/>
+    <!-- Bico amarelo -->
+    <polygon points="14,34 6,36 14,40" fill="#FB923C" stroke="#9A3412" stroke-width="1.5"/>
+    <!-- Olho -->
+    <circle cx="22" cy="30" r="3" fill="#1F2937"/>
+    <circle cx="22" cy="29" r="0.8" fill="white"/>
+    <!-- Barbela vermelha -->
+    <ellipse cx="22" cy="46" rx="4" ry="6" fill="#DC2626" stroke="#7F1D1D" stroke-width="1"/>
+    <!-- Cauda grande -->
+    <path d="M 82 45 Q 95 38, 92 28 Q 100 50, 92 65 Q 95 70, 82 60 Z" fill="#92400E" stroke="#451A03" stroke-width="1.5"/>
+    <!-- Detalhes da cauda -->
+    <line x1="82" y1="45" x2="92" y2="38" stroke="#451A03" stroke-width="0.8"/>
+    <line x1="84" y1="55" x2="94" y2="55" stroke="#451A03" stroke-width="0.8"/>
+    <!-- Pernas -->
+    <line x1="46" y1="80" x2="44" y2="92" stroke="#FB923C" stroke-width="3" stroke-linecap="round"/>
+    <line x1="64" y1="80" x2="66" y2="92" stroke="#FB923C" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 38 92 L 44 92 L 50 92 M 60 92 L 66 92 L 72 92" stroke="#FB923C" stroke-width="2.5" fill="none"/>
+  </svg>`,
+
+  // === SER HUMANO ===
+  bebe: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="92" rx="22" ry="3" fill="rgba(0,0,0,0.18)"/>
+    <!-- Manta/cobertor -->
+    <ellipse cx="50" cy="68" rx="28" ry="18" fill="#FBCFE8" stroke="#9F1239" stroke-width="1.5"/>
+    <!-- Cabeça -->
+    <circle cx="50" cy="42" r="22" fill="#FED7AA" stroke="#9A3412" stroke-width="1.5"/>
+    <!-- Cabelinho -->
+    <path d="M 35 30 Q 40 22, 45 28 Q 50 20, 55 28 Q 60 22, 65 30" fill="#78350F" stroke="#451A03" stroke-width="1"/>
+    <!-- Olhos -->
+    <circle cx="42" cy="44" r="2.5" fill="#1F2937"/>
+    <circle cx="58" cy="44" r="2.5" fill="#1F2937"/>
+    <circle cx="42.5" cy="43" r="0.8" fill="white"/>
+    <circle cx="58.5" cy="43" r="0.8" fill="white"/>
+    <!-- Bochechinhas -->
+    <ellipse cx="32" cy="50" rx="3" ry="2.5" fill="#FB7185" opacity="0.6"/>
+    <ellipse cx="68" cy="50" rx="3" ry="2.5" fill="#FB7185" opacity="0.6"/>
+    <!-- Boca -->
+    <ellipse cx="50" cy="54" rx="3" ry="2" fill="#DC2626"/>
+    <!-- Chupeta -->
+    <circle cx="50" cy="58" r="3" fill="#FCD34D" stroke="#92400E" stroke-width="1"/>
+  </svg>`,
+
+  crianca: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="93" rx="20" ry="3" fill="rgba(0,0,0,0.18)"/>
+    <!-- Corpo (camiseta) -->
+    <rect x="36" y="48" width="28" height="36" rx="6" fill="#3B82F6" stroke="#1E3A8A" stroke-width="1.5"/>
+    <!-- Pernas (calça) -->
+    <rect x="39" y="78" width="9" height="14" fill="#1E40AF" stroke="#1E3A8A" stroke-width="1"/>
+    <rect x="52" y="78" width="9" height="14" fill="#1E40AF" stroke="#1E3A8A" stroke-width="1"/>
+    <!-- Sapatos -->
+    <ellipse cx="43" cy="93" rx="5" ry="2.5" fill="#1F2937"/>
+    <ellipse cx="56" cy="93" rx="5" ry="2.5" fill="#1F2937"/>
+    <!-- Braços -->
+    <ellipse cx="30" cy="58" rx="4" ry="14" fill="#FED7AA" stroke="#9A3412" stroke-width="1"/>
+    <ellipse cx="70" cy="58" rx="4" ry="14" fill="#FED7AA" stroke="#9A3412" stroke-width="1"/>
+    <!-- Cabeça -->
+    <circle cx="50" cy="32" r="16" fill="#FED7AA" stroke="#9A3412" stroke-width="1.5"/>
+    <!-- Cabelo -->
+    <path d="M 35 25 Q 38 15, 50 17 Q 62 15, 65 25 L 65 30 Q 50 22, 35 30 Z" fill="#78350F" stroke="#451A03" stroke-width="1"/>
+    <!-- Olhos -->
+    <circle cx="44" cy="32" r="2" fill="#1F2937"/>
+    <circle cx="56" cy="32" r="2" fill="#1F2937"/>
+    <!-- Sorriso -->
+    <path d="M 44 38 Q 50 42, 56 38" fill="none" stroke="#1F2937" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Bochechinhas -->
+    <ellipse cx="38" cy="36" rx="2.5" ry="2" fill="#FB7185" opacity="0.5"/>
+    <ellipse cx="62" cy="36" rx="2.5" ry="2" fill="#FB7185" opacity="0.5"/>
+  </svg>`,
+
+  adolescente: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="93" rx="20" ry="3" fill="rgba(0,0,0,0.18)"/>
+    <!-- Corpo (camiseta com listra) -->
+    <rect x="34" y="42" width="32" height="40" rx="4" fill="#16A34A" stroke="#14532D" stroke-width="1.5"/>
+    <rect x="34" y="56" width="32" height="3" fill="#FBBF24"/>
+    <!-- Pernas (calça jeans) -->
+    <rect x="38" y="78" width="10" height="15" fill="#1E40AF" stroke="#1E3A8A" stroke-width="1"/>
+    <rect x="52" y="78" width="10" height="15" fill="#1E40AF" stroke="#1E3A8A" stroke-width="1"/>
+    <!-- Tênis -->
+    <ellipse cx="43" cy="93" rx="6" ry="2.5" fill="white" stroke="#1F2937" stroke-width="1"/>
+    <ellipse cx="57" cy="93" rx="6" ry="2.5" fill="white" stroke="#1F2937" stroke-width="1"/>
+    <!-- Braços -->
+    <ellipse cx="28" cy="56" rx="4" ry="16" fill="#FED7AA" stroke="#9A3412" stroke-width="1"/>
+    <ellipse cx="72" cy="56" rx="4" ry="16" fill="#FED7AA" stroke="#9A3412" stroke-width="1"/>
+    <!-- Cabeça -->
+    <circle cx="50" cy="28" r="14" fill="#FED7AA" stroke="#9A3412" stroke-width="1.5"/>
+    <!-- Cabelo estiloso -->
+    <path d="M 36 24 Q 38 12, 50 12 Q 62 12, 64 24 L 64 22 Q 56 16, 50 18 Q 44 16, 36 22 Z" fill="#1F2937" stroke="#000" stroke-width="1"/>
+    <!-- Topete -->
+    <path d="M 42 16 Q 50 10, 58 16 Q 50 18, 42 16 Z" fill="#374151"/>
+    <!-- Olhos -->
+    <circle cx="45" cy="28" r="1.8" fill="#1F2937"/>
+    <circle cx="55" cy="28" r="1.8" fill="#1F2937"/>
+    <!-- Sorriso meio sério -->
+    <line x1="46" y1="34" x2="54" y2="34" stroke="#1F2937" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Espinha (detalhe da idade) -->
+    <circle cx="40" cy="32" r="0.8" fill="#FB7185"/>
+    <circle cx="60" cy="36" r="0.8" fill="#FB7185"/>
+    <!-- Mochila no ombro -->
+    <rect x="62" y="46" width="9" height="14" rx="2" fill="#DC2626" stroke="#7F1D1D" stroke-width="1"/>
+  </svg>`,
+
+  adulto: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="93" rx="22" ry="3" fill="rgba(0,0,0,0.18)"/>
+    <!-- Corpo (camisa social) -->
+    <rect x="34" y="40" width="32" height="42" rx="4" fill="#1E40AF" stroke="#1E3A8A" stroke-width="1.5"/>
+    <!-- Gravata -->
+    <polygon points="50,40 46,46 50,72 54,46" fill="#DC2626" stroke="#7F1D1D" stroke-width="1"/>
+    <!-- Botões da camisa -->
+    <circle cx="50" cy="55" r="0.8" fill="white"/>
+    <circle cx="50" cy="65" r="0.8" fill="white"/>
+    <!-- Pernas (calça social) -->
+    <rect x="38" y="78" width="10" height="15" fill="#1F2937"/>
+    <rect x="52" y="78" width="10" height="15" fill="#1F2937"/>
+    <!-- Sapatos sociais -->
+    <ellipse cx="43" cy="93" rx="6" ry="2.5" fill="#000"/>
+    <ellipse cx="57" cy="93" rx="6" ry="2.5" fill="#000"/>
+    <!-- Braços -->
+    <ellipse cx="28" cy="56" rx="4.5" ry="17" fill="#FED7AA" stroke="#9A3412" stroke-width="1"/>
+    <ellipse cx="72" cy="56" rx="4.5" ry="17" fill="#FED7AA" stroke="#9A3412" stroke-width="1"/>
+    <!-- Cabeça -->
+    <circle cx="50" cy="28" r="14" fill="#FED7AA" stroke="#9A3412" stroke-width="1.5"/>
+    <!-- Cabelo curto -->
+    <path d="M 36 25 Q 38 14, 50 14 Q 62 14, 64 25 L 60 22 Q 50 19, 40 22 Z" fill="#451A03" stroke="#000" stroke-width="1"/>
+    <!-- Olhos -->
+    <circle cx="45" cy="28" r="1.8" fill="#1F2937"/>
+    <circle cx="55" cy="28" r="1.8" fill="#1F2937"/>
+    <!-- Sorriso -->
+    <path d="M 45 34 Q 50 36, 55 34" fill="none" stroke="#1F2937" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Barba ou bigode leve -->
+    <path d="M 44 33 Q 50 36, 56 33" fill="none" stroke="#451A03" stroke-width="1"/>
+  </svg>`,
+
+  idoso: `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="93" rx="22" ry="3" fill="rgba(0,0,0,0.18)"/>
+    <!-- Bengala -->
+    <line x1="74" y1="55" x2="78" y2="92" stroke="#78350F" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 74 55 Q 70 50, 72 48" fill="none" stroke="#78350F" stroke-width="2.5"/>
+    <!-- Corpo (camisa de manga longa) -->
+    <rect x="34" y="42" width="32" height="42" rx="4" fill="#92400E" stroke="#451A03" stroke-width="1.5"/>
+    <!-- Pernas -->
+    <rect x="38" y="78" width="10" height="15" fill="#451A03"/>
+    <rect x="52" y="78" width="10" height="15" fill="#451A03"/>
+    <!-- Sapatos -->
+    <ellipse cx="43" cy="93" rx="6" ry="2.5" fill="#1F2937"/>
+    <ellipse cx="57" cy="93" rx="6" ry="2.5" fill="#1F2937"/>
+    <!-- Braço esquerdo -->
+    <ellipse cx="28" cy="56" rx="4" ry="16" fill="#FED7AA" stroke="#9A3412" stroke-width="1"/>
+    <!-- Braço direito (segurando bengala) -->
+    <ellipse cx="72" cy="56" rx="4" ry="16" fill="#FED7AA" stroke="#9A3412" stroke-width="1"/>
+    <!-- Cabeça -->
+    <circle cx="50" cy="28" r="14" fill="#FED7AA" stroke="#9A3412" stroke-width="1.5"/>
+    <!-- Cabelo branco/grisalho -->
+    <path d="M 36 25 Q 38 16, 50 16 Q 62 16, 64 25 L 60 22 Q 50 21, 40 22 Z" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="1"/>
+    <!-- Mais cabelo branco -->
+    <path d="M 38 22 Q 50 18, 62 22" fill="none" stroke="white" stroke-width="1.5"/>
+    <!-- Óculos -->
+    <circle cx="44" cy="29" r="3.5" fill="none" stroke="#1F2937" stroke-width="1.2"/>
+    <circle cx="56" cy="29" r="3.5" fill="none" stroke="#1F2937" stroke-width="1.2"/>
+    <line x1="47.5" y1="29" x2="52.5" y2="29" stroke="#1F2937" stroke-width="1"/>
+    <!-- Olhos -->
+    <circle cx="44" cy="29" r="1.5" fill="#1F2937"/>
+    <circle cx="56" cy="29" r="1.5" fill="#1F2937"/>
+    <!-- Rugas (linhas de expressão) -->
+    <path d="M 38 25 Q 40 24, 42 25" fill="none" stroke="#9A3412" stroke-width="0.5"/>
+    <path d="M 58 25 Q 60 24, 62 25" fill="none" stroke="#9A3412" stroke-width="0.5"/>
+    <path d="M 40 38 Q 42 39, 44 38" fill="none" stroke="#9A3412" stroke-width="0.5"/>
+    <path d="M 56 38 Q 58 39, 60 38" fill="none" stroke="#9A3412" stroke-width="0.5"/>
+    <!-- Sorriso gentil -->
+    <path d="M 45 36 Q 50 38, 55 36" fill="none" stroke="#1F2937" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Bigode branco -->
+    <path d="M 45 34 Q 50 36, 55 34" fill="none" stroke="#E5E7EB" stroke-width="1.5"/>
+  </svg>`
+};
+
+/* DEFINIÇÃO DOS CICLOS - cada etapa tem suas fases na ordem CERTA */
+const CICLOS = {
+  planta: {
+    titulo: 'Planta',
+    fases: [
+      { id: 'semente_terra', nome: 'Semente plantada na terra', desc: 'A semente é colocada na terra úmida e começa a vida.' },
+      { id: 'muda',         nome: 'Muda brotando',           desc: 'A semente germina e nasce uma muda com primeiras folhinhas.' },
+      { id: 'planta_jovem', nome: 'Planta jovem',            desc: 'A muda cresce, ganha mais folhas e fica forte.' },
+      { id: 'planta_flor',  nome: 'Planta com flor',         desc: 'A planta amadurece e produz flores coloridas.' },
+      { id: 'planta_fruto', nome: 'Planta com fruto',        desc: 'As flores se transformam em frutos com sementes novas.' },
+    ]
+  },
+  borboleta: {
+    titulo: 'Borboleta',
+    fases: [
+      { id: 'ovo_borboleta', nome: 'Ovo na folha',  desc: 'A borboleta deposita os ovos na parte de baixo das folhas.' },
+      { id: 'lagarta',       nome: 'Lagarta',       desc: 'Do ovo nasce uma lagarta que come muitas folhas.' },
+      { id: 'casulo',        nome: 'Casulo',        desc: 'A lagarta se envolve num casulo e fica em metamorfose.' },
+      { id: 'borboleta',     nome: 'Borboleta',     desc: 'Sai do casulo a borboleta adulta com asas coloridas!' },
+    ]
+  },
+  sapo: {
+    titulo: 'Sapo',
+    fases: [
+      { id: 'ovo_sapo',     nome: 'Ovos na água',           desc: 'A fêmea deposita os ovos protegidos por gel na água.' },
+      { id: 'girino',       nome: 'Girino com cauda',       desc: 'Nascem girinos que respiram pelas guelras como peixes.' },
+      { id: 'girino_pernas', nome: 'Girino com pernas',     desc: 'O girino desenvolve pernas e a cauda começa a sumir.' },
+      { id: 'sapo',         nome: 'Sapo adulto',            desc: 'Vira sapo, que respira por pulmões e sai da água.' },
+    ]
+  },
+  galinha: {
+    titulo: 'Galinha',
+    fases: [
+      { id: 'ovo_galinha', nome: 'Ovo no ninho',  desc: 'A galinha bota o ovo e o aquece por 21 dias.' },
+      { id: 'pintinho',    nome: 'Pintinho',      desc: 'O pintinho quebra a casca e nasce amarelinho.' },
+      { id: 'frango',      nome: 'Frango jovem',  desc: 'O pintinho cresce, perde a penugem e ganha penas.' },
+      { id: 'galinha',     nome: 'Galinha adulta',desc: 'Vira galinha adulta com crista vermelha grande.' },
+    ]
+  },
+  humano: {
+    titulo: 'Ser Humano',
+    fases: [
+      { id: 'bebe',        nome: 'Bebê',          desc: 'O bebê nasce e precisa de cuidados intensos da família.' },
+      { id: 'crianca',     nome: 'Criança',       desc: 'A criança aprende a falar, andar, brincar e ler.' },
+      { id: 'adolescente', nome: 'Adolescente',   desc: 'Na adolescência, o corpo muda e a personalidade se forma.' },
+      { id: 'adulto',      nome: 'Adulto',        desc: 'O adulto trabalha, constrói família, contribui pra sociedade.' },
+      { id: 'idoso',       nome: 'Idoso',         desc: 'Na terceira idade, compartilha sabedoria e experiência de vida.' },
+    ]
+  }
+};
+
+/* === ETAPAS === */
+const ETAPAS = [
+  { id: 1, ciclo: 'planta',    titulo: 'Ciclo da Planta',     emoji: '🌱',
+    instrucao: 'Toque nas fases na ordem certa, da semente ao fruto!',
+    fala_inicio: 'Da semente nasce a vida!',
+    fala_sucesso: 'Sabe tudo sobre plantas!' },
+  { id: 2, ciclo: 'borboleta', titulo: 'Ciclo da Borboleta',  emoji: '🦋',
+    instrucao: 'Mostre como a lagarta vira borboleta!',
+    fala_inicio: 'Metamorfose é mágica!',
+    fala_sucesso: 'Você é um expert em metamorfose!' },
+  { id: 3, ciclo: 'sapo',      titulo: 'Ciclo do Sapo',       emoji: '🐸',
+    instrucao: 'Do ovo na água ao sapo na terra!',
+    fala_inicio: 'Bora pra água!',
+    fala_sucesso: 'Mestre da metamorfose aquática!' },
+  { id: 4, ciclo: 'galinha',   titulo: 'Ciclo da Galinha',    emoji: '🐔',
+    instrucao: 'Como o pintinho vira galinha?',
+    fala_inicio: 'Quem nasce primeiro?',
+    fala_sucesso: 'Cocoricó! Você acertou!' },
+  { id: 5, ciclo: 'humano',    titulo: 'Ciclo do Ser Humano', emoji: '👶',
+    instrucao: 'Do bebê ao idoso, todos crescem!',
+    fala_inicio: 'A vida tem muitas fases!',
+    fala_sucesso: 'Você sabe da vida!' },
+  { id: 6, ciclo: 'final',     titulo: 'Desafio Final',       emoji: '✨',
+    instrucao: 'Perguntas misturadas! Qual fase é qual?',
+    fala_inicio: 'Reta final!',
+    fala_sucesso: 'Mestre da Vida!' },
+];
+
+const ELOGIOS = ['Mandou bem!', 'Você é demais!', 'Que esperto!', 'Excelente!', 'Brilhou!', 'Acertou em cheio!'];
+const INCENTIVOS = ['Quase! Tente outra vez!', 'Vamos pensar de novo!', 'Você consegue!', 'Olha as fases com calma!'];
+
+/* === ESTADO === */
+const STATE = {
+  nomeAluno: '',
+  etapaAtual: 1,
+  estrelasPorEtapa: {},
+  jogo: {
+    etapa: null,
+    progresso: 0,
+    acertos: 0,
+    erros: 0,
+    bloqueado: false,
+    ativo: false,
+    // Específico ordenação:
+    ordemAlvo: [],     // ordem correta
+    ordemAluno: [],    // ordem que aluno está clicando
+    cicloAtual: null,
+    quizUsados: []     // ids de fase já perguntadas no desafio final
+  }
+};
+
+/* PERSISTÊNCIA */
+function salvar() {
+  try {
+    localStorage.setItem('pde_ciclo_dados', JSON.stringify({
+      nomeAluno: STATE.nomeAluno,
+      etapaAtual: STATE.etapaAtual,
+      estrelasPorEtapa: STATE.estrelasPorEtapa
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_ciclo_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    STATE.nomeAluno = d.nomeAluno || '';
+    STATE.etapaAtual = d.etapaAtual || 1;
+    STATE.estrelasPorEtapa = d.estrelasPorEtapa || {};
+    if (STATE.nomeAluno) document.getElementById('nome-aluno').value = STATE.nomeAluno;
+  } catch (e) {}
+}
+
+/* LOBBY */
+function renderLobby() {
+  const balaoSaud = document.getElementById('balao-saudacao');
+  const feitas = Object.keys(STATE.estrelasPorEtapa).length;
+  if (balaoSaud) {
+    if (feitas === 0) balaoSaud.textContent = 'Vamos descobrir como tudo cresce na natureza?';
+    else if (feitas === ETAPAS.length) balaoSaud.textContent = 'Você é Mestre dos Ciclos! 🏆';
+    else balaoSaud.textContent = `Você já fez ${feitas} de 6 aventuras. Continue!`;
+  }
+
+  const cont = document.getElementById('mapa-grid');
+  cont.innerHTML = '';
+  ETAPAS.forEach((e, idx) => {
+    const card = document.createElement('div');
+    const feita = !!STATE.estrelasPorEtapa[e.id];
+    const atual = e.id === STATE.etapaAtual && !feita;
+    const anterior = idx === 0 ? true : !!STATE.estrelasPorEtapa[ETAPAS[idx-1].id];
+    const bloqueada = !feita && !atual && !anterior;
+
+    card.className = 'mapa-etapa' + (feita ? ' feita' : '') + (atual ? ' atual' : '') + (bloqueada ? ' bloqueada' : '');
+
+    let estrelasMini = '';
+    const obtidas = STATE.estrelasPorEtapa[e.id] || 0;
+    for (let i = 0; i < 3; i++) estrelasMini += i < obtidas ? '<span class="ativa">★</span>' : '<span class="vazia">★</span>';
+
+    card.innerHTML = `
+      <div class="circulo">${e.id}</div>
+      <span class="emoji-lugar">${e.emoji}</span>
+      <span class="nome-lugar">${e.titulo}</span>
+      <div class="estrelas-lugar">${estrelasMini}</div>
+    `;
+    if (!bloqueada) {
+      card.onclick = () => { STATE.etapaAtual = e.id; comecarEtapaAtual(); };
+    }
+    cont.appendChild(card);
+  });
+
+  const btn = document.getElementById('btn-comecar');
+  if (feitas === ETAPAS.length) {
+    btn.textContent = '🏆 Aventura completa! Recomeçar';
+    btn.onclick = () => {
+      if (confirm('Recomeçar a aventura? Seu progresso será apagado.')) {
+        STATE.estrelasPorEtapa = {};
+        STATE.etapaAtual = 1;
+        salvar();
+        renderLobby();
+      }
+    };
+  } else {
+    const proxima = ETAPAS.find(e => !STATE.estrelasPorEtapa[e.id]);
+    if (proxima) {
+      STATE.etapaAtual = proxima.id;
+      btn.textContent = `🚀 ${proxima.emoji} ${proxima.titulo}`;
+      btn.onclick = comecarEtapaAtual;
+    }
+  }
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+
+function resetarProgresso() {
+  if (!confirm('Recomeçar a aventura? Seu progresso será apagado.')) return;
+  STATE.estrelasPorEtapa = {};
+  STATE.etapaAtual = 1;
+  salvar();
+  renderLobby();
+}
+
+/* UTILS */
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function elogio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivo() { return INCENTIVOS[Math.floor(Math.random() * INCENTIVOS.length)]; }
+
+/* COMEÇAR ETAPA */
+function comecarEtapaAtual() {
+  STATE.nomeAluno = document.getElementById('nome-aluno').value.trim();
+  salvar();
+  const etapa = ETAPAS.find(e => e.id === STATE.etapaAtual);
+  if (!etapa) return;
+  STATE.jogo.etapa = etapa;
+  STATE.jogo.progresso = 0;
+  STATE.jogo.acertos = 0;
+  STATE.jogo.erros = 0;
+  STATE.jogo.ativo = true;
+  STATE.jogo.bloqueado = false;
+  STATE.jogo.quizUsados = [];
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('treino').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+  document.getElementById('etapa-emoji').textContent = etapa.emoji;
+  document.getElementById('etapa-nome').textContent = etapa.titulo;
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Verdinho:</b> ${etapa.instrucao}`;
+  renderMascote('svg-mascote-painel', 'feliz');
+  // Total dinâmico: ciclo = 1 ordenação; final = 5 perguntas
+  STATE.jogo.totalEtapa = etapa.ciclo === 'final' ? 5 : 1;
+  atualizarUI();
+  renderMiniMapa();
+  iniciarExercicio();
+}
+
+function renderMiniMapa() {
+  const cont = document.getElementById('mini-mapa-itens');
+  cont.innerHTML = '';
+  ETAPAS.forEach(e => {
+    const div = document.createElement('div');
+    const feita = !!STATE.estrelasPorEtapa[e.id];
+    const atual = e.id === STATE.etapaAtual;
+    div.className = 'mini-mapa-item' + (feita ? ' feita' : '') + (atual ? ' atual' : '');
+    div.innerHTML = `<div class="num-mini">${e.id}</div><span>${e.emoji} ${e.titulo}</span>`;
+    cont.appendChild(div);
+  });
+}
+
+function atualizarUI() {
+  const cont = document.getElementById('estrelinhas-prog');
+  cont.innerHTML = '';
+  for (let i = 0; i < STATE.jogo.totalEtapa; i++) {
+    const e = document.createElement('span');
+    e.className = 'estrelinha' + (i < STATE.jogo.progresso ? ' ativa' : '');
+    e.textContent = '★';
+    cont.appendChild(e);
+  }
+}
+
+function limparFeedback() {
+  const fb = document.getElementById('feedback');
+  fb.classList.add('hidden');
+  fb.className = 'feedback hidden';
+}
+function mostrarFeedback(tipo, texto) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback ' + tipo;
+  fb.innerHTML = texto;
+  fb.classList.remove('hidden');
+}
+
+/* DISPATCH */
+function iniciarExercicio() {
+  STATE.jogo.bloqueado = false;
+  limparFeedback();
+  const arena = document.getElementById('arena');
+  arena.innerHTML = '';
+  const etapa = STATE.jogo.etapa;
+  if (etapa.ciclo === 'final') exDesafioFinal();
+  else exOrdenacao(etapa.ciclo);
+}
+
+/* EXERCÍCIO DE ORDENAÇÃO (etapas 1-5) */
+function exOrdenacao(cicloId) {
+  const ciclo = CICLOS[cicloId];
+  STATE.jogo.cicloAtual = cicloId;
+  STATE.jogo.ordemAlvo = ciclo.fases.map(f => f.id);
+  STATE.jogo.ordemAluno = [];
+
+  // Embaralhar fases pra mostrar fora de ordem
+  const embaralhadas = shuffle(ciclo.fases);
+  const arena = document.getElementById('arena');
+  arena.innerHTML = `
+    <div class="pergunta-grande">${ciclo.titulo}: toque nas fases na ordem certa!</div>
+    <div class="seq-progresso" id="seq-prog"></div>
+    <div class="fases-grid" id="fases-cont"></div>
+    <div id="info-clique"></div>
+  `;
+  renderSeqProgresso();
+
+  const cont = document.getElementById('fases-cont');
+  embaralhadas.forEach(f => {
+    const card = document.createElement('div');
+    card.className = 'fase-card';
+    card.dataset.id = f.id;
+    card.innerHTML = `
+      <div class="svg-fase">${SVG_FASES[f.id] || ''}</div>
+      <div class="nome-fase">${f.nome}</div>
+    `;
+    card.addEventListener('click', () => clicarFase(card, f.id));
+    cont.appendChild(card);
+  });
+}
+
+function renderSeqProgresso() {
+  const cont = document.getElementById('seq-prog');
+  if (!cont) return;
+  const total = STATE.jogo.ordemAlvo.length;
+  const feitos = STATE.jogo.ordemAluno.length;
+  cont.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const div = document.createElement('div');
+    div.className = 'seq-passo';
+    if (i < feitos) {
+      div.classList.add('feito');
+      div.textContent = i + 1;
+    } else if (i === feitos) {
+      div.classList.add('atual');
+      div.textContent = '?';
+    } else {
+      div.textContent = '?';
+    }
+    cont.appendChild(div);
+  }
+}
+
+function clicarFase(card, faseId) {
+  if (STATE.jogo.bloqueado) return;
+  if (card.classList.contains('acertado')) return;
+  // Já clicou nessa antes? Ignora
+  if (STATE.jogo.ordemAluno.includes(faseId)) return;
+
+  const proxIdx = STATE.jogo.ordemAluno.length;
+  const correto = STATE.jogo.ordemAlvo[proxIdx] === faseId;
+
+  if (correto) {
+    STATE.jogo.ordemAluno.push(faseId);
+    card.classList.add('acertado');
+    // Adiciona badge com número da ordem
+    const badge = document.createElement('div');
+    badge.className = 'badge-ordem';
+    badge.textContent = proxIdx + 1;
+    card.appendChild(badge);
+    renderSeqProgresso();
+
+    // Mostra info da fase
+    const ciclo = CICLOS[STATE.jogo.cicloAtual];
+    const fase = ciclo.fases.find(f => f.id === faseId);
+    const info = document.getElementById('info-clique');
+    if (info && fase) {
+      info.innerHTML = `<div class="info-fase"><h3>${fase.nome}</h3><div class="descricao">💡 ${fase.desc}</div></div>`;
+    }
+
+    // Concluído?
+    if (STATE.jogo.ordemAluno.length === STATE.jogo.ordemAlvo.length) {
+      STATE.jogo.bloqueado = true;
+      tocarSom('acerto');
+      mostrarFeedback('acerto', `🎉 ${elogio()} Você completou o ciclo!`);
+      renderMascote('svg-mascote-painel', 'feliz');
+      document.getElementById('balao-fala-painel').innerHTML = `<b>Verdinho:</b> ${STATE.jogo.etapa.fala_sucesso} ✨`;
+      STATE.jogo.acertos = 1;
+      STATE.jogo.progresso = 1;
+      atualizarUI();
+      setTimeout(() => finalizarEtapa(), 2200);
+    } else {
+      // Pequeno feedback positivo
+      tocarSom('acerto-mini');
+    }
+  } else {
+    STATE.jogo.bloqueado = true;
+    card.classList.add('errado');
+    tocarSom('erro');
+    // Revela qual era a próxima
+    const proxId = STATE.jogo.ordemAlvo[proxIdx];
+    const proxCard = document.querySelector(`.fase-card[data-id="${proxId}"]`);
+    if (proxCard) proxCard.classList.add('alvo-revelado');
+    const ciclo = CICLOS[STATE.jogo.cicloAtual];
+    const proxFase = ciclo.fases.find(f => f.id === proxId);
+    mostrarFeedback('erro', `🤗 ${incentivo()} A próxima fase era <b>${proxFase.nome}</b>.`);
+    renderMascote('svg-mascote-painel', 'pensando');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Verdinho:</b> Vamos tentar de novo!`;
+    STATE.jogo.erros = 1;
+    STATE.jogo.acertos = 0;
+    STATE.jogo.progresso = 1;
+    atualizarUI();
+    setTimeout(() => finalizarEtapa(), 2800);
+  }
+}
+
+/* DESAFIO FINAL: perguntas mistas tipo "qual a próxima fase?" */
+function exDesafioFinal() {
+  // Coleta todas as fases de todos os ciclos
+  const todasFases = [];
+  Object.entries(CICLOS).forEach(([cId, ciclo]) => {
+    ciclo.fases.forEach((f, idx) => {
+      todasFases.push({
+        cicloId: cId,
+        cicloTitulo: ciclo.titulo,
+        idx: idx,
+        total: ciclo.fases.length,
+        fase: f,
+        proxFase: idx < ciclo.fases.length - 1 ? ciclo.fases[idx + 1] : null
+      });
+    });
+  });
+
+  // Filtrar pra perguntas onde existe próxima fase, e que ainda não foi usada
+  const elegiveis = todasFases.filter(t => t.proxFase && !STATE.jogo.quizUsados.includes(t.cicloId + '|' + t.fase.id));
+  if (elegiveis.length === 0) {
+    finalizarEtapa();
+    return;
+  }
+  const sel = elegiveis[Math.floor(Math.random() * elegiveis.length)];
+  STATE.jogo.quizUsados.push(sel.cicloId + '|' + sel.fase.id);
+
+  const arena = document.getElementById('arena');
+  // Pergunta: dada uma fase, qual é a próxima?
+  arena.innerHTML = `
+    <div class="pergunta-grande">No ciclo da ${sel.cicloTitulo}, depois desta fase vem qual?</div>
+    <div class="quiz-pergunta">
+      <div class="qsvg">${SVG_FASES[sel.fase.id] || ''}</div>
+      <div class="qtext">${sel.fase.nome}</div>
+    </div>
+    <div class="opcoes-grid" id="opcoes-cont"></div>
+  `;
+  // Opções: a próxima correta + 3 distractors
+  const ciclo = CICLOS[sel.cicloId];
+  const opcoes = new Set([sel.proxFase.id]);
+  // Distractors do mesmo ciclo (preferencial)
+  ciclo.fases.forEach(f => {
+    if (f.id !== sel.fase.id && f.id !== sel.proxFase.id) opcoes.add(f.id);
+  });
+  // Se ainda faltar, pega aleatório de outros ciclos
+  if (opcoes.size < 4) {
+    Object.values(CICLOS).forEach(c => {
+      c.fases.forEach(f => {
+        if (opcoes.size < 4 && f.id !== sel.fase.id) opcoes.add(f.id);
+      });
+    });
+  }
+  const arr = shuffle([...opcoes]).slice(0, 4);
+  const cont = document.getElementById('opcoes-cont');
+  arr.forEach(faseId => {
+    let nomeFase = faseId;
+    Object.values(CICLOS).forEach(c => {
+      const f = c.fases.find(x => x.id === faseId);
+      if (f) nomeFase = f.nome;
+    });
+    const btn = document.createElement('button');
+    btn.className = 'opcao-btn';
+    btn.dataset.id = faseId;
+    btn.textContent = nomeFase;
+    btn.onclick = () => responderQuiz(btn, faseId, sel.proxFase.id, sel.proxFase.nome);
+    cont.appendChild(btn);
+  });
+}
+
+function responderQuiz(btn, idEscolhido, idCerto, nomeCerto) {
+  if (STATE.jogo.bloqueado) return;
+  STATE.jogo.bloqueado = true;
+  document.querySelectorAll('.opcao-btn').forEach(b => {
+    b.disabled = true;
+    if (idEscolhido !== idCerto && b.dataset.id === idCerto) b.classList.add('alt-correta');
+  });
+  const correto = idEscolhido === idCerto;
+  if (correto) btn.classList.add('acerto');
+  else btn.classList.add('erro');
+  finalizarComum(correto, nomeCerto);
+}
+
+function finalizarComum(correto, respCorretaTxt) {
+  if (correto) {
+    STATE.jogo.acertos++;
+    tocarSom('acerto');
+    mostrarFeedback('acerto', `🎉 ${elogio()}`);
+    renderMascote('svg-mascote-painel', 'feliz');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Verdinho:</b> ${STATE.jogo.etapa.fala_sucesso} ✨`;
+  } else {
+    STATE.jogo.erros++;
+    tocarSom('erro');
+    mostrarFeedback('erro', `🤗 ${incentivo()} Era <b>${respCorretaTxt}</b>.`);
+    renderMascote('svg-mascote-painel', 'pensando');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Verdinho:</b> Vamos pra próxima!`;
+  }
+  STATE.jogo.progresso++;
+  atualizarUI();
+  setTimeout(() => {
+    if (STATE.jogo.progresso >= STATE.jogo.totalEtapa) finalizarEtapa();
+    else iniciarExercicio();
+  }, correto ? 1500 : 2200);
+}
+
+/* FINALIZAR ETAPA + TRANSIÇÃO */
+function finalizarEtapa() {
+  STATE.jogo.ativo = false;
+  const etapa = STATE.jogo.etapa;
+  const total = STATE.jogo.acertos + STATE.jogo.erros;
+  const aprov = total > 0 ? STATE.jogo.acertos / total : 0;
+
+  let estrelas;
+  if (aprov >= 0.95) estrelas = 3;
+  else if (aprov >= 0.75) estrelas = 2;
+  else estrelas = 1;
+  if (STATE.jogo.erros > STATE.jogo.acertos) estrelas = 1;
+
+  const anterior = STATE.estrelasPorEtapa[etapa.id] || 0;
+  STATE.estrelasPorEtapa[etapa.id] = Math.max(anterior, estrelas);
+  if (STATE.etapaAtual === etapa.id && STATE.etapaAtual < ETAPAS.length) STATE.etapaAtual++;
+  salvar();
+
+  const todasFeitas = ETAPAS.every(e => STATE.estrelasPorEtapa[e.id]);
+  const proxima = ETAPAS.find(e => e.id > etapa.id);
+
+  if (todasFeitas) {
+    renderMascote('svg-mascote-trofeu', 'feliz');
+    document.getElementById('modal-trilha-completa').classList.add('aberto');
+    criarConfetes();
+    return;
+  }
+
+  if (estrelas === 1) {
+    renderMascote('svg-mascote-modal', 'pensando');
+    document.getElementById('etapa-fim-titulo').textContent = '💪 Vamos tentar de novo?';
+    document.getElementById('etapa-fim-msg').textContent = 'Praticar mais um pouquinho ajuda a aprender!';
+    let estrelasHtml = '';
+    for (let i = 0; i < 3; i++) {
+      estrelasHtml += i < estrelas ? '<span class="ativa">★</span>' : '<span class="vazia">★</span>';
+    }
+    document.getElementById('etapa-fim-estrelas').innerHTML = estrelasHtml;
+    document.getElementById('etapa-fim-detalhes').textContent = `${STATE.jogo.acertos} acerto${STATE.jogo.acertos !== 1 ? 's' : ''} · ${STATE.jogo.erros} erro${STATE.jogo.erros !== 1 ? 's' : ''}`;
+    const acoes = document.getElementById('etapa-fim-acoes');
+    acoes.innerHTML = '';
+    const btnRepetir = document.createElement('button');
+    btnRepetir.className = 'btn-confirmar';
+    btnRepetir.textContent = '↻ Repetir';
+    btnRepetir.onclick = () => { fecharModal('modal-etapa-fim'); comecarEtapaAtual(); };
+    acoes.appendChild(btnRepetir);
+    const btnAvancar = document.createElement('button');
+    btnAvancar.className = 'btn-cancelar';
+    btnAvancar.textContent = proxima ? '➡ Próxima' : '🏠 Voltar';
+    btnAvancar.onclick = () => {
+      fecharModal('modal-etapa-fim');
+      if (proxima) { STATE.etapaAtual = proxima.id; comecarEtapaAtual(); }
+      else voltarLobby();
+    };
+    acoes.appendChild(btnAvancar);
+    document.getElementById('modal-etapa-fim').classList.add('aberto');
+    return;
+  }
+
+  if (proxima) mostrarTransicaoAutomatica(estrelas, etapa, proxima);
+  else voltarLobby();
+}
+
+function mostrarTransicaoAutomatica(estrelas, etapaAtual, proxima) {
+  const overlay = document.createElement('div');
+  overlay.id = 'transicao-overlay';
+  overlay.style.cssText = `
+    position: fixed; inset: 0;
+    background: rgba(20,83,45,0.85);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999999;
+    backdrop-filter: blur(4px);
+    animation: transicaoFadeIn 0.3s ease-out;
+  `;
+  const card = document.createElement('div');
+  card.style.cssText = `
+    background: white;
+    border-radius: 20px;
+    padding: 24px 28px;
+    max-width: 420px;
+    text-align: center;
+    border: 4px solid #16A34A;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    animation: transicaoCardIn 0.4s ease-out;
+  `;
+  let estrelasHtml = '';
+  for (let i = 0; i < 3; i++) {
+    estrelasHtml += i < estrelas
+      ? '<span style="color:#FBBF24;">★</span>'
+      : '<span style="color:#E2E8F0;">★</span>';
+  }
+  card.innerHTML = `
+    <div style="font-size:3rem; line-height:1; margin-bottom:6px;">🌱</div>
+    <h2 style="font-family:'Fredoka',sans-serif; font-weight:700; color:#15803D; font-size:1.4rem; margin:0 0 4px;">
+      ${estrelas === 3 ? 'Perfeito!' : 'Muito bom!'}
+    </h2>
+    <p style="font-family:'Fredoka',sans-serif; font-weight:500; color:#14532D; font-size:0.95rem; margin:0 0 8px;">
+      Você passou da <b>${etapaAtual.titulo}</b>!
+    </p>
+    <div style="font-size:2rem; letter-spacing:8px; margin:8px 0;">${estrelasHtml}</div>
+    <div style="background:#FFF9E6; border:2px dashed #FBBF24; border-radius:12px; padding:10px; margin-top:10px;">
+      <div style="font-family:'Fredoka',sans-serif; font-weight:600; color:#475569; font-size:0.82rem;">Próxima aventura:</div>
+      <div style="font-family:'Fredoka',sans-serif; font-weight:700; color:#15803D; font-size:1.05rem;">
+        ${proxima.emoji} ${proxima.titulo}
+      </div>
+    </div>
+  `;
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+  tocarSom('acerto');
+  setTimeout(() => {
+    overlay.style.animation = 'transicaoFadeOut 0.3s ease-out forwards';
+    setTimeout(() => {
+      overlay.remove();
+      STATE.etapaAtual = proxima.id;
+      comecarEtapaAtual();
+    }, 300);
+  }, 2500);
+}
+
+function voltarLobby() {
+  if (STATE.jogo.ativo && (STATE.jogo.acertos + STATE.jogo.erros) > 0) {
+    if (!confirm('Voltar ao mapa? Seu progresso da aventura atual será perdido.')) return;
+  }
+  STATE.jogo.ativo = false;
+  document.getElementById('treino').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-etapa-fim');
+  fecharModal('modal-trilha-completa');
+  renderLobby();
+}
+
+/* MODAIS */
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+
+/* SOM */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'acerto') {
+      const notas = [523, 659, 784, 1047];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t0 = c.currentTime + i * 0.07;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.18);
+        o.start(t0); o.stop(t0 + 0.2);
+      });
+    } else if (tipo === 'acerto-mini') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 880; o.type = 'sine';
+      g.gain.setValueAtTime(0.1, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.15);
+      o.start(); o.stop(c.currentTime + 0.16);
+    } else {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 320; o.type = 'sine';
+      g.gain.setValueAtTime(0.1, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.3);
+      o.frequency.exponentialRampToValueAtTime(180, c.currentTime + 0.3);
+      o.start(); o.stop(c.currentTime + 0.32);
+    }
+  } catch (e) {}
+}
+
+/* CONFETES */
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#16A34A','#FBBF24','#FB923C','#EC4899','#22C55E','#86EFAC'];
+  for (let i = 0; i < 50; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* ACESSIBILIDADE COMPARTILHADA */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    // Escala SEMPRE inicia em 'normal' (não persistir entre sessões; vários alunos compartilham dispositivo)
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* WEBNODE EMBED */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+const ro = new ResizeObserver(() => reportarAltura());
+ro.observe(document.getElementById('pde-painel'));
+
+/* SELOS BNCC */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'ciencias',
+      icone: 'CIE',
+      titulo: 'BNCC Ciências da Natureza · Vida e Evolução',
+      itens: [
+        { cod: 'EF02CI04', desc: 'Descrever características de plantas e animais (tamanho, forma, cor, fase da vida, local onde se desenvolvem etc.) que fazem parte de seu cotidiano e relacioná-las ao ambiente em que eles vivem.' },
+        { cod: 'EF02CI05', desc: 'Investigar a importância da água e da luz para a manutenção da vida de plantas em geral.' },
+        { cod: 'EF03CI04', desc: 'Identificar características sobre o modo de vida (o que comem, como se reproduzem, como se deslocam etc.) dos animais mais comuns no ambiente próximo.' },
+        { cod: 'EF03CI06', desc: 'Comparar alguns animais e organizar grupos com base em características externas comuns (presença de penas, pelos, escamas, bico, garras, antenas, patas etc.).' },
+        { cod: 'EF05CI09', desc: 'Discutir o ciclo da vida de plantas e animais, percebendo o nascimento, crescimento e reprodução como etapas comuns aos seres vivos.' },
+        { cod: 'EF06CI07', desc: 'Justificar o papel do sistema nervoso na coordenação das ações motoras e sensoriais do corpo, com base na análise de suas estruturas básicas.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Cultura Digital',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-etapa-fim', 'modal-trilha-completa'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+const styleTransicao = document.createElement('style');
+styleTransicao.textContent = `
+@keyframes transicaoFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes transicaoFadeOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes transicaoCardIn {
+  0% { transform: scale(0.7) translateY(20px); opacity: 0; }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}`;
+document.head.appendChild(styleTransicao);
+
+/* INICIALIZAÇÃO */
+carregar();
+carregarA11y();
+renderLobby();
+
+document.getElementById('nome-aluno').addEventListener('input', (e) => {
+  STATE.nomeAluno = e.target.value;
+  salvar();
+});
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2385 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Batalha Matemática · Portal do Educador</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+  #pde-painel {
+    font-family: 'Fredoka', 'Segoe UI', Roboto, sans-serif;
+    color: #1E324A;
+    width: 100%;
+    margin: 0 auto;
+    min-height: 700px;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e0e9f3 100%);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #pde-painel h1, #pde-painel h2, #pde-painel h3, #pde-painel .titulo {
+    font-family: 'Baloo 2', 'Fredoka', sans-serif;
+  }
+
+  /* Cores institucionais NEWPC */
+  #pde-painel .pde-azul-escuro { color: #1E324A; }
+  #pde-painel .bg-pde-azul-escuro { background-color: #1E324A; }
+  #pde-painel .pde-cyan { color: #37B1DA; }
+  #pde-painel .bg-pde-cyan { background-color: #37B1DA; }
+  #pde-painel .pde-lime { color: #B6D752; }
+  #pde-painel .bg-pde-lime { background-color: #B6D752; }
+
+  /* Animações */
+  @keyframes pde-bounce-in { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
+  @keyframes pde-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  @keyframes pde-pulse-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); } 50% { box-shadow: 0 0 0 12px rgba(255, 215, 0, 0); } }
+  @keyframes pde-confetti { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(120vh) rotate(720deg); opacity: 0; } }
+  @keyframes pde-float-up { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-60px); opacity: 0; } }
+  @keyframes pde-flash { 0%, 100% { background-color: transparent; } 50% { background-color: rgba(255, 255, 0, 0.3); } }
+
+  #pde-painel .pde-bounce-in { animation: pde-bounce-in 0.5s ease-out; }
+  #pde-painel .pde-shake { animation: pde-shake 0.4s; }
+  #pde-painel .pde-pulse-glow { animation: pde-pulse-glow 1.5s infinite; }
+  #pde-painel .pde-flash { animation: pde-flash 0.5s; }
+
+  #pde-painel .confetti {
+    position: absolute; width: 12px; height: 12px;
+    animation: pde-confetti 3s ease-out forwards;
+    pointer-events: none;
+  }
+
+  #pde-painel .float-points {
+    position: absolute; font-weight: 800; font-size: 2rem;
+    animation: pde-float-up 1.2s ease-out forwards;
+    pointer-events: none; z-index: 50;
+  }
+
+  /* Botões da calculadora */
+  #pde-painel .numpad-btn {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    border-radius: 12px;
+    transition: transform 0.08s, box-shadow 0.08s;
+    cursor: pointer;
+    user-select: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.15);
+    height: clamp(44px, 7vh, 64px);
+    max-height: 64px;
+    font-size: clamp(1rem, 2.2vw, 1.4rem);
+    width: 100%;
+  }
+  #pde-painel .numpad-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
+  #pde-painel .numpad-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* Calculadora wrapper - controla largura máxima do teclado */
+  #pde-painel .calc-wrapper {
+    max-width: 380px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* Display da operação */
+  #pde-painel .operacao-display {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+    line-height: 1.1;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+  }
+
+  /* Time card */
+  #pde-painel .team-card {
+    transition: opacity 0.3s, transform 0.3s;
+    border-radius: 16px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  #pde-painel .team-card.inactive { opacity: 0.45; transform: scale(0.97); }
+  #pde-painel .team-card.active { opacity: 1; transform: scale(1); }
+
+  /* Cabo da batalha */
+  #pde-painel .rope-track {
+    position: relative;
+    height: 14px;
+    background: linear-gradient(90deg, #1E40AF 0%, #1E40AF 50%, #DC2626 50%, #DC2626 100%);
+    border-radius: 7px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+  }
+  #pde-painel .rope-marker {
+    position: absolute; top: 50%;
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    transform: translate(-50%, -50%);
+    transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 5;
+  }
+
+  /* Vidas */
+  #pde-painel .vida {
+    display: inline-block;
+    font-size: 1.5rem;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  #pde-painel .vida.perdida { opacity: 0.2; transform: scale(0.7) rotate(-30deg); }
+
+  /* Combo */
+  #pde-painel .combo-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    color: #1E324A;
+    box-shadow: 0 2px 8px rgba(255, 165, 0, 0.5);
+  }
+
+  /* Modais */
+  #pde-painel .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    padding: 16px;
+  }
+  #pde-painel .modal-overlay.active { display: flex; }
+  #pde-painel .modal-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 24px;
+  }
+
+  /* Inputs */
+  #pde-painel input[type="text"], #pde-painel input[type="number"], #pde-painel select {
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    width: 100%;
+    background: white;
+  }
+  #pde-painel input[type="text"]:focus, #pde-painel select:focus {
+    outline: none;
+    border-color: #37B1DA;
+    box-shadow: 0 0 0 3px rgba(55, 177, 218, 0.2);
+  }
+
+  /* Botões principais */
+  #pde-painel .btn-primary {
+    background: linear-gradient(135deg, #37B1DA, #1E324A);
+    color: white;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    padding: 14px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+    transition: transform 0.1s, box-shadow 0.1s;
+    font-size: 1.1rem;
+  }
+  #pde-painel .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+  #pde-painel .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  #pde-painel .btn-success {
+    background: linear-gradient(135deg, #B6D752, #6B9B0F);
+    color: #1E324A;
+  }
+  #pde-painel .btn-warning {
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    color: #1E324A;
+  }
+  #pde-painel .btn-danger {
+    background: linear-gradient(135deg, #EF4444, #B91C1C);
+    color: white;
+  }
+  #pde-painel .btn-ghost {
+    background: rgba(30, 50, 74, 0.1);
+    color: #1E324A;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Chip / opção selecionável */
+  #pde-painel .chip {
+    background: white;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  #pde-painel .chip:hover { border-color: #37B1DA; }
+  #pde-painel .chip.active {
+    background: linear-gradient(135deg, #37B1DA, #1E324A);
+    color: white;
+    border-color: #1E324A;
+  }
+
+  /* Header app */
+  #pde-painel .app-header {
+    background: linear-gradient(135deg, #1E324A 0%, #2C4A6B 100%);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* Logo NEWPC inline */
+  #pde-painel .logo-newpc {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+  }
+  #pde-painel .logo-newpc .nw-circle {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #37B1DA, #B6D752);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #1E324A;
+    font-size: 1rem;
+  }
+
+  /* Layout responsivo principal */
+  #pde-painel .battle-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  @media (max-width: 640px) {
+    #pde-painel .battle-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    #pde-painel .team-card.inactive { display: none; }
+    #pde-painel .app-header { padding: 10px 14px; }
+    #pde-painel .operacao-display { font-size: 2rem; }
+  }
+
+  /* Resposta input */
+  #pde-painel .answer-display {
+    background: white;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    text-align: center;
+    min-height: 56px;
+    border: 3px solid rgba(255,255,255,0.3);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  #pde-painel .answer-display.error { background: #FEE2E2; border-color: #DC2626; color: #991B1B; }
+  #pde-painel .answer-display.success { background: #DCFCE7; border-color: #16A34A; color: #15803D; }
+
+  /* Cronômetro */
+  #pde-painel .timer-circle {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    gap: 6px;
+  }
+  #pde-painel .timer-circle.danger { background: #DC2626; animation: pde-pulse-glow 1s infinite; }
+
+  /* Tabela do relatório */
+  #pde-painel .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+  }
+  #pde-painel .report-table th {
+    background: #1E324A; color: white;
+    padding: 10px; text-align: left;
+    font-family: 'Baloo 2', sans-serif;
+  }
+  #pde-painel .report-table td {
+    padding: 10px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  #pde-painel .report-table tr:nth-child(even) td { background: #f8fafc; }
+
+  /* Esconder elementos */
+  #pde-painel .hidden { display: none !important; }
+
+  /* Painel BNCC */
+  #pde-painel .bncc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+  }
+
+  /* Aviso vidas */
+  #pde-painel .lives-display {
+    display: flex; align-items: center; gap: 4px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 999px;
+    padding: 4px 10px;
+  }
+
+  /* Footer placar mobile */
+  #pde-painel .mobile-score {
+    display: none;
+    background: white;
+    border-top: 2px solid #1E324A;
+    padding: 8px;
+    justify-content: space-around;
+    align-items: center;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+  }
+  @media (max-width: 640px) {
+    #pde-painel .mobile-score { display: flex; }
+  }
+
+  /* Animação de scroll de transição entre turnos */
+  @keyframes pde-slide-enter {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  #pde-painel .slide-enter { animation: pde-slide-enter 0.4s ease-out; }
+
+  /* ===== LOBBY COMPACTO (cabe sem scroll) ===== */
+  #pde-painel .lobby-compact {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 1100px;
+    margin: 0 auto;
+    min-height: 600px;
+  }
+
+  #pde-painel .lobby-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 4px 8px;
+    flex-wrap: wrap;
+  }
+
+  #pde-painel .lobby-titulo {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    color: #1E324A;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+  }
+
+  #pde-painel .btn-link-relatorio {
+    background: rgba(55, 177, 218, 0.15);
+    color: #1E324A;
+    border: 1px solid rgba(30, 50, 74, 0.2);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  #pde-painel .btn-link-relatorio:hover {
+    background: rgba(55, 177, 218, 0.25);
+  }
+
+  #pde-painel .lobby-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    flex: 1;
+  }
+
+  #pde-painel .lobby-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #pde-painel .lobby-secao {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    color: #1E324A;
+    font-size: 1rem;
+    margin: 0 0 4px 0;
+  }
+
+  #pde-painel .lobby-input {
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.95rem;
+    width: 100%;
+    background: white;
+  }
+
+  #pde-painel .chip-sm {
+    background: white;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 5px 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-align: center;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  #pde-painel .chip-sm:hover { border-color: #37B1DA; }
+  #pde-painel .chip-sm.active {
+    background: linear-gradient(135deg, #37B1DA, #1E324A);
+    color: white;
+    border-color: #1E324A;
+  }
+
+  #pde-painel .lobby-actions {
+    display: flex;
+    gap: 10px;
+  }
+  #pde-painel .lobby-actions .btn-primary {
+    padding: 12px 18px;
+    font-size: 1rem;
+  }
+
+  /* Slider compacto */
+  #pde-painel .lobby-col input[type="range"] {
+    height: 6px;
+    margin-top: 4px;
+  }
+
+  /* BNCC anos compactos */
+  #pde-painel #bncc-anos .chip-sm {
+    padding: 4px 6px;
+    font-size: 0.85rem;
+  }
+
+  /* Mobile: empilha as colunas */
+  @media (max-width: 768px) {
+    #pde-painel .lobby-card {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    #pde-painel .lobby-titulo {
+      font-size: 1.3rem;
+    }
+    #pde-painel .lobby-header {
+      flex-wrap: wrap;
+    }
+  }
+
+  /* Desktop alto: aproveita espaço vertical sem ficar gigante */
+  @media (min-height: 800px) {
+    #pde-painel .lobby-compact {
+      padding: 24px;
+      gap: 16px;
+    }
+    #pde-painel .lobby-card { padding: 24px; gap: 28px; }
+  }
+
+  /* Botão admin flutuante */
+  #pde-painel .btn-admin {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    background: rgba(30, 50, 74, 0.85);
+    color: white;
+    border: none;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+
+/* ============== SELOS BNCC ============== */
+#pde-painel .selos-bncc {
+  background: #F8FAFC;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 14px 0 6px;
+  text-align: left;
+  border: 2px solid #E2E8F0;
+}
+#pde-painel .selos-bncc h3 {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  color: #1E324A;
+  font-size: 0.95rem;
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#pde-painel .selos-bncc .selo-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #E2E8F0;
+}
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone {
+  flex-shrink: 0;
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg,#37B1DA,#1E324A);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  color: white;
+  font-weight: 800;
+  font-family: 'Baloo 2',sans-serif;
+  letter-spacing: -0.5px;
+}
+#pde-painel .selos-bncc .selo-icone.matematica { background: linear-gradient(135deg,#0891B2,#0E7490); }
+#pde-painel .selos-bncc .selo-icone.portugues { background: linear-gradient(135deg,#9333EA,#581C87); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo {
+  font-weight: 800;
+  color: #1E324A;
+  font-size: 0.88rem;
+  margin-bottom: 3px;
+  font-family: 'Baloo 2',sans-serif;
+}
+#pde-painel .selos-bncc .selo-codigos {
+  font-size: 0.78rem;
+  color: #475569;
+  line-height: 1.5;
+}
+#pde-painel .selos-bncc .selo-codigos b {
+  color: #1E324A;
+  font-family: 'Baloo 2',sans-serif;
+  display: inline-block;
+  background: #E2E8F0;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.74rem;
+  margin-right: 4px;
+}
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px dashed #CBD5E1;
+  font-size: 0.72rem;
+  color: #64748B;
+  text-align: center;
+  line-height: 1.5;
+}
+#pde-painel .selos-bncc-rodape strong { color: #1E324A; }
+
+#pde-painel.alto-contraste .selos-bncc { background: #000; border-color: #FBBF24; }
+#pde-painel.alto-contraste .selos-bncc h3 { color: #FBBF24; }
+#pde-painel.alto-contraste .selos-bncc .selo-icone { background: #FBBF24 !important; color: #000; }
+#pde-painel.alto-contraste .selos-bncc .selo-titulo { color: #FBBF24; }
+#pde-painel.alto-contraste .selos-bncc .selo-codigos { color: #FFF; }
+#pde-painel.alto-contraste .selos-bncc .selo-codigos b { color: #000; background: #FBBF24; }
+#pde-painel.alto-contraste .selos-bncc .selo-row { border-bottom-color: #FBBF24; }
+#pde-painel.alto-contraste .selos-bncc-rodape { color: #FBBF24; border-top-color: #FBBF24; }
+
+
+/* ============================================ */
+/* PATCH UNIFICADO v2                            */
+/* 1. Acessibilidade: escala de texto FUNCIONAL  */
+/* 2. Desktop-wide: aproveita tela grande        */
+/* ============================================ */
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 12px clamp(12px, 2vw, 24px) 24px; }
+  #pde-painel .lobby-card { padding: 18px; }
+  #pde-painel .area-treino { padding: 16px; }
+  #pde-painel .painel-info { padding: 16px; }
+  #pde-painel .treino-grid { grid-template-columns: 280px minmax(0, 1fr); gap: 18px; }
+  #pde-painel .opcoes-grid {
+    max-width: 900px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  #pde-painel .fases-grid {
+    max-width: 1100px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  #pde-painel .fase-card { min-height: 170px; padding: 14px 8px; }
+  #pde-painel .fase-card .svg-fase { width: 110px; height: 110px; }
+  #pde-painel .fase-card .nome-fase { font-size: 0.92rem; }
+  #pde-painel .cores-grid {
+    max-width: 800px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .instrumentos-grid {
+    max-width: 720px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  #pde-painel .instrumento-btn { min-height: 110px; }
+  #pde-painel .instrumento-btn .icone-instr { font-size: 2.6rem; }
+  #pde-painel .instrumento-btn .nome-instr { font-size: 0.85rem; }
+  #pde-painel .mapa-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .mapa-etapa { padding: 12px 8px; }
+  #pde-painel .mapa-etapa .emoji-lugar { font-size: 2.2rem; }
+  #pde-painel .mapa-etapa .nome-lugar { font-size: 0.85rem; }
+  #pde-painel .pergunta-grande { font-size: 1.35rem; padding: 0 8px; margin-bottom: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .modal-conteudo h2 { font-size: 1.65rem; }
+  #pde-painel .modal-conteudo p { font-size: 1.05rem; }
+  #pde-painel .opcao-btn { min-height: 64px; font-size: 1.05rem; padding: 14px 12px; }
+  #pde-painel .area-mistura { max-width: 420px; }
+  #pde-painel .pista-musica { height: 280px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  #pde-painel .compositor-grid { grid-template-columns: 90px 1fr; max-width: 900px; margin: 0 auto; }
+  #pde-painel .passo-cel { min-height: 38px; }
+  #pde-painel .seq-progresso { padding: 14px; max-width: 720px; margin: 8px auto; }
+  #pde-painel .seq-progresso .seq-passo { width: 44px; height: 44px; font-size: 1.6rem; }
+  #pde-painel .estrelinhas-prog { padding: 12px; }
+  #pde-painel .header h1 { font-size: 1.45rem; }
+  #pde-painel .btn-header { font-size: 0.92rem; padding: 7px 14px; }
+  #pde-painel .input-nome { font-size: 1.1rem; padding: 14px 18px; }
+  #pde-painel .btn-comecar-aventura { font-size: 1.2rem; padding: 14px 24px; }
+  #pde-painel .quiz-pergunta { padding: 18px; }
+  #pde-painel .quiz-pergunta .qsvg { width: 160px; height: 160px; }
+  #pde-painel .quiz-pergunta .qtext { font-size: 1.25rem; }
+  #pde-painel .info-fase { padding: 14px 18px; max-width: 900px; margin-left: auto; margin-right: auto; }
+  #pde-painel .alvo-info { max-width: 480px; padding: 12px 18px; font-size: 1.05rem; }
+  #pde-painel .pote-cor { width: 100px; height: 100px; }
+  #pde-painel .balde { width: 130px; height: 130px; }
+  #pde-painel .escolha-dupla { max-width: 480px; gap: 14px; }
+  #pde-painel .opcao-dupla { font-size: 1.2rem; min-height: 90px; padding: 22px 12px; }
+  #pde-painel .cor-mostra { width: 200px; height: 200px; }
+  #pde-painel .svg-ilustracao { width: 280px; height: 280px; }
+  #pde-painel .mapa-jogo-wrap { max-width: 900px; margin: 0 auto; }
+}
+@media (min-width: 1440px) {
+  #pde-painel { max-width: 1400px; }
+  #pde-painel .opcoes-grid { max-width: 1000px; }
+  #pde-painel .fases-grid { max-width: 1240px; }
+}
+/* === FIM PATCH UNIFICADO v2 === */
+
+
+/* === SISTEMA A11Y === */
+#pde-painel.alto-contraste { background: #000 !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+#pde-painel.alto-contraste .a11y-grupo { background: #1A1A1A; border-color: #FBBF24; color: #FFF; }
+#pde-painel.alto-contraste .a11y-grupo h3 { color: #FBBF24; }
+#pde-painel.alto-contraste .a11y-tam-btn { background: #1A1A1A; color: #FBBF24; border-color: #FBBF24; }
+#pde-painel.alto-contraste .a11y-tam-btn.ativo { background: #FBBF24; color: #000; }
+#pde-painel.alto-contraste .toggle-row { background: #1A1A1A; color: #FFF; border-color: #FBBF24; }
+
+#pde-painel.daltonico .text-blue-700,
+#pde-painel.daltonico .bg-blue-600 { background-color: #3B82F6 !important; color: white !important; }
+#pde-painel.daltonico .text-red-700,
+#pde-painel.daltonico .bg-red-600 { background-color: #FB923C !important; color: white !important; }
+
+#pde-painel.sem-animacoes *,
+#pde-painel.sem-animacoes *::before,
+#pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Estilização dos elementos do modal A11Y */
+#pde-painel .a11y-grupo {
+  background: #FFF9E6; border: 3px solid #FBBF24; border-radius: 14px;
+  padding: 12px; margin-bottom: 10px; text-align: left;
+}
+#pde-painel .a11y-grupo h3 {
+  font-family: 'Fredoka','Baloo 2',sans-serif; font-size: 1rem;
+  font-weight: 700; color: #1E324A; margin: 0 0 4px;
+}
+#pde-painel .a11y-grupo .desc {
+  font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35;
+}
+#pde-painel .a11y-tam-grid {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 5px;
+}
+#pde-painel .a11y-tam-btn {
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 8px 4px; text-align: center;
+  font-family: 'Fredoka','Baloo 2',sans-serif; font-weight: 700;
+  cursor: pointer; transition: all 0.15s; color: #475569;
+}
+#pde-painel .a11y-tam-btn:hover { border-color: #1E324A; }
+#pde-painel .a11y-tam-btn.ativo {
+  background: linear-gradient(135deg,#1E324A 0%,#0F172A 100%);
+  color: white; border-color: #0F172A;
+}
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #1E324A; }
+#pde-painel .toggle-row.ativo {
+  background: linear-gradient(135deg,#16A34A 0%,#14532D 100%);
+  color: white; border-color: #14532D;
+}
+#pde-painel .toggle-row .switch {
+  width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px;
+  position: relative; flex-shrink: 0;
+}
+#pde-painel .toggle-row .switch::after {
+  content: ""; position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; background: white; border-radius: 50%;
+  transition: left 0.2s;
+}
+#pde-painel .toggle-row.ativo .switch { background: #14532D; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto {
+  flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka','Baloo 2',sans-serif;
+}
+#pde-painel .toggle-row .texto small {
+  display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px;
+}
+
+#pde-painel .btn-secundario {
+  background: white; color: #1E324A;
+  border: 2px solid #1E324A; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #1E324A; color: white; }
+/* === FIM SISTEMA A11Y === */
+
+</style>
+</head>
+<body>
+<div id="pde-painel">
+
+<!-- ========================================== -->
+<!-- TELA 1: LOBBY / CONFIGURAÇÃO DA BATALHA    -->
+<!-- ========================================== -->
+<div id="tela-lobby" class="lobby-compact">
+
+  <!-- Cabeçalho compacto: tudo em uma linha -->
+  <div class="lobby-header">
+    <div class="logo-newpc" style="font-size: 0.85rem; color: #1E324A;">
+      <span class="nw-circle">N</span>
+      <span class="hidden sm:inline">NEWPC · Portal do Educador</span>
+    </div>
+    <h1 class="lobby-titulo">⚔️ Batalha Matemática</h1>
+    <button class="btn-link-relatorio" onclick="abrirAcessibilidade()" title="Acessibilidade" style="margin-right: 4px;">
+      ♿ <span class="hidden sm:inline">A11Y</span>
+    </button>
+    <button class="btn-link-relatorio" onclick="abrirModal('modal-relatorio-dados')" title="Dados para o relatório">
+      📋 <span class="hidden sm:inline">Dados do relatório</span>
+    </button>
+  </div>
+
+  <!-- Card principal em 2 colunas -->
+  <div class="lobby-card">
+
+    <!-- COLUNA ESQUERDA: Conteúdo -->
+    <div class="lobby-col">
+      <h3 class="lobby-secao">📚 Conteúdo</h3>
+      <div class="flex gap-2 mb-2">
+        <div class="chip active flex-1" data-conteudo="livre" onclick="selecionarConteudo('livre')">⚙️ Modo Livre</div>
+        <div class="chip flex-1" data-conteudo="bncc" onclick="selecionarConteudo('bncc')">📖 Por Ano BNCC</div>
+      </div>
+
+      <!-- Painel Modo Livre -->
+      <div id="painel-livre" class="bg-slate-50 rounded-lg p-3 space-y-2">
+        <div>
+          <label class="text-xs font-semibold pde-azul-escuro block mb-1">Operações:</label>
+          <div class="grid grid-cols-2 gap-1.5">
+            <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-md cursor-pointer border border-slate-200 text-sm">
+              <input type="checkbox" id="op-add" checked class="w-4 h-4"><span>➕ Adição</span>
+            </label>
+            <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-md cursor-pointer border border-slate-200 text-sm">
+              <input type="checkbox" id="op-sub" checked class="w-4 h-4"><span>➖ Subtração</span>
+            </label>
+            <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-md cursor-pointer border border-slate-200 text-sm">
+              <input type="checkbox" id="op-mul" class="w-4 h-4"><span>✖️ Multipl.</span>
+            </label>
+            <label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded-md cursor-pointer border border-slate-200 text-sm">
+              <input type="checkbox" id="op-div" class="w-4 h-4"><span>➗ Divisão</span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-semibold pde-azul-escuro block mb-1">Faixa numérica:</label>
+          <div class="flex gap-1.5">
+            <div class="chip-sm active flex-1" data-faixa="facil" onclick="selecionarFaixa('facil')">😊 Fácil</div>
+            <div class="chip-sm flex-1" data-faixa="medio" onclick="selecionarFaixa('medio')">🤔 Médio</div>
+            <div class="chip-sm flex-1" data-faixa="dificil" onclick="selecionarFaixa('dificil')">🔥 Difícil</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Painel BNCC -->
+      <div id="painel-bncc" class="bg-slate-50 rounded-lg p-3 space-y-2 hidden">
+        <label class="text-xs font-semibold pde-azul-escuro block mb-1">Ano escolar:</label>
+        <div class="grid grid-cols-9 gap-1" id="bncc-anos"></div>
+        <div id="bncc-descricao" class="text-xs text-slate-600 bg-white p-2 rounded border border-slate-200">
+          <strong>Selecione um ano</strong> para ver as operações da BNCC.
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUNA DIREITA: Configurações + Times -->
+    <div class="lobby-col">
+      <h3 class="lobby-secao">⚙️ Configurações</h3>
+      <div class="grid grid-cols-2 gap-2 mb-3">
+        <div>
+          <label class="text-xs font-semibold block">🏆 Pontos: <span id="lbl-pontos" class="pde-cyan font-bold">10</span></label>
+          <input type="range" id="cfg-pontos" min="5" max="20" value="10" class="w-full" oninput="document.getElementById('lbl-pontos').textContent=this.value">
+        </div>
+        <div>
+          <label class="text-xs font-semibold block">⏱️ Tempo: <span id="lbl-tempo" class="pde-cyan font-bold">20</span>s</label>
+          <input type="range" id="cfg-tempo" min="10" max="45" value="20" step="5" class="w-full" oninput="document.getElementById('lbl-tempo').textContent=this.value">
+        </div>
+        <div>
+          <label class="text-xs font-semibold block">❤️ Vidas: <span id="lbl-vidas" class="pde-cyan font-bold">3</span></label>
+          <input type="range" id="cfg-vidas" min="1" max="5" value="3" class="w-full" oninput="document.getElementById('lbl-vidas').textContent=this.value">
+        </div>
+        <div>
+          <label class="text-xs font-semibold block mb-0.5">🔊 Som:</label>
+          <div class="flex gap-1">
+            <div class="chip-sm active flex-1" data-som="on" onclick="selecionarSom('on')">Ligado</div>
+            <div class="chip-sm flex-1" data-som="off" onclick="selecionarSom('off')">Mudo</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="lobby-secao">👥 Times</h3>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-xs font-semibold text-blue-700 block">💙 Time 1</label>
+          <input type="text" id="cfg-nome-azul" value="Time Azul" maxlength="20" class="lobby-input">
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-red-700 block">❤️ Time 2</label>
+          <input type="text" id="cfg-nome-vermelho" value="Time Vermelho" maxlength="20" class="lobby-input">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botões fixos no rodapé -->
+  <div class="lobby-actions">
+    <button class="btn-primary btn-warning flex-1" onclick="iniciarTreino()">
+      🎯 Treinar
+    </button>
+    <button class="btn-primary btn-success flex-1" onclick="iniciarBatalha()" style="font-size: 1.1rem;">
+      ⚔️ Iniciar Batalha
+    </button>
+  </div>
+</div>
+
+<!-- Modal: Dados do relatório -->
+<!-- MODAL A11Y -->
+<div id="modal-a11y" class="modal-overlay">
+    <div class="modal-conteudo">
+      <h2 style="color:#1E324A; font-family:'Fredoka','Baloo 2',sans-serif; font-weight:700; margin:0 0 6px; font-size:1.4rem; text-align:center;">♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem; text-align:center; margin:0 0 12px;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div style="margin-top:14px; text-align:center;">
+        <button onclick="fecharModal('modal-a11y')" style="background:linear-gradient(135deg,#16A34A,#14532D); color:white; border:3px solid #2E7D32; box-shadow:0 4px 0 #2E7D32; padding:11px 28px; border-radius:14px; font-family:'Fredoka','Baloo 2',sans-serif; font-weight:700; font-size:0.95rem; cursor:pointer;">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+<div id="modal-relatorio-dados" class="modal-overlay">
+  <div class="modal-card">
+    <h2 class="text-xl font-bold pde-azul-escuro mb-3" style="font-family: 'Baloo 2', sans-serif;">📋 Dados para o relatório</h2>
+    <p class="text-sm text-slate-600 mb-4">Esses dados aparecem no PDF que você pode exportar ao final da batalha. Todos são opcionais.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div>
+        <label class="text-xs font-semibold">Escola</label>
+        <input type="text" id="cfg-escola" placeholder="Ex: EMEF Castelo Branco">
+      </div>
+      <div>
+        <label class="text-xs font-semibold">Turma</label>
+        <input type="text" id="cfg-turma" placeholder="Ex: 5º ano A">
+      </div>
+      <div>
+        <label class="text-xs font-semibold">Professor(a)</label>
+        <input type="text" id="cfg-professor" placeholder="Ex: Profa. Maria">
+      </div>
+      <div>
+        <label class="text-xs font-semibold">Data</label>
+        <input type="text" id="cfg-data" readonly>
+      </div>
+    </div>
+    <button class="btn-primary w-full mt-4" onclick="fecharModal('modal-relatorio-dados')">✓ Salvar e fechar</button>
+  </div>
+</div>
+
+
+<!-- ========================================== -->
+<!-- TELA 2: BATALHA                            -->
+<!-- ========================================== -->
+<div id="tela-batalha" class="hidden">
+
+  <!-- Cabeçalho -->
+  <div class="app-header">
+    <div class="flex items-center gap-3">
+      <button class="btn-ghost text-white" style="background: rgba(255,255,255,0.15);" onclick="confirmarSair()">↩️ Sair</button>
+      <div class="logo-newpc text-white" style="font-size: 0.85rem;">
+        <span class="nw-circle">N</span>
+        <span class="hidden md:inline">Batalha Matemática</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 flex-wrap justify-center">
+      <div id="placar-azul" class="flex items-center gap-2 bg-blue-600 rounded-full px-3 py-1">
+        <span id="nome-azul-header" class="text-xs md:text-sm">💙</span>
+        <span id="pontos-azul" class="text-xl font-extrabold" style="font-family: 'Baloo 2', sans-serif;">0</span>
+      </div>
+      <span class="text-white">×</span>
+      <div id="placar-vermelho" class="flex items-center gap-2 bg-red-600 rounded-full px-3 py-1">
+        <span id="pontos-vermelho" class="text-xl font-extrabold" style="font-family: 'Baloo 2', sans-serif;">0</span>
+        <span id="nome-vermelho-header" class="text-xs md:text-sm">❤️</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <div id="timer" class="timer-circle">⏱️ <span id="timer-valor">20</span></div>
+      <button class="btn-ghost text-white" style="background: rgba(255,255,255,0.15); margin-right: 4px;" onclick="abrirAcessibilidade()" title="Acessibilidade">♿</button><button class="btn-ghost text-white" style="background: rgba(255,255,255,0.15);" onclick="abrirAjuda()">❓</button>
+    </div>
+  </div>
+
+  <!-- Cabo de guerra -->
+  <div class="px-4 pt-3">
+    <div class="bg-white rounded-xl shadow p-3">
+      <div class="flex items-center justify-between mb-2 text-xs md:text-sm font-bold">
+        <span id="label-azul" class="text-blue-700">💙 Time Azul</span>
+        <span class="text-slate-500" id="rodada-info">Rodada 1 · Vez do <span id="time-da-vez">Azul</span></span>
+        <span id="label-vermelho" class="text-red-700">Time Vermelho ❤️</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div id="vidas-azul" class="lives-display"></div>
+        <div class="rope-track flex-1">
+          <div id="rope-marker" class="rope-marker" style="left: 50%;">⭐</div>
+        </div>
+        <div id="vidas-vermelho" class="lives-display"></div>
+      </div>
+      <div class="flex justify-between mt-2 text-xs">
+        <span id="combo-azul" class="hidden combo-badge">🔥 Combo x<span class="combo-mult">2</span></span>
+        <span id="combo-vermelho" class="hidden combo-badge ml-auto">🔥 Combo x<span class="combo-mult">2</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arena dos times -->
+  <div class="battle-grid">
+
+    <!-- TIME AZUL -->
+    <div id="card-azul" class="team-card active" style="background: linear-gradient(165deg, #2563EB, #1E3A8A);">
+      <div class="flex items-center justify-between mb-2">
+        <h2 id="titulo-azul" class="text-white font-bold" style="font-family: 'Baloo 2', sans-serif;">💙 Time Azul</h2>
+        <span id="status-azul" class="text-yellow-300 text-xs font-bold hidden">SUA VEZ</span>
+      </div>
+     <div class="calc-wrapper">
+      <div id="op-azul" class="operacao-display text-white text-center py-3 px-2 rounded-xl mb-2"
+           style="background: rgba(0,0,0,0.25); border: 3px solid #FFD700;">
+        — + — = ?
+      </div>
+      <div id="resp-azul" class="answer-display mb-2 pde-azul-escuro" style="color: #1E324A;">_</div>
+
+      <div class="grid grid-cols-3 gap-2 mb-2">
+        <button class="numpad-btn" style="background: white; color: #1E3A8A;" onclick="digitar('azul','1')">1</button>
+        <button class="numpad-btn" style="background: white; color: #1E3A8A;" onclick="digitar('azul','2')">2</button>
+        <button class="numpad-btn" style="background: white; color: #1E3A8A;" onclick="digitar('azul','3')">3</button>
+        <button class="numpad-btn" style="background: white; color: #1E3A8A;" onclick="digitar('azul','4')">4</button>
+        <button class="numpad-btn" style="background: white; color: #1E3A8A;" onclick="digitar('azul','5')">5</button>
+        <button class="numpad-btn" style="background: white; color: #1E3A8A;" onclick="digitar('azul','6')">6</button>
+        <button class="numpad-btn" style="background: white; color: #1E3A8A;" onclick="digitar('azul','7')">7</button>
+        <button class="numpad-btn" style="background: white; color: #1E3A8A;" onclick="digitar('azul','8')">8</button>
+        <button class="numpad-btn" style="background: white; color: #1E3A8A;" onclick="digitar('azul','9')">9</button>
+        <button class="numpad-btn" style="background: #FCA5A5; color: #7F1D1D;" onclick="limpar('azul')">⌫</button>
+        <button class="numpad-btn" style="background: white; color: #1E3A8A;" onclick="digitar('azul','0')">0</button>
+        <button class="numpad-btn" style="background: #B6D752; color: #1E324A;" onclick="confirmar('azul')">✓</button>
+      </div>
+      <div id="sinal-menos-azul" class="text-center hidden">
+        <button class="btn-ghost text-white" style="background: rgba(255,255,255,0.2);" onclick="alternarSinal('azul')">± Sinal</button>
+      </div>
+     </div>
+    </div>
+
+    <!-- TIME VERMELHO -->
+    <div id="card-vermelho" class="team-card inactive" style="background: linear-gradient(165deg, #DC2626, #7F1D1D);">
+      <div class="flex items-center justify-between mb-2">
+        <h2 id="titulo-vermelho" class="text-white font-bold" style="font-family: 'Baloo 2', sans-serif;">❤️ Time Vermelho</h2>
+        <span id="status-vermelho" class="text-yellow-300 text-xs font-bold hidden">SUA VEZ</span>
+      </div>
+     <div class="calc-wrapper">
+      <div id="op-vermelho" class="operacao-display text-white text-center py-3 px-2 rounded-xl mb-2"
+           style="background: rgba(0,0,0,0.25); border: 3px solid #FFD700;">
+        — + — = ?
+      </div>
+      <div id="resp-vermelho" class="answer-display mb-2" style="color: #1E324A;">_</div>
+
+      <div class="grid grid-cols-3 gap-2 mb-2">
+        <button class="numpad-btn" style="background: white; color: #7F1D1D;" onclick="digitar('vermelho','1')">1</button>
+        <button class="numpad-btn" style="background: white; color: #7F1D1D;" onclick="digitar('vermelho','2')">2</button>
+        <button class="numpad-btn" style="background: white; color: #7F1D1D;" onclick="digitar('vermelho','3')">3</button>
+        <button class="numpad-btn" style="background: white; color: #7F1D1D;" onclick="digitar('vermelho','4')">4</button>
+        <button class="numpad-btn" style="background: white; color: #7F1D1D;" onclick="digitar('vermelho','5')">5</button>
+        <button class="numpad-btn" style="background: white; color: #7F1D1D;" onclick="digitar('vermelho','6')">6</button>
+        <button class="numpad-btn" style="background: white; color: #7F1D1D;" onclick="digitar('vermelho','7')">7</button>
+        <button class="numpad-btn" style="background: white; color: #7F1D1D;" onclick="digitar('vermelho','8')">8</button>
+        <button class="numpad-btn" style="background: white; color: #7F1D1D;" onclick="digitar('vermelho','9')">9</button>
+        <button class="numpad-btn" style="background: #FCA5A5; color: #7F1D1D;" onclick="limpar('vermelho')">⌫</button>
+        <button class="numpad-btn" style="background: white; color: #7F1D1D;" onclick="digitar('vermelho','0')">0</button>
+        <button class="numpad-btn" style="background: #B6D752; color: #1E324A;" onclick="confirmar('vermelho')">✓</button>
+      </div>
+      <div id="sinal-menos-vermelho" class="text-center hidden">
+        <button class="btn-ghost text-white" style="background: rgba(255,255,255,0.2);" onclick="alternarSinal('vermelho')">± Sinal</button>
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <!-- Score mobile -->
+  <div class="mobile-score">
+    <span class="text-blue-700">💙 <span id="mob-pts-azul">0</span></span>
+    <span class="text-slate-500 text-xs">vs</span>
+    <span class="text-red-700"><span id="mob-pts-vermelho">0</span> ❤️</span>
+  </div>
+
+  <!-- Modo treino badge -->
+  <div id="treino-badge" class="hidden fixed top-3 left-1/2 -translate-x-1/2 z-50 bg-yellow-400 text-slate-900 font-bold px-4 py-2 rounded-full shadow-lg" style="font-family: 'Baloo 2', sans-serif;">
+    🎯 MODO TREINO
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL: VITÓRIA / FIM DE JOGO               -->
+<!-- ========================================== -->
+<div id="modal-vitoria" class="modal-overlay">
+  <div class="modal-card pde-bounce-in relative">
+    <div id="confetti-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+    <div class="text-center relative z-10">
+      <div class="text-7xl mb-3">🏆</div>
+      <h2 class="text-2xl font-extrabold pde-azul-escuro mb-1" style="font-family: 'Baloo 2', sans-serif;">VENCEDOR!</h2>
+      <p id="vitoria-time" class="text-3xl font-extrabold mb-4" style="font-family: 'Baloo 2', sans-serif;">—</p>
+      <p id="vitoria-motivo" class="text-sm text-slate-600 mb-4">—</p>
+
+      <div class="bg-slate-50 rounded-xl p-4 mb-4 text-left">
+        <h3 class="font-bold pde-azul-escuro mb-3 text-center">📊 Resumo da Partida</h3>
+        <div id="vitoria-resumo" class="space-y-2 text-sm"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <button class="btn-primary btn-success" onclick="reiniciar()">🔁 Revanche</button>
+        <button class="btn-primary btn-warning" onclick="exportarPDF()">📄 Relatório PDF</button>
+        <button class="btn-primary" onclick="voltarLobby()">🏠 Nova partida</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL: EMPATE / MORTE SÚBITA               -->
+<!-- ========================================== -->
+<div id="modal-empate" class="modal-overlay">
+  <div class="modal-card pde-bounce-in text-center">
+    <div class="text-6xl mb-3">⚔️</div>
+    <h2 class="text-2xl font-extrabold pde-azul-escuro mb-2" style="font-family: 'Baloo 2', sans-serif;">EMPATE!</h2>
+    <p class="text-slate-600 mb-4">Os dois times estão na mesma pontuação. É hora da <strong>morte súbita</strong>: uma operação, primeiro que acertar vence.</p>
+    <button class="btn-primary btn-danger w-full" onclick="iniciarMorteSubita()">⚡ Começar Morte Súbita</button>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL: AJUDA / REGRAS                      -->
+<!-- ========================================== -->
+<div id="modal-ajuda" class="modal-overlay">
+  <div class="modal-card">
+    <h2 class="text-xl font-bold pde-azul-escuro mb-3" style="font-family: 'Baloo 2', sans-serif;">📖 Como funciona</h2>
+    <div class="space-y-3 text-sm text-slate-700">
+      <p><strong>⚔️ Rodadas alternadas:</strong> Os times revezam. Quando estiver sua vez, sua calculadora fica destacada.</p>
+      <p><strong>❤️ Vidas:</strong> Cada time começa com vidas. Errar perde 1 vida. Sem vidas = derrota.</p>
+      <p><strong>🔥 Combo:</strong> Acertou 3 seguidas? <strong>x2</strong> nos próximos pontos. 5 seguidas? <strong>x3</strong>! Errou? Combo zera.</p>
+      <p><strong>⏱️ Tempo:</strong> Cada rodada tem tempo individual. Estourou o tempo = perde 1 vida e turno passa.</p>
+      <p><strong>🏆 Vitória:</strong> Atingir os pontos definidos OU adversário ficar sem vidas.</p>
+      <p><strong>⌨️ Teclado físico:</strong> Números 0-9, Enter para confirmar, Backspace para apagar (funciona pro time da vez).</p>
+    </div>
+    <button class="btn-primary w-full mt-4" onclick="fecharModal('modal-ajuda')">Entendi</button>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL: CONFIRMAÇÃO SAIR                    -->
+<!-- ========================================== -->
+<div id="modal-sair" class="modal-overlay">
+  <div class="modal-card text-center">
+    <div class="text-5xl mb-3">⚠️</div>
+    <h2 class="text-xl font-bold pde-azul-escuro mb-2" style="font-family: 'Baloo 2', sans-serif;">Sair da batalha?</h2>
+    <p class="text-slate-600 mb-4 text-sm">A partida atual será perdida. Tem certeza?</p>
+    <div class="grid grid-cols-2 gap-2">
+      <button class="btn-ghost" onclick="fecharModal('modal-sair')">Continuar jogando</button>
+      <button class="btn-primary btn-danger" onclick="voltarLobby()">Sim, sair</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /pde-painel -->
+
+<script>
+
+window.SELOS_BNCC_DADOS = {"nome": "batalha_mat", "bncc": [{"tipo": "matematica", "icone": "MAT", "titulo": "BNCC Matemática · Números e Operações", "itens": [{"cod": "EF02MA05", "desc": "Construir fatos básicos da adição e subtração e usá-los no cálculo mental."}, {"cod": "EF03MA05", "desc": "Utilizar diferentes procedimentos de cálculo mental e escrito."}, {"cod": "EF03MA07", "desc": "Resolver problemas de multiplicação por meio de adição de parcelas iguais."}, {"cod": "EF04MA03", "desc": "Resolver e elaborar problemas com números naturais."}, {"cod": "EF04MA04", "desc": "Utilizar relações entre adição/subtração e multiplicação/divisão."}, {"cod": "EF05MA07", "desc": "Resolver problemas envolvendo as quatro operações com números naturais."}]}, {"tipo": "computacao", "icone": "💻", "titulo": "BNCC Computação · Cultura Digital", "itens": [{"cod": "EF15CO01", "desc": "Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem."}]}]};
+
+/* ============== SELOS BNCC NEWPC ============== */
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div class="selos-bncc-info" style="font-size:0.78rem; color:#64748B; margin-bottom:8px; line-height:1.4;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  // Por componente curricular
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row">
+      <div class="selo-icone ${grupo.tipo}">${grupo.icone}</div>
+      <div class="selo-info">
+        <div class="selo-titulo">${grupo.titulo}</div>
+        <div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  // Acessibilidade (sempre)
+  html += `<div class="selo-row">
+    <div class="selo-icone acessibilidade">♿</div>
+    <div class="selo-info">
+      <div class="selo-titulo">Acessibilidade Digital</div>
+      <div class="selo-codigos">
+        <span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala de texto até 172%, modo daltônico, redução de animações</span>
+      </div>
+    </div>
+  </div>`;
+  // LBI (sempre)
+  html += `<div class="selo-row">
+    <div class="selo-icone lbi">⚖️</div>
+    <div class="selo-info">
+      <div class="selo-titulo">Lei Brasileira de Inclusão</div>
+      <div class="selo-codigos">
+        <span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span>
+      </div>
+    </div>
+  </div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  // Remove anterior se existir
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  // Insere antes da div de ações (ou no final se não houver)
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+
+
+/* ============================================================
+   BATALHA MATEMÁTICA · NEWPC · Portal do Educador
+   Aplicação autocontida para embed no Webnode
+   ============================================================ */
+
+// ===================== ESTADO ===============================
+const STATE = {
+  config: {
+    modo: 'lousa',
+    conteudo: 'livre',          // 'livre' | 'bncc'
+    faixa: 'facil',              // 'facil' | 'medio' | 'dificil'
+    bnccAno: null,               // 1..9
+    operacoes: { add: true, sub: true, mul: false, div: false },
+    pontos: 10,
+    tempo: 20,
+    vidas: 3,
+    som: true,
+    nomes: { azul: 'Time Azul', vermelho: 'Time Vermelho' },
+    escola: '', turma: '', professor: '',
+  },
+  jogo: {
+    ativo: false,
+    treino: false,
+    morteSubita: false,
+    rodada: 0,
+    timeDaVez: 'azul',
+    timer: null,
+    tempoRestante: 0,
+    pontos: { azul: 0, vermelho: 0 },
+    vidas: { azul: 3, vermelho: 3 },
+    acertosSeguidos: { azul: 0, vermelho: 0 },
+    operacao: { azul: null, vermelho: null },
+    resposta: { azul: '', vermelho: '' },
+    sinal: { azul: 1, vermelho: 1 },
+    historico: [], // { time, operacao, resposta, correta, certo, tempoGasto, rodada }
+    inicioRodada: 0,
+    inicioPartida: 0,
+  }
+};
+
+// ===================== BNCC =================================
+// Configuração de operações por ano escolar conforme BNCC
+const BNCC = {
+  1: { titulo: '1º ano', desc: 'Adições e subtrações simples até 10 (EF01MA06, EF01MA08).',
+       gerador: () => gerarOp(['add','sub'], 1, 10, false) },
+  2: { titulo: '2º ano', desc: 'Adições e subtrações até 100, multiplicação inicial por dobros (EF02MA05, EF02MA07).',
+       gerador: () => gerarOp(['add','sub'], 1, 100, false) },
+  3: { titulo: '3º ano', desc: 'Adição, subtração e multiplicação (tabuadas até 5) (EF03MA05, EF03MA07).',
+       gerador: () => gerarOp(['add','sub','mul'], 1, 100, false, { mulMax: 5 }) },
+  4: { titulo: '4º ano', desc: 'Quatro operações até 1000, divisão exata (EF04MA03, EF04MA06).',
+       gerador: () => gerarOp(['add','sub','mul','div'], 1, 200, false, { mulMax: 10 }) },
+  5: { titulo: '5º ano', desc: 'Quatro operações com números maiores e divisão com resto (EF05MA07, EF05MA08).',
+       gerador: () => gerarOp(['add','sub','mul','div'], 1, 500, false, { mulMax: 12 }) },
+  6: { titulo: '6º ano', desc: 'Operações com naturais, potências simples (EF06MA03, EF06MA15).',
+       gerador: () => Math.random() < 0.2 ? gerarPotencia() : gerarOp(['add','sub','mul','div'], 1, 1000, false, { mulMax: 15 }) },
+  7: { titulo: '7º ano', desc: 'Operações com inteiros (positivos e negativos) (EF07MA03, EF07MA04).',
+       gerador: () => gerarOp(['add','sub','mul','div'], -50, 50, true, { mulMax: 12 }) },
+  8: { titulo: '8º ano', desc: 'Operações com inteiros, potências e raízes quadradas exatas (EF08MA02, EF08MA05).',
+       gerador: () => {
+         const r = Math.random();
+         if (r < 0.15) return gerarRaiz();
+         if (r < 0.30) return gerarPotencia();
+         return gerarOp(['add','sub','mul','div'], -100, 100, true, { mulMax: 15 });
+       } },
+  9: { titulo: '9º ano', desc: 'Inteiros, potências, raízes e expressões numéricas (EF09MA01, EF09MA02).',
+       gerador: () => {
+         const r = Math.random();
+         if (r < 0.20) return gerarRaiz();
+         if (r < 0.40) return gerarPotencia();
+         return gerarOp(['add','sub','mul','div'], -200, 200, true, { mulMax: 20 });
+       } },
+};
+
+// ===================== GERADORES DE OPERAÇÕES ===============
+function gerarOp(opsDisponiveis, min, max, permitirNegativo, opts = {}) {
+  const op = opsDisponiveis[Math.floor(Math.random() * opsDisponiveis.length)];
+  let a, b, resultado, simbolo;
+  const mulMax = opts.mulMax || 10;
+  const range = (lo, hi) => Math.floor(Math.random() * (hi - lo + 1)) + lo;
+
+  switch(op) {
+    case 'add':
+      a = range(Math.max(min, 1), max);
+      b = range(Math.max(min, 1), max);
+      if (permitirNegativo && Math.random() < 0.4) a = -a;
+      if (permitirNegativo && Math.random() < 0.4) b = -b;
+      resultado = a + b;
+      simbolo = '+';
+      break;
+    case 'sub':
+      if (permitirNegativo) {
+        a = range(min, max);
+        b = range(min, max);
+      } else {
+        a = range(2, max);
+        b = range(1, a); // garante resultado >= 0
+      }
+      resultado = a - b;
+      simbolo = '−';
+      break;
+    case 'mul':
+      a = range(2, mulMax);
+      b = range(2, mulMax);
+      if (permitirNegativo && Math.random() < 0.3) a = -a;
+      if (permitirNegativo && Math.random() < 0.3) b = -b;
+      resultado = a * b;
+      simbolo = '×';
+      break;
+    case 'div':
+      // Geramos divisão exata: começa pelo resultado e multiplica
+      b = range(2, mulMax);
+      resultado = range(2, mulMax);
+      a = b * resultado;
+      if (permitirNegativo && Math.random() < 0.3) {
+        a = -a;
+        resultado = -resultado;
+      }
+      simbolo = '÷';
+      break;
+  }
+  return formatarOp(a, b, simbolo, resultado);
+}
+
+function gerarPotencia() {
+  const base = Math.floor(Math.random() * 9) + 2;  // 2..10
+  const exp = Math.floor(Math.random() * 2) + 2;   // 2..3
+  const resultado = Math.pow(base, exp);
+  return {
+    texto: `${base}<sup>${exp}</sup> = ?`,
+    textoSimples: `${base}^${exp}`,
+    resultado,
+  };
+}
+
+function gerarRaiz() {
+  // Raízes quadradas exatas
+  const r = Math.floor(Math.random() * 11) + 2; // 2..12
+  const radicando = r * r;
+  return {
+    texto: `√${radicando} = ?`,
+    textoSimples: `√${radicando}`,
+    resultado: r,
+  };
+}
+
+function formatarOp(a, b, simbolo, resultado) {
+  const fmt = (n) => n < 0 ? `(${n})` : `${n}`;
+  return {
+    texto: `${fmt(a)} ${simbolo} ${fmt(b)} = ?`,
+    textoSimples: `${fmt(a)} ${simbolo} ${fmt(b)}`,
+    resultado,
+  };
+}
+
+function novaOperacao(time) {
+  const c = STATE.config;
+  let op;
+
+  if (STATE.jogo.morteSubita) {
+    // Em morte súbita, gera operação um pouco mais difícil
+    op = c.conteudo === 'bncc' && c.bnccAno
+      ? BNCC[c.bnccAno].gerador()
+      : gerarOp(getOpsAtivas(), 1, 30, false);
+  } else if (c.conteudo === 'bncc' && c.bnccAno) {
+    op = BNCC[c.bnccAno].gerador();
+  } else {
+    const ops = getOpsAtivas();
+    if (ops.length === 0) ops.push('add');
+    const max = c.faixa === 'facil' ? 10 : c.faixa === 'medio' ? 25 : 100;
+    op = gerarOp(ops, 1, max, false, { mulMax: c.faixa === 'facil' ? 5 : c.faixa === 'medio' ? 10 : 12 });
+  }
+
+  STATE.jogo.operacao[time] = op;
+  STATE.jogo.resposta[time] = '';
+  STATE.jogo.sinal[time] = 1;
+
+  const elOp = document.getElementById(`op-${time}`);
+  const elResp = document.getElementById(`resp-${time}`);
+  elOp.innerHTML = op.texto;
+  elResp.textContent = '_';
+  elResp.classList.remove('error', 'success');
+
+  // Mostra botão de sinal só quando precisa de resposta negativa
+  const elSinal = document.getElementById(`sinal-menos-${time}`);
+  if (op.resultado < 0) {
+    elSinal.classList.remove('hidden');
+  } else {
+    elSinal.classList.add('hidden');
+  }
+}
+
+function getOpsAtivas() {
+  const ops = [];
+  if (document.getElementById('op-add').checked) ops.push('add');
+  if (document.getElementById('op-sub').checked) ops.push('sub');
+  if (document.getElementById('op-mul').checked) ops.push('mul');
+  if (document.getElementById('op-div').checked) ops.push('div');
+  return ops;
+}
+
+// ===================== LOBBY ================================
+function selecionarModo(modo) {
+  STATE.config.modo = modo;
+  document.querySelectorAll('[data-modo]').forEach(el => el.classList.toggle('active', el.dataset.modo === modo));
+}
+
+function selecionarConteudo(c) {
+  STATE.config.conteudo = c;
+  document.querySelectorAll('[data-conteudo]').forEach(el => el.classList.toggle('active', el.dataset.conteudo === c));
+  document.getElementById('painel-livre').classList.toggle('hidden', c !== 'livre');
+  document.getElementById('painel-bncc').classList.toggle('hidden', c !== 'bncc');
+}
+
+function selecionarFaixa(f) {
+  STATE.config.faixa = f;
+  document.querySelectorAll('[data-faixa]').forEach(el => el.classList.toggle('active', el.dataset.faixa === f));
+}
+
+function selecionarSom(s) {
+  STATE.config.som = (s === 'on');
+  document.querySelectorAll('[data-som]').forEach(el => el.classList.toggle('active', el.dataset.som === s));
+}
+
+function popularBNCC() {
+  const grid = document.getElementById('bncc-anos');
+  grid.innerHTML = '';
+  for (let i = 1; i <= 9; i++) {
+    const div = document.createElement('div');
+    div.className = 'chip-sm';
+    div.textContent = `${i}º`;
+    div.onclick = () => selecionarBNCCAno(i);
+    div.dataset.ano = i;
+    grid.appendChild(div);
+  }
+}
+
+function selecionarBNCCAno(ano) {
+  STATE.config.bnccAno = ano;
+  document.querySelectorAll('[data-ano]').forEach(el => el.classList.toggle('active', parseInt(el.dataset.ano) === ano));
+  const desc = BNCC[ano];
+  document.getElementById('bncc-descricao').innerHTML = `<strong>${desc.titulo}:</strong> ${desc.desc}`;
+}
+
+// ===================== INÍCIO DA BATALHA ====================
+function lerConfiguracoesDoLobby() {
+  STATE.config.pontos = parseInt(document.getElementById('cfg-pontos').value);
+  STATE.config.tempo = parseInt(document.getElementById('cfg-tempo').value);
+  STATE.config.vidas = parseInt(document.getElementById('cfg-vidas').value);
+  STATE.config.nomes.azul = document.getElementById('cfg-nome-azul').value || 'Time Azul';
+  STATE.config.nomes.vermelho = document.getElementById('cfg-nome-vermelho').value || 'Time Vermelho';
+  STATE.config.escola = document.getElementById('cfg-escola').value;
+  STATE.config.turma = document.getElementById('cfg-turma').value;
+  STATE.config.professor = document.getElementById('cfg-professor').value;
+  STATE.config.operacoes = {
+    add: document.getElementById('op-add').checked,
+    sub: document.getElementById('op-sub').checked,
+    mul: document.getElementById('op-mul').checked,
+    div: document.getElementById('op-div').checked,
+  };
+  salvarConfig();
+}
+
+function iniciarBatalha() {
+  lerConfiguracoesDoLobby();
+  if (STATE.config.conteudo === 'bncc' && !STATE.config.bnccAno) {
+    alert('Selecione um ano escolar BNCC antes de iniciar.');
+    return;
+  }
+  if (STATE.config.conteudo === 'livre' && !Object.values(STATE.config.operacoes).some(v => v)) {
+    alert('Selecione ao menos uma operação no Modo Livre.');
+    return;
+  }
+  STATE.jogo.treino = false;
+  configurarPartida();
+}
+
+function iniciarTreino() {
+  lerConfiguracoesDoLobby();
+  if (STATE.config.conteudo === 'bncc' && !STATE.config.bnccAno) {
+    alert('Selecione um ano escolar BNCC.');
+    return;
+  }
+  STATE.jogo.treino = true;
+  configurarPartida();
+  document.getElementById('treino-badge').classList.remove('hidden');
+}
+
+function configurarPartida() {
+  // Reset estado de jogo
+  STATE.jogo.ativo = true;
+  STATE.jogo.morteSubita = false;
+  STATE.jogo.rodada = 1;
+  STATE.jogo.timeDaVez = Math.random() < 0.5 ? 'azul' : 'vermelho';
+  STATE.jogo.pontos = { azul: 0, vermelho: 0 };
+  STATE.jogo.vidas = { azul: STATE.config.vidas, vermelho: STATE.config.vidas };
+  STATE.jogo.acertosSeguidos = { azul: 0, vermelho: 0 };
+  STATE.jogo.historico = [];
+  STATE.jogo.inicioPartida = Date.now();
+
+  // Atualiza UI estática
+  document.getElementById('titulo-azul').innerHTML = `💙 ${STATE.config.nomes.azul}`;
+  document.getElementById('titulo-vermelho').innerHTML = `❤️ ${STATE.config.nomes.vermelho}`;
+  document.getElementById('label-azul').innerHTML = `💙 ${STATE.config.nomes.azul}`;
+  document.getElementById('label-vermelho').innerHTML = `${STATE.config.nomes.vermelho} ❤️`;
+  document.getElementById('nome-azul-header').textContent = '💙';
+  document.getElementById('nome-vermelho-header').textContent = '❤️';
+
+  // Vai para tela de batalha
+  document.getElementById('tela-lobby').classList.add('hidden');
+  document.getElementById('tela-batalha').classList.remove('hidden');
+  document.getElementById('treino-badge').classList.toggle('hidden', !STATE.jogo.treino);
+
+  atualizarVidasUI();
+  atualizarPlacarUI();
+  atualizarRopeUI();
+
+  // Gera primeira operação só pro time da vez
+  novaOperacao(STATE.jogo.timeDaVez);
+  // O outro time recebe placeholder
+  document.getElementById(`op-${outro(STATE.jogo.timeDaVez)}`).innerHTML = '⏳ Aguarde...';
+  document.getElementById(`resp-${outro(STATE.jogo.timeDaVez)}`).textContent = '_';
+
+  atualizarTurnoUI();
+  iniciarTimer();
+  reportarAlturaParent();
+}
+
+function outro(time) { return time === 'azul' ? 'vermelho' : 'azul'; }
+
+// ===================== TURNO E TIMER ========================
+function atualizarTurnoUI() {
+  const t = STATE.jogo.timeDaVez;
+  document.getElementById(`card-azul`).classList.toggle('active', t === 'azul');
+  document.getElementById(`card-azul`).classList.toggle('inactive', t !== 'azul');
+  document.getElementById(`card-vermelho`).classList.toggle('active', t === 'vermelho');
+  document.getElementById(`card-vermelho`).classList.toggle('inactive', t !== 'vermelho');
+  document.getElementById('status-azul').classList.toggle('hidden', t !== 'azul');
+  document.getElementById('status-vermelho').classList.toggle('hidden', t !== 'vermelho');
+  document.getElementById('time-da-vez').textContent = STATE.config.nomes[t];
+  document.getElementById('rodada-info').innerHTML = `Rodada ${STATE.jogo.rodada} · Vez do <strong>${STATE.config.nomes[t]}</strong>`;
+}
+
+function iniciarTimer() {
+  if (STATE.jogo.timer) clearInterval(STATE.jogo.timer);
+  STATE.jogo.tempoRestante = STATE.config.tempo;
+  STATE.jogo.inicioRodada = Date.now();
+  document.getElementById('timer-valor').textContent = STATE.jogo.tempoRestante;
+  document.getElementById('timer').classList.remove('danger');
+
+  STATE.jogo.timer = setInterval(() => {
+    STATE.jogo.tempoRestante--;
+    document.getElementById('timer-valor').textContent = STATE.jogo.tempoRestante;
+    if (STATE.jogo.tempoRestante <= 5) {
+      document.getElementById('timer').classList.add('danger');
+    }
+    if (STATE.jogo.tempoRestante <= 0) {
+      clearInterval(STATE.jogo.timer);
+      tempoEsgotado();
+    }
+  }, 1000);
+}
+
+function pararTimer() {
+  if (STATE.jogo.timer) {
+    clearInterval(STATE.jogo.timer);
+    STATE.jogo.timer = null;
+  }
+}
+
+function tempoEsgotado() {
+  const t = STATE.jogo.timeDaVez;
+  registrarHistorico(t, '(tempo esgotado)', false, STATE.config.tempo);
+  if (!STATE.jogo.treino) {
+    perderVida(t);
+  } else {
+    flashErro(t);
+  }
+  STATE.jogo.acertosSeguidos[t] = 0;
+  atualizarComboUI(t);
+
+  if (STATE.jogo.morteSubita) {
+    finalizarMorteSubita(outro(t));
+    return;
+  }
+
+  if (verificarFimDeJogo()) return;
+  passarTurno();
+}
+
+// ===================== INPUT ================================
+function digitar(time, digito) {
+  if (time !== STATE.jogo.timeDaVez || !STATE.jogo.ativo) return;
+  if (STATE.jogo.resposta[time].length >= 5) return;
+  STATE.jogo.resposta[time] += digito;
+  atualizarRespUI(time);
+  tocarSom('click');
+}
+
+function limpar(time) {
+  if (time !== STATE.jogo.timeDaVez || !STATE.jogo.ativo) return;
+  STATE.jogo.resposta[time] = STATE.jogo.resposta[time].slice(0, -1);
+  atualizarRespUI(time);
+}
+
+function alternarSinal(time) {
+  if (time !== STATE.jogo.timeDaVez || !STATE.jogo.ativo) return;
+  STATE.jogo.sinal[time] *= -1;
+  atualizarRespUI(time);
+}
+
+function atualizarRespUI(time) {
+  const r = STATE.jogo.resposta[time];
+  const s = STATE.jogo.sinal[time];
+  const display = r === '' ? '_' : (s < 0 ? '−' : '') + r;
+  const el = document.getElementById(`resp-${time}`);
+  el.textContent = display;
+  el.classList.remove('error', 'success');
+}
+
+function confirmar(time) {
+  if (time !== STATE.jogo.timeDaVez || !STATE.jogo.ativo) return;
+  const respStr = STATE.jogo.resposta[time];
+  if (respStr === '') return;
+
+  const resp = parseInt(respStr) * STATE.jogo.sinal[time];
+  const correta = STATE.jogo.operacao[time].resultado;
+  const tempoGasto = (Date.now() - STATE.jogo.inicioRodada) / 1000;
+
+  if (resp === correta) {
+    acerto(time, tempoGasto);
+  } else {
+    erro(time, tempoGasto);
+  }
+}
+
+function acerto(time, tempoGasto) {
+  pararTimer();
+  registrarHistorico(time, STATE.jogo.operacao[time].textoSimples, true, tempoGasto, STATE.jogo.operacao[time].resultado);
+
+  STATE.jogo.acertosSeguidos[time]++;
+  const seq = STATE.jogo.acertosSeguidos[time];
+  let multiplicador = 1;
+  if (seq >= 5) multiplicador = 3;
+  else if (seq >= 3) multiplicador = 2;
+
+  if (!STATE.jogo.treino) {
+    STATE.jogo.pontos[time] += multiplicador;
+  }
+
+  // Visual
+  document.getElementById(`resp-${time}`).classList.add('success');
+  flashAcerto(time, multiplicador);
+  tocarSom('acerto');
+
+  if (STATE.jogo.morteSubita) {
+    setTimeout(() => finalizarMorteSubita(time), 800);
+    return;
+  }
+
+  atualizarPlacarUI();
+  atualizarRopeUI();
+  atualizarComboUI(time);
+
+  if (verificarFimDeJogo()) return;
+
+  setTimeout(() => passarTurno(), 1000);
+}
+
+function erro(time, tempoGasto) {
+  registrarHistorico(time, STATE.jogo.operacao[time].textoSimples, false, tempoGasto, STATE.jogo.operacao[time].resultado, parseInt(STATE.jogo.resposta[time]) * STATE.jogo.sinal[time]);
+
+  STATE.jogo.acertosSeguidos[time] = 0;
+  atualizarComboUI(time);
+
+  document.getElementById(`resp-${time}`).classList.add('error');
+  document.getElementById(`card-${time}`).classList.add('pde-shake');
+  setTimeout(() => document.getElementById(`card-${time}`).classList.remove('pde-shake'), 400);
+
+  if (!STATE.jogo.treino) {
+    perderVida(time);
+    tocarSom('erro');
+  } else {
+    flashErro(time);
+  }
+
+  // Limpa para tentar de novo? Não — o turno passa.
+  STATE.jogo.resposta[time] = '';
+  STATE.jogo.sinal[time] = 1;
+
+  if (STATE.jogo.morteSubita) {
+    setTimeout(() => finalizarMorteSubita(outro(time)), 800);
+    return;
+  }
+
+  if (verificarFimDeJogo()) return;
+
+  setTimeout(() => passarTurno(), 1200);
+}
+
+function passarTurno() {
+  STATE.jogo.timeDaVez = outro(STATE.jogo.timeDaVez);
+  STATE.jogo.rodada++;
+
+  const t = STATE.jogo.timeDaVez;
+  novaOperacao(t);
+
+  // Time inativo recebe "aguarde"
+  document.getElementById(`op-${outro(t)}`).innerHTML = '⏳ Aguarde...';
+  document.getElementById(`resp-${outro(t)}`).textContent = '_';
+  STATE.jogo.resposta[outro(t)] = '';
+
+  document.getElementById(`card-${t}`).classList.add('slide-enter');
+  setTimeout(() => document.getElementById(`card-${t}`).classList.remove('slide-enter'), 400);
+
+  atualizarTurnoUI();
+  iniciarTimer();
+}
+
+// ===================== VIDAS / PLACAR / COMBO ===============
+function perderVida(time) {
+  STATE.jogo.vidas[time] = Math.max(0, STATE.jogo.vidas[time] - 1);
+  atualizarVidasUI();
+}
+
+function atualizarVidasUI() {
+  ['azul','vermelho'].forEach(t => {
+    const el = document.getElementById(`vidas-${t}`);
+    el.innerHTML = '';
+    for (let i = 0; i < STATE.config.vidas; i++) {
+      const v = document.createElement('span');
+      v.className = 'vida';
+      v.textContent = '❤️';
+      if (i >= STATE.jogo.vidas[t]) v.classList.add('perdida');
+      el.appendChild(v);
+    }
+  });
+}
+
+function atualizarPlacarUI() {
+  document.getElementById('pontos-azul').textContent = STATE.jogo.pontos.azul;
+  document.getElementById('pontos-vermelho').textContent = STATE.jogo.pontos.vermelho;
+  document.getElementById('mob-pts-azul').textContent = STATE.jogo.pontos.azul;
+  document.getElementById('mob-pts-vermelho').textContent = STATE.jogo.pontos.vermelho;
+}
+
+function atualizarRopeUI() {
+  const total = STATE.config.pontos;
+  const diff = STATE.jogo.pontos.azul - STATE.jogo.pontos.vermelho;
+  // 50% = neutro, vai pra direita = azul vence (avança pro lado vermelho)
+  // Convenção: azul à esquerda. Se azul tá ganhando, marker vai pro lado vermelho (direita)
+  let pos = 50 + (diff / total) * 40;
+  pos = Math.max(10, Math.min(90, pos));
+  document.getElementById('rope-marker').style.left = `${pos}%`;
+}
+
+function atualizarComboUI(time) {
+  const seq = STATE.jogo.acertosSeguidos[time];
+  const el = document.getElementById(`combo-${time}`);
+  if (seq >= 3) {
+    const mult = seq >= 5 ? 3 : 2;
+    el.classList.remove('hidden');
+    el.querySelector('.combo-mult').textContent = mult;
+  } else {
+    el.classList.add('hidden');
+  }
+}
+
+function flashAcerto(time, multiplicador) {
+  const card = document.getElementById(`card-${time}`);
+  const ponto = document.createElement('div');
+  ponto.className = 'float-points';
+  ponto.style.left = '50%';
+  ponto.style.top = '40%';
+  ponto.style.color = '#FFD700';
+  ponto.textContent = multiplicador > 1 ? `+${multiplicador} 🔥` : '+1';
+  card.style.position = 'relative';
+  card.appendChild(ponto);
+  setTimeout(() => ponto.remove(), 1200);
+}
+
+function flashErro(time) {
+  document.getElementById(`card-${time}`).classList.add('pde-shake');
+  setTimeout(() => document.getElementById(`card-${time}`).classList.remove('pde-shake'), 400);
+}
+
+// ===================== HISTÓRICO ============================
+function registrarHistorico(time, operacao, certo, tempoGasto, correta = null, dada = null) {
+  STATE.jogo.historico.push({
+    rodada: STATE.jogo.rodada,
+    time,
+    nomeTime: STATE.config.nomes[time],
+    operacao,
+    certo,
+    tempoGasto: Math.round(tempoGasto * 10) / 10,
+    respostaCorreta: correta,
+    respostaDada: dada,
+    timestamp: Date.now()
+  });
+}
+
+// ===================== FIM DE JOGO ==========================
+function verificarFimDeJogo() {
+  if (STATE.jogo.treino) return false;
+
+  if (STATE.jogo.vidas.azul <= 0) {
+    finalizarJogo('vermelho', 'sem_vidas');
+    return true;
+  }
+  if (STATE.jogo.vidas.vermelho <= 0) {
+    finalizarJogo('azul', 'sem_vidas');
+    return true;
+  }
+  if (STATE.jogo.pontos.azul >= STATE.config.pontos) {
+    finalizarJogo('azul', 'pontos');
+    return true;
+  }
+  if (STATE.jogo.pontos.vermelho >= STATE.config.pontos) {
+    finalizarJogo('vermelho', 'pontos');
+    return true;
+  }
+  return false;
+}
+
+function finalizarJogo(vencedor, motivo) {
+  pararTimer();
+  STATE.jogo.ativo = false;
+
+  // Verifica empate raro (não deveria ocorrer com essa lógica, mas por segurança)
+  if (vencedor === null && STATE.jogo.pontos.azul === STATE.jogo.pontos.vermelho) {
+    abrirEmpate();
+    return;
+  }
+
+  const config = STATE.config;
+  const cor = vencedor === 'azul' ? '#1E40AF' : '#B91C1C';
+  document.getElementById('vitoria-time').innerHTML = `${vencedor === 'azul' ? '💙' : '❤️'} ${config.nomes[vencedor]}`;
+  document.getElementById('vitoria-time').style.color = cor;
+
+  let textoMotivo = '';
+  if (motivo === 'sem_vidas') textoMotivo = `O adversário ficou sem vidas!`;
+  else if (motivo === 'pontos') textoMotivo = `Atingiu ${config.pontos} pontos primeiro!`;
+  else if (motivo === 'morte_subita') textoMotivo = `Acertou primeiro na morte súbita!`;
+  document.getElementById('vitoria-motivo').textContent = textoMotivo;
+
+  // Resumo
+  const acertosA = STATE.jogo.historico.filter(h => h.time === 'azul' && h.certo).length;
+  const errosA = STATE.jogo.historico.filter(h => h.time === 'azul' && !h.certo).length;
+  const acertosV = STATE.jogo.historico.filter(h => h.time === 'vermelho' && h.certo).length;
+  const errosV = STATE.jogo.historico.filter(h => h.time === 'vermelho' && !h.certo).length;
+  const totalRodadas = STATE.jogo.historico.length;
+  const duracaoMin = Math.round((Date.now() - STATE.jogo.inicioPartida) / 60000 * 10) / 10;
+
+  document.getElementById('vitoria-resumo').innerHTML = `
+    <div class="flex justify-between"><span>💙 ${config.nomes.azul}:</span><strong>${STATE.jogo.pontos.azul} pts · ${acertosA}✓ / ${errosA}✗</strong></div>
+    <div class="flex justify-between"><span>❤️ ${config.nomes.vermelho}:</span><strong>${STATE.jogo.pontos.vermelho} pts · ${acertosV}✓ / ${errosV}✗</strong></div>
+    <div class="flex justify-between"><span>Total de rodadas:</span><strong>${totalRodadas}</strong></div>
+    <div class="flex justify-between"><span>Duração:</span><strong>${duracaoMin} min</strong></div>
+  `;
+
+  abrirModal('modal-vitoria');
+  criarConfetes();
+  tocarSom('vitoria');
+  reportarAlturaParent();
+}
+
+function abrirEmpate() {
+  abrirModal('modal-empate');
+}
+
+function iniciarMorteSubita() {
+  fecharModal('modal-empate');
+  STATE.jogo.morteSubita = true;
+  STATE.jogo.ativo = true;
+  STATE.jogo.timeDaVez = Math.random() < 0.5 ? 'azul' : 'vermelho';
+  novaOperacao('azul');
+  novaOperacao('vermelho');
+  // Em morte súbita, ambos veem operações ao mesmo tempo? Não — mantém turno
+  document.getElementById(`op-${outro(STATE.jogo.timeDaVez)}`).innerHTML = '⏳ Aguarde...';
+  STATE.jogo.tempoRestante = 15; // tempo curto para morte súbita
+  STATE.config.tempo = 15;
+  atualizarTurnoUI();
+  iniciarTimer();
+}
+
+function finalizarMorteSubita(vencedor) {
+  STATE.jogo.morteSubita = false;
+  pararTimer();
+  finalizarJogo(vencedor, 'morte_subita');
+}
+
+// ===================== MODAIS / NAVEGAÇÃO ===================
+function abrirModal(id) {
+  document.getElementById(id).classList.add('active');
+  pedirScrollTopParent();
+}
+
+function fecharModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+function abrirAjuda() { abrirModal('modal-ajuda'); }
+
+function confirmarSair() {
+  if (STATE.jogo.ativo) {
+    abrirModal('modal-sair');
+  } else {
+    voltarLobby();
+  }
+}
+
+function voltarLobby() {
+  fecharModal('modal-sair');
+  fecharModal('modal-vitoria');
+  pararTimer();
+  STATE.jogo.ativo = false;
+  document.getElementById('tela-batalha').classList.add('hidden');
+  document.getElementById('tela-lobby').classList.remove('hidden');
+  document.getElementById('treino-badge').classList.add('hidden');
+  reportarAlturaParent();
+  pedirScrollTopParent();
+}
+
+function reiniciar() {
+  fecharModal('modal-vitoria');
+  if (STATE.jogo.treino) {
+    iniciarTreino();
+  } else {
+    configurarPartida();
+  }
+}
+
+// ===================== TECLADO FÍSICO =======================
+document.addEventListener('keydown', (e) => {
+  if (!STATE.jogo.ativo) return;
+  // Não interferir se algum input está focado
+  if (document.activeElement && ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+
+  const t = STATE.jogo.timeDaVez;
+  if (e.key >= '0' && e.key <= '9') {
+    digitar(t, e.key);
+    e.preventDefault();
+  } else if (e.key === 'Enter') {
+    confirmar(t);
+    e.preventDefault();
+  } else if (e.key === 'Backspace') {
+    limpar(t);
+    e.preventDefault();
+  } else if (e.key === '-' || e.key === '+') {
+    alternarSinal(t);
+    e.preventDefault();
+  }
+});
+
+// ===================== CONFETES + SOM =======================
+function criarConfetes() {
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#37B1DA', '#B6D752', '#FFD700', '#FF8C00', '#1E324A', '#EF4444'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 1.5 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    cont.appendChild(c);
+  }
+}
+
+// Sons sintetizados (Web Audio) para evitar arquivos externos
+let audioCtx = null;
+function tocarSom(tipo) {
+  if (!STATE.config.som) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.connect(g); g.connect(audioCtx.destination);
+    g.gain.setValueAtTime(0.06, audioCtx.currentTime);
+    if (tipo === 'click') {
+      o.frequency.value = 600; o.type = 'square';
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+      o.start(); o.stop(audioCtx.currentTime + 0.05);
+    } else if (tipo === 'acerto') {
+      o.frequency.setValueAtTime(523, audioCtx.currentTime);
+      o.frequency.setValueAtTime(659, audioCtx.currentTime + 0.1);
+      o.frequency.setValueAtTime(784, audioCtx.currentTime + 0.2);
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+      o.start(); o.stop(audioCtx.currentTime + 0.3);
+    } else if (tipo === 'erro') {
+      o.frequency.setValueAtTime(220, audioCtx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.3);
+      o.type = 'sawtooth';
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+      o.start(); o.stop(audioCtx.currentTime + 0.3);
+    } else if (tipo === 'vitoria') {
+      [523, 659, 784, 1047].forEach((f, i) => {
+        const oo = audioCtx.createOscillator();
+        const gg = audioCtx.createGain();
+        oo.connect(gg); gg.connect(audioCtx.destination);
+        oo.frequency.value = f;
+        gg.gain.setValueAtTime(0.05, audioCtx.currentTime + i * 0.12);
+        gg.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.12 + 0.4);
+        oo.start(audioCtx.currentTime + i * 0.12);
+        oo.stop(audioCtx.currentTime + i * 0.12 + 0.4);
+      });
+    }
+  } catch (e) { /* navegadores antigos */ }
+}
+
+// ===================== EXPORTAÇÃO PDF =======================
+function exportarPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const cfg = STATE.config;
+  const j = STATE.jogo;
+  const dataAgora = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+  // Header NEWPC
+  doc.setFillColor(30, 50, 74);
+  doc.rect(0, 0, 210, 25, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('NEWPC · Portal do Educador', 14, 11);
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Relatório da Batalha Matemática', 14, 18);
+
+  doc.setTextColor(30, 50, 74);
+  doc.setFontSize(10);
+  let y = 33;
+
+  // Dados gerais
+  doc.setFont('helvetica', 'bold');
+  doc.text('Dados da Atividade', 14, y); y += 6;
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Data: ${dataAgora}`, 14, y); y += 5;
+  if (cfg.escola) { doc.text(`Escola: ${cfg.escola}`, 14, y); y += 5; }
+  if (cfg.turma) { doc.text(`Turma: ${cfg.turma}`, 14, y); y += 5; }
+  if (cfg.professor) { doc.text(`Professor(a): ${cfg.professor}`, 14, y); y += 5; }
+  doc.text(`Modo: ${cfg.conteudo === 'bncc' ? 'BNCC ' + BNCC[cfg.bnccAno].titulo : 'Modo Livre · faixa ' + cfg.faixa}`, 14, y); y += 5;
+  doc.text(`Pontos para vencer: ${cfg.pontos} · Vidas: ${cfg.vidas} · Tempo: ${cfg.tempo}s`, 14, y); y += 8;
+
+  // Resultado
+  doc.setFont('helvetica', 'bold');
+  doc.setFillColor(182, 215, 82);
+  doc.rect(14, y, 182, 8, 'F');
+  doc.text(`Placar Final: ${cfg.nomes.azul} ${j.pontos.azul} × ${j.pontos.vermelho} ${cfg.nomes.vermelho}`, 16, y + 5.5);
+  y += 14;
+
+  // Estatísticas
+  const acertosA = j.historico.filter(h => h.time === 'azul' && h.certo).length;
+  const errosA = j.historico.filter(h => h.time === 'azul' && !h.certo).length;
+  const acertosV = j.historico.filter(h => h.time === 'vermelho' && h.certo).length;
+  const errosV = j.historico.filter(h => h.time === 'vermelho' && !h.certo).length;
+  const totalA = acertosA + errosA;
+  const totalV = acertosV + errosV;
+  const aprovA = totalA > 0 ? Math.round(acertosA / totalA * 100) : 0;
+  const aprovV = totalV > 0 ? Math.round(acertosV / totalV * 100) : 0;
+  const tempoMedioA = totalA > 0 ? (j.historico.filter(h => h.time === 'azul').reduce((s,h) => s+h.tempoGasto, 0) / totalA).toFixed(1) : '—';
+  const tempoMedioV = totalV > 0 ? (j.historico.filter(h => h.time === 'vermelho').reduce((s,h) => s+h.tempoGasto, 0) / totalV).toFixed(1) : '—';
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('Desempenho dos Times', 14, y); y += 6;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+
+  // Tabela de stats
+  doc.setFillColor(240, 244, 248);
+  doc.rect(14, y, 182, 7, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.text('Time', 16, y + 5);
+  doc.text('Pontos', 60, y + 5);
+  doc.text('Acertos', 85, y + 5);
+  doc.text('Erros', 110, y + 5);
+  doc.text('Aprov.', 135, y + 5);
+  doc.text('Tempo médio', 160, y + 5);
+  y += 7;
+  doc.setFont('helvetica', 'normal');
+  doc.text(cfg.nomes.azul, 16, y + 5);
+  doc.text(`${j.pontos.azul}`, 60, y + 5);
+  doc.text(`${acertosA}`, 85, y + 5);
+  doc.text(`${errosA}`, 110, y + 5);
+  doc.text(`${aprovA}%`, 135, y + 5);
+  doc.text(`${tempoMedioA}s`, 160, y + 5);
+  y += 7;
+  doc.text(cfg.nomes.vermelho, 16, y + 5);
+  doc.text(`${j.pontos.vermelho}`, 60, y + 5);
+  doc.text(`${acertosV}`, 85, y + 5);
+  doc.text(`${errosV}`, 110, y + 5);
+  doc.text(`${aprovV}%`, 135, y + 5);
+  doc.text(`${tempoMedioV}s`, 160, y + 5);
+  y += 12;
+
+  // Histórico de operações
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Histórico de Rodadas', 14, y); y += 6;
+  doc.setFontSize(8);
+  doc.setFillColor(30, 50, 74);
+  doc.setTextColor(255, 255, 255);
+  doc.rect(14, y, 182, 6, 'F');
+  doc.text('#', 16, y + 4);
+  doc.text('Time', 24, y + 4);
+  doc.text('Operação', 70, y + 4);
+  doc.text('Resp. Correta', 115, y + 4);
+  doc.text('Resp. Dada', 145, y + 4);
+  doc.text('Tempo', 172, y + 4);
+  doc.text('Status', 188, y + 4);
+  y += 6;
+  doc.setTextColor(30, 50, 74);
+
+  j.historico.forEach((h, i) => {
+    if (y > 280) {
+      doc.addPage();
+      y = 20;
+    }
+    if (i % 2 === 0) {
+      doc.setFillColor(248, 250, 252);
+      doc.rect(14, y, 182, 5, 'F');
+    }
+    doc.text(`${h.rodada}`, 16, y + 3.5);
+    doc.text(h.nomeTime.substring(0, 18), 24, y + 3.5);
+    doc.text(h.operacao.substring(0, 25), 70, y + 3.5);
+    doc.text(`${h.respostaCorreta ?? '—'}`, 115, y + 3.5);
+    doc.text(h.respostaDada !== null && h.respostaDada !== undefined ? `${h.respostaDada}` : '—', 145, y + 3.5);
+    doc.text(`${h.tempoGasto}s`, 172, y + 3.5);
+    if (h.certo) { doc.setTextColor(22, 163, 74); doc.text('✓', 190, y + 3.5); }
+    else { doc.setTextColor(220, 38, 38); doc.text('✗', 190, y + 3.5); }
+    doc.setTextColor(30, 50, 74);
+    y += 5;
+  });
+
+  // Rodapé
+  const totalPaginas = doc.internal.getNumberOfPages();
+  for (let p = 1; p <= totalPaginas; p++) {
+    doc.setPage(p);
+    doc.setFontSize(7);
+    doc.setTextColor(120, 120, 120);
+    doc.text(`Gerado em ${dataAgora} · NEWPC Tecnologia · portaldoeducador.com.br`, 14, 290);
+    doc.text(`Página ${p} de ${totalPaginas}`, 180, 290);
+  }
+
+  const nome = `BatalhaMatematica_${(cfg.turma || 'turma').replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`;
+  doc.save(nome);
+}
+
+// ===================== PERSISTÊNCIA LOCAL ===================
+function salvarConfig() {
+  try {
+    localStorage.setItem('pde_batalha_config', JSON.stringify({
+      conteudo: STATE.config.conteudo,
+      bnccAno: STATE.config.bnccAno,
+      faixa: STATE.config.faixa,
+      pontos: STATE.config.pontos,
+      tempo: STATE.config.tempo,
+      vidas: STATE.config.vidas,
+      som: STATE.config.som,
+      nomes: STATE.config.nomes,
+      escola: STATE.config.escola,
+      professor: STATE.config.professor,
+    }));
+  } catch (e) { /* localStorage indisponível */ }
+}
+
+function carregarConfig() {
+  try {
+    const raw = localStorage.getItem('pde_batalha_config');
+    if (!raw) return;
+    const cfg = JSON.parse(raw);
+    if (cfg.conteudo) selecionarConteudo(cfg.conteudo);
+    if (cfg.bnccAno) selecionarBNCCAno(cfg.bnccAno);
+    if (cfg.faixa) selecionarFaixa(cfg.faixa);
+    if (cfg.som !== undefined) selecionarSom(cfg.som ? 'on' : 'off');
+    if (cfg.pontos) { document.getElementById('cfg-pontos').value = cfg.pontos; document.getElementById('lbl-pontos').textContent = cfg.pontos; }
+    if (cfg.tempo) { document.getElementById('cfg-tempo').value = cfg.tempo; document.getElementById('lbl-tempo').textContent = cfg.tempo; }
+    if (cfg.vidas) { document.getElementById('cfg-vidas').value = cfg.vidas; document.getElementById('lbl-vidas').textContent = cfg.vidas; }
+    if (cfg.nomes?.azul) document.getElementById('cfg-nome-azul').value = cfg.nomes.azul;
+    if (cfg.nomes?.vermelho) document.getElementById('cfg-nome-vermelho').value = cfg.nomes.vermelho;
+    if (cfg.escola) document.getElementById('cfg-escola').value = cfg.escola;
+    if (cfg.professor) document.getElementById('cfg-professor').value = cfg.professor;
+  } catch (e) { /* ok */ }
+}
+
+// ===================== EMBED WEBNODE ========================
+function reportarAlturaParent() {
+  if (window.self === window.top) return;
+  try {
+    // Calcula altura baseada apenas no #pde-painel (não no body, evita inflação por modais fixed)
+    requestAnimationFrame(() => {
+      const painel = document.getElementById('pde-painel');
+      const altura = Math.max(painel.scrollHeight, painel.offsetHeight);
+      window.parent.postMessage({ tipo: 'pde-altura', altura: altura + 40 }, '*');
+    });
+  } catch (e) {}
+}
+
+function pedirScrollTopParent() {
+  if (window.self === window.top) return;
+  try {
+    window.parent.postMessage({ tipo: 'pde-scroll-top' }, '*');
+  } catch (e) {}
+}
+
+// ResizeObserver para reportar altura automaticamente
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => reportarAlturaParent());
+  ro.observe(document.getElementById('pde-painel'));
+}
+
+// ===================== INICIALIZAÇÃO ========================
+window.addEventListener('DOMContentLoaded', () => {
+  popularBNCC();
+  carregarConfig();
+  document.getElementById('cfg-data').value = new Date().toLocaleDateString('pt-BR');
+  reportarAlturaParent();
+});
+
+window.addEventListener('load', reportarAlturaParent);
+window.addEventListener('resize', reportarAlturaParent);
+
+/* Auto-injeta selos BNCC quando modal de fim abrir */
+(function() {
+  const MODAIS_SELOS = ["modal-vitoria", "modal-empate"];
+  function observarModais() {
+    MODAIS_SELOS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto') || el.classList.contains('active')) {
+          inserirSelosNoModal(id);
+        }
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observarModais);
+  else observarModais();
+})();
+
+
+/* === SISTEMA A11Y NEWPC === */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  if (!p) return;
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    // Escala SEMPRE inicia em 'normal' (não persistir entre sessões; vários alunos compartilham dispositivo)
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+function abrirAcessibilidade() {
+  renderizarA11y();
+  if (typeof abrirModal === 'function') abrirModal('modal-a11y');
+  else document.getElementById('modal-a11y')?.classList.add('aberto');
+}
+// Carrega no init
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', carregarA11y);
+} else {
+  carregarA11y();
+}
+/* === FIM SISTEMA A11Y === */
+
+</script>
+
+<button class="btn-admin" onclick="confirmarSair()" title="Voltar / Configurações" id="btn-admin-flutuante" style="display:none">⚙️</button>
+
+</body>
+</html>

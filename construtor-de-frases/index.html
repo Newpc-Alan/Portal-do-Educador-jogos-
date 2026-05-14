@@ -1,0 +1,2386 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Construtor de Frases · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #1E324A);
+  padding: 6px clamp(6px, 1.5vw, 12px) 10px;
+  width: 100%; max-width: 100%; overflow-x: hidden; margin: 0 auto;
+  user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+  --pde-cor-texto: #1E324A;
+  background: linear-gradient(180deg, #FCE7F3 0%, #DB2777 50%, #581C87 100%);
+  border-radius: 12px;
+}
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-jogo,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .nivel-card,
+#pde-painel.alto-contraste .modo-card,
+#pde-painel.alto-contraste .tema-card,
+#pde-painel.alto-contraste .qtd-card { background: #000 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .nivel-card.selecionado,
+#pde-painel.alto-contraste .modo-card.selecionado,
+#pde-painel.alto-contraste .tema-card.selecionado,
+#pde-painel.alto-contraste .qtd-card.selecionado { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .palavra-chip { background: #1F2937 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .palavra-chip.no-slot { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .slot-frase { border-color: #FBBF24 !important; background: #1F2937 !important; }
+#pde-painel.alto-contraste .lacuna-opcao { background: #1F2937 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#DB2777 0%,#831843 100%);
+  border-radius: 10px;
+  padding: 6px 10px;
+  color: white;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 6px rgba(131,24,67,0.25);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 14px;
+  padding: 10px;
+  border: 2px solid #DB2777;
+  box-shadow: 0 3px 8px rgba(219,39,119,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #FCE7F3 0%, #F0ABFC 100%);
+  border-radius: 10px;
+  padding: 7px 10px;
+  margin-bottom: 8px;
+  border: 2px solid #DB2777;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 64px; height: 64px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 10px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #1E324A;
+  font-size: 0.85rem;
+  line-height: 1.25;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: ''; position: absolute;
+  left: -8px; top: 18px;
+  width: 0; height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #DB2777;
+  font-size: 0.95rem;
+  margin-bottom: 1px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 5px; padding: 8px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 70px; height: 70px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+#pde-painel .secao-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #DB2777;
+  font-size: 0.92rem;
+  margin: 8px 0 5px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* MODO */
+#pde-painel .modo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  margin-bottom: 6px;
+}
+@media (min-width: 700px) {
+  #pde-painel .modo-grid { grid-template-columns: repeat(4, 1fr); }
+}
+#pde-painel .modo-card {
+  background: white;
+  border: 2px solid #DB2777;
+  border-radius: 10px;
+  padding: 7px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  color: #1E324A;
+  font-size: 0.78rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #831843;
+}
+#pde-painel .modo-card:hover { transform: translateY(-2px); }
+#pde-painel .modo-card.selecionado {
+  background: linear-gradient(135deg,#DB2777 0%,#831843 100%);
+  color: white;
+  border-color: #581C87;
+  transform: translateY(2px);
+}
+#pde-painel .modo-card .modo-emoji { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .modo-card .modo-titulo { font-weight: 700; font-size: 0.85rem; }
+#pde-painel .modo-card .modo-desc { font-size: 0.7rem; opacity: 0.85; margin-top: 1px; line-height: 1.2; }
+
+/* NÍVEL */
+#pde-painel .nivel-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  margin-bottom: 6px;
+}
+@media (min-width: 700px) {
+  #pde-painel .nivel-grid { grid-template-columns: repeat(4, 1fr); }
+}
+#pde-painel .nivel-card {
+  background: white;
+  border: 2px solid #FBBF24;
+  border-radius: 10px;
+  padding: 7px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  color: #92400E;
+  font-size: 0.78rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #92400E;
+}
+#pde-painel .nivel-card:hover { transform: translateY(-2px); }
+#pde-painel .nivel-card.selecionado {
+  background: linear-gradient(135deg,#F59E0B 0%,#92400E 100%);
+  color: white;
+  border-color: #451A03;
+  transform: translateY(2px);
+}
+#pde-painel .nivel-card .nivel-emoji { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .nivel-card .nivel-titulo { font-weight: 700; font-size: 0.85rem; }
+#pde-painel .nivel-card .nivel-desc { font-size: 0.7rem; opacity: 0.85; margin-top: 1px; line-height: 1.2; }
+
+/* TEMA */
+#pde-painel .tema-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 6px;
+}
+@media (min-width: 700px) {
+  #pde-painel .tema-grid { grid-template-columns: repeat(6, 1fr); }
+}
+#pde-painel .tema-card {
+  background: white;
+  border: 2px solid #A78BFA;
+  border-radius: 10px;
+  padding: 5px 3px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #5B21B6;
+  font-size: 0.7rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #5B21B6;
+}
+#pde-painel .tema-card:hover { transform: translateY(-2px); }
+#pde-painel .tema-card.selecionado {
+  background: linear-gradient(135deg,#8B5CF6 0%,#5B21B6 100%);
+  color: white;
+  border-color: #4C1D95;
+  transform: translateY(2px);
+}
+#pde-painel .tema-card .t-emoji { display: block; font-size: 1.05rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .info-pool {
+  margin-top: 4px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.75rem;
+  color: #475569;
+  text-align: center;
+}
+#pde-painel .info-pool b { color: #DB2777; }
+
+/* Qtd jogadores e nomes (modo competitivo) */
+#pde-painel .qtd-area, #pde-painel .jogadores-area { display: none; margin-bottom: 6px; }
+#pde-painel .qtd-area.ativo, #pde-painel .jogadores-area.ativo { display: block; }
+#pde-painel .qtd-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+#pde-painel .qtd-card {
+  background: white;
+  border: 2px solid #FBBF24;
+  border-radius: 10px;
+  padding: 8px 5px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 0.92rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #92400E;
+}
+#pde-painel .qtd-card:hover { transform: translateY(-2px); }
+#pde-painel .qtd-card.selecionado {
+  background: linear-gradient(135deg,#F59E0B 0%,#92400E 100%);
+  color: white;
+  border-color: #451A03;
+  transform: translateY(2px);
+}
+#pde-painel .qtd-card .qtd-emoji { display: block; font-size: 1.3rem; line-height: 1; }
+#pde-painel .qtd-card .qtd-num { display: block; font-size: 1rem; margin-top: 2px; }
+
+#pde-painel .jogadores-grid {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 5px 8px;
+  align-items: center;
+}
+#pde-painel .jogadores-grid .pino-mini {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 3px solid #1E324A;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: white;
+  justify-self: center;
+}
+#pde-painel .jogadores-grid input {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.92rem;
+  padding: 5px 8px;
+  border: 2px solid #DB2777;
+  border-radius: 6px;
+  background: white;
+  color: #1E324A;
+  font-weight: 600;
+  width: 100%;
+}
+#pde-painel .jogadores-grid input:focus { outline: none; border-color: #831843; }
+
+/* Tempo (modo relógio) */
+#pde-painel .tempo-area { display: none; margin-bottom: 6px; }
+#pde-painel .tempo-area.ativo { display: block; }
+#pde-painel .tempo-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+#pde-painel .tempo-card {
+  background: white;
+  border: 2px solid #14B8A6;
+  border-radius: 10px;
+  padding: 6px 4px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #0F766E;
+  font-size: 0.82rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #0F766E;
+}
+#pde-painel .tempo-card:hover { transform: translateY(-2px); }
+#pde-painel .tempo-card.selecionado {
+  background: linear-gradient(135deg,#14B8A6 0%,#0F766E 100%);
+  color: white;
+  border-color: #134E4A;
+  transform: translateY(2px);
+}
+
+#pde-painel .btn-comecar {
+  width: 100%;
+  background: linear-gradient(135deg,#DB2777 0%,#831843 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #581C87, 0 4px 10px rgba(131,24,67,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #581C87;
+  margin-top: 6px;
+}
+#pde-painel .btn-comecar:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #581C87, 0 2px 6px rgba(131,24,67,0.25);
+}
+#pde-painel .btn-comecar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* JOGO */
+#pde-painel .jogo-grid {
+  display: grid; gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #pde-painel .jogo-grid { grid-template-columns: 1fr !important; gap: 8px; }
+  #pde-painel .area-jogo { order: 1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+#pde-painel .area-jogo {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 3px solid #DB2777;
+  box-shadow: 0 2px 6px rgba(219,39,119,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+#pde-painel .painel-info {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 10px;
+  border: 3px solid #DB2777;
+  box-shadow: 0 2px 6px rgba(219,39,119,0.12);
+  min-width: 0;
+}
+
+#pde-painel .cab-jogo {
+  background: linear-gradient(135deg, #DB2777 0%, #831843 100%);
+  border-radius: 10px;
+  padding: 6px 12px;
+  color: white;
+  border: 2px solid white;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; flex-wrap: wrap;
+}
+#pde-painel .cab-jogo .vez-jogador {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+#pde-painel .cab-jogo .pino-vez {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2.5px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: white;
+  flex-shrink: 0;
+}
+#pde-painel .cab-jogo .info-rodada-cab {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.78rem;
+  background: rgba(0,0,0,0.2);
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+#pde-painel .cab-jogo .cronometro {
+  font-family: 'Baloo 2',sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  background: rgba(0,0,0,0.3);
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 2px solid white;
+}
+#pde-painel .cab-jogo .cronometro.urgente {
+  background: #DC2626;
+  animation: pulsa 0.7s ease-in-out infinite;
+}
+@keyframes pulsa {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+/* Frase em construção (slots) */
+#pde-painel .frase-area {
+  background: linear-gradient(135deg, #FCE7F3 0%, #FBCFE8 100%);
+  border: 3px dashed #DB2777;
+  border-radius: 12px;
+  padding: 10px;
+  min-height: 80px;
+}
+#pde-painel .frase-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #831843;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#pde-painel .slots-frase {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+  min-height: 44px;
+}
+#pde-painel .slot-frase {
+  min-width: 50px;
+  min-height: 36px;
+  padding: 4px 8px;
+  background: rgba(255,255,255,0.5);
+  border: 2.5px dashed #DB2777;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka',sans-serif;
+  color: #831843;
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: all 0.15s;
+}
+#pde-painel .slot-frase.preenchido {
+  background: linear-gradient(135deg, #FBCFE8 0%, #F9A8D4 100%);
+  border-style: solid;
+  cursor: pointer;
+}
+#pde-painel .slot-frase.lacuna {
+  border-color: #F59E0B;
+  background: #FEF3C7;
+  color: #92400E;
+  flex-direction: column;
+  padding: 4px;
+}
+#pde-painel .slot-frase.drag-over {
+  background: #FBCFE8;
+  border-color: #831843;
+  transform: scale(1.05);
+}
+#pde-painel .slot-frase.correto-feedback {
+  background: linear-gradient(135deg, #BBF7D0 0%, #4ADE80 100%);
+  border-color: #16A34A;
+  color: #14532D;
+  font-weight: 700;
+}
+#pde-painel .slot-frase.errado-feedback {
+  background: linear-gradient(135deg, #FECACA 0%, #F87171 100%);
+  border-color: #DC2626;
+  color: #7F1D1D;
+}
+
+/* Lacuna opções */
+#pde-painel .lacuna-opcoes {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+  width: 100%;
+}
+#pde-painel .lacuna-opcao {
+  background: white;
+  border: 2px solid #F59E0B;
+  border-radius: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 0.82rem;
+  text-align: center;
+  transition: all 0.1s;
+}
+#pde-painel .lacuna-opcao:hover {
+  background: #FEF3C7;
+}
+#pde-painel .lacuna-opcao.selecionada {
+  background: linear-gradient(135deg, #F59E0B 0%, #92400E 100%);
+  color: white;
+  border-color: #451A03;
+}
+
+/* Banco de palavras */
+#pde-painel .palavras-area {
+  background: white;
+  border: 3px solid #7C3AED;
+  border-radius: 12px;
+  padding: 10px;
+}
+#pde-painel .palavras-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #581C87;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#pde-painel .palavras-banco {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  min-height: 40px;
+}
+#pde-painel .palavra-chip {
+  background: linear-gradient(135deg, #C4B5FD 0%, #8B5CF6 100%);
+  color: white;
+  border: 2px solid #5B21B6;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  box-shadow: 0 2px 0 #4C1D95;
+  transition: transform 0.1s;
+}
+#pde-painel .palavra-chip:active { cursor: grabbing; }
+#pde-painel .palavra-chip.arrastando {
+  opacity: 0.4;
+  transform: scale(0.9);
+}
+#pde-painel .palavra-chip.invisivel { visibility: hidden; }
+#pde-painel .palavra-chip.no-slot {
+  background: linear-gradient(135deg, #FBCFE8 0%, #F9A8D4 100%);
+  color: #831843;
+  border-color: #831843;
+  box-shadow: 0 2px 0 #831843;
+}
+
+/* Botões */
+#pde-painel .acoes-jogo {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+#pde-painel .btn-verificar {
+  flex: 2;
+  background: linear-gradient(135deg, #22C55E 0%, #15803D 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #14532D;
+}
+#pde-painel .btn-verificar:active { transform: translateY(2px); box-shadow: 0 1px 0 #14532D; }
+#pde-painel .btn-verificar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+#pde-painel .btn-limpar {
+  flex: 1;
+  background: white;
+  color: #94A3B8;
+  border: 2px solid #CBD5E1;
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+#pde-painel .btn-proxima {
+  width: 100%;
+  background: linear-gradient(135deg, #DB2777 0%, #831843 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #581C87;
+}
+#pde-painel .btn-proxima:active { transform: translateY(2px); box-shadow: 0 1px 0 #581C87; }
+
+/* Feedback rodada */
+#pde-painel .feedback-rodada {
+  background: linear-gradient(135deg, #FCE7F3 0%, #FBCFE8 100%);
+  border: 3px solid #831843;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  animation: aparecer 0.4s ease-out;
+}
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+#pde-painel .feedback-rodada h3 {
+  font-family: 'Fredoka',sans-serif;
+  color: #831843;
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+}
+#pde-painel .feedback-rodada .frase-correta {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: #1E324A;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin: 6px 0;
+  border: 2px dashed #DB2777;
+}
+#pde-painel .feedback-rodada .pts-info {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #831843;
+  font-size: 0.95rem;
+}
+
+/* PAINEL INFO LATERAL */
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg,#FCE7F3 0%,#FBCFE8 100%);
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 2px solid #DB2777;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 38px; height: 38px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #1E324A;
+  line-height: 1.2;
+  min-width: 0;
+  word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #DB2777; font-weight: 700; }
+
+#pde-painel .placar-jogadores {
+  background: white;
+  border-radius: 10px;
+  padding: 6px;
+  margin-bottom: 6px;
+  border: 2px solid #DB2777;
+}
+#pde-painel .placar-jogadores h5 {
+  font-family: 'Fredoka',sans-serif;
+  margin: 0 0 4px;
+  color: #DB2777;
+  font-size: 0.85rem;
+  text-align: center;
+}
+#pde-painel .jog-linha {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px;
+  background: #FCE7F3;
+  border-radius: 6px;
+  margin-bottom: 3px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.82rem;
+}
+#pde-painel .jog-linha:last-child { margin-bottom: 0; }
+#pde-painel .jog-linha.vez-dele {
+  background: linear-gradient(135deg, #DB2777 0%, #831843 100%);
+  color: white;
+  outline: 2px solid #581C87;
+}
+#pde-painel .jog-linha.vez-dele .pts { background: white; color: #DB2777; }
+#pde-painel .jog-linha .pino-jog {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 0.72rem;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+#pde-painel .jog-linha .nome {
+  flex: 1; font-weight: 700;
+  color: #1E324A;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#pde-painel .jog-linha.vez-dele .nome { color: white; }
+#pde-painel .jog-linha .pts {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  background: #DB2777;
+  color: white;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+}
+
+#pde-painel .info-rodada {
+  background: linear-gradient(135deg,#FCE7F3 0%,#FBCFE8 100%);
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 2px solid #DB2777;
+}
+#pde-painel .info-rodada .linha {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.78rem;
+  color: #DB2777;
+  padding: 2px 0;
+}
+#pde-painel .info-rodada .linha .label { font-weight: 600; }
+#pde-painel .info-rodada .linha .valor { font-weight: 700; color: #1E324A; }
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(131,24,67,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #DB2777;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal { width: 100px; height: 100px; margin: 0 auto 8px; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #DB2777;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #1E324A; font-size: 0.95rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#DB2777 0%,#831843 100%);
+  color: white; border: 3px solid #581C87;
+  box-shadow: 0 4px 0 #581C87;
+}
+#pde-painel .btn-confirmar.dourado {
+  background: linear-gradient(135deg,#FBBF24 0%,#92400E 100%);
+  color: white; border: 3px solid #451A03;
+  box-shadow: 0 4px 0 #451A03;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .vencedor-coroa { font-size: 4rem; animation: bounceCoroa 0.8s ease-out; }
+@keyframes bounceCoroa {
+  0% { transform: scale(0) rotate(-30deg); }
+  60% { transform: scale(1.3) rotate(10deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+#pde-painel .ranking-final {
+  background: #FCE7F3; border-radius: 10px; padding: 10px; margin: 10px 0; text-align: left;
+}
+#pde-painel .ranking-final h4 { font-family: 'Fredoka',sans-serif; text-align: center; color: #DB2777; margin: 0 0 6px; }
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #DB2777;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #1E324A; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+
+#pde-painel .a11y-grupo { background: #FCE7F3; border: 3px solid #DB2777; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #DB2777; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #DB2777; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#DB2777 0%,#831843 100%); color: white; border-color: #581C87; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #DB2777; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#DB2777 0%,#831843 100%); color: white; border-color: #581C87; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #581C87; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #DB2777;
+  border: 2px solid #DB2777; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #DB2777; color: white; }
+
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #FBBF24; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #DB2777; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#DB2777,#831843); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.portugues { background: linear-gradient(135deg,#FB923C,#C2410C); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #DB2777; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #DB2777; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #FCE7F3; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FBBF24; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #DB2777; }
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 8px clamp(10px, 1.5vw, 18px) 14px; }
+  #pde-painel .lobby-card { padding: 14px; }
+  #pde-painel .area-jogo { padding: 12px 16px; }
+  #pde-painel .painel-info { padding: 10px 12px; }
+  #pde-painel .jogo-grid { grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .palavra-chip { font-size: 1rem; padding: 8px 16px; }
+  #pde-painel .slot-frase { font-size: 1rem; min-height: 40px; padding: 5px 10px; }
+}
+@media (min-width: 1440px) { #pde-painel { max-width: 1400px; } }
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>📝 Construtor de Frases</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Olá! Sou o Letrágrafo! 📝🐧</strong>
+        <span>Vamos construir frases? Arraste as palavras na ordem certa! Quanto mais difícil o nível, mais palavras e detalhes.</span>
+      </div>
+    </div>
+
+    <div class="secao-titulo">🎮 Modo de jogo</div>
+    <div class="modo-grid" id="modo-grid"></div>
+
+    <div class="qtd-area" id="qtd-area">
+      <div class="secao-titulo">👥 Quantos jogadores?</div>
+      <div class="qtd-grid" id="qtd-grid"></div>
+    </div>
+
+    <div class="jogadores-area" id="jogadores-area">
+      <div class="secao-titulo">✏️ Nomes</div>
+      <div class="jogadores-grid" id="jogadores-grid"></div>
+    </div>
+
+    <div class="tempo-area" id="tempo-area">
+      <div class="secao-titulo">⏱️ Tempo total (modo contra o relógio)</div>
+      <div class="tempo-grid" id="tempo-grid"></div>
+    </div>
+
+    <div class="secao-titulo">📊 Nível de dificuldade</div>
+    <div class="nivel-grid" id="nivel-grid"></div>
+
+    <div class="secao-titulo">🎨 Tema (filtro opcional)</div>
+    <div class="tema-grid" id="tema-grid"></div>
+    <div class="info-pool" id="info-pool">—</div>
+
+    <button class="btn-comecar" id="btn-comecar" onclick="comecarJogo()" disabled>📝 Começar!</button>
+  </div>
+
+  <div id="jogo" class="jogo-grid hidden">
+    <div class="area-jogo">
+      <div class="cab-jogo">
+        <div class="vez-jogador">
+          <div class="pino-vez" id="pino-vez">1</div>
+          <span id="nome-vez">—</span>
+        </div>
+        <div id="info-rodada-cab" class="info-rodada-cab">Frase 1</div>
+        <div class="cronometro hidden" id="cronometro">--:--</div>
+      </div>
+
+      <div class="frase-area">
+        <div class="frase-titulo">📝 Monte a frase aqui:</div>
+        <div class="slots-frase" id="slots-frase"></div>
+      </div>
+
+      <div class="palavras-area">
+        <div class="palavras-titulo">🎯 Palavras disponíveis (arraste ou toque):</div>
+        <div class="palavras-banco" id="palavras-banco"></div>
+      </div>
+
+      <div class="acoes-jogo" id="acoes-jogo">
+        <button class="btn-limpar" onclick="limparFrase()">↻ Limpar</button>
+        <button class="btn-verificar" id="btn-verificar" onclick="verificarFrase()">✓ Verificar frase</button>
+      </div>
+
+      <div id="feedback-area"></div>
+    </div>
+
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Vamos lá!</div>
+      </div>
+      <div class="placar-jogadores" id="placar-jogadores">
+        <h5>🏆 Placar</h5>
+        <div id="placar-linhas"></div>
+      </div>
+      <div class="info-rodada">
+        <div class="linha"><span class="label">📝 Frase</span><span class="valor" id="frase-info-side">1</span></div>
+        <div class="linha"><span class="label">✅ Acertos</span><span class="valor" id="acertos-info">0</span></div>
+        <div class="linha"><span class="label">📊 Nível</span><span class="valor" id="nivel-info">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-fim">
+    <div class="modal-conteudo">
+      <div class="vencedor-coroa">👑</div>
+      <h2 id="fim-titulo">🎉 Fim!</h2>
+      <p id="fim-msg">—</p>
+      <div class="ranking-final" id="ranking-final"></div>
+      <div class="acoes" id="fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>📝 Como brincar com o Letrágrafo</h2>
+      <h3>🎯 Objetivo</h3>
+      <p>Arrastar as palavras embaralhadas pra montar uma frase correta. Trabalhamos ordem das palavras, concordância verbal e nominal.</p>
+
+      <h3>🎮 4 modos disponíveis</h3>
+      <ul>
+        <li>👤 <b>Individual:</b> sem pressão de tempo, ideal pra aprender</li>
+        <li>👨‍🏫 <b>Professor (lousa):</b> projeta na sala, turma ajuda a montar</li>
+        <li>⏱️ <b>Contra o relógio:</b> quantas frases consegue montar em X minutos</li>
+        <li>🏆 <b>Competitivo:</b> 2-4 jogadores se revezam</li>
+      </ul>
+
+      <h3>📊 4 níveis progressivos</h3>
+      <ul>
+        <li>🌱 <b>Fácil</b> (5-6 palavras) - alfabetização tardia, 2º-3º ano</li>
+        <li>🌿 <b>Médio</b> (7-9 palavras) - 4º-5º ano</li>
+        <li>🌳 <b>Difícil</b> (8-10 palavras + 1 lacuna) - 6º-7º ano</li>
+        <li>🏆 <b>Expert</b> (10-13 palavras + 2 lacunas) - 8º-9º ano</li>
+      </ul>
+
+      <h3>🎯 Lacunas (níveis Difícil e Expert)</h3>
+      <p>Em algumas posições aparece um quadro amarelo com 2 opções (correta + distratora). É preciso escolher a palavra que mantém concordância verbal ou nominal.</p>
+
+      <h3>🌟 Como pontuar</h3>
+      <ul>
+        <li>🌱 Fácil acertou = <b>2 pts</b></li>
+        <li>🌿 Médio acertou = <b>4 pts</b></li>
+        <li>🌳 Difícil acertou = <b>6 pts</b></li>
+        <li>🏆 Expert acertou = <b>8 pts</b></li>
+      </ul>
+
+      <h3>📖 BNCC</h3>
+      <ul>
+        <li>Português (EF03LP12, EF04LP11, EF05LP08, EF06LP06) · Ordem sintática, concordância, flexão</li>
+        <li>Computação (EF06CO04) · Raciocínio lógico e estruturado</li>
+      </ul>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar dourado" onclick="fecharModal('modal-ajuda')">Bora montar!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar dourado" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script id="script-jogo">
+/* BANCO DE FRASES · Construtor de Frases
+ * 80 frases · 4 níveis × 5 temáticas
+ *
+ * Estrutura por frase:
+ *   {
+ *     nivel: 'facil' | 'medio' | 'dificil' | 'expert',
+ *     tema: 'animais' | 'escola' | 'familia' | 'ciencia' | 'esportes',
+ *     palavras: ['palavra1', 'palavra2', ...],    // frase montada em ordem correta
+ *     lacunas: [ { idx: N, opcoes: ['correta','distratora'] } ]  // posições c/ lacuna
+ *   }
+ *
+ * Nível FÁCIL e MÉDIO: lacunas = [] (só ordem)
+ * Nível DIFÍCIL: 1 lacuna
+ * Nível EXPERT: 2 lacunas
+ */
+
+const FRASES = [
+
+  /* ============ NÍVEL FÁCIL · 20 frases · 5-6 palavras · só ordem ============ */
+  /* Animais · 4 */
+  { nivel: 'facil', tema: 'animais', palavras: ['O','gato','dorme','no','sofá'], lacunas: [] },
+  { nivel: 'facil', tema: 'animais', palavras: ['Os','pássaros','voam','muito','alto'], lacunas: [] },
+  { nivel: 'facil', tema: 'animais', palavras: ['Meu','cachorro','late','para','estranhos'], lacunas: [] },
+  { nivel: 'facil', tema: 'animais', palavras: ['O','peixe','nada','no','aquário'], lacunas: [] },
+  /* Escola · 4 */
+  { nivel: 'facil', tema: 'escola', palavras: ['A','aluna','estuda','para','prova'], lacunas: [] },
+  { nivel: 'facil', tema: 'escola', palavras: ['O','professor','ensina','com','paciência'], lacunas: [] },
+  { nivel: 'facil', tema: 'escola', palavras: ['Eu','adoro','ler','livros','interessantes'], lacunas: [] },
+  { nivel: 'facil', tema: 'escola', palavras: ['Nós','escrevemos','com','o','lápis'], lacunas: [] },
+  /* Família · 4 */
+  { nivel: 'facil', tema: 'familia', palavras: ['Minha','mãe','prepara','o','almoço'], lacunas: [] },
+  { nivel: 'facil', tema: 'familia', palavras: ['O','vovô','conta','muitas','histórias'], lacunas: [] },
+  { nivel: 'facil', tema: 'familia', palavras: ['A','irmã','toca','o','violão'], lacunas: [] },
+  { nivel: 'facil', tema: 'familia', palavras: ['Meu','pai','dirige','o','carro'], lacunas: [] },
+  /* Ciência · 4 */
+  { nivel: 'facil', tema: 'ciencia', palavras: ['O','sol','aquece','a','Terra'], lacunas: [] },
+  { nivel: 'facil', tema: 'ciencia', palavras: ['A','planta','precisa','de','água'], lacunas: [] },
+  { nivel: 'facil', tema: 'ciencia', palavras: ['As','estrelas','brilham','à','noite'], lacunas: [] },
+  { nivel: 'facil', tema: 'ciencia', palavras: ['O','ímã','atrai','o','metal'], lacunas: [] },
+  /* Esportes · 4 */
+  { nivel: 'facil', tema: 'esportes', palavras: ['O','jogador','chuta','a','bola'], lacunas: [] },
+  { nivel: 'facil', tema: 'esportes', palavras: ['A','nadadora','venceu','a','corrida'], lacunas: [] },
+  { nivel: 'facil', tema: 'esportes', palavras: ['Nós','treinamos','toda','semana','cedo'], lacunas: [] },
+  { nivel: 'facil', tema: 'esportes', palavras: ['O','time','comemorou','o','gol'], lacunas: [] },
+
+  /* ============ NÍVEL MÉDIO · 20 frases · 7-9 palavras · só ordem ============ */
+  /* Animais · 4 */
+  { nivel: 'medio', tema: 'animais', palavras: ['A','onça-pintada','vive','nas','florestas','tropicais','do','Brasil'], lacunas: [] },
+  { nivel: 'medio', tema: 'animais', palavras: ['Os','tucanos','têm','bicos','grandes','e','muito','coloridos'], lacunas: [] },
+  { nivel: 'medio', tema: 'animais', palavras: ['As','formigas','trabalham','em','grupo','para','construir','formigueiros'], lacunas: [] },
+  { nivel: 'medio', tema: 'animais', palavras: ['O','beija-flor','consegue','voar','para','trás','com','facilidade'], lacunas: [] },
+  /* Escola · 4 */
+  { nivel: 'medio', tema: 'escola', palavras: ['Os','alunos','apresentaram','o','trabalho','de','história','hoje'], lacunas: [] },
+  { nivel: 'medio', tema: 'escola', palavras: ['A','biblioteca','da','escola','tem','muitos','livros','novos'], lacunas: [] },
+  { nivel: 'medio', tema: 'escola', palavras: ['Nós','aprendemos','sobre','o','sistema','solar','na','aula'], lacunas: [] },
+  { nivel: 'medio', tema: 'escola', palavras: ['A','professora','corrigiu','as','redações','com','muita','atenção'], lacunas: [] },
+  /* Família · 4 */
+  { nivel: 'medio', tema: 'familia', palavras: ['Minha','tia','viaja','para','o','litoral','todo','verão'], lacunas: [] },
+  { nivel: 'medio', tema: 'familia', palavras: ['O','meu','irmão','mais','novo','aprendeu','a','andar'], lacunas: [] },
+  { nivel: 'medio', tema: 'familia', palavras: ['A','vovó','preparou','um','bolo','delicioso','para','nós'], lacunas: [] },
+  { nivel: 'medio', tema: 'familia', palavras: ['Nós','jantamos','todos','juntos','na','sala','da','casa'], lacunas: [] },
+  /* Ciência · 4 */
+  { nivel: 'medio', tema: 'ciencia', palavras: ['A','água','muda','de','estado','físico','com','temperatura'], lacunas: [] },
+  { nivel: 'medio', tema: 'ciencia', palavras: ['As','plantas','produzem','seu','alimento','através','da','fotossíntese'], lacunas: [] },
+  { nivel: 'medio', tema: 'ciencia', palavras: ['A','Lua','gira','ao','redor','do','planeta','Terra'], lacunas: [] },
+  { nivel: 'medio', tema: 'ciencia', palavras: ['Os','vulcões','liberam','lava','quente','do','interior','terrestre'], lacunas: [] },
+  /* Esportes · 4 */
+  { nivel: 'medio', tema: 'esportes', palavras: ['O','goleiro','defendeu','o','pênalti','no','final','do','jogo'], lacunas: [] },
+  { nivel: 'medio', tema: 'esportes', palavras: ['Os','atletas','treinam','muitas','horas','para','as','competições'], lacunas: [] },
+  { nivel: 'medio', tema: 'esportes', palavras: ['A','equipe','brasileira','conquistou','a','medalha','de','ouro'], lacunas: [] },
+  { nivel: 'medio', tema: 'esportes', palavras: ['O','tênis','é','um','esporte','praticado','no','mundo','inteiro'], lacunas: [] },
+
+];
+/* NÍVEIS DIFÍCIL e EXPERT · com lacunas de concordância */
+
+FRASES.push(
+
+  /* ============ NÍVEL DIFÍCIL · 20 frases · 8-10 palavras · 1 lacuna ============ */
+  /* Lacuna trabalha CONCORDÂNCIA verbal ou nominal */
+
+  /* Animais · 4 */
+  { nivel: 'dificil', tema: 'animais', palavras: ['Os','golfinhos','são','animais','muito','inteligentes','e','sociáveis'],
+    lacunas: [{ idx: 2, opcoes: ['são','é'] }] },
+  { nivel: 'dificil', tema: 'animais', palavras: ['As','baleias','jubarte','migram','milhares','de','quilômetros','todo','ano'],
+    lacunas: [{ idx: 3, opcoes: ['migram','migra'] }] },
+  { nivel: 'dificil', tema: 'animais', palavras: ['O','tamanduá-bandeira','utiliza','sua','língua','comprida','para','capturar','formigas'],
+    lacunas: [{ idx: 3, opcoes: ['sua','suas'] }] },
+  { nivel: 'dificil', tema: 'animais', palavras: ['As','araras','azuis','vivem','em','bandos','nas','matas','brasileiras'],
+    lacunas: [{ idx: 3, opcoes: ['vivem','vive'] }] },
+
+  /* Escola · 4 */
+  { nivel: 'dificil', tema: 'escola', palavras: ['Os','professores','organizaram','uma','feira','de','ciências','na','escola'],
+    lacunas: [{ idx: 2, opcoes: ['organizaram','organizou'] }] },
+  { nivel: 'dificil', tema: 'escola', palavras: ['As','crianças','aprenderam','a','letra','da','música','com','alegria'],
+    lacunas: [{ idx: 2, opcoes: ['aprenderam','aprenderão'] }] },
+  { nivel: 'dificil', tema: 'escola', palavras: ['A','diretora','recebeu','os','pais','para','uma','reunião','importante'],
+    lacunas: [{ idx: 2, opcoes: ['recebeu','receberam'] }] },
+  { nivel: 'dificil', tema: 'escola', palavras: ['Os','livros','novos','chegaram','à','biblioteca','na','semana','passada'],
+    lacunas: [{ idx: 3, opcoes: ['chegaram','chegou'] }] },
+
+  /* Família · 4 */
+  { nivel: 'dificil', tema: 'familia', palavras: ['Meus','primos','vieram','passar','as','férias','na','nossa','casa'],
+    lacunas: [{ idx: 2, opcoes: ['vieram','veio'] }] },
+  { nivel: 'dificil', tema: 'familia', palavras: ['As','minhas','tias','prepararam','um','jantar','especial','de','aniversário'],
+    lacunas: [{ idx: 3, opcoes: ['prepararam','preparou'] }] },
+  { nivel: 'dificil', tema: 'familia', palavras: ['O','avô','contou','suas','histórias','de','quando','era','criança'],
+    lacunas: [{ idx: 3, opcoes: ['suas','sua'] }] },
+  { nivel: 'dificil', tema: 'familia', palavras: ['Nossos','irmãos','foram','ao','parque','brincar','no','fim','de','semana'],
+    lacunas: [{ idx: 2, opcoes: ['foram','foi'] }] },
+
+  /* Ciência · 4 */
+  { nivel: 'dificil', tema: 'ciencia', palavras: ['Os','planetas','do','sistema','solar','giram','em','torno','do','Sol'],
+    lacunas: [{ idx: 5, opcoes: ['giram','gira'] }] },
+  { nivel: 'dificil', tema: 'ciencia', palavras: ['As','células','formam','todos','os','tecidos','do','corpo','humano'],
+    lacunas: [{ idx: 2, opcoes: ['formam','forma'] }] },
+  { nivel: 'dificil', tema: 'ciencia', palavras: ['O','calor','do','Sol','faz','a','água','dos','oceanos','evaporar'],
+    lacunas: [{ idx: 4, opcoes: ['faz','fazem'] }] },
+  { nivel: 'dificil', tema: 'ciencia', palavras: ['Os','ecossistemas','brasileiros','possuem','uma','biodiversidade','enorme','e','riquíssima'],
+    lacunas: [{ idx: 3, opcoes: ['possuem','possui'] }] },
+
+  /* Esportes · 4 */
+  { nivel: 'dificil', tema: 'esportes', palavras: ['Os','atletas','olímpicos','treinaram','muitos','anos','para','essa','competição'],
+    lacunas: [{ idx: 3, opcoes: ['treinaram','treinou'] }] },
+  { nivel: 'dificil', tema: 'esportes', palavras: ['A','seleção','brasileira','conquistou','seu','primeiro','título','mundial','em','1958'],
+    lacunas: [{ idx: 3, opcoes: ['conquistou','conquistaram'] }] },
+  { nivel: 'dificil', tema: 'esportes', palavras: ['As','jogadoras','marcaram','três','gols','no','segundo','tempo','do','jogo'],
+    lacunas: [{ idx: 2, opcoes: ['marcaram','marcou'] }] },
+  { nivel: 'dificil', tema: 'esportes', palavras: ['O','vôlei','de','praia','exige','muita','força','e','agilidade','dos','atletas'],
+    lacunas: [{ idx: 4, opcoes: ['exige','exigem'] }] },
+
+  /* ============ NÍVEL EXPERT · 20 frases · 10-13 palavras · 2 lacunas ============ */
+
+  /* Animais · 4 */
+  { nivel: 'expert', tema: 'animais', palavras: ['As','onças-pintadas','são','predadoras','de','topo','que','habitam','as','florestas','tropicais'],
+    lacunas: [
+      { idx: 2, opcoes: ['são','é'] },
+      { idx: 7, opcoes: ['habitam','habita'] }
+    ] },
+  { nivel: 'expert', tema: 'animais', palavras: ['Os','botos-rosa','vivem','exclusivamente','em','rios','de','água','doce','da','região','amazônica'],
+    lacunas: [
+      { idx: 2, opcoes: ['vivem','vive'] },
+      { idx: 8, opcoes: ['doce','doces'] }
+    ] },
+  { nivel: 'expert', tema: 'animais', palavras: ['As','aves','migratórias','percorrem','enormes','distâncias','seguindo','as','estações','do','ano'],
+    lacunas: [
+      { idx: 3, opcoes: ['percorrem','percorre'] },
+      { idx: 7, opcoes: ['as','os'] }
+    ] },
+  { nivel: 'expert', tema: 'animais', palavras: ['Os','filhotes','de','tartaruga','nascem','nas','praias','e','correm','para','o','mar'],
+    lacunas: [
+      { idx: 4, opcoes: ['nascem','nasce'] },
+      { idx: 8, opcoes: ['correm','corre'] }
+    ] },
+
+  /* Escola · 4 */
+  { nivel: 'expert', tema: 'escola', palavras: ['Os','estudantes','do','ensino','médio','realizaram','experiências','interessantes','no','laboratório','de','química'],
+    lacunas: [
+      { idx: 5, opcoes: ['realizaram','realizou'] },
+      { idx: 6, opcoes: ['experiências','experiência'] }
+    ] },
+  { nivel: 'expert', tema: 'escola', palavras: ['As','novas','tecnologias','transformaram','completamente','a','forma','como','aprendemos','dentro','da','escola'],
+    lacunas: [
+      { idx: 3, opcoes: ['transformaram','transformou'] },
+      { idx: 8, opcoes: ['aprendemos','aprende'] }
+    ] },
+  { nivel: 'expert', tema: 'escola', palavras: ['Os','livros','didáticos','foram','distribuídos','aos','alunos','no','primeiro','dia','de','aula'],
+    lacunas: [
+      { idx: 3, opcoes: ['foram','foi'] },
+      { idx: 4, opcoes: ['distribuídos','distribuído'] }
+    ] },
+  { nivel: 'expert', tema: 'escola', palavras: ['A','professora','sugeriu','que','os','alunos','escrevessem','suas','redações','sobre','o','meio','ambiente'],
+    lacunas: [
+      { idx: 6, opcoes: ['escrevessem','escreveriam'] },
+      { idx: 7, opcoes: ['suas','sua'] }
+    ] },
+
+  /* Família · 4 */
+  { nivel: 'expert', tema: 'familia', palavras: ['Os','meus','parentes','organizaram','uma','grande','festa','para','comemorar','o','aniversário','da','vovó'],
+    lacunas: [
+      { idx: 3, opcoes: ['organizaram','organizou'] },
+      { idx: 5, opcoes: ['grande','grandes'] }
+    ] },
+  { nivel: 'expert', tema: 'familia', palavras: ['As','minhas','sobrinhas','aprenderam','a','tocar','piano','com','a','professora','de','música'],
+    lacunas: [
+      { idx: 3, opcoes: ['aprenderam','aprendeu'] },
+      { idx: 8, opcoes: ['a','o'] }
+    ] },
+  { nivel: 'expert', tema: 'familia', palavras: ['Os','primos','de','São','Paulo','vieram','passar','o','feriado','com','toda','a','nossa','família'],
+    lacunas: [
+      { idx: 5, opcoes: ['vieram','veio'] },
+      { idx: 12, opcoes: ['nossa','nosso'] }
+    ] },
+  { nivel: 'expert', tema: 'familia', palavras: ['A','família','reuniu-se','em','volta','da','mesa','para','compartilhar','as','novidades','da','semana'],
+    lacunas: [
+      { idx: 2, opcoes: ['reuniu-se','reuniram-se'] },
+      { idx: 9, opcoes: ['as','os'] }
+    ] },
+
+  /* Ciência · 4 */
+  { nivel: 'expert', tema: 'ciencia', palavras: ['Os','cientistas','descobriram','novas','espécies','de','plantas','no','interior','da','floresta','amazônica'],
+    lacunas: [
+      { idx: 2, opcoes: ['descobriram','descobriu'] },
+      { idx: 4, opcoes: ['espécies','espécie'] }
+    ] },
+  { nivel: 'expert', tema: 'ciencia', palavras: ['As','correntes','marítimas','influenciam','diretamente','o','clima','das','regiões','litorâneas','do','planeta'],
+    lacunas: [
+      { idx: 3, opcoes: ['influenciam','influencia'] },
+      { idx: 8, opcoes: ['regiões','região'] }
+    ] },
+  { nivel: 'expert', tema: 'ciencia', palavras: ['Os','átomos','são','as','menores','partículas','que','compõem','toda','a','matéria','do','universo'],
+    lacunas: [
+      { idx: 2, opcoes: ['são','é'] },
+      { idx: 7, opcoes: ['compõem','compõe'] }
+    ] },
+  { nivel: 'expert', tema: 'ciencia', palavras: ['A','energia','solar','é','uma','fonte','limpa','renovável','que','beneficia','o','meio','ambiente'],
+    lacunas: [
+      { idx: 3, opcoes: ['é','são'] },
+      { idx: 9, opcoes: ['beneficia','beneficiam'] }
+    ] },
+
+  /* Esportes · 4 */
+  { nivel: 'expert', tema: 'esportes', palavras: ['Os','jogadores','brasileiros','comemoraram','a','vitória','com','muita','emoção','na','final','do','campeonato'],
+    lacunas: [
+      { idx: 3, opcoes: ['comemoraram','comemorou'] },
+      { idx: 7, opcoes: ['muita','muitas'] }
+    ] },
+  { nivel: 'expert', tema: 'esportes', palavras: ['As','ginastas','olímpicas','executaram','movimentos','impressionantes','durante','toda','a','apresentação','no','tatame'],
+    lacunas: [
+      { idx: 3, opcoes: ['executaram','executou'] },
+      { idx: 4, opcoes: ['movimentos','movimento'] }
+    ] },
+  { nivel: 'expert', tema: 'esportes', palavras: ['Os','torcedores','aplaudiram','a','equipe','quando','os','jogadores','entraram','no','gramado','do','estádio'],
+    lacunas: [
+      { idx: 2, opcoes: ['aplaudiram','aplaudiu'] },
+      { idx: 8, opcoes: ['entraram','entrou'] }
+    ] },
+  { nivel: 'expert', tema: 'esportes', palavras: ['A','natação','é','um','esporte','completo','que','exercita','todos','os','músculos','do','corpo'],
+    lacunas: [
+      { idx: 2, opcoes: ['é','são'] },
+      { idx: 7, opcoes: ['exercita','exercitam'] }
+    ] }
+
+);
+/* ============================================================
+ * CONSTRUTOR DE FRASES · Portal do Educador NEWPC
+ * Mascote: Letrágrafo (pinguim escritor)
+ * ============================================================ */
+
+function svgMascote(expressao = 'normal') {
+  let olhos;
+  if (expressao === 'feliz') {
+    olhos = `
+      <path d="M 36 44 Q 41 39, 46 44" fill="none" stroke="#1F2937" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M 54 44 Q 59 39, 64 44" fill="none" stroke="#1F2937" stroke-width="2.2" stroke-linecap="round"/>
+    `;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <circle cx="41" cy="46" r="5" fill="white" stroke="#1F2937" stroke-width="1.2"/>
+      <circle cx="59" cy="46" r="5" fill="white" stroke="#1F2937" stroke-width="1.2"/>
+      <circle cx="41" cy="47" r="2" fill="#1F2937"/>
+      <circle cx="59" cy="47" r="2" fill="#1F2937"/>
+    `;
+  } else if (expressao === 'surpresa') {
+    olhos = `
+      <ellipse cx="41" cy="46" rx="6" ry="7" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <ellipse cx="59" cy="46" rx="6" ry="7" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <circle cx="41" cy="47" r="2.5" fill="#1F2937"/>
+      <circle cx="59" cy="47" r="2.5" fill="#1F2937"/>
+    `;
+  } else {
+    olhos = `
+      <circle cx="41" cy="46" r="5.5" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <circle cx="59" cy="46" r="5.5" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <circle cx="41" cy="47" r="2.5" fill="#1F2937"/>
+      <circle cx="59" cy="47" r="2.5" fill="#1F2937"/>
+      <circle cx="42" cy="45" r="1" fill="white"/>
+      <circle cx="60" cy="45" r="1" fill="white"/>
+    `;
+  }
+
+  return `
+    <!-- Sombra -->
+    <ellipse cx="50" cy="93" rx="28" ry="2.5" fill="rgba(0,0,0,0.2)"/>
+    <!-- Corpo pinguim (oval preto) -->
+    <ellipse cx="50" cy="58" rx="30" ry="32" fill="#1F2937" stroke="#0F172A" stroke-width="2"/>
+    <!-- Barriga branca -->
+    <ellipse cx="50" cy="63" rx="20" ry="24" fill="white"/>
+    <!-- Cabeça -->
+    <ellipse cx="50" cy="42" rx="26" ry="22" fill="#1F2937" stroke="#0F172A" stroke-width="1.8"/>
+    <!-- Rosto branco interno -->
+    <ellipse cx="50" cy="46" rx="18" ry="14" fill="white"/>
+    <!-- Óculos (armação) -->
+    <circle cx="41" cy="46" r="8" fill="none" stroke="#1F2937" stroke-width="2.2"/>
+    <circle cx="59" cy="46" r="8" fill="none" stroke="#1F2937" stroke-width="2.2"/>
+    <line x1="49" y1="46" x2="51" y2="46" stroke="#1F2937" stroke-width="2.2"/>
+    <line x1="33" y1="44" x2="29" y2="42" stroke="#1F2937" stroke-width="2"/>
+    <line x1="67" y1="44" x2="71" y2="42" stroke="#1F2937" stroke-width="2"/>
+    <!-- Olhos -->
+    ${olhos}
+    <!-- Bico laranja -->
+    <path d="M 46 54 L 50 60 L 54 54 Z" fill="#F97316" stroke="#C2410C" stroke-width="1"/>
+    <!-- Bochechas -->
+    <ellipse cx="30" cy="54" rx="2.5" ry="2" fill="#FB7185" opacity="0.5"/>
+    <ellipse cx="70" cy="54" rx="2.5" ry="2" fill="#FB7185" opacity="0.5"/>
+    <!-- Asa esquerda segurando caneta -->
+    <ellipse cx="22" cy="62" rx="5" ry="12" fill="#1F2937" stroke="#0F172A" stroke-width="1.5" transform="rotate(-10 22 62)"/>
+    <!-- Asa direita -->
+    <ellipse cx="78" cy="62" rx="5" ry="12" fill="#1F2937" stroke="#0F172A" stroke-width="1.5" transform="rotate(10 78 62)"/>
+    <!-- CANETA-TINTEIRO segurada pela asa esquerda -->
+    <rect x="15" y="55" width="20" height="6" fill="#DB2777" stroke="#831843" stroke-width="1.2" rx="1" transform="rotate(-25 25 58)"/>
+    <!-- Ponta da caneta -->
+    <path d="M 13 54 L 11 56 L 13 58 Z" fill="#FBBF24" stroke="#92400E" stroke-width="1" transform="rotate(-25 13 56)"/>
+    <!-- Detalhe dourado da caneta -->
+    <rect x="20" y="55" width="2" height="6" fill="#FBBF24" transform="rotate(-25 21 58)"/>
+    <!-- Patinhas laranjas -->
+    <ellipse cx="40" cy="89" rx="5" ry="2.5" fill="#F97316" stroke="#C2410C" stroke-width="1.2"/>
+    <ellipse cx="60" cy="89" rx="5" ry="2.5" fill="#F97316" stroke="#C2410C" stroke-width="1.2"/>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* CONFIGURAÇÕES */
+const MODOS = {
+  individual:  { emoji: '👤', titulo: 'Individual', desc: 'Sem pressão de tempo' },
+  professor:   { emoji: '👨‍🏫', titulo: 'Professor', desc: 'Lousa, turma colabora' },
+  relogio:     { emoji: '⏱️', titulo: 'Contra o relógio', desc: 'Máximo de frases no tempo' },
+  competitivo: { emoji: '🏆', titulo: 'Competitivo', desc: '2-4 jogadores se revezam' }
+};
+
+const NIVEIS = {
+  facil:    { emoji: '🌱', titulo: 'Fácil',   desc: '5-6 palavras, só ordem', pontos: 2 },
+  medio:    { emoji: '🌿', titulo: 'Médio',   desc: '7-9 palavras, só ordem', pontos: 4 },
+  dificil:  { emoji: '🌳', titulo: 'Difícil', desc: '8-10 palavras + 1 lacuna', pontos: 6 },
+  expert:   { emoji: '🏆', titulo: 'Expert',  desc: '10-13 palavras + 2 lacunas', pontos: 8 }
+};
+
+const TEMAS = {
+  todos:    { emoji: '🌎', nome: 'Todos' },
+  animais:  { emoji: '🐾', nome: 'Animais' },
+  escola:   { emoji: '🏫', nome: 'Escola' },
+  familia:  { emoji: '👨‍👩‍👧', nome: 'Família' },
+  ciencia:  { emoji: '🔬', nome: 'Ciência' },
+  esportes: { emoji: '⚽', nome: 'Esportes' }
+};
+
+const TEMPOS = {
+  1: '1 min', 3: '3 min', 5: '5 min', 7: '7 min', 10: '10 min'
+};
+
+const CORES_PINOS = [
+  { fundo: '#DC2626', nome: 'Vermelho' },
+  { fundo: '#2563EB', nome: 'Azul' },
+  { fundo: '#16A34A', nome: 'Verde' },
+  { fundo: '#F59E0B', nome: 'Amarelo' }
+];
+
+const RODADAS_PADRAO = 5; // pra modos individual/professor/competitivo
+const ELOGIOS = ['Perfeito!', 'Mandou bem!', 'Excelente!', 'Sintaxe afiada!', 'Construção impecável!'];
+const INCENTIVOS = ['Quase! Tenta de novo na próxima.', 'Continue tentando!', 'Foco na ordem!', 'A próxima é sua!'];
+
+const STATE = {
+  modo: null,
+  qtdJogadores: 2,
+  nomes: ['Jogador 1','Jogador 2','Jogador 3','Jogador 4'],
+  nivel: null,
+  tema: 'todos',
+  tempoMin: 5,
+  partida: {
+    ativa: false,
+    rodada: 1,
+    rodadaMax: RODADAS_PADRAO,
+    jogadores: [],
+    vezAtual: 0,
+    fraseAtual: null,    // objeto FRASES
+    slots: [],           // [{ palavra, lacunaIdx, opcoesEscolhida }]
+    palavrasBanco: [],   // [{ texto, originalIdx, usada }]
+    poolUsado: [],
+    fase: null,          // 'montando' | 'feedback'
+    respondeu: false,
+    tempoSeg: 0,
+    timerInterval: null,
+    lacunasEscolhidas: {} // { idxSlot: textoEscolhido }
+  }
+};
+
+function salvar() {
+  try {
+    localStorage.setItem('pde_frases_dados', JSON.stringify({
+      modo: STATE.modo, qtdJogadores: STATE.qtdJogadores, nomes: STATE.nomes,
+      nivel: STATE.nivel, tema: STATE.tema, tempoMin: STATE.tempoMin
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_frases_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.modo) STATE.modo = d.modo;
+    if (d.qtdJogadores) STATE.qtdJogadores = d.qtdJogadores;
+    if (Array.isArray(d.nomes)) STATE.nomes = d.nomes;
+    if (d.nivel) STATE.nivel = d.nivel;
+    if (d.tema) STATE.tema = d.tema;
+    if (d.tempoMin) STATE.tempoMin = d.tempoMin;
+  } catch (e) {}
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function elogio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivo() { return INCENTIVOS[Math.floor(Math.random() * INCENTIVOS.length)]; }
+
+/* POOL FILTRADO */
+function poolAtivo() {
+  let pool = FRASES.slice();
+  if (STATE.nivel) pool = pool.filter(f => f.nivel === STATE.nivel);
+  if (STATE.tema !== 'todos') pool = pool.filter(f => f.tema === STATE.tema);
+  return pool;
+}
+
+/* LOBBY */
+function renderLobby() {
+  // Modos
+  const modoCont = document.getElementById('modo-grid');
+  modoCont.innerHTML = '';
+  Object.entries(MODOS).forEach(([key, m]) => {
+    const card = document.createElement('div');
+    card.className = 'modo-card' + (STATE.modo === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="modo-emoji">${m.emoji}</span>
+      <div class="modo-titulo">${m.titulo}</div>
+      <div class="modo-desc">${m.desc}</div>
+    `;
+    card.onclick = () => { STATE.modo = key; salvar(); renderLobby(); };
+    modoCont.appendChild(card);
+  });
+
+  // Qtd e nomes (só competitivo)
+  const qtdArea = document.getElementById('qtd-area');
+  const jogArea = document.getElementById('jogadores-area');
+  if (STATE.modo === 'competitivo') {
+    qtdArea.classList.add('ativo');
+    jogArea.classList.add('ativo');
+    const grid = document.getElementById('qtd-grid');
+    grid.innerHTML = '';
+    [2,3,4].forEach(n => {
+      const c = document.createElement('div');
+      c.className = 'qtd-card' + (STATE.qtdJogadores === n ? ' selecionado' : '');
+      c.innerHTML = `<span class="qtd-emoji">👥</span><span class="qtd-num">${n}</span>`;
+      c.onclick = () => { STATE.qtdJogadores = n; salvar(); renderLobby(); };
+      grid.appendChild(c);
+    });
+    const jgrid = document.getElementById('jogadores-grid');
+    jgrid.innerHTML = '';
+    for (let i = 0; i < STATE.qtdJogadores; i++) {
+      const pino = document.createElement('div');
+      pino.className = 'pino-mini';
+      pino.style.background = CORES_PINOS[i].fundo;
+      pino.textContent = (i+1);
+      const inp = document.createElement('input');
+      inp.type = 'text'; inp.maxLength = 20;
+      inp.value = STATE.nomes[i] || `Jogador ${i+1}`;
+      inp.oninput = (e) => { STATE.nomes[i] = e.target.value; salvar(); };
+      jgrid.appendChild(pino);
+      jgrid.appendChild(inp);
+    }
+  } else {
+    qtdArea.classList.remove('ativo');
+    jogArea.classList.remove('ativo');
+  }
+
+  // Tempo (só modo relógio)
+  const tempoArea = document.getElementById('tempo-area');
+  if (STATE.modo === 'relogio') {
+    tempoArea.classList.add('ativo');
+    const grid = document.getElementById('tempo-grid');
+    grid.innerHTML = '';
+    Object.entries(TEMPOS).forEach(([min, label]) => {
+      const minN = parseInt(min);
+      const c = document.createElement('div');
+      c.className = 'tempo-card' + (STATE.tempoMin === minN ? ' selecionado' : '');
+      c.textContent = label;
+      c.onclick = () => { STATE.tempoMin = minN; salvar(); renderLobby(); };
+      grid.appendChild(c);
+    });
+  } else {
+    tempoArea.classList.remove('ativo');
+  }
+
+  // Nível
+  const nivCont = document.getElementById('nivel-grid');
+  nivCont.innerHTML = '';
+  Object.entries(NIVEIS).forEach(([key, n]) => {
+    const card = document.createElement('div');
+    card.className = 'nivel-card' + (STATE.nivel === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="nivel-emoji">${n.emoji}</span>
+      <div class="nivel-titulo">${n.titulo}</div>
+      <div class="nivel-desc">${n.desc}</div>
+    `;
+    card.onclick = () => { STATE.nivel = key; salvar(); renderLobby(); };
+    nivCont.appendChild(card);
+  });
+
+  // Tema
+  const temaCont = document.getElementById('tema-grid');
+  temaCont.innerHTML = '';
+  Object.entries(TEMAS).forEach(([key, t]) => {
+    const card = document.createElement('div');
+    card.className = 'tema-card' + (STATE.tema === key ? ' selecionado' : '');
+    card.innerHTML = `<span class="t-emoji">${t.emoji}</span>${t.nome}`;
+    card.onclick = () => { STATE.tema = key; salvar(); renderLobby(); };
+    temaCont.appendChild(card);
+  });
+
+  // Info pool
+  const pool = poolAtivo();
+  const elPool = document.getElementById('info-pool');
+  if (!STATE.nivel) {
+    elPool.innerHTML = '👉 Escolha um nível pra continuar';
+  } else if (pool.length === 0) {
+    elPool.innerHTML = `⚠️ <b>Nenhuma frase</b> com esse filtro - troque o tema`;
+  } else {
+    elPool.innerHTML = `📝 <b>${pool.length} frases</b> disponíveis nesse nível/tema`;
+  }
+
+  // Botão
+  const btn = document.getElementById('btn-comecar');
+  const podeComecar = STATE.modo && STATE.nivel && pool.length > 0;
+  btn.disabled = !podeComecar;
+  if (!STATE.modo)        btn.textContent = '📝 Escolha um modo';
+  else if (!STATE.nivel)  btn.textContent = '📝 Escolha um nível';
+  else if (pool.length === 0) btn.textContent = '⚠️ Sem frases pra esse filtro';
+  else                    btn.textContent = `📝 Começar (${MODOS[STATE.modo].titulo} · ${NIVEIS[STATE.nivel].titulo})`;
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+/* INICIAR PARTIDA */
+function comecarJogo() {
+  if (!STATE.modo || !STATE.nivel) return;
+  const pool = poolAtivo();
+  if (pool.length === 0) return;
+
+  STATE.partida.jogadores = [];
+  if (STATE.modo === 'individual' || STATE.modo === 'relogio') {
+    STATE.partida.jogadores.push({ idx: 0, nome: 'Você', pontos: 0, acertos: 0 });
+  } else if (STATE.modo === 'professor') {
+    STATE.partida.jogadores.push({ idx: 0, nome: 'Turma', pontos: 0, acertos: 0 });
+  } else { // competitivo
+    for (let i = 0; i < STATE.qtdJogadores; i++) {
+      STATE.partida.jogadores.push({
+        idx: i,
+        nome: STATE.nomes[i] || `Jogador ${i+1}`,
+        pontos: 0, acertos: 0
+      });
+    }
+  }
+
+  STATE.partida.rodada = 1;
+  STATE.partida.rodadaMax = STATE.modo === 'relogio' ? 999 : RODADAS_PADRAO;
+  STATE.partida.vezAtual = 0;
+  STATE.partida.poolUsado = [];
+  STATE.partida.ativa = true;
+
+  // Cronômetro pro modo relógio
+  if (STATE.modo === 'relogio') {
+    STATE.partida.tempoSeg = STATE.tempoMin * 60;
+    iniciarCronometro();
+    document.getElementById('cronometro').classList.remove('hidden');
+  } else {
+    document.getElementById('cronometro').classList.add('hidden');
+  }
+
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('jogo').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+
+  prepararRodada();
+}
+
+function jogadorAtual() {
+  return STATE.partida.jogadores[STATE.partida.vezAtual];
+}
+
+function iniciarCronometro() {
+  if (STATE.partida.timerInterval) clearInterval(STATE.partida.timerInterval);
+  atualizarCronometro();
+  STATE.partida.timerInterval = setInterval(() => {
+    STATE.partida.tempoSeg--;
+    atualizarCronometro();
+    if (STATE.partida.tempoSeg <= 0) {
+      clearInterval(STATE.partida.timerInterval);
+      encerrarPartida();
+    }
+  }, 1000);
+}
+
+function atualizarCronometro() {
+  const el = document.getElementById('cronometro');
+  if (!el) return;
+  const min = Math.floor(STATE.partida.tempoSeg / 60);
+  const seg = STATE.partida.tempoSeg % 60;
+  el.textContent = `${min}:${seg.toString().padStart(2,'0')}`;
+  if (STATE.partida.tempoSeg <= 30) el.classList.add('urgente');
+  else el.classList.remove('urgente');
+}
+
+function prepararRodada() {
+  const pool = poolAtivo();
+  let disponiveis = pool.map((f, i) => ({ f, i })).filter(o => !STATE.partida.poolUsado.includes(o.i));
+  if (disponiveis.length === 0) {
+    STATE.partida.poolUsado = [];
+    disponiveis = pool.map((f, i) => ({ f, i }));
+  }
+  const escolhido = disponiveis[Math.floor(Math.random() * disponiveis.length)];
+  STATE.partida.fraseAtual = escolhido.f;
+  STATE.partida.poolUsado.push(escolhido.i);
+
+  // Montar slots e banco
+  STATE.partida.slots = [];
+  STATE.partida.lacunasEscolhidas = {};
+  const lacunaIdxs = (escolhido.f.lacunas || []).map(l => l.idx);
+  escolhido.f.palavras.forEach((p, i) => {
+    const lacuna = (escolhido.f.lacunas || []).find(l => l.idx === i);
+    STATE.partida.slots.push({
+      idxOriginal: i,
+      palavraCorreta: p,
+      palavraAtual: null,        // texto que está no slot agora
+      ehLacuna: !!lacuna,
+      opcoesLacuna: lacuna ? shuffle(lacuna.opcoes) : null
+    });
+  });
+
+  // Banco de palavras: somente posições SEM lacuna, embaralhadas
+  const palavrasNaoLacuna = escolhido.f.palavras
+    .map((p, i) => ({ texto: p, idxOriginal: i }))
+    .filter(o => !lacunaIdxs.includes(o.idxOriginal));
+  STATE.partida.palavrasBanco = shuffle(palavrasNaoLacuna).map((o, idx) => ({
+    ...o,
+    bancoIdx: idx,
+    usada: false,
+    slotIdx: null
+  }));
+
+  STATE.partida.fase = 'montando';
+  STATE.partida.respondeu = false;
+
+  atualizarCabecalho();
+  renderSlots();
+  renderBanco();
+  renderPlacar();
+  atualizarInfoLateral();
+  document.getElementById('feedback-area').innerHTML = '';
+  document.getElementById('acoes-jogo').classList.remove('hidden');
+  renderMascote('svg-mascote-painel', 'pensando');
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Letrágrafo:</b> Arraste as palavras na ordem certa!`;
+}
+
+function atualizarCabecalho() {
+  const j = jogadorAtual();
+  if (!j) return;
+  document.getElementById('pino-vez').textContent = j.idx + 1;
+  document.getElementById('pino-vez').style.background = CORES_PINOS[j.idx].fundo;
+  document.getElementById('nome-vez').textContent = `Vez de ${j.nome}`;
+  const txt = STATE.modo === 'relogio' ? `Frase ${STATE.partida.rodada}` : `Frase ${STATE.partida.rodada}/${STATE.partida.rodadaMax}`;
+  document.getElementById('info-rodada-cab').textContent = txt;
+}
+
+function atualizarInfoLateral() {
+  const j = jogadorAtual();
+  if (!j) return;
+  const txt = STATE.modo === 'relogio' ? `${STATE.partida.rodada}` : `${STATE.partida.rodada}/${STATE.partida.rodadaMax}`;
+  document.getElementById('frase-info-side').textContent = txt;
+  document.getElementById('acertos-info').textContent = j.acertos;
+  document.getElementById('nivel-info').textContent = NIVEIS[STATE.nivel].titulo;
+}
+
+function renderSlots() {
+  const cont = document.getElementById('slots-frase');
+  cont.innerHTML = '';
+  STATE.partida.slots.forEach((slot, idx) => {
+    const el = document.createElement('div');
+    el.className = 'slot-frase';
+    el.dataset.slotIdx = idx;
+
+    if (slot.ehLacuna) {
+      el.classList.add('lacuna');
+      el.innerHTML = '<div class="lacuna-opcoes"></div>';
+      const opcoesCont = el.querySelector('.lacuna-opcoes');
+      slot.opcoesLacuna.forEach(op => {
+        const btn = document.createElement('button');
+        btn.className = 'lacuna-opcao';
+        btn.textContent = op;
+        btn.onclick = (e) => { e.stopPropagation(); escolherLacuna(idx, op, btn); };
+        if (STATE.partida.lacunasEscolhidas[idx] === op) btn.classList.add('selecionada');
+        opcoesCont.appendChild(btn);
+      });
+    } else if (slot.palavraAtual) {
+      el.classList.add('preenchido');
+      el.textContent = slot.palavraAtual;
+      el.onclick = () => removerPalavraDoSlot(idx);
+    } else {
+      el.innerHTML = '<span style="opacity:0.4">___</span>';
+      // Drop target
+      el.ondragover = (e) => { e.preventDefault(); el.classList.add('drag-over'); };
+      el.ondragleave = () => el.classList.remove('drag-over');
+      el.ondrop = (e) => {
+        e.preventDefault();
+        el.classList.remove('drag-over');
+        const bancoIdx = parseInt(e.dataTransfer.getData('bancoIdx'));
+        encaixarPalavra(bancoIdx, idx);
+      };
+      // Tap-to-place: clica em slot vazio depois de selecionar palavra
+      el.onclick = () => { if (STATE.palavraSelecionada !== undefined) tapEncaixar(idx); };
+    }
+
+    cont.appendChild(el);
+  });
+
+  // Verificar se já pode verificar
+  const podeVerificar = STATE.partida.slots.every(s =>
+    (s.ehLacuna && STATE.partida.lacunasEscolhidas[STATE.partida.slots.indexOf(s)] !== undefined) ||
+    (!s.ehLacuna && s.palavraAtual)
+  );
+  document.getElementById('btn-verificar').disabled = !podeVerificar;
+}
+
+function renderBanco() {
+  const cont = document.getElementById('palavras-banco');
+  cont.innerHTML = '';
+  STATE.partida.palavrasBanco.forEach(p => {
+    const chip = document.createElement('div');
+    chip.className = 'palavra-chip';
+    if (p.usada) chip.classList.add('invisivel');
+    chip.dataset.bancoIdx = p.bancoIdx;
+    chip.textContent = p.texto;
+    chip.draggable = true;
+
+    // Desktop: drag-and-drop nativo
+    chip.ondragstart = (e) => {
+      e.dataTransfer.setData('bancoIdx', p.bancoIdx);
+      chip.classList.add('arrastando');
+    };
+    chip.ondragend = () => chip.classList.remove('arrastando');
+
+    // Mobile/touch: tap-to-select
+    chip.onclick = () => {
+      if (p.usada) return;
+      // Toggle de seleção
+      if (STATE.palavraSelecionada === p.bancoIdx) {
+        STATE.palavraSelecionada = undefined;
+        chip.style.outline = '';
+      } else {
+        // Limpa outras seleções visuais
+        document.querySelectorAll('#palavras-banco .palavra-chip').forEach(c => c.style.outline = '');
+        STATE.palavraSelecionada = p.bancoIdx;
+        chip.style.outline = '4px solid #FBBF24';
+      }
+    };
+
+    cont.appendChild(chip);
+  });
+}
+
+function encaixarPalavra(bancoIdx, slotIdx) {
+  const p = STATE.partida.palavrasBanco[bancoIdx];
+  const slot = STATE.partida.slots[slotIdx];
+  if (!p || p.usada || !slot || slot.ehLacuna || slot.palavraAtual) return;
+  slot.palavraAtual = p.texto;
+  p.usada = true;
+  p.slotIdx = slotIdx;
+  tocarSom('clique');
+  STATE.palavraSelecionada = undefined;
+  renderSlots();
+  renderBanco();
+}
+
+function tapEncaixar(slotIdx) {
+  if (STATE.palavraSelecionada === undefined) return;
+  encaixarPalavra(STATE.palavraSelecionada, slotIdx);
+}
+
+function removerPalavraDoSlot(slotIdx) {
+  const slot = STATE.partida.slots[slotIdx];
+  if (!slot || !slot.palavraAtual) return;
+  // Achar a palavra correspondente no banco
+  const bancoItem = STATE.partida.palavrasBanco.find(p => p.slotIdx === slotIdx);
+  if (bancoItem) {
+    bancoItem.usada = false;
+    bancoItem.slotIdx = null;
+  }
+  slot.palavraAtual = null;
+  renderSlots();
+  renderBanco();
+}
+
+function escolherLacuna(slotIdx, palavra, btnEl) {
+  STATE.partida.lacunasEscolhidas[slotIdx] = palavra;
+  // Visual: marcar selecionada (se houver elemento)
+  if (btnEl && btnEl.parentElement) {
+    btnEl.parentElement.querySelectorAll('.lacuna-opcao').forEach(b => b.classList.remove('selecionada'));
+    btnEl.classList.add('selecionada');
+  }
+  tocarSom('clique');
+  renderSlots();
+}
+
+function limparFrase() {
+  STATE.partida.slots.forEach(s => { if (!s.ehLacuna) s.palavraAtual = null; });
+  STATE.partida.palavrasBanco.forEach(p => { p.usada = false; p.slotIdx = null; });
+  STATE.partida.lacunasEscolhidas = {};
+  STATE.palavraSelecionada = undefined;
+  renderSlots();
+  renderBanco();
+}
+
+function verificarFrase() {
+  if (STATE.partida.respondeu) return;
+  STATE.partida.respondeu = true;
+
+  const slots = STATE.partida.slots;
+  let acertou = true;
+
+  slots.forEach((s, idx) => {
+    if (s.ehLacuna) {
+      const escolhida = STATE.partida.lacunasEscolhidas[idx];
+      if (escolhida !== s.palavraCorreta) acertou = false;
+    } else {
+      if (s.palavraAtual !== s.palavraCorreta) acertou = false;
+    }
+  });
+
+  // Feedback visual nos slots
+  const slotsEls = document.querySelectorAll('#slots-frase .slot-frase');
+  slots.forEach((s, idx) => {
+    const el = slotsEls[idx];
+    if (s.ehLacuna) {
+      const escolhida = STATE.partida.lacunasEscolhidas[idx];
+      el.classList.add(escolhida === s.palavraCorreta ? 'correto-feedback' : 'errado-feedback');
+    } else {
+      el.classList.add(s.palavraAtual === s.palavraCorreta ? 'correto-feedback' : 'errado-feedback');
+    }
+  });
+
+  // Pontuação
+  const j = jogadorAtual();
+  let pontos = 0;
+  if (acertou) {
+    pontos = NIVEIS[STATE.nivel].pontos;
+    j.pontos += pontos;
+    j.acertos++;
+    tocarSom('acerto');
+    renderMascote('svg-mascote-painel', 'feliz');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Letrágrafo:</b> ${elogio()}`;
+  } else {
+    tocarSom('erro');
+    renderMascote('svg-mascote-painel', 'surpresa');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Letrágrafo:</b> ${incentivo()}`;
+  }
+
+  // Esconder ações de jogo e mostrar feedback
+  document.getElementById('acoes-jogo').classList.add('hidden');
+  setTimeout(() => mostrarFeedbackRodada(acertou, pontos), 800);
+  renderPlacar();
+  atualizarInfoLateral();
+}
+
+function mostrarFeedbackRodada(acertou, pontos) {
+  STATE.partida.fase = 'feedback';
+  const cont = document.getElementById('feedback-area');
+  const f = STATE.partida.fraseAtual;
+  const j = jogadorAtual();
+
+  const ehUltimaRodada = STATE.modo !== 'relogio' && STATE.partida.rodada >= STATE.partida.rodadaMax &&
+    (STATE.modo !== 'competitivo' || STATE.partida.vezAtual === STATE.partida.jogadores.length - 1);
+
+  cont.innerHTML = `
+    <div class="feedback-rodada">
+      <h3>${acertou ? '✅ Frase correta!' : '❌ Não foi dessa vez!'}</h3>
+      ${!acertou ? `
+        <div class="frase-correta">${f.palavras.join(' ')}</div>
+      ` : ''}
+      <div class="pts-info">
+        ${acertou ? `+${pontos} pontos · ${j.nome}: ${j.pontos} pts` : `Frase correta acima · ${j.nome}: ${j.pontos} pts`}
+      </div>
+      <button class="btn-proxima" onclick="proximaRodada()" style="margin-top:8px">
+        ${ehUltimaRodada ? '🏁 Ver resultado final' : '➡️ Próxima frase'}
+      </button>
+    </div>
+  `;
+}
+
+function proximaRodada() {
+  if (STATE.modo === 'competitivo') {
+    STATE.partida.vezAtual = (STATE.partida.vezAtual + 1) % STATE.partida.jogadores.length;
+    if (STATE.partida.vezAtual === 0) STATE.partida.rodada++;
+  } else {
+    STATE.partida.rodada++;
+  }
+
+  // Modo relógio: continua até acabar tempo
+  if (STATE.modo !== 'relogio' && STATE.partida.rodada > STATE.partida.rodadaMax) {
+    encerrarPartida();
+    return;
+  }
+  prepararRodada();
+}
+
+function encerrarPartida() {
+  STATE.partida.ativa = false;
+  if (STATE.partida.timerInterval) {
+    clearInterval(STATE.partida.timerInterval);
+    STATE.partida.timerInterval = null;
+  }
+
+  const ordenados = STATE.partida.jogadores.slice().sort((a,b) => b.pontos - a.pontos);
+  const venc = ordenados[0];
+
+  let titulo = '';
+  let msg = '';
+  if (STATE.modo === 'competitivo') {
+    titulo = `🏆 ${venc.nome} venceu!`;
+    msg = `Com <b>${venc.pontos} pontos</b> e <b>${venc.acertos}</b> frases corretas!`;
+  } else if (STATE.modo === 'relogio') {
+    titulo = `⏱️ Tempo esgotado!`;
+    msg = `${venc.nome === 'Você' ? 'Você' : venc.nome} montou <b>${venc.acertos}</b> frases corretas em ${STATE.tempoMin} min, totalizando <b>${venc.pontos} pontos</b>.`;
+  } else {
+    titulo = `🎉 Fim do jogo!`;
+    msg = `${venc.nome === 'Turma' ? 'A turma' : 'Você'} fez <b>${venc.pontos} pontos</b> com <b>${venc.acertos}</b> frases corretas em ${STATE.partida.rodadaMax} rodadas.`;
+  }
+
+  document.getElementById('fim-titulo').textContent = titulo;
+  document.getElementById('fim-msg').innerHTML = msg;
+
+  let html = '<h4>📊 Ranking final</h4>';
+  ordenados.forEach((j, pos) => {
+    const med = pos === 0 ? '🥇' : pos === 1 ? '🥈' : pos === 2 ? '🥉' : `${pos+1}º`;
+    html += `
+      <div class="jog-linha">
+        <div class="pino-jog" style="background:${CORES_PINOS[j.idx].fundo}">${j.idx+1}</div>
+        <div class="nome">${med} ${j.nome}</div>
+        <div class="pts">${j.pontos} pts</div>
+      </div>
+      <div style="font-size:0.72rem; color:#475569; padding:0 6px 4px; font-family:'Fredoka',sans-serif;">
+        ✅ ${j.acertos} frases corretas
+      </div>
+    `;
+  });
+  document.getElementById('ranking-final').innerHTML = html;
+
+  const acoes = document.getElementById('fim-acoes');
+  acoes.innerHTML = '';
+  const btn1 = document.createElement('button');
+  btn1.className = 'btn-confirmar dourado';
+  btn1.textContent = '↻ Jogar de novo';
+  btn1.onclick = () => { fecharModal('modal-fim'); comecarJogo(); };
+  acoes.appendChild(btn1);
+  const btn2 = document.createElement('button');
+  btn2.className = 'btn-cancelar';
+  btn2.textContent = '🏠 Menu';
+  btn2.onclick = () => { fecharModal('modal-fim'); voltarLobby(); };
+  acoes.appendChild(btn2);
+
+  document.getElementById('modal-fim').classList.add('aberto');
+  if (venc.acertos >= 3 && venc.pontos >= 12) criarConfetes();
+}
+
+function renderPlacar() {
+  const cont = document.getElementById('placar-linhas');
+  cont.innerHTML = '';
+  const ordenados = STATE.partida.jogadores.slice().sort((a,b) => b.pontos - a.pontos);
+  ordenados.forEach(j => {
+    const linha = document.createElement('div');
+    linha.className = 'jog-linha' + (j.idx === jogadorAtual().idx ? ' vez-dele' : '');
+    linha.innerHTML = `
+      <div class="pino-jog" style="background:${CORES_PINOS[j.idx].fundo}">${j.idx+1}</div>
+      <div class="nome">${j.nome}</div>
+      <div class="pts">${j.pontos}</div>
+    `;
+    cont.appendChild(linha);
+  });
+}
+
+function voltarLobby() {
+  if (STATE.partida.ativa && STATE.partida.rodada > 1) {
+    if (!confirm('Voltar ao menu? A partida atual será perdida.')) return;
+  }
+  STATE.partida.ativa = false;
+  if (STATE.partida.timerInterval) {
+    clearInterval(STATE.partida.timerInterval);
+    STATE.partida.timerInterval = null;
+  }
+  document.getElementById('jogo').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-fim');
+  renderLobby();
+}
+
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+/* SOM */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'acerto') {
+      const notas = [523, 659, 784, 1047];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t0 = c.currentTime + i * 0.07;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.18);
+        o.start(t0); o.stop(t0 + 0.2);
+      });
+    } else if (tipo === 'erro') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 320; o.type = 'sine';
+      g.gain.setValueAtTime(0.08, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.25);
+      o.frequency.exponentialRampToValueAtTime(180, c.currentTime + 0.25);
+      o.start(); o.stop(c.currentTime + 0.27);
+    } else if (tipo === 'clique') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 600; o.type = 'sine';
+      g.gain.setValueAtTime(0.06, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.08);
+      o.start(); o.stop(c.currentTime + 0.1);
+    }
+  } catch (e) {}
+}
+
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#DB2777','#831843','#FBBF24','#22C55E','#8B5CF6','#F472B6','#581C87'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* A11Y */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* WEBNODE EMBED */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => reportarAltura());
+  ro.observe(document.getElementById('pde-painel'));
+}
+
+/* SELOS BNCC */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'portugues',
+      icone: 'LP',
+      titulo: 'BNCC Língua Portuguesa',
+      itens: [
+        { cod: 'EF03LP12', desc: 'Reconhecer função de elementos coesivos e ordem de constituintes em frases.' },
+        { cod: 'EF04LP11', desc: 'Identificar e produzir concordância nominal e verbal.' },
+        { cod: 'EF05LP08', desc: 'Diferenciar termos e perceber padrões sintáticos da língua.' },
+        { cod: 'EF06LP06', desc: 'Empregar formas verbais conforme situação comunicativa e flexões adequadas.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Pensamento Computacional',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem.' },
+        { cod: 'EF06CO04', desc: 'Aplicar pensamento computacional: decomposição, padrões, sequenciamento, estruturação.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-fim'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+/* INIT */
+carregar();
+carregarA11y();
+renderLobby();
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+
+/* Expor pro smoke test */
+window.STATE = STATE;
+window.FRASES = FRASES;
+window.MODOS = MODOS;
+window.NIVEIS = NIVEIS;
+window.TEMAS = TEMAS;
+window.poolAtivo = poolAtivo;
+window.comecarJogo = comecarJogo;
+window.voltarLobby = voltarLobby;
+window.prepararRodada = prepararRodada;
+window.encaixarPalavra = encaixarPalavra;
+window.escolherLacuna = escolherLacuna;
+window.verificarFrase = verificarFrase;
+window.limparFrase = limparFrase;
+window.removerPalavraDoSlot = removerPalavraDoSlot;
+window.proximaRodada = proximaRodada;
+window.encerrarPartida = encerrarPartida;
+window.jogadorAtual = jogadorAtual;
+window.abrirAjuda = abrirAjuda;
+window.abrirAcessibilidade = abrirAcessibilidade;
+window.defA11y = defA11y;
+window.ESTADO_A11Y = ESTADO_A11Y;
+window.fecharModal = fecharModal;
+window.renderLobby = renderLobby;
+window.montarSelosBNCC = montarSelosBNCC;
+
+</script>
+</body>
+</html>

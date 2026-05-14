@@ -1,0 +1,1874 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Fazendinha das Letras · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #1E324A);
+  padding: 6px clamp(6px, 1.5vw, 12px) 10px;
+  width: 100%; max-width: 100%; overflow-x: hidden; margin: 0 auto;
+  user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+  --pde-cor-texto: #1E324A;
+  background: linear-gradient(180deg, #FEF3C7 0%, #BBF7D0 45%, #65A30D 100%);
+  border-radius: 12px;
+}
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-jogo,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .nivel-card,
+#pde-painel.alto-contraste .modo-card { background: #000 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .nivel-card.selecionado,
+#pde-painel.alto-contraste .modo-card.selecionado { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .animal-arrastavel { background: #1F2937 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .palavra-zona { background: #1F2937 !important; border-color: #FBBF24 !important; color: #FBBF24 !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#65A30D 0%,#365314 100%);
+  border-radius: 10px; padding: 6px 10px; color: white;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 6px rgba(54,83,20,0.25);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white; border-radius: 14px; padding: 10px;
+  border: 2px solid #65A30D;
+  box-shadow: 0 3px 8px rgba(101,163,13,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #FEF3C7 0%, #BBF7D0 100%);
+  border-radius: 10px; padding: 7px 10px; margin-bottom: 8px;
+  border: 2px solid #65A30D;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 72px; height: 72px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1; background: white; padding: 6px 10px; border-radius: 10px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif; font-weight: 600;
+  color: #1E324A; font-size: 0.85rem; line-height: 1.25;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: ''; position: absolute; left: -8px; top: 18px;
+  width: 0; height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  color: #365314; font-size: 0.95rem; margin-bottom: 1px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 5px; padding: 8px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 78px; height: 78px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+#pde-painel .secao-titulo {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  color: #365314; font-size: 0.92rem; margin: 8px 0 5px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+#pde-painel .modo-grid, #pde-painel .nivel-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 5px; margin-bottom: 6px;
+}
+@media (min-width: 700px) {
+  #pde-painel .modo-grid, #pde-painel .nivel-grid { grid-template-columns: repeat(4, 1fr); }
+}
+#pde-painel .modo-card {
+  background: white; border: 2px solid #65A30D; border-radius: 10px;
+  padding: 7px; cursor: pointer; text-align: center;
+  font-family: 'Fredoka',sans-serif; color: #1E324A; font-size: 0.78rem;
+  transition: all 0.15s; box-shadow: 0 2px 0 #365314;
+}
+#pde-painel .modo-card:hover { transform: translateY(-2px); }
+#pde-painel .modo-card.selecionado {
+  background: linear-gradient(135deg,#65A30D 0%,#365314 100%);
+  color: white; border-color: #1A2E05; transform: translateY(2px);
+}
+#pde-painel .modo-card .modo-emoji { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .modo-card .modo-titulo { font-weight: 700; font-size: 0.85rem; }
+#pde-painel .modo-card .modo-desc { font-size: 0.7rem; opacity: 0.85; margin-top: 1px; line-height: 1.2; }
+
+#pde-painel .nivel-card {
+  background: white; border: 2px solid #92400E; border-radius: 10px;
+  padding: 7px; cursor: pointer; text-align: center;
+  font-family: 'Fredoka',sans-serif; color: #451A03; font-size: 0.78rem;
+  transition: all 0.15s; box-shadow: 0 2px 0 #451A03;
+}
+#pde-painel .nivel-card:hover { transform: translateY(-2px); }
+#pde-painel .nivel-card.selecionado {
+  background: linear-gradient(135deg,#92400E 0%,#451A03 100%);
+  color: white; border-color: #2D0A02; transform: translateY(2px);
+}
+#pde-painel .nivel-card .nivel-emoji { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .nivel-card .nivel-titulo { font-weight: 700; font-size: 0.85rem; }
+#pde-painel .nivel-card .nivel-desc { font-size: 0.7rem; opacity: 0.85; margin-top: 1px; line-height: 1.2; }
+
+#pde-painel .qtd-area, #pde-painel .jogadores-area {
+  display: none; margin-bottom: 6px;
+}
+#pde-painel .qtd-area.ativo, #pde-painel .jogadores-area.ativo { display: block; }
+#pde-painel .qtd-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+#pde-painel .qtd-card {
+  background: white; border: 2px solid #84CC16; border-radius: 10px;
+  padding: 8px 5px; cursor: pointer; text-align: center;
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #365314;
+  font-size: 0.92rem; transition: all 0.15s; box-shadow: 0 2px 0 #365314;
+}
+#pde-painel .qtd-card:hover { transform: translateY(-2px); }
+#pde-painel .qtd-card.selecionado {
+  background: linear-gradient(135deg,#84CC16 0%,#365314 100%);
+  color: white; border-color: #1A2E05; transform: translateY(2px);
+}
+#pde-painel .qtd-card .qtd-emoji { display: block; font-size: 1.3rem; line-height: 1; }
+#pde-painel .qtd-card .qtd-num { display: block; font-size: 1rem; margin-top: 2px; }
+
+#pde-painel .jogadores-grid {
+  display: grid; grid-template-columns: 70px 1fr; gap: 5px 8px; align-items: center;
+}
+#pde-painel .jogadores-grid .pino-mini {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 3px solid #1E324A;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  font-size: 1.05rem; color: white; justify-self: center;
+}
+#pde-painel .jogadores-grid input {
+  font-family: 'Fredoka',sans-serif; font-size: 0.92rem;
+  padding: 5px 8px; border: 2px solid #65A30D; border-radius: 6px;
+  background: white; color: #1E324A; font-weight: 600; width: 100%;
+}
+#pde-painel .jogadores-grid input:focus { outline: none; border-color: #365314; }
+
+#pde-painel .info-pool {
+  margin-top: 4px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.75rem;
+  color: #475569;
+  text-align: center;
+}
+#pde-painel .info-pool b { color: #365314; }
+
+#pde-painel .btn-comecar {
+  width: 100%;
+  background: linear-gradient(135deg,#65A30D 0%,#365314 100%);
+  color: white; border: 2px solid white; border-radius: 10px;
+  padding: 9px 16px; font-family: 'Fredoka',sans-serif;
+  font-weight: 700; font-size: 1rem; cursor: pointer;
+  box-shadow: 0 3px 0 #1A2E05, 0 4px 10px rgba(54,83,20,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #1A2E05; margin-top: 6px;
+}
+#pde-painel .btn-comecar:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #1A2E05, 0 2px 6px rgba(54,83,20,0.25);
+}
+#pde-painel .btn-comecar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* JOGO */
+#pde-painel .jogo-grid {
+  display: grid; gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #pde-painel .jogo-grid { grid-template-columns: 1fr !important; gap: 8px; }
+  #pde-painel .area-jogo { order: 1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+#pde-painel .area-jogo {
+  background: white; border-radius: 12px; padding: 10px 12px;
+  border: 3px solid #65A30D;
+  box-shadow: 0 2px 6px rgba(101,163,13,0.12);
+  display: flex; flex-direction: column; gap: 8px; min-width: 0;
+}
+#pde-painel .painel-info {
+  background: white; border-radius: 12px; padding: 8px 10px;
+  border: 3px solid #65A30D;
+  box-shadow: 0 2px 6px rgba(101,163,13,0.12);
+  min-width: 0;
+}
+
+#pde-painel .cab-jogo {
+  background: linear-gradient(135deg, #65A30D 0%, #365314 100%);
+  border-radius: 10px; padding: 6px 12px; color: white;
+  border: 2px solid white;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; flex-wrap: wrap;
+}
+#pde-painel .cab-jogo .vez-jogador {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Fredoka',sans-serif; font-size: 0.92rem; font-weight: 700;
+}
+#pde-painel .cab-jogo .pino-vez {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2.5px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  font-size: 0.95rem; color: white; flex-shrink: 0;
+}
+#pde-painel .cab-jogo .info-rodada-cab {
+  font-family: 'Fredoka',sans-serif; font-size: 0.78rem;
+  background: rgba(0,0,0,0.2); padding: 2px 10px; border-radius: 999px;
+}
+
+/* CENA DA FAZENDA · animais arrastáveis */
+#pde-painel .cena-fazenda {
+  background: linear-gradient(180deg, #FEF3C7 0%, #FDE68A 50%, #BBF7D0 100%);
+  border: 3px solid #92400E;
+  border-radius: 16px;
+  padding: 14px 8px 12px;
+  position: relative;
+  min-height: 120px;
+}
+#pde-painel .cena-fazenda::before {
+  content: '☁️ 🌾 ☁️';
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  letter-spacing: 6px;
+}
+#pde-painel .cena-fazenda::after {
+  content: '🌳 🌻';
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+#pde-painel .animais-grid {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  position: relative;
+  z-index: 1;
+  min-height: 80px;
+}
+#pde-painel .animal-arrastavel {
+  background: white;
+  border: 3px solid #92400E;
+  border-radius: 50%;
+  width: clamp(58px, 11vw, 78px);
+  height: clamp(58px, 11vw, 78px);
+  display: flex; align-items: center; justify-content: center;
+  cursor: grab;
+  font-size: clamp(2rem, 6vw, 2.6rem);
+  box-shadow: 0 4px 0 #451A03;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+#pde-painel .animal-arrastavel:active { cursor: grabbing; transform: translateY(2px); box-shadow: 0 2px 0 #451A03; }
+#pde-painel .animal-arrastavel:hover:not(.encaixado) {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 0 #451A03;
+}
+#pde-painel .animal-arrastavel.selecionado {
+  border-color: #65A30D;
+  background: #ECFCCB;
+  box-shadow: 0 4px 0 #365314, 0 0 0 4px rgba(101,163,13,0.35);
+  transform: scale(1.08);
+}
+#pde-painel .animal-arrastavel.arrastando { opacity: 0.5; }
+#pde-painel .animal-arrastavel.encaixado {
+  background: #BBF7D0;
+  border-color: #14532D;
+  opacity: 0.55;
+  cursor: default;
+  transform: scale(0.85);
+  box-shadow: 0 2px 0 #14532D;
+}
+#pde-painel .animal-arrastavel.errou {
+  animation: tremer 0.4s ease-in-out;
+  border-color: #DC2626;
+  background: #FEE2E2;
+}
+@keyframes tremer {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* INSTRUÇÃO + BOTÃO OUVIR */
+#pde-painel .instrucao-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border: 3px dashed #92400E;
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+#pde-painel .instrucao-area .instrucao-txt {
+  flex: 1;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #451A03;
+  line-height: 1.2;
+}
+#pde-painel .instrucao-area .instrucao-txt b { color: #92400E; }
+#pde-painel .btn-ouvir-todas {
+  background: linear-gradient(135deg, #65A30D 0%, #365314 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #1A2E05;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+#pde-painel .btn-ouvir-todas:active { transform: translateY(2px); box-shadow: 0 1px 0 #1A2E05; }
+
+/* PALAVRAS ZONA · onde se solta o animal */
+#pde-painel .palavras-zona {
+  display: grid;
+  gap: 8px;
+}
+#pde-painel .palavras-zona.zona-3 { grid-template-columns: repeat(3, 1fr); }
+#pde-painel .palavras-zona.zona-4 { grid-template-columns: repeat(2, 1fr); }
+#pde-painel .palavras-zona.zona-5 { grid-template-columns: repeat(5, 1fr); }
+#pde-painel .palavras-zona.zona-6 { grid-template-columns: repeat(3, 1fr); }
+@media (min-width: 600px) {
+  #pde-painel .palavras-zona.zona-4 { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 520px) {
+  #pde-painel .palavras-zona.zona-5,
+  #pde-painel .palavras-zona.zona-6 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 380px) {
+  #pde-painel .palavras-zona.zona-3,
+  #pde-painel .palavras-zona.zona-4,
+  #pde-painel .palavras-zona.zona-5,
+  #pde-painel .palavras-zona.zona-6 { grid-template-columns: repeat(2, 1fr); }
+}
+
+#pde-painel .palavra-zona {
+  background: white;
+  border: 3px solid #65A30D;
+  border-radius: 12px;
+  padding: 10px 6px;
+  text-align: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+  color: #365314;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  min-height: 56px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px;
+  transition: all 0.15s;
+  box-shadow: 0 3px 0 #365314;
+  cursor: pointer;
+  position: relative;
+}
+#pde-painel .palavra-zona:hover:not(.completa) {
+  background: #ECFCCB;
+  transform: translateY(-2px);
+}
+#pde-painel .palavra-zona.alvo-drag {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FBBF24 100%);
+  border-color: #92400E;
+  transform: scale(1.05);
+}
+#pde-painel .palavra-zona.completa {
+  background: linear-gradient(135deg, #BBF7D0 0%, #16A34A 100%);
+  color: white;
+  border-color: #14532D;
+  box-shadow: 0 3px 0 #14532D;
+  cursor: default;
+}
+#pde-painel .palavra-zona.completa .emoji-completa {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+#pde-painel .palavra-zona.errou-zona {
+  background: linear-gradient(135deg, #FECACA 0%, #DC2626 100%);
+  color: white;
+  border-color: #7F1D1D;
+  animation: tremer 0.4s ease-in-out;
+}
+
+/* FEEDBACK */
+#pde-painel .feedback-rodada {
+  background: linear-gradient(135deg, #ECFCCB 0%, #65A30D 100%);
+  border: 3px solid #1A2E05;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  animation: aparecer 0.4s ease-out;
+  color: white;
+}
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+#pde-painel .feedback-rodada h3 {
+  font-family: 'Fredoka',sans-serif;
+  color: white; margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+#pde-painel .feedback-rodada .pts-info {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  color: white; font-size: 0.92rem;
+}
+
+#pde-painel .btn-proxima {
+  background: linear-gradient(135deg, #92400E 0%, #451A03 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700; font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #2D0A02;
+  margin-top: 8px;
+  width: 100%;
+}
+#pde-painel .btn-proxima:active { transform: translateY(2px); box-shadow: 0 1px 0 #2D0A02; }
+
+#pde-painel .auto-avanco-info { margin-top: 8px; }
+#pde-painel .auto-avanco-barra {
+  height: 5px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 0 auto;
+  max-width: 240px;
+}
+#pde-painel .auto-avanco-fill {
+  height: 100%;
+  background: linear-gradient(90deg, white 0%, #FBBF24 100%);
+  width: 0%;
+  animation: encherBarra 2.5s linear forwards;
+  border-radius: 999px;
+}
+@keyframes encherBarra {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+#pde-painel.sem-animacoes .auto-avanco-fill { animation: none; width: 100%; }
+#pde-painel .btn-skip-auto {
+  background: none; border: none;
+  color: white; text-decoration: underline; cursor: pointer;
+  font-family: inherit; font-size: 0.78rem; padding: 0 4px;
+}
+#pde-painel .btn-skip-auto:hover { color: #FEF3C7; }
+
+/* PAINEL LATERAL */
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg,#FEF3C7 0%,#BBF7D0 100%);
+  border-radius: 10px; padding: 6px 8px;
+  margin-bottom: 6px; border: 2px solid #65A30D;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 42px; height: 42px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1; font-family: 'Fredoka',sans-serif; font-weight: 600;
+  font-size: 0.78rem; color: #1E324A; line-height: 1.2;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #365314; font-weight: 700; }
+
+#pde-painel .placar-jogadores {
+  background: white; border-radius: 10px; padding: 6px;
+  margin-bottom: 6px; border: 2px solid #65A30D;
+}
+#pde-painel .placar-jogadores h5 {
+  font-family: 'Fredoka',sans-serif; margin: 0 0 4px;
+  color: #365314; font-size: 0.85rem; text-align: center;
+}
+#pde-painel .jog-linha {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px; background: #FEF3C7; border-radius: 6px;
+  margin-bottom: 3px;
+  font-family: 'Fredoka',sans-serif; font-size: 0.82rem;
+}
+#pde-painel .jog-linha:last-child { margin-bottom: 0; }
+#pde-painel .jog-linha.vez-dele {
+  background: linear-gradient(135deg, #65A30D 0%, #365314 100%);
+  color: white; outline: 2px solid #1A2E05;
+}
+#pde-painel .jog-linha.vez-dele .pts { background: white; color: #365314; }
+#pde-painel .jog-linha .pino-jog {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  font-size: 0.72rem; color: white; flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+#pde-painel .jog-linha .nome {
+  flex: 1; font-weight: 700; color: #1E324A;
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#pde-painel .jog-linha.vez-dele .nome { color: white; }
+#pde-painel .jog-linha .pts {
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  background: #65A30D; color: white;
+  padding: 1px 8px; border-radius: 999px; font-size: 0.72rem;
+}
+
+#pde-painel .info-rodada {
+  background: linear-gradient(135deg,#FEF3C7 0%,#FDE68A 100%);
+  border-radius: 10px; padding: 6px 8px;
+  margin-bottom: 6px; border: 2px solid #92400E;
+}
+#pde-painel .info-rodada .linha {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'Fredoka',sans-serif; font-size: 0.78rem;
+  color: #92400E; padding: 2px 0;
+}
+#pde-painel .info-rodada .linha .label { font-weight: 600; }
+#pde-painel .info-rodada .linha .valor { font-weight: 700; color: #1E324A; }
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(54,83,20,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #65A30D;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #365314;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #1E324A; font-size: 0.95rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#65A30D 0%,#365314 100%);
+  color: white; border: 3px solid #1A2E05;
+  box-shadow: 0 4px 0 #1A2E05;
+}
+#pde-painel .btn-confirmar.dourado {
+  background: linear-gradient(135deg,#92400E 0%,#451A03 100%);
+  color: white; border: 3px solid #2D0A02;
+  box-shadow: 0 4px 0 #2D0A02;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .vencedor-coroa { font-size: 4rem; animation: bounceCoroa 0.8s ease-out; }
+@keyframes bounceCoroa {
+  0% { transform: scale(0) rotate(-30deg); }
+  60% { transform: scale(1.3) rotate(10deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+#pde-painel .ranking-final {
+  background: #FEF3C7; border-radius: 10px; padding: 10px; margin: 10px 0; text-align: left;
+}
+#pde-painel .ranking-final h4 { font-family: 'Fredoka',sans-serif; text-align: center; color: #365314; margin: 0 0 6px; }
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #365314;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #1E324A; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+
+#pde-painel .a11y-grupo { background: #ECFCCB; border: 3px solid #65A30D; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #365314; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #65A30D; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#65A30D 0%,#365314 100%); color: white; border-color: #1A2E05; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #65A30D; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#65A30D 0%,#365314 100%); color: white; border-color: #1A2E05; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #1A2E05; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #365314;
+  border: 2px solid #365314; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #365314; color: white; }
+
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #FBBF24; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #365314; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#65A30D,#365314); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.portugues { background: linear-gradient(135deg,#65A30D,#365314); }
+#pde-painel .selos-bncc .selo-icone.ciencias { background: linear-gradient(135deg,#92400E,#451A03); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #365314; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #365314; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #ECFCCB; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FBBF24; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #365314; }
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 8px clamp(10px, 1.5vw, 18px) 14px; }
+  #pde-painel .lobby-card { padding: 14px; }
+  #pde-painel .area-jogo { padding: 12px 16px; }
+  #pde-painel .painel-info { padding: 10px 12px; }
+  #pde-painel .jogo-grid { grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+}
+@media (min-width: 1440px) { #pde-painel { max-width: 1400px; } }
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>🐮 Fazendinha das Letras</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Muu! Sou a Mu, a vaca leitora 🐮📖</strong>
+        <span>Bem-vindos à minha fazenda! Aqui você vai arrastar cada bicho até o nome certo dele. Vamos descobrir como se escreve cada animal? Toque ou arraste!</span>
+      </div>
+    </div>
+
+    <div class="secao-titulo">🎮 Modo de jogo</div>
+    <div class="modo-grid" id="modo-grid"></div>
+
+    <div class="qtd-area" id="qtd-area">
+      <div class="secao-titulo">👥 Quantos jogadores?</div>
+      <div class="qtd-grid" id="qtd-grid"></div>
+    </div>
+
+    <div class="jogadores-area" id="jogadores-area">
+      <div class="secao-titulo">✏️ Nomes</div>
+      <div class="jogadores-grid" id="jogadores-grid"></div>
+    </div>
+
+    <div class="secao-titulo">📊 Nível de dificuldade</div>
+    <div class="nivel-grid" id="nivel-grid"></div>
+    <div class="info-pool" id="info-pool">—</div>
+
+    <button class="btn-comecar" id="btn-comecar" onclick="comecarJogo()" disabled>🐮 Bora pra fazenda!</button>
+  </div>
+
+  <div id="jogo" class="jogo-grid hidden">
+    <div class="area-jogo">
+      <div class="cab-jogo">
+        <div class="vez-jogador">
+          <div class="pino-vez" id="pino-vez">1</div>
+          <span id="nome-vez">—</span>
+        </div>
+        <div id="info-rodada-cab" class="info-rodada-cab">Rodada 1</div>
+      </div>
+
+      <div class="cena-fazenda">
+        <div class="animais-grid" id="animais-grid"></div>
+      </div>
+
+      <div class="instrucao-area">
+        <div class="instrucao-txt" id="instrucao-txt">🐮 Toque num bichinho, depois toque no nome dele!</div>
+        <button class="btn-ouvir-todas" onclick="ouvirTodos()">🔊 Ouvir</button>
+      </div>
+
+      <div class="palavras-zona" id="palavras-zona"></div>
+
+      <div id="feedback-area"></div>
+    </div>
+
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Toque num bichinho!</div>
+      </div>
+      <div class="placar-jogadores" id="placar-jogadores">
+        <h5>🏆 Placar</h5>
+        <div id="placar-linhas"></div>
+      </div>
+      <div class="info-rodada">
+        <div class="linha"><span class="label">🌾 Rodada</span><span class="valor" id="rodada-info-side">1/10</span></div>
+        <div class="linha"><span class="label">✅ Encaixados</span><span class="valor" id="encaixados-info">0/0</span></div>
+        <div class="linha"><span class="label">📊 Nível</span><span class="valor" id="nivel-info">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-fim">
+    <div class="modal-conteudo">
+      <div class="vencedor-coroa">👑</div>
+      <h2 id="fim-titulo">🎉 Fim!</h2>
+      <p id="fim-msg">—</p>
+      <div class="ranking-final" id="ranking-final"></div>
+      <div class="acoes" id="fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🐮 Como brincar com a Mu</h2>
+      <h3>🎯 Objetivo</h3>
+      <p>Cada bichinho da fazenda tem o nome escrito numa placa. Arraste o bicho até o nome dele · ou toque no bicho e depois na palavra. Acerte todos!</p>
+
+      <h3>🖱️ Como responder · dois jeitos</h3>
+      <ul>
+        <li><b>Tocar:</b> toque no bicho (fica destacado) · depois toque no nome dele.</li>
+        <li><b>Arrastar:</b> segure o bicho e arraste até a palavra. Funciona em qualquer dispositivo.</li>
+      </ul>
+
+      <h3>🎮 4 modos disponíveis</h3>
+      <ul>
+        <li>👤 <b>Individual:</b> sem pressão</li>
+        <li>👨‍🏫 <b>Professor (lousa):</b> turma colabora</li>
+        <li>⏱️ <b>Contra o relógio:</b> máximo de bichos no tempo</li>
+        <li>🏆 <b>Competitivo:</b> 2-4 jogadores se revezam</li>
+      </ul>
+
+      <h3>📊 4 níveis progressivos</h3>
+      <ul>
+        <li>🌱 <b>Filhotinho</b> · 3 animais · palavras curtas (PATO, GATO) · 1º ano</li>
+        <li>🌿 <b>Aprendiz</b> · 4 animais · palavras médias (PORCO, OVELHA) · 1º/2º ano</li>
+        <li>🌳 <b>Pequeno Fazendeiro</b> · 5 animais · palavras maiores (CAVALO, GALINHA) · 2º ano</li>
+        <li>🏆 <b>Mestre da Fazenda</b> · 6 animais · palavras longas (PORQUINHO, BEZERRO) · 3º ano</li>
+      </ul>
+
+      <h3>🔊 Áudio</h3>
+      <p>Toque no botão <b>🔊 Ouvir</b> pra escutar todos os nomes da rodada. Cada bicho também fala seu nome quando você toca nele.</p>
+
+      <h3>📖 BNCC</h3>
+      <ul>
+        <li>Português EF01LP14 (leitura de palavras inteiras), EF01LP04, EF02LP01</li>
+        <li>Ciências EF01CI02 (animais e características)</li>
+        <li>Computação EF15CO01 (dispositivos digitais), EF06CO04 (padrões)</li>
+      </ul>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar dourado" onclick="fecharModal('modal-ajuda')">Bora cuidar da fazenda!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar dourado" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script id="script-jogo">
+/* ====================================================================
+ * BANCO DE ANIMAIS · Fazendinha das Letras
+ *
+ * 24 animais únicos · 6 por nível
+ * Estrutura: { animal, emoji, nivel, silabas }
+ * ==================================================================== */
+
+const ANIMAIS = [
+  /* FILHOTINHO · 6 palavras curtas (1-2 sílabas) */
+  { animal: 'boi',     emoji: '🐂', nivel: 'filhotinho', silabas: 1 },
+  { animal: 'pato',    emoji: '🦆', nivel: 'filhotinho', silabas: 2 },
+  { animal: 'gato',    emoji: '🐱', nivel: 'filhotinho', silabas: 2 },
+  { animal: 'galo',    emoji: '🐓', nivel: 'filhotinho', silabas: 2 },
+  { animal: 'rato',    emoji: '🐭', nivel: 'filhotinho', silabas: 2 },
+  { animal: 'vaca',    emoji: '🐮', nivel: 'filhotinho', silabas: 2 },
+
+  /* APRENDIZ · 6 palavras médias (2-3 sílabas) */
+  { animal: 'porco',   emoji: '🐷', nivel: 'aprendiz', silabas: 2 },
+  { animal: 'ovelha',  emoji: '🐑', nivel: 'aprendiz', silabas: 3 },
+  { animal: 'cabra',   emoji: '🐐', nivel: 'aprendiz', silabas: 2 },
+  { animal: 'peru',    emoji: '🦃', nivel: 'aprendiz', silabas: 2 },
+  { animal: 'ganso',   emoji: '🪿', nivel: 'aprendiz', silabas: 2 },
+  { animal: 'coelho',  emoji: '🐰', nivel: 'aprendiz', silabas: 3 },
+
+  /* PEQUENO FAZENDEIRO · 6 palavras maiores (2-3 sílabas) */
+  { animal: 'cavalo',  emoji: '🐴', nivel: 'pequeno', silabas: 3 },
+  { animal: 'galinha', emoji: '🐔', nivel: 'pequeno', silabas: 3 },
+  { animal: 'cachorro', emoji: '🐶', nivel: 'pequeno', silabas: 3 },
+  { animal: 'peixe',   emoji: '🐟', nivel: 'pequeno', silabas: 2 },
+  { animal: 'cobra',   emoji: '🐍', nivel: 'pequeno', silabas: 2 },
+  { animal: 'sapo',    emoji: '🐸', nivel: 'pequeno', silabas: 2 },
+
+  /* MESTRE · 6 palavras longas e compostas */
+  { animal: 'porquinho',    emoji: '🐖', nivel: 'mestre', silabas: 3 },
+  { animal: 'bezerro',      emoji: '🐄', nivel: 'mestre', silabas: 3 },
+  { animal: 'cachorrinho',  emoji: '🐕', nivel: 'mestre', silabas: 4 },
+  { animal: 'pintinho',     emoji: '🐥', nivel: 'mestre', silabas: 3 },
+  { animal: 'tartaruga',    emoji: '🐢', nivel: 'mestre', silabas: 4 },
+  { animal: 'borboleta',    emoji: '🦋', nivel: 'mestre', silabas: 4 }
+];
+
+const NIVEIS_INFO = {
+  filhotinho: {
+    emoji: '🌱',
+    titulo: 'Filhotinho',
+    desc: '3 animais · palavras curtas · 1º ano',
+    ano: '1º ano',
+    pontos: 2,
+    animaisPorRodada: 3
+  },
+  aprendiz: {
+    emoji: '🌿',
+    titulo: 'Aprendiz',
+    desc: '4 animais · palavras médias · 1º/2º ano',
+    ano: '1º/2º ano',
+    pontos: 4,
+    animaisPorRodada: 4
+  },
+  pequeno: {
+    emoji: '🌳',
+    titulo: 'Pequeno Fazendeiro',
+    desc: '5 animais · palavras maiores · 2º ano',
+    ano: '2º ano',
+    pontos: 6,
+    animaisPorRodada: 5
+  },
+  mestre: {
+    emoji: '🏆',
+    titulo: 'Mestre da Fazenda',
+    desc: '6 animais · palavras longas · 3º ano',
+    ano: '3º ano',
+    pontos: 8,
+    animaisPorRodada: 6
+  }
+};
+/* ============================================================
+ * FAZENDINHA DAS LETRAS · Portal do Educador NEWPC
+ * Mascote: Mu, a vaca leitora
+ * Mecânica: arrastar animal pra palavra escrita correta
+ * ============================================================ */
+
+function svgMascote(expressao = 'normal') {
+  let olhos, boca;
+  if (expressao === 'feliz') {
+    olhos = `
+      <path d="M 36 38 Q 41 33, 46 38" fill="none" stroke="#1F2937" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 56 38 Q 61 33, 66 38" fill="none" stroke="#1F2937" stroke-width="2.5" stroke-linecap="round"/>
+    `;
+    boca = `<path d="M 40 55 Q 50 62 60 55" fill="none" stroke="#7C2D12" stroke-width="2.2" stroke-linecap="round"/>`;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <circle cx="40" cy="40" r="4.5" fill="white" stroke="#1F2937" stroke-width="1.4"/>
+      <circle cx="60" cy="40" r="4.5" fill="white" stroke="#1F2937" stroke-width="1.4"/>
+      <circle cx="40" cy="40" r="2" fill="#1F2937"/>
+      <circle cx="60" cy="40" r="2" fill="#1F2937"/>
+    `;
+    boca = `<path d="M 44 55 Q 50 58 56 55" fill="none" stroke="#7C2D12" stroke-width="1.8" stroke-linecap="round"/>`;
+  } else if (expressao === 'surpresa') {
+    olhos = `
+      <ellipse cx="40" cy="40" rx="5" ry="6" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <ellipse cx="60" cy="40" rx="5" ry="6" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <circle cx="40" cy="41" r="2.5" fill="#1F2937"/>
+      <circle cx="60" cy="41" r="2.5" fill="#1F2937"/>
+    `;
+    boca = `<ellipse cx="50" cy="56" rx="3" ry="4" fill="#7C2D12"/>`;
+  } else {
+    olhos = `
+      <ellipse cx="40" cy="40" rx="3" ry="4" fill="#1F2937"/>
+      <ellipse cx="60" cy="40" rx="3" ry="4" fill="#1F2937"/>
+      <ellipse cx="41" cy="38" rx="0.9" ry="1.3" fill="white"/>
+      <ellipse cx="61" cy="38" rx="0.9" ry="1.3" fill="white"/>
+    `;
+    boca = `<path d="M 44 54 Q 50 57 56 54" fill="none" stroke="#7C2D12" stroke-width="1.8" stroke-linecap="round"/>`;
+  }
+
+  return `
+    <!-- Sombra -->
+    <ellipse cx="50" cy="93" rx="28" ry="2.5" fill="rgba(0,0,0,0.2)"/>
+    <!-- Patas -->
+    <rect x="32" y="74" width="6" height="14" fill="#1F2937" rx="2"/>
+    <rect x="62" y="74" width="6" height="14" fill="#1F2937" rx="2"/>
+    <!-- Corpo branco com manchas -->
+    <ellipse cx="50" cy="62" rx="26" ry="22" fill="white" stroke="#1F2937" stroke-width="2"/>
+    <!-- Manchas marrons no corpo -->
+    <ellipse cx="32" cy="58" rx="7" ry="5" fill="#92400E" transform="rotate(-15 32 58)"/>
+    <ellipse cx="68" cy="65" rx="8" ry="6" fill="#92400E" transform="rotate(20 68 65)"/>
+    <ellipse cx="50" cy="74" rx="5" ry="3" fill="#92400E"/>
+    <!-- Úbere (detalhe da vaca, sutil) -->
+    <ellipse cx="50" cy="80" rx="6" ry="3" fill="#FB7185" opacity="0.5"/>
+    <!-- Cabeça branca -->
+    <ellipse cx="50" cy="42" rx="22" ry="20" fill="white" stroke="#1F2937" stroke-width="2"/>
+    <!-- Mancha marrom na cabeça (entre os chifres) -->
+    <ellipse cx="50" cy="32" rx="10" ry="6" fill="#92400E"/>
+    <!-- Mancha do focinho -->
+    <ellipse cx="50" cy="54" rx="12" ry="8" fill="#FECACA" stroke="#1F2937" stroke-width="1.5"/>
+    <!-- Narinas -->
+    <ellipse cx="46" cy="54" rx="1.2" ry="2" fill="#1F2937"/>
+    <ellipse cx="54" cy="54" rx="1.2" ry="2" fill="#1F2937"/>
+    <!-- Chifres -->
+    <path d="M 28 26 Q 24 18, 30 14 Q 33 18, 32 24 Z" fill="#FDE68A" stroke="#92400E" stroke-width="1.5"/>
+    <path d="M 72 26 Q 76 18, 70 14 Q 67 18, 68 24 Z" fill="#FDE68A" stroke="#92400E" stroke-width="1.5"/>
+    <!-- Orelhas -->
+    <ellipse cx="22" cy="36" rx="7" ry="5" fill="white" stroke="#1F2937" stroke-width="1.8" transform="rotate(-40 22 36)"/>
+    <ellipse cx="78" cy="36" rx="7" ry="5" fill="white" stroke="#1F2937" stroke-width="1.8" transform="rotate(40 78 36)"/>
+    <ellipse cx="22" cy="36" rx="3" ry="2.5" fill="#FB7185" opacity="0.5" transform="rotate(-40 22 36)"/>
+    <ellipse cx="78" cy="36" rx="3" ry="2.5" fill="#FB7185" opacity="0.5" transform="rotate(40 78 36)"/>
+    <!-- Óculos redondos de leitura (que torna leitora) -->
+    <circle cx="40" cy="40" r="8" fill="rgba(255,255,255,0.3)" stroke="#1F2937" stroke-width="2"/>
+    <circle cx="60" cy="40" r="8" fill="rgba(255,255,255,0.3)" stroke="#1F2937" stroke-width="2"/>
+    <line x1="48" y1="40" x2="52" y2="40" stroke="#1F2937" stroke-width="2"/>
+    <!-- Olhos -->
+    ${olhos}
+    <!-- Boca -->
+    ${boca}
+    <!-- Topete na cabeça (penteado) -->
+    <path d="M 46 26 Q 50 18 54 26" fill="#92400E" stroke="#7C2D12" stroke-width="1"/>
+    <!-- Livro aberto entre as patas dianteiras -->
+    <g transform="translate(43 85)">
+      <path d="M 0 0 L 7 -3 L 7 4 L 0 7 Z" fill="#FBBF24" stroke="#92400E" stroke-width="0.8"/>
+      <path d="M 7 -3 L 14 0 L 14 7 L 7 4 Z" fill="#FBBF24" stroke="#92400E" stroke-width="0.8"/>
+      <line x1="7" y1="-3" x2="7" y2="4" stroke="#92400E" stroke-width="0.6"/>
+      <line x1="2" y1="0" x2="5" y2="-1" stroke="#7C2D12" stroke-width="0.4"/>
+      <line x1="2" y1="2" x2="5" y2="1" stroke="#7C2D12" stroke-width="0.4"/>
+      <line x1="9" y1="-1" x2="12" y2="0" stroke="#7C2D12" stroke-width="0.4"/>
+      <line x1="9" y1="1" x2="12" y2="2" stroke="#7C2D12" stroke-width="0.4"/>
+    </g>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* ============ CONFIGS ============ */
+const MODOS = {
+  individual:  { emoji: '👤', titulo: 'Individual', desc: 'Sem pressão' },
+  professor:   { emoji: '👨‍🏫', titulo: 'Professor', desc: 'Lousa, sem timer' },
+  relogio:     { emoji: '⏱️', titulo: 'Contra o relógio', desc: 'Tempo limitado' },
+  competitivo: { emoji: '🏆', titulo: 'Competitivo', desc: '2-4 jogadores' }
+};
+
+const CORES_PINOS = [
+  { fundo: '#DC2626', nome: 'Vermelho' },
+  { fundo: '#2563EB', nome: 'Azul' },
+  { fundo: '#16A34A', nome: 'Verde' },
+  { fundo: '#F59E0B', nome: 'Laranja' }
+];
+
+const RODADAS_PADRAO = 10;
+const TEMPO_AUTO_AVANCO = 2500;
+const TEMPO_RELOGIO_MIN = 5;
+const ELOGIOS = ['Muu! Acertou! 🐮', 'Boa leitura!', 'Bichinho no lugar!', 'Você tá ficando expert!', 'Continua assim!'];
+const INCENTIVOS = ['Tenta de novo!', 'Olha as letras com calma.', 'A Mu sabe que você consegue.', 'Boa tentativa, vamos lá!'];
+
+const STATE = {
+  modo: null,
+  qtdJogadores: 2,
+  nomes: ['Jogador 1','Jogador 2','Jogador 3','Jogador 4'],
+  nivel: null,
+  partida: {
+    ativa: false,
+    rodada: 1,
+    rodadaMax: RODADAS_PADRAO,
+    jogadores: [],
+    vezAtual: 0,
+    animaisRodada: [],         /* array de animais sorteados pra rodada */
+    palavrasOrdem: [],         /* ordem das palavras-zona (embaralhada) */
+    encaixesFeitos: {},        /* {animal: true} se já encaixado */
+    animalSelecionado: null,   /* animal clicado · aguardando palavra */
+    fase: null,
+    tempoSeg: 0,
+    timerInterval: null,
+    autoAvancoTimer: null
+  }
+};
+
+function salvar() {
+  try {
+    localStorage.setItem('pde_fazenda_dados', JSON.stringify({
+      modo: STATE.modo, qtdJogadores: STATE.qtdJogadores, nomes: STATE.nomes, nivel: STATE.nivel
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_fazenda_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.modo) STATE.modo = d.modo;
+    if (d.qtdJogadores) STATE.qtdJogadores = d.qtdJogadores;
+    if (Array.isArray(d.nomes)) STATE.nomes = d.nomes;
+    if (d.nivel) STATE.nivel = d.nivel;
+  } catch (e) {}
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function elogio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivo() { return INCENTIVOS[Math.floor(Math.random() * INCENTIVOS.length)]; }
+
+function falar(texto, opcoes = {}) {
+  try {
+    if (typeof speechSynthesis === 'undefined') return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(texto);
+    u.lang = 'pt-BR';
+    u.rate = opcoes.rate || 1.0;
+    u.pitch = opcoes.pitch || 1.0;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+
+function poolAnimais() {
+  if (!STATE.nivel) return [];
+  return ANIMAIS.filter(a => a.nivel === STATE.nivel);
+}
+
+/* ============ LOBBY ============ */
+function renderLobby() {
+  const modoCont = document.getElementById('modo-grid');
+  modoCont.innerHTML = '';
+  Object.entries(MODOS).forEach(([key, m]) => {
+    const card = document.createElement('div');
+    card.className = 'modo-card' + (STATE.modo === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="modo-emoji">${m.emoji}</span>
+      <div class="modo-titulo">${m.titulo}</div>
+      <div class="modo-desc">${m.desc}</div>
+    `;
+    card.onclick = () => { STATE.modo = key; salvar(); renderLobby(); };
+    modoCont.appendChild(card);
+  });
+
+  const qtdArea = document.getElementById('qtd-area');
+  const jogArea = document.getElementById('jogadores-area');
+  if (STATE.modo === 'competitivo') {
+    qtdArea.classList.add('ativo');
+    jogArea.classList.add('ativo');
+    const grid = document.getElementById('qtd-grid');
+    grid.innerHTML = '';
+    [2,3,4].forEach(n => {
+      const c = document.createElement('div');
+      c.className = 'qtd-card' + (STATE.qtdJogadores === n ? ' selecionado' : '');
+      c.innerHTML = `<span class="qtd-emoji">👥</span><span class="qtd-num">${n}</span>`;
+      c.onclick = () => { STATE.qtdJogadores = n; salvar(); renderLobby(); };
+      grid.appendChild(c);
+    });
+    const jgrid = document.getElementById('jogadores-grid');
+    jgrid.innerHTML = '';
+    for (let i = 0; i < STATE.qtdJogadores; i++) {
+      const pino = document.createElement('div');
+      pino.className = 'pino-mini';
+      pino.style.background = CORES_PINOS[i].fundo;
+      pino.textContent = (i+1);
+      const inp = document.createElement('input');
+      inp.type = 'text'; inp.maxLength = 20;
+      inp.value = STATE.nomes[i] || `Jogador ${i+1}`;
+      inp.oninput = (e) => { STATE.nomes[i] = e.target.value; salvar(); };
+      jgrid.appendChild(pino);
+      jgrid.appendChild(inp);
+    }
+  } else {
+    qtdArea.classList.remove('ativo');
+    jogArea.classList.remove('ativo');
+  }
+
+  const nivCont = document.getElementById('nivel-grid');
+  nivCont.innerHTML = '';
+  Object.entries(NIVEIS_INFO).forEach(([key, n]) => {
+    const card = document.createElement('div');
+    card.className = 'nivel-card' + (STATE.nivel === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="nivel-emoji">${n.emoji}</span>
+      <div class="nivel-titulo">${n.titulo}</div>
+      <div class="nivel-desc">${n.desc}</div>
+    `;
+    card.onclick = () => { STATE.nivel = key; salvar(); renderLobby(); };
+    nivCont.appendChild(card);
+  });
+
+  const elPool = document.getElementById('info-pool');
+  if (!STATE.nivel) {
+    elPool.innerHTML = '👉 Escolha um nível pra continuar';
+  } else {
+    const info = NIVEIS_INFO[STATE.nivel];
+    elPool.innerHTML = `🐮 <b>${info.animaisPorRodada} animais</b> por rodada · ${info.pontos} pontos por acerto`;
+  }
+
+  const btn = document.getElementById('btn-comecar');
+  const podeComecar = STATE.modo && STATE.nivel;
+  btn.disabled = !podeComecar;
+  if (!STATE.modo)        btn.textContent = '🐮 Escolha um modo';
+  else if (!STATE.nivel)  btn.textContent = '🐮 Escolha um nível';
+  else                    btn.textContent = `🐮 Começar (${MODOS[STATE.modo].titulo} · ${NIVEIS_INFO[STATE.nivel].titulo})`;
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+
+/* ============ INICIAR JOGO ============ */
+function comecarJogo() {
+  if (!STATE.modo || !STATE.nivel) return;
+
+  STATE.partida.jogadores = [];
+  if (STATE.modo === 'individual' || STATE.modo === 'relogio') {
+    STATE.partida.jogadores.push({ idx: 0, nome: 'Você', pontos: 0, acertos: 0 });
+  } else if (STATE.modo === 'professor') {
+    STATE.partida.jogadores.push({ idx: 0, nome: 'Turma', pontos: 0, acertos: 0 });
+  } else {
+    for (let i = 0; i < STATE.qtdJogadores; i++) {
+      STATE.partida.jogadores.push({
+        idx: i, nome: STATE.nomes[i] || `Jogador ${i+1}`,
+        pontos: 0, acertos: 0
+      });
+    }
+  }
+
+  STATE.partida.rodada = 1;
+  STATE.partida.rodadaMax = STATE.modo === 'relogio' ? 999 : RODADAS_PADRAO;
+  STATE.partida.vezAtual = 0;
+  STATE.partida.ativa = true;
+
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('jogo').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+
+  prepararRodada();
+}
+
+function jogadorAtual() { return STATE.partida.jogadores[STATE.partida.vezAtual]; }
+
+/* PREPARAR RODADA · sorteia N animais únicos */
+function prepararRodada() {
+  const info = NIVEIS_INFO[STATE.nivel];
+  const pool = poolAnimais();
+  const sorteados = shuffle(pool).slice(0, info.animaisPorRodada);
+
+  STATE.partida.animaisRodada = sorteados;
+  STATE.partida.palavrasOrdem = shuffle(sorteados.map(a => a.animal));
+  STATE.partida.encaixesFeitos = {};
+  STATE.partida.animalSelecionado = null;
+  STATE.partida.fase = 'jogando';
+
+  atualizarCabecalho();
+  atualizarInfoLateral();
+  document.getElementById('feedback-area').innerHTML = '';
+
+  /* Renderizar animais arrastáveis na cena */
+  const cenaCont = document.getElementById('animais-grid');
+  cenaCont.innerHTML = '';
+  sorteados.forEach(a => {
+    const div = document.createElement('div');
+    div.className = 'animal-arrastavel';
+    div.dataset.animal = a.animal;
+    div.textContent = a.emoji;
+    div.draggable = true;
+
+    /* Clique = selecionar */
+    div.onclick = () => selecionarAnimal(a);
+
+    /* Drag-and-drop */
+    div.addEventListener('dragstart', (e) => {
+      div.classList.add('arrastando');
+      e.dataTransfer.setData('text/plain', a.animal);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    div.addEventListener('dragend', () => {
+      div.classList.remove('arrastando');
+    });
+
+    cenaCont.appendChild(div);
+  });
+
+  /* Renderizar palavras-zona */
+  const palavrasCont = document.getElementById('palavras-zona');
+  palavrasCont.className = `palavras-zona zona-${info.animaisPorRodada}`;
+  palavrasCont.innerHTML = '';
+  STATE.partida.palavrasOrdem.forEach(palavra => {
+    const div = document.createElement('div');
+    div.className = 'palavra-zona';
+    div.dataset.palavra = palavra;
+    div.textContent = palavra;
+
+    /* Clique = tentar encaixar */
+    div.onclick = () => clicarPalavra(palavra);
+
+    /* Drop-zone */
+    div.addEventListener('dragover', (e) => {
+      if (STATE.partida.encaixesFeitos[palavra]) return;
+      e.preventDefault();
+      div.classList.add('alvo-drag');
+    });
+    div.addEventListener('dragleave', () => div.classList.remove('alvo-drag'));
+    div.addEventListener('drop', (e) => {
+      e.preventDefault();
+      div.classList.remove('alvo-drag');
+      if (STATE.partida.encaixesFeitos[palavra]) return;
+      const animalArrastado = e.dataTransfer.getData('text/plain');
+      tentarEncaixe(animalArrastado, palavra);
+    });
+
+    palavrasCont.appendChild(div);
+  });
+
+  renderPlacar();
+  renderMascote('svg-mascote-painel', 'pensando');
+  document.getElementById('balao-fala-painel').innerHTML =
+    `<b>Mu:</b> Toque ou arraste cada bicho até o nome dele!`;
+  document.getElementById('instrucao-txt').innerHTML =
+    `🐮 ${jogadorAtual().nome}, encaixe cada bichinho no nome certo!`;
+
+  /* Falar todos no início */
+  setTimeout(() => ouvirTodos(), 500);
+}
+
+function atualizarCabecalho() {
+  const j = jogadorAtual();
+  if (!j) return;
+  document.getElementById('pino-vez').textContent = j.idx + 1;
+  document.getElementById('pino-vez').style.background = CORES_PINOS[j.idx].fundo;
+  document.getElementById('nome-vez').textContent = `Vez de ${j.nome}`;
+  const txt = STATE.modo === 'relogio' ? `Rodada ${STATE.partida.rodada}` : `Rodada ${STATE.partida.rodada}/${STATE.partida.rodadaMax}`;
+  document.getElementById('info-rodada-cab').textContent = txt;
+}
+
+function atualizarInfoLateral() {
+  const j = jogadorAtual();
+  if (!j) return;
+  const txt = STATE.modo === 'relogio' ? `${STATE.partida.rodada}` : `${STATE.partida.rodada}/${STATE.partida.rodadaMax}`;
+  document.getElementById('rodada-info-side').textContent = txt;
+  const total = STATE.partida.animaisRodada.length;
+  const feitos = Object.keys(STATE.partida.encaixesFeitos).length;
+  document.getElementById('encaixados-info').textContent = `${feitos}/${total}`;
+  document.getElementById('nivel-info').textContent = NIVEIS_INFO[STATE.nivel].titulo;
+}
+
+/* SELECIONAR animal por clique (modo tap) */
+function selecionarAnimal(animal) {
+  if (STATE.partida.encaixesFeitos[animal.animal]) return;
+  /* Limpar seleção anterior */
+  document.querySelectorAll('.animal-arrastavel').forEach(el => el.classList.remove('selecionado'));
+  const div = document.querySelector(`.animal-arrastavel[data-animal="${animal.animal}"]`);
+  if (div) div.classList.add('selecionado');
+  STATE.partida.animalSelecionado = animal;
+  falar(animal.animal, { rate: 0.95 });
+  document.getElementById('instrucao-txt').innerHTML =
+    `🔊 <b>${animal.animal.toUpperCase()}</b>! Agora toque no nome dele.`;
+}
+
+/* CLICAR PALAVRA (resposta no modo tap) */
+function clicarPalavra(palavra) {
+  if (STATE.partida.encaixesFeitos[palavra]) return;
+  if (!STATE.partida.animalSelecionado) {
+    /* Sem animal selecionado · só fala a palavra */
+    falar(palavra, { rate: 0.95 });
+    return;
+  }
+  tentarEncaixe(STATE.partida.animalSelecionado.animal, palavra);
+}
+
+/* TENTAR ENCAIXE (origem: clique OU drag) */
+function tentarEncaixe(animalNome, palavra) {
+  const correto = animalNome === palavra;
+  const divAnimal = document.querySelector(`.animal-arrastavel[data-animal="${animalNome}"]`);
+  const divPalavra = document.querySelector(`.palavra-zona[data-palavra="${palavra}"]`);
+
+  if (correto) {
+    STATE.partida.encaixesFeitos[palavra] = true;
+    if (divAnimal) { divAnimal.classList.remove('selecionado'); divAnimal.classList.add('encaixado'); }
+    if (divPalavra) {
+      divPalavra.classList.add('completa');
+      const animalObj = STATE.partida.animaisRodada.find(a => a.animal === animalNome);
+      divPalavra.innerHTML = `<span class="emoji-completa">${animalObj.emoji}</span><span>${palavra.toUpperCase()}</span>`;
+    }
+    const j = jogadorAtual();
+    j.pontos += NIVEIS_INFO[STATE.nivel].pontos;
+    j.acertos++;
+    tocarSom('acerto');
+    renderMascote('svg-mascote-painel', 'feliz');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Mu:</b> ${elogio()}`;
+    document.getElementById('instrucao-txt').innerHTML =
+      `✅ <b>${palavra.toUpperCase()}</b>! ${elogio().replace(/[!🐮]/g, '').trim()}.`;
+    falar(palavra, { rate: 0.85 });
+    STATE.partida.animalSelecionado = null;
+  } else {
+    if (divAnimal) divAnimal.classList.add('errou');
+    if (divPalavra) divPalavra.classList.add('errou-zona');
+    tocarSom('erro');
+    renderMascote('svg-mascote-painel', 'surpresa');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Mu:</b> ${incentivo()}`;
+    document.getElementById('instrucao-txt').innerHTML =
+      `❌ Não é <b>${palavra.toUpperCase()}</b>! Tenta outra.`;
+    falar(`Não é ${palavra}. Tenta de novo.`, { rate: 0.9 });
+    setTimeout(() => {
+      if (divAnimal) { divAnimal.classList.remove('errou'); divAnimal.classList.remove('selecionado'); }
+      if (divPalavra) divPalavra.classList.remove('errou-zona');
+      STATE.partida.animalSelecionado = null;
+    }, 700);
+  }
+
+  atualizarInfoLateral();
+  renderPlacar();
+
+  /* Verificar se completou todos os animais da rodada */
+  if (Object.keys(STATE.partida.encaixesFeitos).length >= STATE.partida.animaisRodada.length) {
+    setTimeout(() => mostrarFeedbackRodada(), 800);
+  }
+}
+
+function mostrarFeedbackRodada() {
+  STATE.partida.fase = 'feedback';
+  const cont = document.getElementById('feedback-area');
+  const j = jogadorAtual();
+
+  const ehUltimaRodada = STATE.modo !== 'relogio' && STATE.partida.rodada >= STATE.partida.rodadaMax &&
+    (STATE.modo !== 'competitivo' || STATE.partida.vezAtual === STATE.partida.jogadores.length - 1);
+
+  const modoManual = STATE.modo === 'professor';
+  const pontosRodada = STATE.partida.animaisRodada.length * NIVEIS_INFO[STATE.nivel].pontos;
+
+  cont.innerHTML = `
+    <div class="feedback-rodada">
+      <h3>🎉 Rodada completa!</h3>
+      <div class="pts-info">
+        ${STATE.partida.animaisRodada.length} bichinhos encaixados · +${pontosRodada} pontos · ${j.nome}: ${j.pontos} pts
+      </div>
+      ${modoManual || ehUltimaRodada ? `
+        <button class="btn-proxima" onclick="proximaRodada()">
+          ${ehUltimaRodada ? '🏁 Ver resultado final' : '➡️ Próxima rodada'}
+        </button>
+      ` : `
+        <div class="auto-avanco-info">
+          <div class="auto-avanco-barra"><div class="auto-avanco-fill"></div></div>
+          <div style="font-family:'Fredoka',sans-serif; font-size:0.78rem; color:white; margin-top:4px; text-align:center;">
+            Próxima rodada em instantes...
+            <button class="btn-skip-auto" onclick="proximaRodada()">pular</button>
+          </div>
+        </div>
+      `}
+    </div>
+  `;
+
+  if (modoManual) return;
+
+  if (STATE.partida.autoAvancoTimer) clearTimeout(STATE.partida.autoAvancoTimer);
+  STATE.partida.autoAvancoTimer = setTimeout(() => proximaRodada(), TEMPO_AUTO_AVANCO);
+}
+
+function proximaRodada() {
+  if (STATE.partida.autoAvancoTimer) {
+    clearTimeout(STATE.partida.autoAvancoTimer);
+    STATE.partida.autoAvancoTimer = null;
+  }
+
+  if (STATE.modo === 'competitivo') {
+    STATE.partida.vezAtual = (STATE.partida.vezAtual + 1) % STATE.partida.jogadores.length;
+    if (STATE.partida.vezAtual === 0) STATE.partida.rodada++;
+  } else {
+    STATE.partida.rodada++;
+  }
+
+  if (STATE.modo !== 'relogio' && STATE.partida.rodada > STATE.partida.rodadaMax) {
+    encerrarPartida();
+    return;
+  }
+  prepararRodada();
+}
+
+function encerrarPartida() {
+  STATE.partida.ativa = false;
+  if (STATE.partida.timerInterval) {
+    clearInterval(STATE.partida.timerInterval);
+    STATE.partida.timerInterval = null;
+  }
+  if (STATE.partida.autoAvancoTimer) {
+    clearTimeout(STATE.partida.autoAvancoTimer);
+    STATE.partida.autoAvancoTimer = null;
+  }
+  if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+
+  const ordenados = STATE.partida.jogadores.slice().sort((a,b) => b.pontos - a.pontos);
+  const venc = ordenados[0];
+
+  let titulo = '';
+  let msg = '';
+  if (STATE.modo === 'competitivo') {
+    titulo = `🏆 ${venc.nome} venceu!`;
+    msg = `Com <b>${venc.pontos} pontos</b> e <b>${venc.acertos}</b> bichinhos certos!`;
+  } else if (STATE.modo === 'relogio') {
+    titulo = `⏱️ Tempo esgotado!`;
+    msg = `${venc.nome === 'Você' ? 'Você' : venc.nome} encaixou <b>${venc.acertos}</b> animais, totalizando <b>${venc.pontos} pontos</b>.`;
+  } else {
+    titulo = `🎉 Parabéns!`;
+    msg = `${venc.nome === 'Turma' ? 'A turma' : 'Você'} encaixou <b>${venc.acertos}</b> animais em ${STATE.partida.rodadaMax} rodadas, totalizando <b>${venc.pontos} pontos</b>.`;
+  }
+
+  document.getElementById('fim-titulo').textContent = titulo;
+  document.getElementById('fim-msg').innerHTML = msg;
+
+  let html = '<h4>📊 Ranking final</h4>';
+  ordenados.forEach((j, pos) => {
+    const med = pos === 0 ? '🥇' : pos === 1 ? '🥈' : pos === 2 ? '🥉' : `${pos+1}º`;
+    html += `
+      <div class="jog-linha">
+        <div class="pino-jog" style="background:${CORES_PINOS[j.idx].fundo}">${j.idx+1}</div>
+        <div class="nome">${med} ${j.nome}</div>
+        <div class="pts">${j.pontos} pts</div>
+      </div>
+      <div style="font-size:0.72rem; color:#475569; padding:0 6px 4px; font-family:'Fredoka',sans-serif;">
+        ✅ ${j.acertos} bichinhos corretos
+      </div>
+    `;
+  });
+  document.getElementById('ranking-final').innerHTML = html;
+
+  const acoes = document.getElementById('fim-acoes');
+  acoes.innerHTML = '';
+  const btn1 = document.createElement('button');
+  btn1.className = 'btn-confirmar dourado';
+  btn1.textContent = '↻ Jogar de novo';
+  btn1.onclick = () => { fecharModal('modal-fim'); comecarJogo(); };
+  acoes.appendChild(btn1);
+  const btn2 = document.createElement('button');
+  btn2.className = 'btn-cancelar';
+  btn2.textContent = '🏠 Menu';
+  btn2.onclick = () => { fecharModal('modal-fim'); voltarLobby(); };
+  acoes.appendChild(btn2);
+
+  document.getElementById('modal-fim').classList.add('aberto');
+  if (venc.acertos >= 5) criarConfetes();
+}
+
+function renderPlacar() {
+  const cont = document.getElementById('placar-linhas');
+  cont.innerHTML = '';
+  const ordenados = STATE.partida.jogadores.slice().sort((a,b) => b.pontos - a.pontos);
+  ordenados.forEach(j => {
+    const linha = document.createElement('div');
+    linha.className = 'jog-linha' + (j.idx === jogadorAtual().idx ? ' vez-dele' : '');
+    linha.innerHTML = `
+      <div class="pino-jog" style="background:${CORES_PINOS[j.idx].fundo}">${j.idx+1}</div>
+      <div class="nome">${j.nome}</div>
+      <div class="pts">${j.pontos}</div>
+    `;
+    cont.appendChild(linha);
+  });
+}
+
+function ouvirTodos() {
+  if (!STATE.partida.animaisRodada || STATE.partida.animaisRodada.length === 0) return;
+  /* Falar cada animal com pequeno delay */
+  const animais = STATE.partida.animaisRodada;
+  animais.forEach((a, i) => {
+    setTimeout(() => falar(a.animal, { rate: 0.92 }), i * 800);
+  });
+}
+
+function voltarLobby() {
+  if (STATE.partida.ativa && STATE.partida.rodada > 1) {
+    if (!confirm('Voltar ao menu? A partida atual será perdida.')) return;
+  }
+  STATE.partida.ativa = false;
+  if (STATE.partida.timerInterval) { clearInterval(STATE.partida.timerInterval); STATE.partida.timerInterval = null; }
+  if (STATE.partida.autoAvancoTimer) { clearTimeout(STATE.partida.autoAvancoTimer); STATE.partida.autoAvancoTimer = null; }
+  if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+  document.getElementById('jogo').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-fim');
+  renderLobby();
+}
+
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+
+/* ============ SOM ============ */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'acerto') {
+      const notas = [523, 659, 784, 1047];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t0 = c.currentTime + i * 0.07;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.18);
+        o.start(t0); o.stop(t0 + 0.2);
+      });
+    } else if (tipo === 'erro') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 320; o.type = 'sine';
+      g.gain.setValueAtTime(0.08, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.25);
+      o.frequency.exponentialRampToValueAtTime(180, c.currentTime + 0.25);
+      o.start(); o.stop(c.currentTime + 0.27);
+    }
+  } catch (e) {}
+}
+
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#65A30D','#365314','#FBBF24','#92400E','#FEF3C7','#BBF7D0'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* ============ A11Y ============ */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* WEBNODE EMBED */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => reportarAltura());
+  ro.observe(document.getElementById('pde-painel'));
+}
+
+/* SELOS BNCC */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'portugues',
+      icone: 'LP',
+      titulo: 'BNCC Língua Portuguesa · Alfabetização',
+      itens: [
+        { cod: 'EF01LP04', desc: 'Distinguir letras de outros sinais gráficos.' },
+        { cod: 'EF01LP14', desc: 'Identificar palavras pela leitura global e por reconhecimento visual.' },
+        { cod: 'EF02LP01', desc: 'Utilizar conhecimento do alfabeto na leitura e escrita.' },
+        { cod: 'EF02LP03', desc: 'Ler e escrever palavras com correspondências regulares diretas.' },
+        { cod: 'EF03LP01', desc: 'Ler/escrever palavras com correspondências regulares e irregulares.' }
+      ]
+    },
+    {
+      tipo: 'ciencias',
+      icone: 'CI',
+      titulo: 'BNCC Ciências · Vida e Evolução',
+      itens: [
+        { cod: 'EF01CI02', desc: 'Identificar as principais partes de um animal e suas características.' },
+        { cod: 'EF02CI04', desc: 'Identificar características de plantas e animais.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, TTS pt-BR, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão + AEE</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Drag-and-drop + tap (clique) para diferentes habilidades motoras, áudio TTS para baixa visão</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-fim'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+/* INIT */
+carregar();
+carregarA11y();
+renderLobby();
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+
+/* Expor pro smoke test */
+window.STATE = STATE;
+window.ANIMAIS = ANIMAIS;
+window.NIVEIS_INFO = NIVEIS_INFO;
+window.MODOS = MODOS;
+window.CORES_PINOS = CORES_PINOS;
+window.TEMPO_AUTO_AVANCO = TEMPO_AUTO_AVANCO;
+window.poolAnimais = poolAnimais;
+window.comecarJogo = comecarJogo;
+window.voltarLobby = voltarLobby;
+window.prepararRodada = prepararRodada;
+window.selecionarAnimal = selecionarAnimal;
+window.clicarPalavra = clicarPalavra;
+window.tentarEncaixe = tentarEncaixe;
+window.proximaRodada = proximaRodada;
+window.encerrarPartida = encerrarPartida;
+window.jogadorAtual = jogadorAtual;
+window.ouvirTodos = ouvirTodos;
+window.abrirAjuda = abrirAjuda;
+window.abrirAcessibilidade = abrirAcessibilidade;
+window.falar = falar;
+window.defA11y = defA11y;
+window.ESTADO_A11Y = ESTADO_A11Y;
+window.fecharModal = fecharModal;
+window.renderLobby = renderLobby;
+window.montarSelosBNCC = montarSelosBNCC;
+window.svgMascote = svgMascote;
+
+</script>
+</body>
+</html>

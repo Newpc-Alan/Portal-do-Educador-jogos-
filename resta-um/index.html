@@ -1,0 +1,1833 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Resta Um · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===========================================================
+   PADRÃO PORTAL DO EDUCADOR - RESTA UM
+   =========================================================== */
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #1E324A);
+  padding: 12px clamp(8px,2vw,18px) 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  --pde-escala: 1;
+  --pde-cor-texto: #1E324A;
+  font-size: calc(1rem * var(--pde-escala));
+}
+
+/* A11Y · escala */
+#pde-painel.txt-grande   { --pde-escala: 1.18; }
+#pde-painel.txt-enorme   { --pde-escala: 1.42; }
+#pde-painel.txt-gigante  { --pde-escala: 1.72; }
+
+/* A11Y · alto contraste */
+#pde-painel.alto-contraste { background: #000; padding: 20px 12px 28px; --pde-cor-texto: #FFF; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-jogo,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .lobby-secao { color: #FBBF24; }
+#pde-painel.alto-contraste .placar-item { background: #1A1A1A; border: 1px solid #FBBF24; }
+#pde-painel.alto-contraste .placar-item .valor { color: #FBBF24; }
+#pde-painel.alto-contraste .tabuleiro-fundo { background: #1A1A1A; border-color: #FBBF24; }
+#pde-painel.alto-contraste .casa.vazia { background: #000; border-color: #FBBF24; }
+#pde-painel.alto-contraste .casa.peca { background: #FBBF24; border-color: #FFF; }
+#pde-painel.alto-contraste .casa.peca .pino { background: #FBBF24; border-color: #FFF; }
+#pde-painel.alto-contraste .casa.selecionada .pino { background: #FFF; border-color: #FBBF24; }
+#pde-painel.alto-contraste .btn-acao { background: #FBBF24 !important; color: #000 !important; border: 3px solid #FFF; }
+#pde-painel.alto-contraste .btn-secundario { background: #1A1A1A !important; color: #FBBF24 !important; border: 2px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+#pde-painel.alto-contraste .info-banner { background: #1A1A1A; border-color: #FBBF24; color: #FFF; }
+
+/* A11Y · daltônico */
+#pde-painel.daltonico .casa.peca .pino { background: linear-gradient(135deg,#3B82F6,#1E3A8A); }
+#pde-painel.daltonico .casa.selecionada .pino { background: linear-gradient(135deg,#FB923C,#9A3412); }
+
+/* A11Y · sem animações */
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ============== HEADER ============== */
+#pde-painel .header {
+  background: linear-gradient(135deg,#1E324A 0%,#2C4A6B 100%);
+  border-radius: 14px;
+  padding: 12px 16px;
+  color: white;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 3px 10px rgba(30,50,74,0.15);
+}
+#pde-painel .header h1 {
+  font-family: 'Baloo 2',sans-serif;
+  font-size: clamp(1.05rem,2.5vw,1.4rem);
+  font-weight: 800; margin: 0; flex: 1; line-height: 1.1;
+}
+#pde-painel .header .acoes { display: flex; gap: 6px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 6px 11px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.85rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* ============== LOBBY ============== */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+#pde-painel .lobby-secao {
+  font-family: 'Baloo 2',sans-serif;
+  font-size: 1.15rem; font-weight: 800; color: #1E324A;
+  margin: 0 0 8px;
+}
+
+/* Card de explicação do jogo */
+#pde-painel .info-banner {
+  background: linear-gradient(135deg,#FEF3C7 0%,#FDE68A 100%);
+  border: 2px solid #F59E0B;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  color: #78350F;
+  line-height: 1.5;
+}
+#pde-painel .info-banner strong {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+  color: #92400E;
+}
+
+/* Como jogar - mini-grid de regras */
+#pde-painel .regras-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+#pde-painel .regra-card {
+  background: #F8FAFC;
+  border: 2px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+#pde-painel .regra-card .num {
+  background: linear-gradient(135deg,#37B1DA,#1E324A);
+  color: white;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+#pde-painel .regra-card .texto {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #475569;
+}
+#pde-painel .regra-card .texto b { color: #1E324A; }
+
+/* Estatísticas pessoais */
+#pde-painel .stats-pessoais {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+#pde-painel .stat-item {
+  background: white;
+  border: 2px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 10px 8px;
+  text-align: center;
+}
+#pde-painel .stat-item .label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 3px;
+}
+#pde-painel .stat-item .valor {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: #1E324A;
+  line-height: 1;
+}
+#pde-painel .stat-item.recorde .valor { color: #16A34A; }
+#pde-painel .stat-item.vitorias .valor { color: #FBBF24; }
+
+/* Botões */
+#pde-painel .botoes-lobby {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+#pde-painel .btn-acao {
+  background: linear-gradient(135deg,#B6D752 0%,#6B9B0F 100%);
+  color: #1E324A;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+  transition: transform 0.08s, box-shadow 0.08s;
+}
+#pde-painel .btn-acao:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.15); }
+#pde-painel .btn-secundario {
+  background: white;
+  color: #475569;
+  border: 2px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { border-color: #37B1DA; color: #37B1DA; }
+
+/* ============== TELA DE JOGO ============== */
+#pde-painel .area-jogo {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 240px 1fr;
+  align-items: start;
+}
+@media (max-width: 820px) { #pde-painel .area-jogo { grid-template-columns: 1fr; } }
+
+#pde-painel .painel-info,
+#pde-painel .area-tabuleiro {
+  background: white;
+  border-radius: 14px;
+  padding: 14px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+#pde-painel .painel-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Placar */
+#pde-painel .placar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+#pde-painel .placar-item {
+  background: linear-gradient(135deg,#F8FAFC,#F1F5F9);
+  border-radius: 10px;
+  padding: 10px 8px;
+  text-align: center;
+  border: 1px solid #E2E8F0;
+}
+#pde-painel .placar-item .label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 3px;
+}
+#pde-painel .placar-item .valor {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: #1E324A;
+  line-height: 1;
+}
+#pde-painel .placar-item.pecas .valor { color: #1E324A; }
+#pde-painel .placar-item.movimentos .valor { color: #37B1DA; }
+#pde-painel .placar-item.tempo .valor { color: #6B9B0F; }
+#pde-painel .placar-item.desfazer .valor { color: #F59E0B; font-size: 1.4rem; }
+
+/* Aviso fim de jogo (peças restantes) */
+#pde-painel .meta-info {
+  background: #F8FAFC;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.85rem;
+  color: #475569;
+  text-align: center;
+  border: 1px dashed #CBD5E1;
+}
+#pde-painel .meta-info b { color: #1E324A; }
+
+/* Botões durante o jogo */
+#pde-painel .botoes-jogo { display: flex; flex-direction: column; gap: 6px; }
+#pde-painel .btn-jogo {
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.92rem;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+#pde-painel .btn-jogo.desfazer {
+  background: #FEF3C7;
+  color: #92400E;
+  border-color: #F59E0B;
+}
+#pde-painel .btn-jogo.desfazer:hover:not(:disabled) { background: #FDE68A; }
+#pde-painel .btn-jogo.desfazer:disabled { opacity: 0.45; cursor: not-allowed; }
+#pde-painel .btn-jogo.reiniciar {
+  background: white;
+  color: #1E324A;
+  border-color: #1E324A;
+}
+#pde-painel .btn-jogo.reiniciar:hover { background: #F1F5F9; }
+
+/* ============== TABULEIRO ============== */
+#pde-painel .area-tabuleiro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#pde-painel .tabuleiro-fundo {
+  background: linear-gradient(135deg,#3D2817 0%,#5C3A1E 100%);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.3), 0 4px 14px rgba(0,0,0,0.15);
+  border: 4px solid #2C1A0F;
+  display: inline-block;
+}
+
+#pde-painel .tabuleiro {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  gap: 6px;
+}
+
+#pde-painel .casa {
+  width: clamp(34px, 8vw, 54px);
+  height: clamp(34px, 8vw, 54px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+#pde-painel .casa.invalida {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#pde-painel .casa.vazia {
+  background: rgba(0,0,0,0.5);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+  cursor: default;
+  border: 2px solid rgba(0,0,0,0.7);
+}
+
+#pde-painel .casa.peca {
+  cursor: pointer;
+  background: rgba(0,0,0,0.4);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+  border: 2px solid rgba(0,0,0,0.6);
+}
+#pde-painel .casa.peca .pino {
+  width: 78%;
+  height: 78%;
+  background: radial-gradient(circle at 30% 30%, #F4E4BC 0%, #D4A574 50%, #8B6F47 100%);
+  border-radius: 50%;
+  border: 2px solid #6B4226;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4), inset -2px -2px 4px rgba(0,0,0,0.2), inset 2px 2px 4px rgba(255,255,255,0.3);
+  transition: transform 0.15s;
+}
+#pde-painel .casa.peca:hover .pino { transform: scale(1.05); }
+
+#pde-painel .casa.selecionada .pino {
+  background: radial-gradient(circle at 30% 30%, #FED7AA 0%, #FB923C 50%, #C2410C 100%);
+  border-color: #9A3412;
+  box-shadow: 0 0 0 3px rgba(251,146,60,0.5), 0 0 12px rgba(251,146,60,0.6), inset -2px -2px 4px rgba(0,0,0,0.2), inset 2px 2px 4px rgba(255,255,255,0.3);
+  transform: scale(1.08);
+}
+
+/* Animação de captura: peça pula no centro */
+#pde-painel .casa.capturada .pino {
+  animation: capturar 0.4s ease-out forwards;
+}
+@keyframes capturar {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+/* Animação de movimento (peça que pula) */
+#pde-painel .casa.pulando .pino {
+  animation: pular 0.35s ease-out;
+}
+@keyframes pular {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* Status do turno */
+#pde-painel .status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #F1F5F9;
+  border-radius: 10px;
+  padding: 8px 14px;
+  width: 100%;
+  font-size: 0.92rem;
+  color: #475569;
+  font-weight: 600;
+}
+#pde-painel .status-bar .destaque {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  color: #1E324A;
+}
+
+/* ============== MODAIS ============== */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(15,23,42,0.65);
+  display: none; align-items: center; justify-content: center;
+  padding: 16px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 18px;
+  max-width: 540px; width: 100%; padding: 22px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 90vh; overflow-y: auto;
+  animation: modalIn 0.25s ease-out;
+  text-align: center;
+}
+@keyframes modalIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .icone-modal { font-size: 3.4rem; margin-bottom: 4px; display: block; line-height: 1; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Baloo 2',sans-serif; font-weight: 800; color: #1E324A;
+  margin: 0 0 6px; font-size: 1.5rem;
+}
+#pde-painel .modal-conteudo p { color: #475569; font-size: 0.95rem; line-height: 1.45; margin: 4px 0; }
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr;
+}
+#pde-painel .modal-conteudo .acoes.duo { grid-template-columns: 1fr 1fr; }
+#pde-painel .modal-conteudo button {
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  padding: 11px 16px; border-radius: 10px; border: none; cursor: pointer; font-size: 0.95rem;
+}
+#pde-painel .btn-confirmar { background: linear-gradient(135deg,#B6D752,#6B9B0F); color: #1E324A; }
+#pde-painel .btn-cancelar { background: #F1F5F9; color: #475569; }
+
+#pde-painel .estrelas-grandes { font-size: 2.5rem; letter-spacing: 6px; margin: 10px 0; }
+#pde-painel .estrelas-grandes .ativa { color: #FBBF24; display: inline-block; transform: scale(0); animation: estrelaPop 0.5s ease-out forwards; }
+#pde-painel .estrelas-grandes .ativa:nth-child(1) { animation-delay: 0.1s; }
+#pde-painel .estrelas-grandes .ativa:nth-child(2) { animation-delay: 0.4s; }
+#pde-painel .estrelas-grandes .ativa:nth-child(3) { animation-delay: 0.7s; }
+#pde-painel .estrelas-grandes .vazia { color: #CBD5E1; }
+@keyframes estrelaPop {
+  0% { transform: scale(0) rotate(-180deg); }
+  60% { transform: scale(1.3) rotate(15deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+/* Modal Ajuda */
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Baloo 2',sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1E324A;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.55; font-size: 0.92rem; color: #475569; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+
+/* Modal Acessibilidade */
+#pde-painel .a11y-grupo { background: #F8FAFC; border: 2px solid #E2E8F0; border-radius: 12px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Baloo 2',sans-serif; font-size: 1rem; font-weight: 800; color: #1E324A; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #64748B; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 8px; padding: 8px 4px; text-align: center; font-family: 'Baloo 2',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #37B1DA; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#37B1DA,#1E324A); color: white; border-color: #B6D752; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 800; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 8px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #37B1DA; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#B6D752,#6B9B0F); color: #1E324A; border-color: #6B9B0F; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #1E324A; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 700; font-size: 0.92rem; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+/* Confetes */
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 9px; height: 14px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* Selos BNCC */
+#pde-painel .selos-bncc { background: #F8FAFC; border-radius: 12px; padding: 12px 14px; margin: 14px 0 6px; text-align: left; border: 2px solid #E2E8F0; }
+#pde-painel .selos-bncc h3 { font-family: 'Baloo 2',sans-serif; font-weight: 800; color: #1E324A; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #E2E8F0; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 38px; height: 38px; background: linear-gradient(135deg,#37B1DA,#1E324A); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.matematica { background: linear-gradient(135deg,#0891B2,#0E7490); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 800; color: #1E324A; font-size: 0.88rem; margin-bottom: 3px; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.78rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #1E324A; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #E2E8F0; padding: 1px 6px; border-radius: 4px; font-size: 0.74rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #CBD5E1; font-size: 0.72rem; color: #64748B; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #1E324A; }
+
+@media (max-width: 600px) {
+  #pde-painel .header h1 { font-size: 1rem; }
+  #pde-painel .tabuleiro-fundo { padding: 12px; }
+  #pde-painel .tabuleiro { gap: 4px; }
+  #pde-painel .stats-pessoais { grid-template-columns: 1fr 1fr 1fr; }
+  #pde-painel .botoes-lobby { grid-template-columns: 1fr; }
+}
+
+/* ========================================================================
+   PATCH RESPONSIVO UNIVERSAL - NEWPC PORTAL DO EDUCADOR
+   Aplicado em: Resta Um, Fração Mágica, Formas Geométricas, Alfabeto v3
+   Foco: celular 320-414px (escolas públicas)
+   ======================================================================== */
+
+/* 1. CONTAINER NUNCA ESTOURA */
+#pde-painel {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  padding: 8px clamp(6px, 2vw, 16px) 16px !important;
+}
+
+/* 2. GARANTIR QUE NENHUM ELEMENTO INTERNO ESTOURA HORIZONTALMENTE */
+#pde-painel > * {
+  max-width: 100%;
+}
+#pde-painel img,
+#pde-painel svg,
+#pde-painel canvas,
+#pde-painel video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 3. HEADER: ações com flex-wrap e tamanho proporcional */
+#pde-painel .header {
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 10px !important;
+}
+#pde-painel .header h1 {
+  min-width: 0;
+  flex: 1 1 auto;
+  word-wrap: break-word;
+}
+#pde-painel .header .acoes {
+  flex-wrap: wrap;
+  gap: 4px;
+}
+#pde-painel .btn-header {
+  font-size: 0.78rem !important;
+  padding: 5px 9px !important;
+}
+
+/* 4. BOAS-VINDAS: empilha mascote sobre balão em mobile */
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas {
+    flex-direction: column;
+    text-align: center;
+    gap: 6px !important;
+  }
+  #pde-painel .boas-vindas .mascote-wrap {
+    width: 90px !important;
+    height: 90px !important;
+    margin: 0 auto;
+  }
+  #pde-painel .boas-vindas .balao::before {
+    /* setinha apontando pra cima em vez de pro lado */
+    left: 50% !important;
+    top: -10px !important;
+    transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+/* 5. TREINO-GRID: empilha em <=720px e JOGO VAI PRIMEIRO */
+@media (max-width: 720px) {
+  #pde-painel .treino-grid,
+  #pde-painel .area-jogo {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  /* Jogo primeiro, painel depois (aluno vê pergunta sem rolar) */
+  #pde-painel .area-treino,
+  #pde-painel .area-tabuleiro {
+    order: -1;
+  }
+  #pde-painel .painel-info {
+    order: 2;
+    padding: 10px !important;
+  }
+  /* Mini-mapa colapsável em mobile (só vê título) */
+  #pde-painel .mini-mapa {
+    margin-top: 4px !important;
+  }
+  #pde-painel .mini-mapa-item {
+    padding: 3px 6px !important;
+    font-size: 0.74rem !important;
+  }
+}
+
+/* 6. MAPA DE AVENTURA: grid fluido (não fixo em 6 colunas) */
+#pde-painel .mapa-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr)) !important;
+  gap: 6px !important;
+}
+@media (max-width: 480px) {
+  #pde-painel .mapa-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  #pde-painel .mapa-etapa {
+    padding: 6px 4px !important;
+  }
+  #pde-painel .mapa-etapa .circulo {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 0.92rem !important;
+  }
+  #pde-painel .mapa-etapa .emoji-lugar {
+    font-size: 1.4rem !important;
+  }
+  #pde-painel .mapa-etapa .nome-lugar {
+    font-size: 0.7rem !important;
+  }
+}
+
+/* 7. SVGs E FIGURAS: sempre fluidas */
+#pde-painel .pizza-svg,
+#pde-painel .forma-mostra svg,
+#pde-painel .forma-mini svg {
+  width: 100% !important;
+  height: auto !important;
+  max-width: min(200px, 70vw);
+  display: block;
+  margin: 0 auto;
+}
+#pde-painel .forma-mostra {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* 8. OPÇÕES E GRIDS: sempre 100% width antes do max-width */
+#pde-painel .opcoes-grid,
+#pde-painel .formas-grid,
+#pde-painel .pares-grid {
+  width: 100% !important;
+}
+
+/* 9. BOTÕES DE OPÇÃO: touch target adequado */
+#pde-painel .opcao-btn {
+  min-height: 56px !important;
+  padding: 12px 8px !important;
+  font-size: clamp(0.92rem, 3.5vw, 1.1rem) !important;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* 10. INPUTS: largura adequada */
+#pde-painel .input-num {
+  max-width: 100%;
+}
+#pde-painel .input-nome {
+  font-size: 1rem !important;
+  padding: 10px 12px !important;
+}
+
+/* 11. PAINEL DE INFO COMPACTO EM MOBILE */
+@media (max-width: 720px) {
+  #pde-painel .placar-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 4px !important;
+  }
+  #pde-painel .placar-item {
+    padding: 6px 4px !important;
+  }
+  #pde-painel .placar-item .label {
+    font-size: 0.62rem !important;
+  }
+  #pde-painel .placar-item .valor {
+    font-size: 1.15rem !important;
+  }
+  #pde-painel .placar-item.desfazer .valor {
+    font-size: 1rem !important;
+  }
+  #pde-painel .mascote-painel {
+    padding: 6px !important;
+  }
+  #pde-painel .mascote-painel .mascote-mini {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  #pde-painel .mascote-painel .balao {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* 12. TABULEIRO RESTA UM: casas escalam com viewport */
+#pde-painel .tabuleiro {
+  gap: clamp(3px, 0.8vw, 6px) !important;
+}
+#pde-painel .casa {
+  width: clamp(28px, min(8vw, 8vh), 54px) !important;
+  height: clamp(28px, min(8vw, 8vh), 54px) !important;
+}
+#pde-painel .tabuleiro-fundo {
+  padding: clamp(8px, 2vw, 18px) !important;
+}
+
+/* 13. CACA DE FORMAS: grid mais flexível */
+#pde-painel .formas-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(70px, calc(50% - 4px)), 1fr)) !important;
+  gap: 6px !important;
+}
+@media (min-width: 481px) {
+  #pde-painel .formas-grid {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)) !important;
+  }
+}
+
+/* 14. PERGUNTA E TEXTO: tamanho fluido */
+#pde-painel .pergunta-grande {
+  font-size: clamp(0.95rem, 4vw, 1.2rem) !important;
+  line-height: 1.3;
+  word-wrap: break-word;
+}
+
+/* 15. MODAIS: padding adaptativo + max-height segura */
+#pde-painel .modal-overlay {
+  padding: 8px !important;
+}
+#pde-painel .modal-conteudo {
+  padding: 16px !important;
+  max-height: 92vh !important;
+}
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo {
+    padding: 14px !important;
+    border-width: 3px !important;
+  }
+  #pde-painel .modal-conteudo h2 {
+    font-size: 1.25rem !important;
+  }
+  #pde-painel .modal-conteudo .mascote-modal {
+    width: 70px !important;
+    height: 70px !important;
+  }
+  #pde-painel .modal-conteudo .acoes,
+  #pde-painel .modal-conteudo .acoes.duo {
+    grid-template-columns: 1fr !important;
+  }
+  #pde-painel .estrelas-conquistadas,
+  #pde-painel .estrelas-grandes {
+    font-size: 2.4rem !important;
+    letter-spacing: 6px !important;
+  }
+}
+
+/* 16. SELOS BNCC: imprime bem em qualquer tela */
+#pde-painel .selos-bncc { padding: 10px 12px !important; }
+#pde-painel .selos-bncc .selo-row { gap: 8px !important; padding: 6px 0 !important; }
+#pde-painel .selos-bncc .selo-icone { width: 32px !important; height: 32px !important; font-size: 0.85rem !important; }
+#pde-painel .selos-bncc .selo-titulo { font-size: 0.82rem !important; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem !important; }
+
+/* 17. STATUS-BAR DO RESTA UM: empilha em mobile estreito */
+@media (max-width: 380px) {
+  #pde-painel .status-bar {
+    flex-direction: column;
+    gap: 2px;
+    text-align: center;
+    padding: 6px 8px !important;
+    font-size: 0.84rem !important;
+  }
+}
+
+/* 18. AJUSTES PARA TELA MUITO ESTREITA (320-380px - Galaxy A02s) */
+@media (max-width: 380px) {
+  #pde-painel {
+    padding: 6px 4px 12px !important;
+  }
+  #pde-painel .header h1 {
+    font-size: 0.92rem !important;
+  }
+  #pde-painel .btn-header {
+    font-size: 0.72rem !important;
+    padding: 4px 7px !important;
+  }
+  #pde-painel .lobby-card,
+  #pde-painel .area-treino,
+  #pde-painel .painel-info {
+    padding: 10px !important;
+    border-width: 2px !important;
+    border-radius: 12px !important;
+  }
+  #pde-painel .pergunta-grande {
+    font-size: 0.92rem !important;
+  }
+  #pde-painel .opcao-btn {
+    font-size: 0.92rem !important;
+    min-height: 50px !important;
+    padding: 10px 6px !important;
+  }
+  #pde-painel .btn-comecar-aventura {
+    font-size: 1rem !important;
+    padding: 11px 14px !important;
+  }
+}
+
+/* 19. FRACAO MAGICA: comparar lado a lado em mobile vira coluna */
+@media (max-width: 480px) {
+  #pde-painel .comparar-wrap {
+    flex-direction: column;
+    gap: 8px !important;
+  }
+  #pde-painel .soma-wrap {
+    flex-wrap: wrap;
+    gap: 6px !important;
+  }
+  #pde-painel .fracao-display {
+    font-size: 1.8rem !important;
+  }
+  #pde-painel .fracao-display.media {
+    font-size: 1.5rem !important;
+  }
+  #pde-painel .input-num {
+    width: 60px !important;
+    font-size: 1.4rem !important;
+  }
+}
+
+/* 20. ALFABETO V3: ajustes específicos para letras grandes */
+#pde-painel .letra-grande,
+#pde-painel .letra-display {
+  font-size: clamp(2.5rem, 12vw, 5rem) !important;
+}
+
+/* FIM DO PATCH RESPONSIVO UNIVERSAL */
+
+
+/* ============================================ */
+/* PATCH UNIFICADO v2                            */
+/* 1. Acessibilidade: escala de texto FUNCIONAL  */
+/* 2. Desktop-wide: aproveita tela grande        */
+/* ============================================ */
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 12px clamp(12px, 2vw, 24px) 24px; }
+  #pde-painel .lobby-card { padding: 18px; }
+  #pde-painel .area-treino { padding: 16px; }
+  #pde-painel .painel-info { padding: 16px; }
+  #pde-painel .treino-grid { grid-template-columns: 280px minmax(0, 1fr); gap: 18px; }
+  #pde-painel .opcoes-grid {
+    max-width: 900px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  #pde-painel .fases-grid {
+    max-width: 1100px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  #pde-painel .fase-card { min-height: 170px; padding: 14px 8px; }
+  #pde-painel .fase-card .svg-fase { width: 110px; height: 110px; }
+  #pde-painel .fase-card .nome-fase { font-size: 0.92rem; }
+  #pde-painel .cores-grid {
+    max-width: 800px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .instrumentos-grid {
+    max-width: 720px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  #pde-painel .instrumento-btn { min-height: 110px; }
+  #pde-painel .instrumento-btn .icone-instr { font-size: 2.6rem; }
+  #pde-painel .instrumento-btn .nome-instr { font-size: 0.85rem; }
+  #pde-painel .mapa-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .mapa-etapa { padding: 12px 8px; }
+  #pde-painel .mapa-etapa .emoji-lugar { font-size: 2.2rem; }
+  #pde-painel .mapa-etapa .nome-lugar { font-size: 0.85rem; }
+  #pde-painel .pergunta-grande { font-size: 1.35rem; padding: 0 8px; margin-bottom: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .modal-conteudo h2 { font-size: 1.65rem; }
+  #pde-painel .modal-conteudo p { font-size: 1.05rem; }
+  #pde-painel .opcao-btn { min-height: 64px; font-size: 1.05rem; padding: 14px 12px; }
+  #pde-painel .area-mistura { max-width: 420px; }
+  #pde-painel .pista-musica { height: 280px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  #pde-painel .compositor-grid { grid-template-columns: 90px 1fr; max-width: 900px; margin: 0 auto; }
+  #pde-painel .passo-cel { min-height: 38px; }
+  #pde-painel .seq-progresso { padding: 14px; max-width: 720px; margin: 8px auto; }
+  #pde-painel .seq-progresso .seq-passo { width: 44px; height: 44px; font-size: 1.6rem; }
+  #pde-painel .estrelinhas-prog { padding: 12px; }
+  #pde-painel .header h1 { font-size: 1.45rem; }
+  #pde-painel .btn-header { font-size: 0.92rem; padding: 7px 14px; }
+  #pde-painel .input-nome { font-size: 1.1rem; padding: 14px 18px; }
+  #pde-painel .btn-comecar-aventura { font-size: 1.2rem; padding: 14px 24px; }
+  #pde-painel .quiz-pergunta { padding: 18px; }
+  #pde-painel .quiz-pergunta .qsvg { width: 160px; height: 160px; }
+  #pde-painel .quiz-pergunta .qtext { font-size: 1.25rem; }
+  #pde-painel .info-fase { padding: 14px 18px; max-width: 900px; margin-left: auto; margin-right: auto; }
+  #pde-painel .alvo-info { max-width: 480px; padding: 12px 18px; font-size: 1.05rem; }
+  #pde-painel .pote-cor { width: 100px; height: 100px; }
+  #pde-painel .balde { width: 130px; height: 130px; }
+  #pde-painel .escolha-dupla { max-width: 480px; gap: 14px; }
+  #pde-painel .opcao-dupla { font-size: 1.2rem; min-height: 90px; padding: 22px 12px; }
+  #pde-painel .cor-mostra { width: 200px; height: 200px; }
+  #pde-painel .svg-ilustracao { width: 280px; height: 280px; }
+  #pde-painel .mapa-jogo-wrap { max-width: 900px; margin: 0 auto; }
+}
+@media (min-width: 1440px) {
+  #pde-painel { max-width: 1400px; }
+  #pde-painel .opcoes-grid { max-width: 1000px; }
+  #pde-painel .fases-grid { max-width: 1240px; }
+}
+/* === FIM PATCH UNIFICADO v2 === */
+
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>♟️ Resta Um</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ Acessibilidade</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓ Ajuda</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <!-- ===================== LOBBY ===================== -->
+  <div id="lobby" class="lobby-card">
+
+    <div class="info-banner">
+      <strong>♟️ Clássico Resta Um</strong>
+      Jogo de raciocínio lógico com 33 buracos em formato de cruz. Saltando peça por peça, o objetivo é chegar ao final com apenas <b>1 peça</b> no centro do tabuleiro.
+    </div>
+
+    <div class="lobby-secao">📋 Como jogar</div>
+    <div class="regras-grid">
+      <div class="regra-card">
+        <div class="num">1</div>
+        <div class="texto">Toque numa peça para <b>selecioná-la</b>.</div>
+      </div>
+      <div class="regra-card">
+        <div class="num">2</div>
+        <div class="texto">Toque num buraco vazio do <b>outro lado</b> de uma peça vizinha para pular sobre ela.</div>
+      </div>
+      <div class="regra-card">
+        <div class="num">3</div>
+        <div class="texto">A peça <b>saltada é capturada</b> e some do tabuleiro.</div>
+      </div>
+      <div class="regra-card">
+        <div class="num">4</div>
+        <div class="texto">Movimentos só podem ser <b>horizontais ou verticais</b>, nunca diagonais.</div>
+      </div>
+      <div class="regra-card">
+        <div class="num">5</div>
+        <div class="texto">Você tem <b>3 desfazes</b> por partida. Use com sabedoria!</div>
+      </div>
+      <div class="regra-card">
+        <div class="num">🎯</div>
+        <div class="texto">Vença com <b>1 peça no centro</b> · Ótimo com 1 em qualquer lugar · Bom com 2 ou 3 peças.</div>
+      </div>
+    </div>
+
+    <div class="lobby-secao">🏆 Suas estatísticas</div>
+    <div class="stats-pessoais">
+      <div class="stat-item">
+        <div class="label">Partidas</div>
+        <div class="valor" id="stat-partidas">0</div>
+      </div>
+      <div class="stat-item vitorias">
+        <div class="label">Vitórias</div>
+        <div class="valor" id="stat-vitorias">0</div>
+      </div>
+      <div class="stat-item recorde">
+        <div class="label">Recorde</div>
+        <div class="valor" id="stat-recorde">—</div>
+      </div>
+    </div>
+
+    <div class="botoes-lobby">
+      <button class="btn-secundario" onclick="resetarStats()">↻ Zerar estatísticas</button>
+      <button class="btn-acao" onclick="comecarJogo()">▶ Começar partida</button>
+    </div>
+  </div>
+
+  <!-- ===================== TELA DE JOGO ===================== -->
+  <div id="jogo" class="area-jogo hidden">
+
+    <div class="painel-info">
+      <div class="placar-grid">
+        <div class="placar-item pecas">
+          <div class="label">Peças</div>
+          <div class="valor" id="placar-pecas">32</div>
+        </div>
+        <div class="placar-item movimentos">
+          <div class="label">Movimentos</div>
+          <div class="valor" id="placar-movs">0</div>
+        </div>
+        <div class="placar-item tempo">
+          <div class="label">Tempo</div>
+          <div class="valor" id="placar-tempo">0:00</div>
+        </div>
+        <div class="placar-item desfazer">
+          <div class="label">Desfazer</div>
+          <div class="valor" id="placar-desfazer">3 / 3</div>
+        </div>
+      </div>
+
+      <div class="meta-info">
+        <b>🎯 Meta:</b> chegar a 1 peça no centro do tabuleiro
+      </div>
+
+      <div class="botoes-jogo">
+        <button class="btn-jogo desfazer" id="btn-desfazer" onclick="desfazer()">↶ Desfazer movimento</button>
+        <button class="btn-jogo reiniciar" onclick="confirmarReiniciar()">↻ Reiniciar partida</button>
+      </div>
+    </div>
+
+    <div class="area-tabuleiro">
+      <div class="status-bar">
+        <span id="status-instrucao">Toque numa peça para selecionar</span>
+        <span class="destaque" id="status-destaque"></span>
+      </div>
+      <div class="tabuleiro-fundo">
+        <div class="tabuleiro" id="tabuleiro"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===================== MODAIS ===================== -->
+  <div class="modal-overlay" id="modal-fim">
+    <div class="modal-conteudo">
+      <span class="icone-modal" id="fim-icone">🏆</span>
+      <h2 id="fim-titulo">Partida finalizada!</h2>
+      <p id="fim-msg">—</p>
+      <div class="estrelas-grandes" id="fim-estrelas"></div>
+      <p id="fim-detalhes" style="font-style:italic;"></p>
+      <div class="acoes duo">
+        <button class="btn-cancelar" onclick="fecharModal('modal-fim'); voltarLobby();">← Lobby</button>
+        <button class="btn-confirmar" onclick="fecharModal('modal-fim'); comecarJogo();">▶ Nova partida</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-confirma-reiniciar">
+    <div class="modal-conteudo">
+      <span class="icone-modal">↻</span>
+      <h2>Reiniciar partida?</h2>
+      <p>Você perderá o progresso atual e começará uma nova partida.</p>
+      <div class="acoes duo">
+        <button class="btn-cancelar" onclick="fecharModal('modal-confirma-reiniciar')">Cancelar</button>
+        <button class="btn-confirmar" onclick="fecharModal('modal-confirma-reiniciar'); comecarJogo();">Reiniciar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>♟️ Como Jogar Resta Um</h2>
+
+      <h3>🎯 Objetivo</h3>
+      <p>Eliminar todas as peças do tabuleiro, exceto uma. O ideal é que a última peça fique no <b>centro</b>.</p>
+
+      <h3>📋 Regras</h3>
+      <ol>
+        <li>O tabuleiro tem 33 buracos em formato de cruz, com 32 peças. Inicia com o centro vazio.</li>
+        <li>Selecione uma peça tocando nela.</li>
+        <li>Mova-a saltando sobre uma peça vizinha (horizontal ou vertical), caindo no buraco vazio do outro lado.</li>
+        <li>A peça saltada é capturada e removida do tabuleiro.</li>
+        <li>Não há saltos diagonais.</li>
+        <li>O jogo termina quando não houver mais movimentos possíveis.</li>
+      </ol>
+
+      <h3>⭐ Pontuação por estrelas</h3>
+      <ul>
+        <li><b>3 estrelas:</b> 1 peça restante NO CENTRO (vitória clássica)</li>
+        <li><b>2 estrelas:</b> 1 peça restante em qualquer outro lugar</li>
+        <li><b>1 estrela:</b> 2 ou 3 peças restantes (bom desempenho)</li>
+        <li><b>Sem estrela:</b> 4 ou mais peças (continue praticando)</li>
+      </ul>
+
+      <h3>💡 Estratégia</h3>
+      <ul>
+        <li>Pense vários movimentos à frente, como no xadrez.</li>
+        <li>Evite criar peças isoladas (sem vizinhos).</li>
+        <li>Use os 3 desfazes com sabedoria - eles são preciosos.</li>
+        <li>Trabalhar das pontas para o centro costuma funcionar melhor.</li>
+      </ul>
+
+      <h3>♿ Acessibilidade</h3>
+      <p>Ajuste o tamanho do texto, contraste e modo daltônico no botão "Acessibilidade".</p>
+
+      <div class="acoes">
+        <button class="btn-confirmar" onclick="fecharModal('modal-ajuda')">Entendi</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#64748B; font-size:0.88rem;">Configurações são salvas e valem para todos os jogos do Portal.</p>
+
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa, sala grande ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui cores quentes por azul/laranja</small></div>
+        </div>
+      </div>
+
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações padrão</button>
+      <div class="acoes">
+        <button class="btn-confirmar" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script>
+/* ===========================================================
+   TABULEIRO RESTA UM - Cruz 7×7 com cantos cortados
+   1 = casa válida (peça inicial), 0 = casa inválida (canto)
+   Centro = peça inicial vazia
+   =========================================================== */
+const TABULEIRO_INICIAL = [
+  [0, 0, 1, 1, 1, 0, 0],
+  [0, 0, 1, 1, 1, 0, 0],
+  [1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 0, 1, 1, 1],  // centro vazio
+  [1, 1, 1, 1, 1, 1, 1],
+  [0, 0, 1, 1, 1, 0, 0],
+  [0, 0, 1, 1, 1, 0, 0]
+];
+const CENTRO_LINHA = 3;
+const CENTRO_COLUNA = 3;
+const TOTAL_PECAS_INICIAIS = 32;
+const DESFAZER_MAX = 3;
+
+/* ===========================================================
+   ESTADO
+   =========================================================== */
+const STATE = {
+  tabuleiro: [],          // matriz 7x7: -1 inválida, 0 vazia, 1 peça
+  selecionada: null,      // {l, c} ou null
+  movimentos: 0,
+  pecas: TOTAL_PECAS_INICIAIS,
+  desfazerRestantes: DESFAZER_MAX,
+  historico: [],          // pilha de snapshots para desfazer
+  tempoInicio: null,
+  timerInterval: null,
+  jogoAtivo: false,
+  stats: {
+    partidas: 0,
+    vitorias: 0,
+    recorde: null   // menor número de peças restantes (1 = vitória, 0 inválido)
+  }
+};
+
+/* ===========================================================
+   PERSISTÊNCIA
+   =========================================================== */
+function salvarStats() {
+  try {
+    localStorage.setItem('pde_restaum_stats', JSON.stringify(STATE.stats));
+  } catch (e) {}
+}
+function carregarStats() {
+  try {
+    const raw = localStorage.getItem('pde_restaum_stats');
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    STATE.stats = {
+      partidas: s.partidas || 0,
+      vitorias: s.vitorias || 0,
+      recorde: s.recorde || null
+    };
+  } catch (e) {}
+}
+function resetarStats() {
+  if (!confirm('Zerar todas as estatísticas? Esta ação não pode ser desfeita.')) return;
+  STATE.stats = { partidas: 0, vitorias: 0, recorde: null };
+  salvarStats();
+  renderLobby();
+}
+
+/* ===========================================================
+   LOBBY
+   =========================================================== */
+function renderLobby() {
+  document.getElementById('stat-partidas').textContent = STATE.stats.partidas;
+  document.getElementById('stat-vitorias').textContent = STATE.stats.vitorias;
+  document.getElementById('stat-recorde').textContent =
+    STATE.stats.recorde !== null ? STATE.stats.recorde + (STATE.stats.recorde === 1 ? ' peça' : ' peças') : '—';
+}
+
+/* ===========================================================
+   COMEÇAR JOGO
+   =========================================================== */
+function comecarJogo() {
+  // Inicializa tabuleiro: copia matriz inicial trocando 0->-1 (inválida) e tudo válido começa com 1, exceto centro
+  STATE.tabuleiro = TABULEIRO_INICIAL.map((linha, l) =>
+    linha.map((v, c) => {
+      // Centro vazio (sempre uma casa válida, fica com 0)
+      if (l === CENTRO_LINHA && c === CENTRO_COLUNA) return 0;
+      // Cantos inválidos da cruz
+      if (v === 0) return -1;
+      // Demais casas válidas: começam com peça
+      return 1;
+    })
+  );
+  STATE.selecionada = null;
+  STATE.movimentos = 0;
+  STATE.pecas = TOTAL_PECAS_INICIAIS;
+  STATE.desfazerRestantes = DESFAZER_MAX;
+  STATE.historico = [];
+  STATE.tempoInicio = Date.now();
+  STATE.jogoAtivo = true;
+
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('jogo').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+
+  renderTabuleiro();
+  atualizarPlacar();
+  iniciarTimer();
+}
+
+function iniciarTimer() {
+  pararTimer();
+  STATE.timerInterval = setInterval(() => {
+    if (!STATE.jogoAtivo) return;
+    atualizarTempo();
+  }, 1000);
+}
+function pararTimer() {
+  if (STATE.timerInterval) {
+    clearInterval(STATE.timerInterval);
+    STATE.timerInterval = null;
+  }
+}
+function atualizarTempo() {
+  const seg = Math.floor((Date.now() - STATE.tempoInicio) / 1000);
+  const m = Math.floor(seg / 60);
+  const s = seg % 60;
+  document.getElementById('placar-tempo').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+}
+
+/* ===========================================================
+   RENDERIZAÇÃO DO TABULEIRO
+   =========================================================== */
+function renderTabuleiro() {
+  const tab = document.getElementById('tabuleiro');
+  tab.innerHTML = '';
+  for (let l = 0; l < 7; l++) {
+    for (let c = 0; c < 7; c++) {
+      const v = STATE.tabuleiro[l][c];
+      const casa = document.createElement('div');
+      casa.className = 'casa';
+      casa.dataset.l = l;
+      casa.dataset.c = c;
+
+      if (v === -1) {
+        casa.classList.add('invalida');
+      } else if (v === 0) {
+        casa.classList.add('vazia');
+      } else {
+        casa.classList.add('peca');
+        const pino = document.createElement('div');
+        pino.className = 'pino';
+        casa.appendChild(pino);
+      }
+
+      casa.addEventListener('click', () => clicarCasa(l, c));
+      tab.appendChild(casa);
+    }
+  }
+  if (STATE.selecionada) {
+    marcarSelecionada(STATE.selecionada.l, STATE.selecionada.c);
+  }
+}
+
+function marcarSelecionada(l, c) {
+  document.querySelectorAll('.casa').forEach(el => el.classList.remove('selecionada'));
+  const sel = document.querySelector(`.casa[data-l="${l}"][data-c="${c}"]`);
+  if (sel) sel.classList.add('selecionada');
+}
+
+function atualizarPlacar() {
+  document.getElementById('placar-pecas').textContent = STATE.pecas;
+  document.getElementById('placar-movs').textContent = STATE.movimentos;
+  document.getElementById('placar-desfazer').textContent = `${STATE.desfazerRestantes} / ${DESFAZER_MAX}`;
+  document.getElementById('btn-desfazer').disabled = STATE.desfazerRestantes === 0 || STATE.historico.length === 0;
+}
+
+function atualizarStatus(instrucao, destaque = '') {
+  document.getElementById('status-instrucao').textContent = instrucao;
+  document.getElementById('status-destaque').textContent = destaque;
+}
+
+/* ===========================================================
+   LÓGICA DO JOGO
+   =========================================================== */
+function clicarCasa(l, c) {
+  if (!STATE.jogoAtivo) return;
+  const v = STATE.tabuleiro[l][c];
+  if (v === -1) return;
+
+  // Caso 1: clicou em peça
+  if (v === 1) {
+    // Se já estava selecionada, desseleciona
+    if (STATE.selecionada && STATE.selecionada.l === l && STATE.selecionada.c === c) {
+      STATE.selecionada = null;
+      document.querySelectorAll('.casa').forEach(el => el.classList.remove('selecionada'));
+      atualizarStatus('Toque numa peça para selecionar');
+      return;
+    }
+    // Seleciona nova peça
+    STATE.selecionada = { l, c };
+    marcarSelecionada(l, c);
+    atualizarStatus('Toque num buraco vazio para mover', `Peça (${l+1},${c+1}) selecionada`);
+    return;
+  }
+
+  // Caso 2: clicou em buraco vazio
+  if (v === 0) {
+    if (!STATE.selecionada) {
+      atualizarStatus('Primeiro toque numa peça para selecionar');
+      return;
+    }
+    const sel = STATE.selecionada;
+    // Verifica se é movimento válido
+    if (movimentoValido(sel.l, sel.c, l, c)) {
+      executarMovimento(sel.l, sel.c, l, c);
+    } else {
+      // Tentou movimento inválido - dá feedback mas mantém seleção
+      atualizarStatus('Movimento inválido', 'Salte sobre uma peça vizinha');
+    }
+  }
+}
+
+function movimentoValido(lOrig, cOrig, lDest, cDest) {
+  const dl = lDest - lOrig;
+  const dc = cDest - cOrig;
+  // Movimento horizontal: 2 colunas, 0 linhas
+  // Movimento vertical: 0 colunas, 2 linhas
+  if (!((Math.abs(dl) === 2 && dc === 0) || (Math.abs(dc) === 2 && dl === 0))) return false;
+  // Casa destino deve estar vazia (já verificado, mas reforça)
+  if (STATE.tabuleiro[lDest][cDest] !== 0) return false;
+  // Casa entre origem e destino deve ter peça
+  const lMeio = lOrig + dl/2;
+  const cMeio = cOrig + dc/2;
+  if (STATE.tabuleiro[lMeio][cMeio] !== 1) return false;
+  return true;
+}
+
+function executarMovimento(lOrig, cOrig, lDest, cDest) {
+  // Salva snapshot no histórico
+  STATE.historico.push({
+    tabuleiro: STATE.tabuleiro.map(linha => linha.slice()),
+    selecionada: STATE.selecionada ? { ...STATE.selecionada } : null,
+    pecas: STATE.pecas,
+    movimentos: STATE.movimentos
+  });
+  // Limita histórico ao número de desfazeres permitidos (apenas o que pode ser desfeito)
+  // Mantém histórico maior para casos especiais; aplica limite ao desfazer
+  if (STATE.historico.length > DESFAZER_MAX + 50) STATE.historico.shift();
+
+  const lMeio = (lOrig + lDest) / 2;
+  const cMeio = (cOrig + cDest) / 2;
+
+  // Animação: peça da meio é capturada, peça origem "pula"
+  const casaMeio = document.querySelector(`.casa[data-l="${lMeio}"][data-c="${cMeio}"]`);
+  if (casaMeio && !document.getElementById('pde-painel').classList.contains('sem-animacoes')) {
+    casaMeio.classList.add('capturada');
+  }
+
+  // Aguarda animação e aplica mudança de estado
+  setTimeout(() => {
+    STATE.tabuleiro[lOrig][cOrig] = 0;
+    STATE.tabuleiro[lMeio][cMeio] = 0;
+    STATE.tabuleiro[lDest][cDest] = 1;
+    STATE.pecas--;
+    STATE.movimentos++;
+    STATE.selecionada = null;
+    renderTabuleiro();
+
+    // Animação na peça que pulou
+    const casaDest = document.querySelector(`.casa[data-l="${lDest}"][data-c="${cDest}"]`);
+    if (casaDest && !document.getElementById('pde-painel').classList.contains('sem-animacoes')) {
+      casaDest.classList.add('pulando');
+      setTimeout(() => casaDest.classList.remove('pulando'), 350);
+    }
+
+    atualizarPlacar();
+    atualizarStatus('Toque numa peça para selecionar');
+    tocarSom('mover');
+
+    // Verifica fim de jogo após movimento
+    setTimeout(() => verificarFim(), 100);
+  }, document.getElementById('pde-painel').classList.contains('sem-animacoes') ? 0 : 380);
+}
+
+function existeMovimentoPossivel() {
+  for (let l = 0; l < 7; l++) {
+    for (let c = 0; c < 7; c++) {
+      if (STATE.tabuleiro[l][c] !== 1) continue;
+      // Tenta os 4 movimentos
+      const direcoes = [[-2,0],[2,0],[0,-2],[0,2]];
+      for (const [dl, dc] of direcoes) {
+        const lDest = l + dl;
+        const cDest = c + dc;
+        if (lDest < 0 || lDest > 6 || cDest < 0 || cDest > 6) continue;
+        if (movimentoValido(l, c, lDest, cDest)) return true;
+      }
+    }
+  }
+  return false;
+}
+
+function verificarFim() {
+  if (existeMovimentoPossivel()) return;
+  // Fim de jogo
+  STATE.jogoAtivo = false;
+  pararTimer();
+  finalizarJogo();
+}
+
+/* ===========================================================
+   DESFAZER
+   =========================================================== */
+function desfazer() {
+  if (STATE.desfazerRestantes === 0 || STATE.historico.length === 0) return;
+  const snap = STATE.historico.pop();
+  STATE.tabuleiro = snap.tabuleiro;
+  STATE.selecionada = snap.selecionada;
+  STATE.pecas = snap.pecas;
+  STATE.movimentos = snap.movimentos;
+  STATE.desfazerRestantes--;
+  renderTabuleiro();
+  atualizarPlacar();
+  atualizarStatus('Movimento desfeito');
+  tocarSom('desfazer');
+}
+
+/* ===========================================================
+   REINICIAR
+   =========================================================== */
+function confirmarReiniciar() {
+  if (!STATE.jogoAtivo || STATE.movimentos === 0) {
+    comecarJogo();
+    return;
+  }
+  document.getElementById('modal-confirma-reiniciar').classList.add('aberto');
+}
+
+/* ===========================================================
+   FINALIZAR
+   =========================================================== */
+function finalizarJogo() {
+  STATE.stats.partidas++;
+  // Recorde: menor número de peças restantes
+  if (STATE.stats.recorde === null || STATE.pecas < STATE.stats.recorde) {
+    STATE.stats.recorde = STATE.pecas;
+  }
+  // Vitória: 1 peça (no centro = perfeito; em outro lugar = também conta como vitória)
+  const ehVitoriaPerfeita = STATE.pecas === 1 && STATE.tabuleiro[CENTRO_LINHA][CENTRO_COLUNA] === 1;
+  const ehVitoria = STATE.pecas === 1;
+  if (ehVitoria) STATE.stats.vitorias++;
+  salvarStats();
+
+  // Calcula estrelas
+  let estrelas, icone, titulo, msg;
+  if (ehVitoriaPerfeita) {
+    estrelas = 3;
+    icone = '🏆';
+    titulo = 'Vitória Perfeita!';
+    msg = 'Você terminou com 1 peça no centro do tabuleiro - o objetivo clássico do Resta Um!';
+    criarConfetes();
+  } else if (ehVitoria) {
+    estrelas = 2;
+    icone = '🥈';
+    titulo = 'Vitória!';
+    msg = 'Você terminou com 1 peça (mas fora do centro). Excelente!';
+    criarConfetes();
+  } else if (STATE.pecas <= 3) {
+    estrelas = 1;
+    icone = '👍';
+    titulo = 'Bom desempenho!';
+    msg = `Você terminou com ${STATE.pecas} peças. Tente reduzir para 1 na próxima!`;
+  } else {
+    estrelas = 0;
+    icone = '💪';
+    titulo = 'Continue praticando';
+    msg = `Você terminou com ${STATE.pecas} peças. O Resta Um é um desafio - tente novamente!`;
+  }
+
+  document.getElementById('fim-icone').textContent = icone;
+  document.getElementById('fim-titulo').textContent = titulo;
+  document.getElementById('fim-msg').textContent = msg;
+  let estrelasHtml = '';
+  for (let i = 0; i < 3; i++) {
+    estrelasHtml += i < estrelas ? '<span class="ativa">★</span>' : '<span class="vazia">★</span>';
+  }
+  document.getElementById('fim-estrelas').innerHTML = estrelasHtml;
+
+  const tempoSeg = Math.floor((Date.now() - STATE.tempoInicio) / 1000);
+  const m = Math.floor(tempoSeg / 60);
+  const s = tempoSeg % 60;
+  document.getElementById('fim-detalhes').textContent =
+    `${STATE.movimentos} movimentos · ${m}:${s.toString().padStart(2,'0')} · ${STATE.pecas} peça${STATE.pecas !== 1 ? 's' : ''} restante${STATE.pecas !== 1 ? 's' : ''}`;
+
+  document.getElementById('modal-fim').classList.add('aberto');
+}
+
+/* ===========================================================
+   VOLTAR LOBBY
+   =========================================================== */
+function voltarLobby() {
+  if (STATE.jogoAtivo && STATE.movimentos > 0) {
+    if (!confirm('Voltar ao lobby? O progresso da partida atual será perdido.')) return;
+  }
+  STATE.jogoAtivo = false;
+  pararTimer();
+  document.getElementById('jogo').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-fim');
+  fecharModal('modal-confirma-reiniciar');
+  renderLobby();
+}
+
+/* ===========================================================
+   MODAIS
+   =========================================================== */
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+
+/* ===========================================================
+   SOM
+   =========================================================== */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'mover') {
+      // "Click" do salto
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 600; o.type = 'triangle';
+      g.gain.setValueAtTime(0.1, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.12);
+      o.frequency.exponentialRampToValueAtTime(300, c.currentTime + 0.12);
+      o.start(); o.stop(c.currentTime + 0.14);
+    } else if (tipo === 'desfazer') {
+      // Som "rewind"
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 220; o.type = 'sine';
+      g.gain.setValueAtTime(0.08, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.2);
+      o.frequency.exponentialRampToValueAtTime(440, c.currentTime + 0.2);
+      o.start(); o.stop(c.currentTime + 0.22);
+    }
+  } catch (e) {}
+}
+
+/* ===========================================================
+   CONFETES
+   =========================================================== */
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#37B1DA','#B6D752','#1E324A','#FCD34D','#22C55E','#EF4444'];
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.7 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 2800);
+}
+
+/* ===========================================================
+   ACESSIBILIDADE (compartilhada com outros jogos)
+   =========================================================== */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    // Escala SEMPRE inicia em 'normal' (não persistir entre sessões; vários alunos compartilham dispositivo)
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* ===========================================================
+   AUTO-RESIZE WEBNODE
+   =========================================================== */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+const ro = new ResizeObserver(() => reportarAltura());
+ro.observe(document.getElementById('pde-painel'));
+
+/* ===========================================================
+   SELOS BNCC
+   =========================================================== */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'matematica',
+      icone: 'MAT',
+      titulo: 'BNCC Matemática · Pensamento Lógico',
+      itens: [
+        { cod: 'EF06MA02', desc: 'Reconhecer o sistema de numeração decimal e a noção de posição no tabuleiro.' },
+        { cod: 'EF07MA20', desc: 'Reconhecer e representar relações de simetria e regularidade em jogos de raciocínio.' },
+        { cod: 'EF08MA20', desc: 'Aplicar estratégias de resolução de problemas envolvendo planejamento de etapas.' },
+        { cod: 'EF09MA22', desc: 'Compreender ideias de combinatória e probabilidade em situações concretas.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Pensamento Computacional',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem.' },
+        { cod: 'EF15CO03', desc: 'Reconhecer princípios e algoritmos básicos no funcionamento de programas digitais.' },
+        { cod: 'EF69CO05', desc: 'Aplicar pensamento computacional na resolução de problemas: decomposição, padrões, abstração e algoritmos.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#64748B; margin-bottom:8px; line-height:1.4;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-fim'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+/* ===========================================================
+   INICIALIZAÇÃO
+   =========================================================== */
+carregarStats();
+carregarA11y();
+renderLobby();
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+  if (e.key === 'z' && (e.ctrlKey || e.metaKey) && STATE.jogoAtivo) {
+    e.preventDefault();
+    desfazer();
+  }
+});
+</script>
+
+</body>
+</html>

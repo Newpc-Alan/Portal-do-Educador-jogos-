@@ -1,0 +1,2276 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Stop / Adedonha Educativo · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #1E324A);
+  padding: 6px clamp(6px, 1.5vw, 12px) 10px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  --pde-cor-texto: #1E324A;
+  background: linear-gradient(180deg, #FEF3C7 0%, #FED7AA 50%, #DC2626 100%);
+  border-radius: 12px;
+}
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-jogo,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .nivel-card,
+#pde-painel.alto-contraste .modo-card { background: #000 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .nivel-card.selecionado,
+#pde-painel.alto-contraste .modo-card.selecionado { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .letra-grande { background: #FBBF24 !important; color: #000 !important; border-color: #FFF !important; }
+#pde-painel.alto-contraste .categoria-input { background: #000 !important; border-color: #FBBF24 !important; color: #FFF !important; }
+#pde-painel.alto-contraste .categoria-input input { background: #000 !important; color: #FBBF24 !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#DC2626 0%,#991B1B 100%);
+  border-radius: 10px;
+  padding: 6px 10px;
+  color: white;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 6px rgba(153,27,27,0.25);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(0,0,0,0.35); border-color: rgba(255,255,255,0.4); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 14px;
+  padding: 10px;
+  border: 2px solid #DC2626;
+  box-shadow: 0 3px 8px rgba(220,38,38,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FBBF24 100%);
+  border-radius: 10px;
+  padding: 7px 10px;
+  margin-bottom: 8px;
+  border: 2px solid #92400E;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 64px; height: 64px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 10px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #1E324A;
+  font-size: 0.85rem;
+  line-height: 1.25;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: ''; position: absolute;
+  left: -8px; top: 18px;
+  width: 0; height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 0.95rem;
+  margin-bottom: 1px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 5px; padding: 8px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 70px; height: 70px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+#pde-painel .secao-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #991B1B;
+  font-size: 0.95rem;
+  margin: 8px 0 5px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* MODO DE JOGO */
+#pde-painel .modo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+}
+#pde-painel .modo-card {
+  background: white;
+  border: 2px solid #FBBF24;
+  border-radius: 10px;
+  padding: 8px 8px;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Fredoka',sans-serif;
+  color: #92400E;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #92400E;
+  display: flex; gap: 8px; align-items: center;
+}
+#pde-painel .modo-card:hover { transform: translateY(-2px); box-shadow: 0 4px 0 #92400E; }
+#pde-painel .modo-card.selecionado {
+  background: linear-gradient(135deg,#DC2626 0%,#991B1B 100%);
+  color: white;
+  border-color: #7F1D1D;
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #7F1D1D;
+}
+#pde-painel .modo-card .modo-emoji { font-size: 1.8rem; flex-shrink: 0; }
+#pde-painel .modo-card .modo-corpo { flex: 1; min-width: 0; }
+#pde-painel .modo-card .modo-titulo { font-weight: 700; font-size: 0.95rem; }
+#pde-painel .modo-card .modo-desc { font-size: 0.72rem; opacity: 0.85; margin-top: 1px; line-height: 1.2; }
+
+/* TEMPO POR RODADA */
+#pde-painel .tempo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  margin-bottom: 6px;
+}
+#pde-painel .tempo-card {
+  background: white;
+  border: 2px solid #FBBF24;
+  border-radius: 8px;
+  padding: 6px 4px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 0.82rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #92400E;
+}
+#pde-painel .tempo-card:hover { transform: translateY(-2px); }
+#pde-painel .tempo-card.selecionado {
+  background: linear-gradient(135deg,#F59E0B 0%,#92400E 100%);
+  color: white;
+  border-color: #451A03;
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #451A03;
+}
+
+/* JOGADORES (apenas modo 2-4) */
+#pde-painel .jogadores-area { display: none; margin-bottom: 6px; }
+#pde-painel .jogadores-area.ativo { display: block; }
+#pde-painel .jogadores-grid {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 5px 8px;
+  align-items: center;
+}
+#pde-painel .jogadores-grid label {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #991B1B;
+  font-size: 0.82rem;
+}
+#pde-painel .jogadores-grid input {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.9rem;
+  padding: 5px 8px;
+  border: 2px solid #FBBF24;
+  border-radius: 6px;
+  background: white;
+  color: #1E324A;
+  font-weight: 600;
+  width: 100%;
+}
+#pde-painel .jogadores-grid input:focus { outline: none; border-color: #DC2626; }
+#pde-painel .qtd-jogadores-btns {
+  display: flex; gap: 4px; margin-bottom: 6px;
+}
+#pde-painel .qtd-jogadores-btn {
+  flex: 1;
+  background: white;
+  border: 2px solid #FBBF24;
+  border-radius: 6px;
+  padding: 5px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+#pde-painel .qtd-jogadores-btn.ativo {
+  background: linear-gradient(135deg,#DC2626 0%,#991B1B 100%);
+  color: white;
+  border-color: #7F1D1D;
+}
+
+#pde-painel .btn-comecar {
+  width: 100%;
+  background: linear-gradient(135deg,#DC2626 0%,#991B1B 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #7F1D1D, 0 4px 10px rgba(220,38,38,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #7F1D1D;
+  margin-top: 6px;
+}
+#pde-painel .btn-comecar:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #7F1D1D, 0 2px 6px rgba(220,38,38,0.25);
+}
+#pde-painel .btn-comecar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* JOGO */
+#pde-painel .jogo-grid {
+  display: grid; gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #pde-painel .jogo-grid { grid-template-columns: 1fr !important; gap: 8px; }
+  #pde-painel .area-jogo { order: 1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+#pde-painel .area-jogo {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 3px solid #DC2626;
+  box-shadow: 0 2px 6px rgba(220,38,38,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+#pde-painel .painel-info {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 10px;
+  border: 3px solid #991B1B;
+  box-shadow: 0 2px 6px rgba(153,27,27,0.12);
+  min-width: 0;
+}
+
+/* TELA DE SORTEIO */
+#pde-painel .tela-sorteio {
+  text-align: center;
+  padding: 16px 8px;
+}
+#pde-painel .tela-sorteio h2 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: 1.2rem;
+  color: #991B1B;
+  margin: 0 0 6px;
+}
+#pde-painel .letra-grande {
+  width: clamp(140px, 30vw, 200px);
+  height: clamp(140px, 30vw, 200px);
+  margin: 8px auto;
+  background: linear-gradient(135deg, #FBBF24 0%, #D97706 100%);
+  border: 6px solid #DC2626;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Baloo 2','Fredoka',sans-serif;
+  font-weight: 800;
+  font-size: clamp(5rem, 14vw, 8rem);
+  color: white;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.25);
+  box-shadow: 0 6px 0 #7F1D1D, 0 8px 20px rgba(0,0,0,0.2);
+  animation: letraPop 0.6s ease-out;
+}
+@keyframes letraPop {
+  0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+  60% { transform: scale(1.2) rotate(15deg); }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+#pde-painel .letra-rodando {
+  animation: letraRoleta 0.08s linear infinite;
+}
+@keyframes letraRoleta {
+  0% { transform: scale(0.85); }
+  50% { transform: scale(1); }
+  100% { transform: scale(0.85); }
+}
+#pde-painel .tela-sorteio p {
+  font-family: 'Fredoka',sans-serif;
+  color: #475569;
+  font-size: 0.9rem;
+  margin: 6px 0;
+}
+#pde-painel .btn-iniciar-rodada {
+  background: linear-gradient(135deg,#DC2626 0%,#991B1B 100%);
+  color: white;
+  border: 3px solid white;
+  border-radius: 12px;
+  padding: 10px 22px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #7F1D1D;
+  margin-top: 6px;
+}
+#pde-painel .btn-iniciar-rodada:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* TELA DE ESCRITA */
+#pde-painel .tela-escrita { display: none; }
+#pde-painel .tela-escrita.ativa { display: block; }
+
+#pde-painel .cab-rodada {
+  background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+  border-radius: 10px;
+  padding: 6px 12px;
+  color: white;
+  text-align: center;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; flex-wrap: wrap;
+}
+#pde-painel .cab-rodada .lado {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Fredoka',sans-serif;
+}
+#pde-painel .cab-rodada .letra-mini {
+  background: white;
+  color: #DC2626;
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  box-shadow: 0 2px 0 #7F1D1D;
+}
+#pde-painel .cab-rodada .tempo-rest {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  background: rgba(0,0,0,0.2);
+  padding: 2px 12px;
+  border-radius: 999px;
+}
+#pde-painel .cab-rodada .tempo-rest.acabando {
+  background: #FBBF24;
+  color: #7F1D1D;
+  animation: pulsoTempo 0.5s ease infinite;
+}
+@keyframes pulsoTempo { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+#pde-painel .nome-jogador-atual {
+  background: #FEF3C7;
+  border: 2px dashed #F59E0B;
+  border-radius: 8px;
+  padding: 5px 10px;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 0.92rem;
+}
+#pde-painel .nome-jogador-atual strong { color: #DC2626; font-size: 1.05rem; }
+
+#pde-painel .categorias-cont {
+  display: flex; flex-direction: column; gap: 5px;
+}
+#pde-painel .categoria-input {
+  background: #FEF3C7;
+  border: 2px solid #F59E0B;
+  border-radius: 8px;
+  padding: 5px 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+#pde-painel .categoria-input .cat-label {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 0.82rem;
+  flex: 0 0 110px;
+}
+#pde-painel .categoria-input input {
+  flex: 1;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.92rem;
+  padding: 4px 8px;
+  border: 2px solid #FBBF24;
+  border-radius: 6px;
+  background: white;
+  color: #1E324A;
+  font-weight: 600;
+  min-width: 0;
+}
+#pde-painel .categoria-input input:focus { outline: none; border-color: #DC2626; }
+#pde-painel .categoria-input input:disabled { background: #F1F5F9; color: #94A3B8; }
+@media (max-width: 480px) {
+  #pde-painel .categoria-input { flex-direction: column; align-items: stretch; gap: 3px; padding: 5px 6px; }
+  #pde-painel .categoria-input .cat-label { flex: 0; font-size: 0.78rem; }
+}
+
+#pde-painel .btn-stop {
+  background: linear-gradient(135deg, #DC2626 0%, #7F1D1D 100%);
+  color: white;
+  border: 4px solid #FBBF24;
+  border-radius: 16px;
+  padding: 12px 22px;
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #450A0A, 0 6px 14px rgba(220,38,38,0.3);
+  letter-spacing: 2px;
+  width: 100%;
+}
+#pde-painel .btn-stop:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #450A0A;
+}
+
+/* TELA DE CONFERÊNCIA */
+#pde-painel .tela-confere { display: none; }
+#pde-painel .tela-confere.ativa { display: block; }
+
+#pde-painel .confere-jogador {
+  background: #FEF3C7;
+  border: 2px solid #F59E0B;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 6px;
+}
+#pde-painel .confere-jogador h4 {
+  font-family: 'Fredoka',sans-serif;
+  margin: 0 0 5px;
+  color: #92400E;
+  font-size: 0.95rem;
+  display: flex; align-items: center; gap: 6px;
+  flex-wrap: wrap;
+}
+#pde-painel .confere-jogador .pontos-final {
+  margin-left: auto;
+  background: #DC2626;
+  color: white;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+#pde-painel .confere-item {
+  display: flex; align-items: center; gap: 6px;
+  background: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin-bottom: 3px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.85rem;
+  border-left: 4px solid #CBD5E1;
+}
+#pde-painel .confere-item.valido { border-left-color: #16A34A; }
+#pde-painel .confere-item.invalido { border-left-color: #DC2626; }
+#pde-painel .confere-item .cat { color: #92400E; font-weight: 700; flex: 0 0 110px; font-size: 0.78rem; }
+#pde-painel .confere-item .palavra { color: #1E324A; font-weight: 600; flex: 1; min-width: 0; word-wrap: break-word; }
+#pde-painel .confere-item .palavra.vazia { color: #94A3B8; font-style: italic; font-weight: 500; }
+#pde-painel .confere-item .pontos {
+  background: #FBBF24;
+  color: #92400E;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+#pde-painel .confere-item .pontos.zero { background: #E2E8F0; color: #64748B; }
+#pde-painel .confere-item .acoes-conf {
+  display: flex; gap: 3px;
+}
+#pde-painel .confere-item button {
+  background: white;
+  border: 2px solid #CBD5E1;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+#pde-painel .confere-item button.aceitar:hover { background: #DCFCE7; border-color: #16A34A; color: #15803D; }
+#pde-painel .confere-item button.rejeitar:hover { background: #FEE2E2; border-color: #DC2626; color: #991B1B; }
+#pde-painel .confere-item button.aceitar.ativo { background: #16A34A; color: white; border-color: #15803D; }
+#pde-painel .confere-item button.rejeitar.ativo { background: #DC2626; color: white; border-color: #991B1B; }
+
+#pde-painel .resumo-rodada {
+  background: linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%);
+  border: 2px solid #15803D;
+  border-radius: 10px;
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  color: #14532D;
+  font-size: 0.9rem;
+}
+#pde-painel .resumo-rodada b { color: #15803D; font-family: 'Baloo 2',sans-serif; font-size: 1.05rem; }
+
+#pde-painel .placar-geral {
+  background: #FFF9E6;
+  border: 2px solid #FBBF24;
+  border-radius: 10px;
+  padding: 6px 10px;
+  margin: 6px 0;
+}
+#pde-painel .placar-geral h4 { font-family: 'Fredoka',sans-serif; color: #92400E; margin: 0 0 4px; font-size: 0.9rem; text-align: center; }
+#pde-painel .placar-linha {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 3px 6px;
+  background: white;
+  border-radius: 6px;
+  margin-bottom: 3px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.88rem;
+}
+#pde-painel .placar-linha.lider { background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%); color: white; }
+#pde-painel .placar-linha .pos { font-weight: 700; flex: 0 0 24px; }
+#pde-painel .placar-linha .nome { flex: 1; font-weight: 600; }
+#pde-painel .placar-linha .total { font-family: 'Baloo 2',sans-serif; font-weight: 800; }
+
+#pde-painel .acoes-rodada {
+  display: flex; gap: 6px; margin-top: 6px;
+}
+#pde-painel .acoes-rodada button { flex: 1; }
+#pde-painel .btn-prox-rodada {
+  background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #7F1D1D;
+}
+#pde-painel .btn-finalizar {
+  background: white;
+  color: #DC2626;
+  border: 2px solid #DC2626;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+/* PAINEL INFO */
+#pde-painel .info-jogo {
+  background: linear-gradient(135deg,#FEF3C7 0%,#FED7AA 100%);
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 2px solid #92400E;
+}
+#pde-painel .info-jogo .linha {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.78rem;
+  color: #92400E;
+  padding: 2px 0;
+}
+#pde-painel .info-jogo .linha .label { font-weight: 600; }
+#pde-painel .info-jogo .linha .valor { font-weight: 700; color: #DC2626; }
+
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg,#FEF3C7 0%,#FDE68A 100%);
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 2px solid #F59E0B;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 38px; height: 38px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #1E324A;
+  line-height: 1.2;
+  min-width: 0;
+  word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #DC2626; font-weight: 700; }
+
+#pde-painel .placar-mini {
+  background: white;
+  border: 2px solid #FBBF24;
+  border-radius: 8px;
+  padding: 5px 8px;
+  margin-bottom: 6px;
+}
+#pde-painel .placar-mini h5 {
+  font-family: 'Fredoka',sans-serif;
+  margin: 0 0 3px;
+  font-size: 0.78rem;
+  color: #92400E;
+  text-align: center;
+}
+#pde-painel .placar-mini-linha {
+  display: flex; justify-content: space-between;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.78rem;
+  padding: 2px 0;
+}
+#pde-painel .placar-mini-linha b { color: #DC2626; font-family: 'Baloo 2',sans-serif; }
+
+#pde-painel .legenda-pontos {
+  background: #DCFCE7;
+  border: 2px solid #16A34A;
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.72rem;
+  color: #14532D;
+  line-height: 1.4;
+}
+#pde-painel .legenda-pontos b { color: #15803D; }
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(127,29,29,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #DC2626;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal { width: 100px; height: 100px; margin: 0 auto 8px; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #991B1B;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #1E324A; font-size: 0.95rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#FCA5A5 0%,#DC2626 100%);
+  color: white; border: 3px solid #991B1B;
+  box-shadow: 0 4px 0 #7F1D1D;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .vencedor-coroa {
+  font-size: 4rem; margin: 8px 0;
+  animation: bounceCoroa 0.8s ease-out;
+}
+@keyframes bounceCoroa {
+  0% { transform: scale(0) rotate(-30deg); }
+  60% { transform: scale(1.3) rotate(10deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+#pde-painel .vencedor-nome {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: #DC2626;
+  margin: 4px 0;
+}
+#pde-painel .ranking-final {
+  background: #FEF3C7;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0;
+  text-align: left;
+}
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #991B1B;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #1E324A; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+
+#pde-painel .a11y-grupo { background: #FEF3C7; border: 3px solid #F59E0B; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #92400E; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #DC2626; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#DC2626 0%,#991B1B 100%); color: white; border-color: #7F1D1D; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #DC2626; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#FCA5A5 0%,#DC2626 100%); color: white; border-color: #991B1B; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #7F1D1D; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #DC2626;
+  border: 2px solid #DC2626; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #DC2626; color: white; }
+
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #FBBF24; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #92400E; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#DC2626,#991B1B); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.lingua { background: linear-gradient(135deg,#DC2626,#7F1D1D); }
+#pde-painel .selos-bncc .selo-icone.geografia { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.ciencias { background: linear-gradient(135deg,#0EA5E9,#0369A1); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #991B1B; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #991B1B; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #FEF3C7; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FBBF24; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #991B1B; }
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 8px clamp(10px, 1.5vw, 18px) 14px; }
+  #pde-painel .lobby-card { padding: 14px; }
+  #pde-painel .area-jogo { padding: 12px 16px; }
+  #pde-painel .painel-info { padding: 10px 12px; }
+  #pde-painel .jogo-grid { grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .modal-conteudo h2 { font-size: 1.5rem; }
+  #pde-painel .modal-conteudo p { font-size: 1rem; }
+  #pde-painel .header h1 { font-size: 1.2rem; }
+  #pde-painel .btn-header { font-size: 0.85rem; padding: 6px 12px; }
+  #pde-painel .btn-comecar { font-size: 1.05rem; padding: 11px 20px; }
+  #pde-painel .modo-card { padding: 10px 12px; }
+  #pde-painel .modo-card .modo-titulo { font-size: 1.05rem; }
+  #pde-painel .modo-card .modo-desc { font-size: 0.85rem; }
+  #pde-painel .categoria-input { padding: 6px 10px; }
+  #pde-painel .categoria-input .cat-label { flex: 0 0 130px; font-size: 0.9rem; }
+  #pde-painel .categoria-input input { font-size: 1rem; padding: 6px 10px; }
+}
+@media (min-width: 1440px) {
+  #pde-painel { max-width: 1400px; }
+}
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>🛑 Stop / Adedonha Educativo</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Oi! Sou a Letrinha! 📝</strong>
+        <span>Vamos jogar Stop? Eu sorteio a letra, vocês escrevem palavras nas 8 categorias antes do tempo acabar!</span>
+      </div>
+    </div>
+
+    <div class="secao-titulo">🎮 Modo de jogo</div>
+    <div class="modo-grid" id="modo-grid"></div>
+
+    <div class="secao-titulo">⏱️ Tempo por rodada</div>
+    <div class="tempo-grid" id="tempo-grid"></div>
+
+    <div class="jogadores-area" id="jogadores-area">
+      <div class="secao-titulo">👥 Jogadores</div>
+      <div class="qtd-jogadores-btns" id="qtd-jogadores-btns"></div>
+      <div class="jogadores-grid" id="jogadores-grid"></div>
+    </div>
+
+    <button class="btn-comecar" id="btn-comecar" onclick="comecarJogo()" disabled>🛑 Começar a partida!</button>
+  </div>
+
+  <div id="jogo" class="jogo-grid hidden">
+    <div class="area-jogo">
+      <div id="tela-sorteio" class="tela-sorteio"></div>
+      <div id="tela-escrita" class="tela-escrita"></div>
+      <div id="tela-confere" class="tela-confere"></div>
+    </div>
+
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Pronta pra rodada!</div>
+      </div>
+      <div class="info-jogo">
+        <div class="linha"><span class="label">🔢 Rodada</span><span class="valor" id="rodada-info">0</span></div>
+        <div class="linha"><span class="label">🎮 Modo</span><span class="valor" id="modo-info">—</span></div>
+        <div class="linha"><span class="label">⏱️ Tempo</span><span class="valor" id="tempo-info">—</span></div>
+      </div>
+      <div class="placar-mini" id="placar-mini-painel" style="display:none">
+        <h5>🏆 Placar</h5>
+        <div id="placar-mini-linhas"></div>
+      </div>
+      <div class="legenda-pontos">
+        <b>Pontuação:</b><br>
+        • Palavra única: <b>10pt</b><br>
+        • Empate na palavra: <b>5pt</b><br>
+        • Inválida ou vazia: <b>0pt</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-fim">
+    <div class="modal-conteudo">
+      <div class="vencedor-coroa">👑</div>
+      <h2 id="fim-titulo">🎉 Fim de jogo!</h2>
+      <div class="vencedor-nome" id="vencedor-nome">—</div>
+      <p id="fim-msg">Parabéns!</p>
+      <div class="ranking-final" id="ranking-final"></div>
+      <div class="acoes" id="fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🛑 Como brincar com a Letrinha</h2>
+      <h3>🎯 Objetivo</h3>
+      <p>Escrever uma palavra que comece com a letra sorteada em cada uma das 8 categorias, antes do tempo acabar!</p>
+
+      <h3>🎮 Modos de jogo</h3>
+      <ul>
+        <li><b>🖥️ Lousa (sala inteira):</b> projete na lousa, sorteie a letra e mostre na turma. A sala responde no caderno. Ao final, conferimos juntos exemplos de palavras válidas.</li>
+        <li><b>👥 2-4 jogadores:</b> revezamento no mesmo dispositivo. Cada um digita suas palavras na sua vez, depois o professor confere.</li>
+      </ul>
+
+      <h3>📚 Categorias pedagógicas</h3>
+      <ul>
+        <li><b>Animal · Fruta:</b> Ciências da Natureza</li>
+        <li><b>Verbo · Adjetivo:</b> Língua Portuguesa</li>
+        <li><b>País · Estado-BR:</b> Geografia</li>
+        <li><b>Profissão · Esporte:</b> Mundo do trabalho e cultura</li>
+      </ul>
+
+      <h3>⭐ Pontuação</h3>
+      <ul>
+        <li><b>10 pontos:</b> palavra válida que ninguém mais escreveu</li>
+        <li><b>5 pontos:</b> palavra válida que alguém também escreveu</li>
+        <li><b>0 pontos:</b> palavra vazia, repetida ou inválida</li>
+      </ul>
+
+      <h3>✅ Conferência</h3>
+      <p>O app valida automaticamente contra um dicionário interno. Se uma palavra válida for rejeitada, o professor pode clicar em <b>"✓ Aceitar"</b> para liberá-la (ex: "Tapioca" em Fruta-T).</p>
+
+      <h3>📖 BNCC</h3>
+      <ul>
+        <li>EF03LP08 (ortografia, classes gramaticais)</li>
+        <li>EF04LP10 (substantivos, verbos, adjetivos)</li>
+        <li>EF05GE02 (espaço geográfico e regiões)</li>
+      </ul>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-ajuda')">Bora jogar!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script id="script-jogo">
+/* DICIONÁRIO PEDAGÓGICO - PARTE 1
+ * Estrutura: DICIO[categoria][letra] = ['palavra1', 'palavra2', ...]
+ * Validação é case-insensitive e ignora acentos
+ */
+
+const DICIO = {
+
+  Animal: {
+    A: ['abelha','arara','arraia','aranha','andorinha','antílope','arara-azul','anta','andorinha','abelha-rainha'],
+    B: ['baleia','boi','besouro','bode','borboleta','búfalo','beija-flor','bicho-preguiça','bagre','bezerro'],
+    C: ['cachorro','cavalo','coelho','cobra','cabrito','capivara','camelo','canguru','caracol','cervo','codorna','coruja'],
+    D: ['dromedário','dálmata','doninha','dourado','dourado-do-mar'],
+    E: ['elefante','escorpião','esquilo','égua','ema','enguia','estrela-do-mar'],
+    F: ['foca','formiga','falcão','flamingo','foca','furão','filhote'],
+    G: ['galo','gato','girafa','golfinho','gavião','ganso','grilo','gambá'],
+    H: ['hipopótamo','hiena','hamster','harpia'],
+    I: ['iguana','ipê','iaque','irara'],
+    J: ['jacaré','jaguatirica','javali','joaninha','jiboia','jegue','jararaca'],
+    L: ['lobo','leão','lagarto','libélula','lhama','lagostim','lince','lula','lebre','lagarta'],
+    M: ['macaco','minhoca','morcego','mariposa','mico','mula','mosca','muriqui'],
+    N: ['narval','nambu'],
+    O: ['onça','ovelha','ostra','onça-pintada','orca','ornitorrinco','orangotango'],
+    P: ['pato','peixe','pinguim','pavão','porco','panda','periquito','perereca','polvo','pombo','peru','piranha'],
+    Q: ['quati','quelônio','quero-quero'],
+    R: ['rato','raposa','rinoceronte','rã','rena','rouxinol'],
+    S: ['sapo','siri','serpente','suricato','sucuri','saci','sabiá','serelepe'],
+    T: ['tatu','tigre','tubarão','tucano','tartaruga','tamanduá','touro','tilápia','tuiuiú'],
+    U: ['urubu','urso','urubu-rei'],
+    V: ['vaca','víbora','veado','veado-campeiro','vespa'],
+    Z: ['zebra','zangão']
+  },
+
+  Fruta: {
+    A: ['abacate','abacaxi','ameixa','amora','acerola','araçá','araticum','abiu'],
+    B: ['banana','bergamota','butiá','babaçu','buriti'],
+    C: ['caju','coco','caqui','cereja','carambola','cupuaçu','cidra','cacau','cambucá','cabeludinha'],
+    D: ['damasco','dendê'],
+    F: ['figo','framboesa','fruta-pão','fruta-do-conde'],
+    G: ['goiaba','graviola','grumixama'],
+    I: ['ingá'],
+    J: ['jabuticaba','jaca','jambo','juá','jatobá','jenipapo','jambolão'],
+    L: ['laranja','limão','lichia','lima','longan'],
+    M: ['mamão','manga','maracujá','melão','melancia','mexerica','morango','marmelo','murici','mangaba'],
+    N: ['nêspera','noni','noz'],
+    O: ['oliva','orange'],
+    P: ['pêra','pêssego','pitanga','pitaia','pequi','pinha','pupunha','physalis'],
+    R: ['romã'],
+    S: ['siriguela','sapoti'],
+    T: ['tamarindo','tâmara','tangerina','tomate','tucumã'],
+    U: ['uva','umbu','uvaia'],
+    V: ['vagem']
+  },
+
+  Verbo: {
+    A: ['amar','andar','agradecer','abraçar','aprender','ajudar','admirar','acordar','almoçar','aceitar','abrir','arrumar'],
+    B: ['beber','brincar','buscar','bater','botar','beijar','brilhar'],
+    C: ['cantar','correr','comer','chorar','contar','cuidar','crescer','colocar','comprar','conversar','consertar','cozinhar'],
+    D: ['dançar','dormir','desenhar','dirigir','descansar','descobrir','dizer','demorar','dividir','derrubar'],
+    E: ['estudar','escrever','escutar','enfeitar','enxergar','escolher','ensinar','escalar','enrolar','esquecer','encontrar','entender'],
+    F: ['falar','fazer','feder','ficar','folhear','fritar','fugir','fechar','furar'],
+    G: ['ganhar','gostar','girar','guardar','gritar','guiar','gozar','grunhir'],
+    H: ['haver','hospedar','hidratar','herdar'],
+    I: ['ir','imaginar','iluminar','impedir','iniciar','inventar','investigar','imitar','interromper'],
+    J: ['jogar','jantar','juntar','julgar','jurar','jejuar'],
+    L: ['ler','levar','lavar','levantar','lembrar','limpar','lutar','localizar'],
+    M: ['mexer','morder','morar','mostrar','mudar','molhar','mergulhar','medir','marcar','mandar'],
+    N: ['nadar','nascer','namorar','negar','navegar','notar','noticiar'],
+    O: ['ouvir','olhar','organizar','observar','obrigar','oferecer','operar','ousar'],
+    P: ['pular','pegar','passear','plantar','pensar','perder','pintar','procurar','perguntar','prestar','preparar','passar'],
+    Q: ['querer','quebrar','quentar','queimar','quietar'],
+    R: ['rir','rezar','responder','rolar','rasgar','reclamar','receber','reciclar','respirar'],
+    S: ['saber','sair','subir','sorrir','sentir','sonhar','separar','seguir','soltar','sentar'],
+    T: ['tomar','tocar','trabalhar','trocar','torcer','tropeçar','telefonar','tentar','tirar'],
+    U: ['usar','unir','utilizar','ultrapassar','umedecer'],
+    V: ['ver','viver','viajar','vencer','voltar','varrer','vender','virar','visitar'],
+    Z: ['zelar','zoar','zumbir']
+  },
+
+  Adjetivo: {
+    A: ['alto','alegre','azul','amarelo','amoroso','antigo','animado','amargo','azedo','arredondado'],
+    B: ['bom','bonito','branco','brilhante','bondoso','baixo','bravo','bobo','barulhento','bonzinho'],
+    C: ['calmo','careca','cheiroso','cansado','curioso','colorido','calor','curto','cheio','comprido','corajoso'],
+    D: ['doce','duro','difícil','divertido','direito','delicado','devagar','duvidoso','doentinho','desconhecido'],
+    E: ['estreito','esperto','elegante','engraçado','enorme','escuro','elétrico','espinhoso','estranho','educado'],
+    F: ['feio','feliz','frio','forte','fraco','fácil','famoso','fofo','firme','fundo'],
+    G: ['gordo','grande','generoso','gentil','grosso','gostoso','gelado','genial','grato'],
+    H: ['humilde','honesto','hábil','histórico'],
+    I: ['inteligente','importante','imenso','incrível','interessante','infinito','inocente','impaciente','igual'],
+    J: ['jovem','justo','jeitoso','jocoso'],
+    L: ['lindo','leve','largo','lento','longe','luminoso','liso','letrado','lerdo'],
+    M: ['mau','molhado','macio','médio','mole','magro','maior','mágico','malvado','manso','meigo'],
+    N: ['novo','negro','nervoso','natural','nobre','necessário','notável'],
+    O: ['ótimo','ocupado','original','obediente','observador','oco'],
+    P: ['pequeno','pesado','perigoso','perto','pobre','preto','puro','paciente','possível','poderoso','prático','perfeito'],
+    Q: ['quente','quieto','querido','quadrado'],
+    R: ['rápido','redondo','rico','raro','ruim','reto','romântico','recente','rouco'],
+    S: ['sábio','simpático','sério','seco','sujo','seguro','sincero','suave','sortudo','silencioso','simples'],
+    T: ['triste','tímido','tranquilo','torto','teimoso','traquina','transparente','típico','total'],
+    U: ['útil','único','urgente','unido','úmido'],
+    V: ['velho','vivo','verde','vermelho','valente','vazio','veloz','vaidoso','verdadeiro'],
+    Z: ['zangado']
+  }
+
+};
+/* DICIONÁRIO PEDAGÓGICO - PARTE 2 */
+
+Object.assign(DICIO, {
+
+  País: {
+    A: ['Argentina','Alemanha','Angola','Austrália','Áustria','Arábia Saudita','Albânia','Argélia','Afeganistão','Andorra'],
+    B: ['Brasil','Bolívia','Bélgica','Bulgária','Bangladesh','Belarus','Benin','Butão','Bahrein','Barbados'],
+    C: ['Canadá','Chile','China','Colômbia','Costa Rica','Cuba','Croácia','Camarões','Chipre','Cazaquistão'],
+    D: ['Dinamarca','Djibuti','Dominica'],
+    E: ['Equador','Egito','Espanha','Estônia','Etiópia','Eslováquia','Eslovênia','El Salvador'],
+    F: ['França','Finlândia','Filipinas','Fiji'],
+    G: ['Grécia','Gana','Guatemala','Guiana','Gabão','Geórgia','Granada'],
+    H: ['Holanda','Hungria','Haiti','Honduras'],
+    I: ['Índia','Inglaterra','Indonésia','Irã','Iraque','Irlanda','Islândia','Israel','Itália'],
+    J: ['Japão','Jamaica','Jordânia'],
+    L: ['Líbia','Líbano','Liberia','Lituânia','Luxemburgo','Letônia','Laos'],
+    M: ['México','Marrocos','Moçambique','Mongólia','Malásia','Madagascar','Mauritânia','Mali','Mônaco','Malta'],
+    N: ['Nigéria','Noruega','Nepal','Nova Zelândia','Namíbia','Nicarágua','Níger'],
+    O: ['Omã'],
+    P: ['Portugal','Paraguai','Peru','Panamá','Polônia','Paquistão','Filipinas'],
+    Q: ['Quênia','Qatar'],
+    R: ['Rússia','Romênia','Ruanda'],
+    S: ['Suécia','Suíça','Sérvia','Senegal','Síria','Somália','Sudão','Singapura','Suriname'],
+    T: ['Tailândia','Turquia','Tunísia','Tanzânia','Togo','Taiwan','Trinidad e Tobago'],
+    U: ['Uruguai','Ucrânia','Uganda'],
+    V: ['Venezuela','Vietnã','Vanuatu'],
+    Z: ['Zâmbia','Zimbábue']
+  },
+
+  'Estado-BR': {
+    A: ['Acre','Alagoas','Amapá','Amazonas'],
+    B: ['Bahia'],
+    C: ['Ceará'],
+    D: ['Distrito Federal'],
+    E: ['Espírito Santo'],
+    G: ['Goiás'],
+    M: ['Maranhão','Mato Grosso','Mato Grosso do Sul','Minas Gerais'],
+    P: ['Pará','Paraíba','Paraná','Pernambuco','Piauí'],
+    R: ['Rio de Janeiro','Rio Grande do Norte','Rio Grande do Sul','Rondônia','Roraima'],
+    S: ['Santa Catarina','São Paulo','Sergipe'],
+    T: ['Tocantins']
+  },
+
+  Profissão: {
+    A: ['advogado','agricultor','arquiteto','artista','astrônomo','ator','atriz','administrador','açougueiro','arrumadeira','astronauta','aviador'],
+    B: ['bombeiro','baleiro','bibliotecário','biólogo','bancário','babá','baterista'],
+    C: ['cantor','contador','cozinheiro','carpinteiro','cabeleireiro','caixa','carteiro','cientista','costureira','confeiteiro','consultor'],
+    D: ['dentista','desenhista','designer','diretor','desenvolvedor','decorador','digitador'],
+    E: ['engenheiro','enfermeiro','eletricista','economista','escritor','escrivão','escultor','encanador','editor'],
+    F: ['farmacêutico','fotógrafo','físico','fiscal','funileiro','feirante','frentista','florista'],
+    G: ['garçom','geógrafo','gerente','garimpeiro','guarda','guia','ginecologista','geólogo'],
+    H: ['historiador','horticultor'],
+    I: ['intérprete','ilustrador','industrial','instrutor','informático'],
+    J: ['jornalista','jardineiro','juiz','joalheiro'],
+    L: ['locutor','lutador','lavrador','linguista','lavadeira'],
+    M: ['médico','mecânico','motorista','massagista','marceneiro','maestro','marinheiro','militar','modelo','músico'],
+    N: ['nutricionista','navegador'],
+    O: ['operário','operador','oftalmologista','ourives'],
+    P: ['professor','pedreiro','padeiro','padre','pintor','programador','psicólogo','policial','pescador','piloto','poeta','psiquiatra'],
+    Q: ['químico','quitandeiro'],
+    R: ['repórter','recepcionista','redator','radialista','revendedor'],
+    S: ['sapateiro','secretário','sociólogo','soldado','salgadeiro','salva-vidas'],
+    T: ['taxista','tradutor','tecelão','técnico','torneiro','telefonista','tatuador'],
+    U: ['urbanista'],
+    V: ['vendedor','veterinário','vigia','vidraceiro','viticultor'],
+    Z: ['zelador','zootecnista']
+  },
+
+  Esporte: {
+    A: ['atletismo','automobilismo','arco e flecha'],
+    B: ['basquete','beisebol','boxe','badminton','beach tennis','boliche','bocha','biribol'],
+    C: ['canoagem','ciclismo','capoeira','caratê','corrida','críquete'],
+    D: ['dardo'],
+    E: ['esgrima','escalada','equitação'],
+    F: ['futebol','futsal','futevôlei','futebol americano'],
+    G: ['ginástica','golfe','goalball'],
+    H: ['handebol','halterofilismo','hipismo','hóquei'],
+    I: ['iatismo'],
+    J: ['judô','jiu-jitsu','jet ski'],
+    L: ['levantamento de peso','luta livre','luta romana'],
+    M: ['maratona','motociclismo','musculação','muay thai','mergulho'],
+    N: ['natação'],
+    O: ['orientação'],
+    P: ['polo','patinação','paintball','pesca','parkour','peteca'],
+    R: ['rúgbi','remo','rapel'],
+    S: ['surf','sinuca','sumô','snowboard','skate','softbol'],
+    T: ['tênis','tiro com arco','triatlo','taekwondo','trekking'],
+    V: ['vôlei','vela','vôlei de praia']
+  }
+
+});
+/* ============================================================
+ * STOP / ADEDONHA EDUCATIVO · Portal do Educador NEWPC
+ * Mascote: Letrinha (letra L antropomorfizada)
+ * ============================================================ */
+
+/* MASCOTE LETRINHA - letra L estilizada como personagem */
+function svgMascote(expressao = 'normal') {
+  let olhos;
+  if (expressao === 'feliz') {
+    olhos = `
+      <path d="M 38 44 Q 44 39, 50 44" fill="none" stroke="#451A03" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 54 44 Q 60 39, 66 44" fill="none" stroke="#451A03" stroke-width="2.5" stroke-linecap="round"/>
+    `;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <circle cx="44" cy="46" r="2.8" fill="#451A03"/>
+      <circle cx="60" cy="46" r="2.8" fill="#451A03"/>
+    `;
+  } else if (expressao === 'surpresa') {
+    olhos = `
+      <ellipse cx="44" cy="46" rx="4" ry="5" fill="white" stroke="#451A03" stroke-width="1.5"/>
+      <ellipse cx="60" cy="46" rx="4" ry="5" fill="white" stroke="#451A03" stroke-width="1.5"/>
+      <circle cx="44" cy="47" r="2.5" fill="#451A03"/>
+      <circle cx="60" cy="47" r="2.5" fill="#451A03"/>
+    `;
+  } else {
+    olhos = `
+      <ellipse cx="44" cy="46" rx="3.5" ry="4.5" fill="white" stroke="#451A03" stroke-width="1"/>
+      <ellipse cx="60" cy="46" rx="3.5" ry="4.5" fill="white" stroke="#451A03" stroke-width="1"/>
+      <circle cx="44.5" cy="47" r="2.2" fill="#451A03"/>
+      <circle cx="60.5" cy="47" r="2.2" fill="#451A03"/>
+      <circle cx="45.5" cy="46" r="0.8" fill="white"/>
+      <circle cx="61.5" cy="46" r="0.8" fill="white"/>
+    `;
+  }
+
+  let boca;
+  if (expressao === 'feliz') {
+    boca = `<path d="M 44 62 Q 52 70, 60 62" fill="#FB7185" stroke="#9F1239" stroke-width="1.2"/>`;
+  } else if (expressao === 'pensando') {
+    boca = `<line x1="48" y1="62" x2="56" y2="62" stroke="#451A03" stroke-width="2" stroke-linecap="round"/>`;
+  } else if (expressao === 'surpresa') {
+    boca = `<ellipse cx="52" cy="62" rx="3" ry="4" fill="#9F1239"/>`;
+  } else {
+    boca = `<path d="M 46 60 Q 52 64, 58 60" fill="none" stroke="#451A03" stroke-width="2" stroke-linecap="round"/>`;
+  }
+
+  return `
+    <!-- Sombra -->
+    <ellipse cx="50" cy="93" rx="28" ry="2.5" fill="rgba(0,0,0,0.18)"/>
+    <!-- Corpo: letra L grande em vermelho com bordas amarelas -->
+    <!-- Vertical da L -->
+    <path d="M 28 22 L 44 22 L 44 76 L 28 76 Z" fill="#DC2626" stroke="#FBBF24" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Horizontal da L -->
+    <path d="M 44 60 L 70 60 L 70 76 L 44 76 Z" fill="#DC2626" stroke="#FBBF24" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Brilho sutil -->
+    <path d="M 30 24 L 30 70" stroke="#FCA5A5" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <path d="M 46 62 L 68 62" stroke="#FCA5A5" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <!-- Bracinhos -->
+    <ellipse cx="22" cy="50" rx="3.5" ry="6" fill="#FBBF24" transform="rotate(-20 22 50)"/>
+    <ellipse cx="76" cy="68" rx="3.5" ry="6" fill="#FBBF24" transform="rotate(30 76 68)"/>
+    <!-- Mão direita segurando uma campainha de stop -->
+    <circle cx="80" cy="72" r="6" fill="#DC2626" stroke="#7F1D1D" stroke-width="1.5"/>
+    <circle cx="80" cy="72" r="3" fill="#FBBF24"/>
+    <line x1="80" y1="78" x2="82" y2="82" stroke="#451A03" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Cabeça apoiada no topo da letra -->
+    <ellipse cx="52" cy="40" rx="22" ry="20" fill="#FCA5A5"/>
+    <!-- Bochechinhas rosadas -->
+    <ellipse cx="34" cy="50" rx="3.5" ry="2.5" fill="#FB7185" opacity="0.5"/>
+    <ellipse cx="70" cy="50" rx="3.5" ry="2.5" fill="#FB7185" opacity="0.5"/>
+    <!-- Óculos de estudiosa -->
+    <circle cx="44" cy="47" r="7" fill="none" stroke="#1F2937" stroke-width="1.8" opacity="0.8"/>
+    <circle cx="60" cy="47" r="7" fill="none" stroke="#1F2937" stroke-width="1.8" opacity="0.8"/>
+    <line x1="51" y1="47" x2="53" y2="47" stroke="#1F2937" stroke-width="1.5"/>
+    <!-- Olhos (atrás dos óculos) -->
+    ${olhos}
+    <!-- Boca -->
+    ${boca}
+    <!-- Topetinho/cabelo -->
+    <path d="M 40 22 Q 46 14 52 18 Q 58 14 64 22" stroke="#7F1D1D" stroke-width="3" fill="#991B1B" stroke-linecap="round"/>
+    <!-- Lacinho amarelo (acessório) -->
+    <path d="M 56 18 L 60 14 L 64 18 L 60 22 Z" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
+    <circle cx="60" cy="18" r="1.5" fill="#92400E"/>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* CATEGORIAS NA ORDEM DO LOBBY */
+const CATEGORIAS = ['Animal','Fruta','Verbo','Adjetivo','País','Estado-BR','Profissão','Esporte'];
+const EMOJIS_CAT = {
+  'Animal': '🦁',
+  'Fruta': '🍎',
+  'Verbo': '🏃',
+  'Adjetivo': '✨',
+  'País': '🌎',
+  'Estado-BR': '🇧🇷',
+  'Profissão': '👷',
+  'Esporte': '⚽'
+};
+
+/* LETRAS VIÁVEIS (sem K, W, Y, X - poucas palavras válidas em pt-BR) */
+const LETRAS = ['A','B','C','D','E','F','G','H','I','J','L','M','N','O','P','Q','R','S','T','U','V','Z'];
+
+const MODOS = {
+  lousa: {
+    nome: 'Modo Lousa',
+    emoji: '🖥️',
+    desc: 'Sala inteira, professor projeta. Letrinha sorteia e mostra exemplos ao fim.'
+  },
+  jogadores: {
+    nome: 'Jogadores',
+    emoji: '👥',
+    desc: 'De 2 a 4 jogadores no mesmo dispositivo, revezando a vez.'
+  }
+};
+
+const TEMPOS = [
+  { id: 60,  label: '1 min' },
+  { id: 90,  label: '1m30s' },
+  { id: 120, label: '2 min' },
+  { id: 180, label: '3 min' }
+];
+
+const STATE = {
+  modo: null,          // 'lousa' | 'jogadores'
+  tempo: 90,
+  qtdJogadores: 2,
+  nomes: ['Jogador 1','Jogador 2','Jogador 3','Jogador 4'],
+  rodada: 0,
+  letrasUsadas: [],
+  partida: {
+    ativa: false,
+    letra: null,
+    fase: null,           // 'sorteio' | 'escrita' | 'confere'
+    jogadorAtual: 0,      // índice (só usado no modo jogadores)
+    respostas: [],        // [{jogadorIdx, palavras: {cat: 'palavra'}, validades: {cat: bool}, pontos: {cat: int}}]
+    tempoRestante: 0,
+    timer: null,
+    totais: []            // pontuação acumulada de todos os jogadores [int]
+  }
+};
+
+const ELOGIOS = ['Mandou ver!', 'Show!', 'Boa essa!', 'Excelente!', 'Você é fera!'];
+const INCENTIVOS_TEMPO = ['Corre que dá!', 'Pensa rápido!', 'Tá acabando!', 'Vai, vai!'];
+
+function salvar() {
+  try {
+    localStorage.setItem('pde_stop_dados', JSON.stringify({
+      modo: STATE.modo, tempo: STATE.tempo,
+      qtdJogadores: STATE.qtdJogadores, nomes: STATE.nomes
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_stop_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.modo) STATE.modo = d.modo;
+    if (d.tempo) STATE.tempo = d.tempo;
+    if (d.qtdJogadores) STATE.qtdJogadores = d.qtdJogadores;
+    if (Array.isArray(d.nomes)) STATE.nomes = d.nomes;
+  } catch (e) {}
+}
+
+function elogio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivo() { return INCENTIVOS_TEMPO[Math.floor(Math.random() * INCENTIVOS_TEMPO.length)]; }
+
+/* NORMALIZAR (case + acentos) */
+function normalizar(s) {
+  if (!s) return '';
+  return s.toString()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .replace(/\s+/g, ' ');
+}
+
+/* VERIFICAR SE PALAVRA É VÁLIDA */
+function palavraValida(categoria, letra, palavra) {
+  if (!palavra || palavra.trim() === '') return false;
+  const pNorm = normalizar(palavra);
+  const lNorm = normalizar(letra);
+  // Deve começar com a letra
+  if (!pNorm.startsWith(lNorm)) return false;
+  // Verificar dicionário
+  if (!DICIO[categoria]) return false;
+  const lista = DICIO[categoria][letra.toUpperCase()] || [];
+  return lista.some(p => normalizar(p) === pNorm);
+}
+
+/* LOBBY */
+function renderLobby() {
+  // Modos
+  const modoCont = document.getElementById('modo-grid');
+  modoCont.innerHTML = '';
+  Object.entries(MODOS).forEach(([key, m]) => {
+    const card = document.createElement('div');
+    card.className = 'modo-card' + (STATE.modo === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <div class="modo-emoji">${m.emoji}</div>
+      <div class="modo-corpo">
+        <div class="modo-titulo">${m.nome}</div>
+        <div class="modo-desc">${m.desc}</div>
+      </div>
+    `;
+    card.onclick = () => {
+      STATE.modo = key;
+      salvar();
+      renderLobby();
+    };
+    modoCont.appendChild(card);
+  });
+
+  // Tempos
+  const tempoCont = document.getElementById('tempo-grid');
+  tempoCont.innerHTML = '';
+  TEMPOS.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'tempo-card' + (STATE.tempo === t.id ? ' selecionado' : '');
+    card.textContent = t.label;
+    card.onclick = () => { STATE.tempo = t.id; salvar(); renderLobby(); };
+    tempoCont.appendChild(card);
+  });
+
+  // Jogadores (apenas modo jogadores)
+  const jArea = document.getElementById('jogadores-area');
+  if (STATE.modo === 'jogadores') {
+    jArea.classList.add('ativo');
+    // Botões de quantidade
+    const qtdCont = document.getElementById('qtd-jogadores-btns');
+    qtdCont.innerHTML = '';
+    [2,3,4].forEach(n => {
+      const b = document.createElement('button');
+      b.className = 'qtd-jogadores-btn' + (STATE.qtdJogadores === n ? ' ativo' : '');
+      b.textContent = `${n} jogadores`;
+      b.onclick = () => { STATE.qtdJogadores = n; salvar(); renderLobby(); };
+      qtdCont.appendChild(b);
+    });
+    // Inputs de nomes
+    const grid = document.getElementById('jogadores-grid');
+    grid.innerHTML = '';
+    for (let i = 0; i < STATE.qtdJogadores; i++) {
+      const l = document.createElement('label');
+      l.textContent = `Jogador ${i+1}:`;
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.maxLength = 20;
+      inp.value = STATE.nomes[i] || `Jogador ${i+1}`;
+      inp.oninput = (e) => { STATE.nomes[i] = e.target.value; salvar(); };
+      grid.appendChild(l);
+      grid.appendChild(inp);
+    }
+  } else {
+    jArea.classList.remove('ativo');
+  }
+
+  // Botão
+  const btn = document.getElementById('btn-comecar');
+  if (STATE.modo && STATE.tempo) {
+    btn.disabled = false;
+    btn.textContent = STATE.modo === 'lousa' ? '🛑 Começar partida (modo lousa)' : `🛑 Começar com ${STATE.qtdJogadores} jogadores`;
+  } else {
+    btn.disabled = true;
+    btn.textContent = '🛑 Escolha modo e tempo';
+  }
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+
+/* INICIAR PARTIDA */
+function comecarJogo() {
+  if (!STATE.modo || !STATE.tempo) return;
+  STATE.rodada = 0;
+  STATE.letrasUsadas = [];
+  STATE.partida.ativa = true;
+  if (STATE.modo === 'jogadores') {
+    STATE.partida.totais = new Array(STATE.qtdJogadores).fill(0);
+  } else {
+    STATE.partida.totais = [0]; // modo lousa: pontuação coletiva da sala
+  }
+
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('jogo').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+  document.getElementById('modo-info').textContent = MODOS[STATE.modo].emoji + ' ' + MODOS[STATE.modo].nome;
+  document.getElementById('tempo-info').textContent = STATE.tempo + 's';
+
+  renderMascote('svg-mascote-painel', 'normal');
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Letrinha:</b> Vamos lá!`;
+  proximaRodada();
+}
+
+/* PRÓXIMA RODADA - vai pra tela de sorteio */
+function proximaRodada() {
+  STATE.rodada++;
+  document.getElementById('rodada-info').textContent = STATE.rodada;
+  STATE.partida.fase = 'sorteio';
+  STATE.partida.letra = null;
+  STATE.partida.jogadorAtual = 0;
+  STATE.partida.respostas = [];
+
+  // Atualizar placar mini
+  atualizarPlacarMini();
+
+  // Esconder outras telas
+  document.getElementById('tela-escrita').classList.remove('ativa');
+  document.getElementById('tela-confere').classList.remove('ativa');
+  document.getElementById('tela-sorteio').style.display = '';
+
+  // Tela de sorteio
+  const tela = document.getElementById('tela-sorteio');
+  tela.innerHTML = `
+    <h2>🎲 Rodada ${STATE.rodada}</h2>
+    <p>Letrinha vai sortear uma letra!</p>
+    <div class="letra-grande" id="letra-roleta">?</div>
+    <p id="msg-sorteio">Clique no botão para começar o sorteio</p>
+    <button class="btn-iniciar-rodada" id="btn-sortear" onclick="sortearLetra()">🎲 Sortear letra</button>
+  `;
+  renderMascote('svg-mascote-painel', 'normal');
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Letrinha:</b> Rodada ${STATE.rodada}! Bora sortear!`;
+}
+
+function sortearLetra() {
+  const btn = document.getElementById('btn-sortear');
+  if (btn) btn.disabled = true;
+  const letraEl = document.getElementById('letra-roleta');
+  const msgEl = document.getElementById('msg-sorteio');
+  letraEl.classList.add('letra-rodando');
+
+  // Letras disponíveis (sem repetir nas últimas, mas com fallback)
+  let disponiveis = LETRAS.filter(l => !STATE.letrasUsadas.includes(l));
+  if (disponiveis.length === 0) {
+    STATE.letrasUsadas = [];
+    disponiveis = LETRAS.slice();
+  }
+
+  // Animação roleta
+  let cont = 0;
+  const tick = setInterval(() => {
+    const sorteada = LETRAS[Math.floor(Math.random() * LETRAS.length)];
+    letraEl.textContent = sorteada;
+    cont++;
+    if (cont > 18) {
+      clearInterval(tick);
+      // Letra final (de verdade, das disponíveis)
+      const letra = disponiveis[Math.floor(Math.random() * disponiveis.length)];
+      STATE.partida.letra = letra;
+      STATE.letrasUsadas.push(letra);
+      letraEl.textContent = letra;
+      letraEl.classList.remove('letra-rodando');
+      msgEl.innerHTML = `<b>Letra sorteada: ${letra}</b>`;
+      tocarSom('letra');
+      renderMascote('svg-mascote-painel', 'surpresa');
+      document.getElementById('balao-fala-painel').innerHTML = `<b>Letrinha:</b> Letra <b>${letra}</b>! Comecem!`;
+
+      // Mostrar botão pra ir pra escrita
+      const btn2 = document.getElementById('btn-sortear');
+      btn2.textContent = '▶️ Começar a rodada';
+      btn2.disabled = false;
+      btn2.onclick = irParaEscrita;
+    }
+  }, 70);
+}
+
+function irParaEscrita() {
+  STATE.partida.fase = 'escrita';
+  document.getElementById('tela-sorteio').style.display = 'none';
+  const tela = document.getElementById('tela-escrita');
+  tela.classList.add('ativa');
+
+  // No modo lousa: tempo único, sem caixas de input pra preencher
+  // (professor escreve no caderno) - mas oferecemos o botão STOP e o tempo
+  // No modo jogadores: cada jogador tem sua vez
+
+  if (STATE.modo === 'lousa') {
+    iniciarEscritaLousa();
+  } else {
+    STATE.partida.jogadorAtual = 0;
+    STATE.partida.respostas = [];
+    iniciarEscritaJogador();
+  }
+}
+
+/* MODO LOUSA: timer único, sem inputs */
+function iniciarEscritaLousa() {
+  const tela = document.getElementById('tela-escrita');
+  tela.innerHTML = `
+    <div class="cab-rodada">
+      <div class="lado">
+        <span>Letra:</span>
+        <div class="letra-mini">${STATE.partida.letra}</div>
+      </div>
+      <div class="tempo-rest" id="tempo-rest">${formatTempo(STATE.tempo)}</div>
+    </div>
+    <div style="background:#FEF3C7; border:2px dashed #F59E0B; border-radius:10px; padding:12px; margin:8px 0; text-align:center; font-family:'Fredoka',sans-serif; color:#92400E; font-weight:600; font-size:0.92rem;">
+      📝 <b>Modo Lousa:</b> a sala escreve no caderno!<br>
+      <span style="font-size:0.8rem;">Categorias: ${CATEGORIAS.map(c => EMOJIS_CAT[c] + ' ' + c).join(' · ')}</span>
+    </div>
+    <button class="btn-stop" onclick="pararRodada()">🛑 STOP! TEMPO ESGOTADO</button>
+  `;
+  iniciarTimer();
+  renderMascote('svg-mascote-painel', 'normal');
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Letrinha:</b> Escrevam! Tic, tac!`;
+}
+
+/* MODO JOGADORES: cada um digita na sua vez */
+function iniciarEscritaJogador() {
+  const idx = STATE.partida.jogadorAtual;
+  if (idx >= STATE.qtdJogadores) {
+    // Todos jogaram, ir pra conferência
+    irParaConferencia();
+    return;
+  }
+  const nome = STATE.nomes[idx] || `Jogador ${idx+1}`;
+  // Inicializar resposta vazia desse jogador
+  const respostaVazia = { jogadorIdx: idx, palavras: {}, validades: {}, manualOverride: {}, pontos: {} };
+  CATEGORIAS.forEach(c => { respostaVazia.palavras[c] = ''; });
+  STATE.partida.respostas.push(respostaVazia);
+
+  const tela = document.getElementById('tela-escrita');
+  tela.innerHTML = `
+    <div class="cab-rodada">
+      <div class="lado">
+        <span>Letra:</span>
+        <div class="letra-mini">${STATE.partida.letra}</div>
+      </div>
+      <div class="tempo-rest" id="tempo-rest">${formatTempo(STATE.tempo)}</div>
+    </div>
+    <div class="nome-jogador-atual">
+      Vez de: <strong>${nome}</strong> (${idx+1}/${STATE.qtdJogadores})
+    </div>
+    <div class="categorias-cont" id="categorias-cont">
+      ${CATEGORIAS.map(c => `
+        <div class="categoria-input">
+          <div class="cat-label">${EMOJIS_CAT[c]} ${c}</div>
+          <input type="text" data-cat="${c}" placeholder="Palavra com ${STATE.partida.letra}..." autocomplete="off" maxlength="40">
+        </div>
+      `).join('')}
+    </div>
+    <button class="btn-stop" onclick="pararRodada()">🛑 STOP! Terminei</button>
+  `;
+  // Focar no primeiro input
+  setTimeout(() => {
+    const primeiro = tela.querySelector('input');
+    if (primeiro) primeiro.focus();
+  }, 100);
+  iniciarTimer();
+  renderMascote('svg-mascote-painel', 'normal');
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Letrinha:</b> Vai, <b>${nome}</b>!`;
+}
+
+function formatTempo(s) {
+  const m = Math.floor(s / 60);
+  const ss = s % 60;
+  return `${m}:${String(ss).padStart(2,'0')}`;
+}
+
+function iniciarTimer() {
+  STATE.partida.tempoRestante = STATE.tempo;
+  if (STATE.partida.timer) clearInterval(STATE.partida.timer);
+  STATE.partida.timer = setInterval(() => {
+    STATE.partida.tempoRestante--;
+    const el = document.getElementById('tempo-rest');
+    if (el) {
+      el.textContent = formatTempo(STATE.partida.tempoRestante);
+      if (STATE.partida.tempoRestante <= 10) {
+        el.classList.add('acabando');
+        if (STATE.partida.tempoRestante % 3 === 0 && STATE.partida.tempoRestante > 0) {
+          renderMascote('svg-mascote-painel', 'surpresa');
+          document.getElementById('balao-fala-painel').innerHTML = `<b>Letrinha:</b> ${incentivo()}`;
+        }
+      }
+    }
+    if (STATE.partida.tempoRestante <= 0) {
+      clearInterval(STATE.partida.timer);
+      pararRodada();
+    }
+  }, 1000);
+}
+
+function pararRodada() {
+  if (STATE.partida.timer) clearInterval(STATE.partida.timer);
+  tocarSom('stop');
+
+  if (STATE.modo === 'lousa') {
+    // Conferência da lousa: mostra exemplos de palavras válidas em cada categoria
+    irParaConferenciaLousa();
+  } else {
+    // Capturar palavras digitadas pelo jogador atual
+    const idx = STATE.partida.jogadorAtual;
+    const resposta = STATE.partida.respostas[idx];
+    const inputs = document.querySelectorAll('#categorias-cont input');
+    inputs.forEach(inp => {
+      const cat = inp.dataset.cat;
+      resposta.palavras[cat] = inp.value.trim();
+    });
+    // Passar pro próximo jogador
+    STATE.partida.jogadorAtual++;
+    if (STATE.partida.jogadorAtual < STATE.qtdJogadores) {
+      // Próximo jogador
+      setTimeout(() => {
+        iniciarEscritaJogador();
+      }, 200);
+    } else {
+      // Todos jogaram, ir pra conferência
+      irParaConferencia();
+    }
+  }
+}
+
+/* CONFERÊNCIA MODO JOGADORES */
+function irParaConferencia() {
+  STATE.partida.fase = 'confere';
+  document.getElementById('tela-escrita').classList.remove('ativa');
+  const tela = document.getElementById('tela-confere');
+  tela.classList.add('ativa');
+
+  // Calcular validades e pontos iniciais
+  calcularPontosRodada();
+
+  renderConferencia();
+  renderMascote('svg-mascote-painel', 'pensando');
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Letrinha:</b> Vamos conferir!`;
+}
+
+function calcularPontosRodada() {
+  const letra = STATE.partida.letra;
+  // 1. Validar cada palavra contra dicionário (a menos que tenha override do professor)
+  STATE.partida.respostas.forEach(r => {
+    CATEGORIAS.forEach(cat => {
+      const p = r.palavras[cat];
+      if (r.manualOverride[cat] === 'aceitar') {
+        r.validades[cat] = true;
+      } else if (r.manualOverride[cat] === 'rejeitar') {
+        r.validades[cat] = false;
+      } else {
+        r.validades[cat] = palavraValida(cat, letra, p);
+      }
+    });
+  });
+
+  // 2. Calcular pontos por categoria considerando duplicatas
+  CATEGORIAS.forEach(cat => {
+    // Coletar palavras válidas normalizadas por jogador
+    const palavrasValidas = STATE.partida.respostas.map(r => {
+      if (r.validades[cat]) return normalizar(r.palavras[cat]);
+      return null;
+    });
+    // Contar frequência
+    const freq = {};
+    palavrasValidas.forEach(p => {
+      if (p) freq[p] = (freq[p] || 0) + 1;
+    });
+    // Pontuar
+    STATE.partida.respostas.forEach((r, i) => {
+      const p = palavrasValidas[i];
+      if (!p) {
+        r.pontos[cat] = 0;
+      } else if (freq[p] === 1) {
+        r.pontos[cat] = 10;
+      } else {
+        r.pontos[cat] = 5;
+      }
+    });
+  });
+}
+
+function renderConferencia() {
+  const tela = document.getElementById('tela-confere');
+  let html = `
+    <div class="resumo-rodada">
+      🎲 Rodada <b>${STATE.rodada}</b> · Letra <b>${STATE.partida.letra}</b>
+    </div>
+  `;
+
+  STATE.partida.respostas.forEach((r, idx) => {
+    const nome = STATE.nomes[r.jogadorIdx] || `Jogador ${r.jogadorIdx+1}`;
+    const totalRodada = Object.values(r.pontos).reduce((a,b) => a+b, 0);
+    html += `
+      <div class="confere-jogador">
+        <h4>${nome} <span class="pontos-final" id="pts-jog-${idx}">${totalRodada} pt</span></h4>
+    `;
+    CATEGORIAS.forEach(cat => {
+      const palavra = r.palavras[cat];
+      const valido = r.validades[cat];
+      const pts = r.pontos[cat];
+      const vazia = !palavra || palavra.trim() === '';
+      const cls = vazia ? 'vazia' : (valido ? 'valido' : 'invalido');
+      html += `
+        <div class="confere-item ${cls}" data-jog="${idx}" data-cat="${cat}">
+          <span class="cat">${EMOJIS_CAT[cat]} ${cat}</span>
+          <span class="palavra ${vazia ? 'vazia' : ''}">${vazia ? '(em branco)' : palavra}</span>
+          <span class="pontos ${pts === 0 ? 'zero' : ''}" id="pts-${idx}-${cat}">${pts}pt</span>
+          <div class="acoes-conf">
+            <button class="aceitar ${r.manualOverride[cat] === 'aceitar' ? 'ativo' : ''}" onclick="overrideValidade(${idx}, '${cat}', 'aceitar')" title="Aceitar mesmo se não estiver no dicionário">✓</button>
+            <button class="rejeitar ${r.manualOverride[cat] === 'rejeitar' ? 'ativo' : ''}" onclick="overrideValidade(${idx}, '${cat}', 'rejeitar')" title="Rejeitar (mesmo válida)">✗</button>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  });
+
+  // Placar geral (acumulado + dessa rodada)
+  html += `<div class="placar-geral"><h4>🏆 Placar acumulado</h4>`;
+  const totaisProvisorios = STATE.partida.respostas.map((r,i) => ({
+    idx: r.jogadorIdx,
+    nome: STATE.nomes[r.jogadorIdx] || `Jogador ${r.jogadorIdx+1}`,
+    total: STATE.partida.totais[r.jogadorIdx] + Object.values(r.pontos).reduce((a,b)=>a+b,0)
+  }));
+  totaisProvisorios.sort((a,b) => b.total - a.total);
+  totaisProvisorios.forEach((t,pos) => {
+    html += `<div class="placar-linha ${pos===0 ? 'lider' : ''}">
+      <span class="pos">${pos+1}º</span>
+      <span class="nome">${t.nome}</span>
+      <span class="total">${t.total} pt</span>
+    </div>`;
+  });
+  html += `</div>`;
+
+  html += `
+    <div class="acoes-rodada">
+      <button class="btn-prox-rodada" onclick="proximaRodadaConfirma()">➡️ Próxima rodada</button>
+      <button class="btn-finalizar" onclick="finalizarPartida()">🏁 Finalizar</button>
+    </div>
+  `;
+
+  tela.innerHTML = html;
+}
+
+function overrideValidade(idx, cat, acao) {
+  const r = STATE.partida.respostas[idx];
+  // Toggle: se clicar de novo no mesmo, remove
+  if (r.manualOverride[cat] === acao) {
+    delete r.manualOverride[cat];
+  } else {
+    r.manualOverride[cat] = acao;
+  }
+  // Recalcular tudo
+  calcularPontosRodada();
+  renderConferencia();
+}
+
+function proximaRodadaConfirma() {
+  // Aplicar pontos ao placar geral
+  STATE.partida.respostas.forEach(r => {
+    const tot = Object.values(r.pontos).reduce((a,b)=>a+b,0);
+    STATE.partida.totais[r.jogadorIdx] += tot;
+  });
+  proximaRodada();
+}
+
+/* CONFERÊNCIA MODO LOUSA - mostra exemplos */
+function irParaConferenciaLousa() {
+  STATE.partida.fase = 'confere';
+  document.getElementById('tela-escrita').classList.remove('ativa');
+  const tela = document.getElementById('tela-confere');
+  tela.classList.add('ativa');
+
+  const letra = STATE.partida.letra;
+  let html = `
+    <div class="resumo-rodada">
+      🎲 Rodada <b>${STATE.rodada}</b> · Letra <b>${letra}</b><br>
+      <span style="font-size:0.82rem;">Confiram as palavras da sala usando estes exemplos!</span>
+    </div>
+  `;
+
+  CATEGORIAS.forEach(cat => {
+    const exemplos = (DICIO[cat] && DICIO[cat][letra]) || [];
+    const lista = exemplos.length > 0 ? exemplos.slice(0, 8).join(', ') : '<i>sem exemplos no dicionário (sala pode pensar livre)</i>';
+    html += `
+      <div class="confere-jogador" style="background:white; border-color:#FBBF24;">
+        <h4 style="color:#DC2626;">${EMOJIS_CAT[cat]} ${cat}</h4>
+        <div style="font-family:'Fredoka',sans-serif; font-size:0.88rem; color:#1E324A; line-height:1.4;">
+          <b>Exemplos válidos:</b> ${lista}
+        </div>
+      </div>
+    `;
+  });
+
+  html += `
+    <div style="background:#DCFCE7; border:2px solid #16A34A; border-radius:10px; padding:8px; margin-top:6px; text-align:center; font-family:'Fredoka',sans-serif; color:#14532D; font-size:0.86rem;">
+      💡 <b>Dica:</b> conte os pontos dos alunos no quadro. Palavra única = 10pt · empate = 5pt
+    </div>
+    <div class="acoes-rodada">
+      <button class="btn-prox-rodada" onclick="proximaRodada()">➡️ Próxima letra</button>
+      <button class="btn-finalizar" onclick="finalizarPartida()">🏁 Encerrar</button>
+    </div>
+  `;
+  tela.innerHTML = html;
+  renderMascote('svg-mascote-painel', 'feliz');
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Letrinha:</b> ${elogio()}`;
+}
+
+/* PLACAR MINI NO PAINEL LATERAL (só modo jogadores) */
+function atualizarPlacarMini() {
+  const cont = document.getElementById('placar-mini-painel');
+  if (STATE.modo !== 'jogadores') {
+    cont.style.display = 'none';
+    return;
+  }
+  cont.style.display = '';
+  const linhas = document.getElementById('placar-mini-linhas');
+  const ordenados = STATE.partida.totais
+    .map((t,i) => ({ idx: i, nome: STATE.nomes[i] || `J${i+1}`, total: t }))
+    .sort((a,b) => b.total - a.total);
+  linhas.innerHTML = ordenados.map(j => `
+    <div class="placar-mini-linha">
+      <span>${j.nome}</span>
+      <b>${j.total}pt</b>
+    </div>
+  `).join('');
+}
+
+/* FINALIZAR PARTIDA */
+function finalizarPartida() {
+  STATE.partida.ativa = false;
+  if (STATE.partida.timer) clearInterval(STATE.partida.timer);
+
+  let html = '';
+  let titulo = '';
+  let nomeVenc = '';
+
+  if (STATE.modo === 'jogadores') {
+    // Aplicar pontos da rodada atual se ainda estiver em conferência
+    if (STATE.partida.fase === 'confere' && STATE.partida.respostas.length > 0) {
+      // Se ainda não confirmou a rodada, aplica agora
+      const jaAplicou = STATE.partida.respostas.every(r => {
+        const tot = Object.values(r.pontos).reduce((a,b)=>a+b,0);
+        return STATE.partida.totais[r.jogadorIdx] >= tot;
+      });
+      if (!jaAplicou) {
+        STATE.partida.respostas.forEach(r => {
+          const tot = Object.values(r.pontos).reduce((a,b)=>a+b,0);
+          STATE.partida.totais[r.jogadorIdx] += tot;
+        });
+      }
+    }
+    const ordenados = STATE.partida.totais
+      .map((t,i) => ({ idx: i, nome: STATE.nomes[i] || `J${i+1}`, total: t }))
+      .sort((a,b) => b.total - a.total);
+    nomeVenc = ordenados[0].nome;
+    titulo = `🏆 ${nomeVenc} venceu!`;
+    html += `<div style="font-family:'Fredoka',sans-serif; color:#92400E; font-size:0.9rem; margin-bottom:6px; text-align:center;">${STATE.rodada} rodadas jogadas</div>`;
+    ordenados.forEach((j, pos) => {
+      html += `<div class="placar-linha ${pos===0 ? 'lider' : ''}" style="font-size:1rem; padding:5px 8px;">
+        <span class="pos">${pos+1}º</span>
+        <span class="nome">${j.nome}</span>
+        <span class="total">${j.total} pt</span>
+      </div>`;
+    });
+  } else {
+    // Modo lousa: só relata rodadas
+    titulo = `🎉 Boa partida!`;
+    nomeVenc = 'Sala inteira';
+    html += `<div style="font-family:'Fredoka',sans-serif; color:#92400E; font-size:1rem; text-align:center; padding:10px;">
+      Jogamos <b>${STATE.rodada}</b> rodadas!<br>
+      <span style="font-size:0.88rem; opacity:0.85;">Letras sorteadas: <b>${STATE.letrasUsadas.join(', ')}</b></span>
+    </div>`;
+  }
+
+  document.getElementById('fim-titulo').textContent = titulo;
+  document.getElementById('vencedor-nome').textContent = nomeVenc;
+  document.getElementById('fim-msg').textContent = STATE.modo === 'jogadores' ? `Parabéns, ${nomeVenc}!` : 'Continuem praticando!';
+  document.getElementById('ranking-final').innerHTML = html;
+
+  const acoes = document.getElementById('fim-acoes');
+  acoes.innerHTML = '';
+  const btnNovo = document.createElement('button');
+  btnNovo.className = 'btn-confirmar';
+  btnNovo.textContent = '↻ Nova partida';
+  btnNovo.onclick = () => { fecharModal('modal-fim'); comecarJogo(); };
+  acoes.appendChild(btnNovo);
+  const btnLobby = document.createElement('button');
+  btnLobby.className = 'btn-cancelar';
+  btnLobby.textContent = '🏠 Menu';
+  btnLobby.onclick = () => { fecharModal('modal-fim'); voltarLobby(); };
+  acoes.appendChild(btnLobby);
+
+  document.getElementById('modal-fim').classList.add('aberto');
+  criarConfetes();
+}
+
+function voltarLobby() {
+  if (STATE.partida.ativa && STATE.rodada > 0) {
+    if (!confirm('Voltar ao menu? Sua partida será perdida.')) return;
+  }
+  STATE.partida.ativa = false;
+  if (STATE.partida.timer) clearInterval(STATE.partida.timer);
+  document.getElementById('jogo').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-fim');
+  renderLobby();
+}
+
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+
+/* SOM */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'letra') {
+      const notas = [523, 659, 784, 1047];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'triangle';
+        const t0 = c.currentTime + i * 0.08;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.2);
+        o.start(t0); o.stop(t0 + 0.22);
+      });
+    } else if (tipo === 'stop') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 440; o.type = 'square';
+      g.gain.setValueAtTime(0.15, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.3);
+      o.frequency.linearRampToValueAtTime(220, c.currentTime + 0.3);
+      o.start(); o.stop(c.currentTime + 0.32);
+    }
+  } catch (e) {}
+}
+
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#DC2626','#FBBF24','#F59E0B','#FCA5A5','#FB923C','#FEF3C7'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* A11Y */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* WEBNODE EMBED */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => reportarAltura());
+  ro.observe(document.getElementById('pde-painel'));
+}
+
+/* SELOS BNCC */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'lingua',
+      icone: 'LP',
+      titulo: 'BNCC Língua Portuguesa · Análise Linguística',
+      itens: [
+        { cod: 'EF03LP08', desc: 'Identificar e diferenciar, em textos, substantivos, verbos e adjetivos.' },
+        { cod: 'EF04LP10', desc: 'Reconhecer a função dos adjetivos como modificadores dos substantivos.' },
+        { cod: 'EF05LP04', desc: 'Diferenciar palavras primitivas, derivadas e compostas em situações de uso.' }
+      ]
+    },
+    {
+      tipo: 'geografia',
+      icone: 'GE',
+      titulo: 'BNCC Geografia · O Sujeito e Seu Lugar no Mundo',
+      itens: [
+        { cod: 'EF05GE02', desc: 'Identificar diferenças étnico-raciais e étnico-culturais e desigualdades sociais entre grupos em diferentes territórios.' },
+        { cod: 'EF06GE01', desc: 'Comparar modificações das paisagens nos lugares de vivência e os usos desses lugares em diferentes tempos.' }
+      ]
+    },
+    {
+      tipo: 'ciencias',
+      icone: 'CI',
+      titulo: 'BNCC Ciências da Natureza · Vida e Evolução',
+      itens: [
+        { cod: 'EF02CI04', desc: 'Descrever características de plantas e animais que fazem parte de seu cotidiano.' },
+        { cod: 'EF03CI04', desc: 'Identificar características sobre o modo de vida dos animais mais comuns no ambiente próximo.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Cultura Digital',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-fim'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+/* INIT */
+carregar();
+carregarA11y();
+renderLobby();
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+
+/* Expor pro smoke test e console */
+window.STATE = STATE;
+window.DICIO = DICIO;
+window.palavraValida = palavraValida;
+window.comecarJogo = comecarJogo;
+window.voltarLobby = voltarLobby;
+window.abrirAjuda = abrirAjuda;
+window.abrirAcessibilidade = abrirAcessibilidade;
+window.defA11y = defA11y;
+window.ESTADO_A11Y = ESTADO_A11Y;
+window.fecharModal = fecharModal;
+window.sortearLetra = sortearLetra;
+window.irParaEscrita = irParaEscrita;
+window.pararRodada = pararRodada;
+window.overrideValidade = overrideValidade;
+window.proximaRodada = proximaRodada;
+window.proximaRodadaConfirma = proximaRodadaConfirma;
+window.finalizarPartida = finalizarPartida;
+window.montarSelosBNCC = montarSelosBNCC;
+
+</script>
+</body>
+</html>

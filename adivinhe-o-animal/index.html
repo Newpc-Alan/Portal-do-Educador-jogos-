@@ -1,0 +1,2649 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Adivinhe o Animal · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #1E324A);
+  padding: 6px clamp(6px, 1.5vw, 12px) 10px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  --pde-cor-texto: #1E324A;
+  background: linear-gradient(180deg, #CFFAFE 0%, #14B8A6 50%, #134E4A 100%);
+  border-radius: 12px;
+}
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-jogo,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .modo-card,
+#pde-painel.alto-contraste .qtd-card,
+#pde-painel.alto-contraste .habitat-card,
+#pde-painel.alto-contraste .origem-card { background: #000 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .modo-card.selecionado,
+#pde-painel.alto-contraste .qtd-card.selecionado,
+#pde-painel.alto-contraste .habitat-card.selecionado,
+#pde-painel.alto-contraste .origem-card.selecionado { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .pista-card { background: #1F2937 !important; color: #FFF !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .opcao-resp { background: #000 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .opcao-resp.correta-mostrada { background: #16A34A !important; color: white !important; }
+#pde-painel.alto-contraste .opcao-resp.errada-mostrada { background: #DC2626 !important; color: white !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#0F766E 0%,#134E4A 100%);
+  border-radius: 10px;
+  padding: 6px 10px;
+  color: white;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 6px rgba(19,78,74,0.25);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 14px;
+  padding: 10px;
+  border: 2px solid #0F766E;
+  box-shadow: 0 3px 8px rgba(15,118,110,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #CFFAFE 0%, #14B8A6 100%);
+  border-radius: 10px;
+  padding: 7px 10px;
+  margin-bottom: 8px;
+  border: 2px solid #0F766E;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 64px; height: 64px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 10px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #1E324A;
+  font-size: 0.85rem;
+  line-height: 1.25;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: ''; position: absolute;
+  left: -8px; top: 18px;
+  width: 0; height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #0F766E;
+  font-size: 0.95rem;
+  margin-bottom: 1px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 5px; padding: 8px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 70px; height: 70px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+#pde-painel .secao-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #0F766E;
+  font-size: 0.92rem;
+  margin: 8px 0 5px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* CARTÕES DE OPÇÃO (modo, qtd, habitat, origem) */
+#pde-painel .modo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 6px;
+}
+@media (max-width: 600px) {
+  #pde-painel .modo-grid { grid-template-columns: 1fr; }
+}
+#pde-painel .modo-card {
+  background: white;
+  border: 2px solid #14B8A6;
+  border-radius: 10px;
+  padding: 8px 6px;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Fredoka',sans-serif;
+  color: #1E324A;
+  font-size: 0.82rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #0F766E;
+  display: flex; gap: 8px; align-items: flex-start;
+}
+#pde-painel .modo-card:hover { transform: translateY(-2px); box-shadow: 0 4px 0 #0F766E; }
+#pde-painel .modo-card.selecionado {
+  background: linear-gradient(135deg,#0F766E 0%,#134E4A 100%);
+  color: white;
+  border-color: #134E4A;
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #134E4A;
+}
+#pde-painel .modo-card .modo-emoji {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #14B8A6;
+}
+#pde-painel .modo-card.selecionado .modo-emoji { background: white; }
+#pde-painel .modo-card .modo-corpo { flex: 1; min-width: 0; }
+#pde-painel .modo-card .modo-titulo { font-weight: 700; font-size: 0.92rem; }
+#pde-painel .modo-card .modo-desc { font-size: 0.72rem; opacity: 0.85; margin-top: 2px; line-height: 1.2; }
+
+/* Quantidade jogadores (só modo competitivo) */
+#pde-painel .qtd-area { display: none; margin-bottom: 6px; }
+#pde-painel .qtd-area.ativo { display: block; }
+#pde-painel .qtd-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+#pde-painel .qtd-card {
+  background: white;
+  border: 2px solid #FBBF24;
+  border-radius: 10px;
+  padding: 8px 5px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 0.92rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #92400E;
+}
+#pde-painel .qtd-card:hover { transform: translateY(-2px); }
+#pde-painel .qtd-card.selecionado {
+  background: linear-gradient(135deg,#F59E0B 0%,#92400E 100%);
+  color: white;
+  border-color: #451A03;
+  transform: translateY(2px);
+}
+#pde-painel .qtd-card .qtd-emoji { display: block; font-size: 1.3rem; line-height: 1; }
+#pde-painel .qtd-card .qtd-num { display: block; font-size: 1rem; margin-top: 2px; }
+
+#pde-painel .jogadores-area { display: none; margin-bottom: 6px; }
+#pde-painel .jogadores-area.ativo { display: block; }
+#pde-painel .jogadores-grid {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 5px 8px;
+  align-items: center;
+}
+#pde-painel .jogadores-grid .pino-mini {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 3px solid #1E324A;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: white;
+  justify-self: center;
+}
+#pde-painel .jogadores-grid input {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.92rem;
+  padding: 5px 8px;
+  border: 2px solid #14B8A6;
+  border-radius: 6px;
+  background: white;
+  color: #1E324A;
+  font-weight: 600;
+  width: 100%;
+}
+#pde-painel .jogadores-grid input:focus { outline: none; border-color: #0F766E; }
+
+/* Filtros: origem + habitat */
+#pde-painel .filtros-area {
+  background: #F1F5F9;
+  border: 2px solid #94A3B8;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 6px;
+}
+#pde-painel .origem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 6px;
+}
+#pde-painel .origem-card {
+  background: white;
+  border: 2px solid #C4B5FD;
+  border-radius: 10px;
+  padding: 6px 4px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #5B21B6;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #5B21B6;
+}
+#pde-painel .origem-card:hover { transform: translateY(-2px); }
+#pde-painel .origem-card.selecionado {
+  background: linear-gradient(135deg,#8B5CF6 0%,#5B21B6 100%);
+  color: white;
+  border-color: #4C1D95;
+  transform: translateY(2px);
+}
+#pde-painel .habitat-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+@media (max-width: 600px) {
+  #pde-painel .habitat-grid { grid-template-columns: repeat(3, 1fr); }
+}
+#pde-painel .habitat-card {
+  background: white;
+  border: 2px solid #BBF7D0;
+  border-radius: 8px;
+  padding: 5px 3px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #14532D;
+  font-size: 0.72rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #14532D;
+}
+#pde-painel .habitat-card:hover { transform: translateY(-2px); }
+#pde-painel .habitat-card.selecionado {
+  background: linear-gradient(135deg,#15803D 0%,#14532D 100%);
+  color: white;
+  border-color: #14532D;
+  transform: translateY(2px);
+}
+#pde-painel .habitat-card .h-emoji { display: block; font-size: 1.1rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .info-pool {
+  margin-top: 4px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.75rem;
+  color: #475569;
+  text-align: center;
+}
+#pde-painel .info-pool b { color: #0F766E; }
+
+#pde-painel .btn-comecar {
+  width: 100%;
+  background: linear-gradient(135deg,#14B8A6 0%,#0F766E 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #134E4A, 0 4px 10px rgba(15,118,110,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #134E4A;
+  margin-top: 6px;
+}
+#pde-painel .btn-comecar:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #134E4A, 0 2px 6px rgba(15,118,110,0.25);
+}
+#pde-painel .btn-comecar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* JOGO */
+#pde-painel .jogo-grid {
+  display: grid; gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #pde-painel .jogo-grid { grid-template-columns: 1fr !important; gap: 8px; }
+  #pde-painel .area-jogo { order: 1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+#pde-painel .area-jogo {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 3px solid #0F766E;
+  box-shadow: 0 2px 6px rgba(15,118,110,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+#pde-painel .painel-info {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 10px;
+  border: 3px solid #0F766E;
+  box-shadow: 0 2px 6px rgba(15,118,110,0.12);
+  min-width: 0;
+}
+
+#pde-painel .cab-jogo {
+  background: linear-gradient(135deg, #0F766E 0%, #134E4A 100%);
+  border-radius: 10px;
+  padding: 6px 12px;
+  color: white;
+  text-align: center;
+  border: 2px solid white;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; flex-wrap: wrap;
+}
+#pde-painel .cab-jogo .vez-jogador {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+#pde-painel .cab-jogo .pino-vez {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2.5px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: white;
+  flex-shrink: 0;
+}
+#pde-painel .cab-jogo .rodada {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.78rem;
+  background: rgba(0,0,0,0.2);
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+
+/* PISTAS */
+#pde-painel .pistas-cont {
+  background: linear-gradient(135deg, #CFFAFE 0%, #A7F3D0 100%);
+  border: 3px dashed #0F766E;
+  border-radius: 12px;
+  padding: 10px;
+}
+#pde-painel .pistas-cab {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+  flex-wrap: wrap; gap: 6px;
+}
+#pde-painel .pistas-cab .titulo-pistas {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #0F766E;
+  font-size: 0.95rem;
+}
+#pde-painel .pistas-cab .pontos-atuais {
+  background: white;
+  border: 2px solid #0F766E;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #0F766E;
+  font-size: 0.82rem;
+}
+#pde-painel .pistas-lista {
+  display: flex; flex-direction: column; gap: 5px;
+}
+#pde-painel .pista-card {
+  background: white;
+  border: 2px solid #14B8A6;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-family: 'Fredoka',sans-serif;
+  color: #1E324A;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  display: flex; align-items: flex-start; gap: 8px;
+  animation: pistaAparecer 0.4s ease-out;
+}
+@keyframes pistaAparecer {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+#pde-painel .pista-card .pista-num {
+  flex-shrink: 0;
+  width: 24px; height: 24px;
+  background: #14B8A6;
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+#pde-painel .pista-card .pista-texto {
+  flex: 1;
+  font-weight: 600;
+}
+#pde-painel .pista-card.pista-ultima .pista-num { background: #DC2626; }
+#pde-painel .pista-card b { color: #0F766E; font-weight: 700; }
+
+#pde-painel .acoes-pistas {
+  display: flex; gap: 6px; margin-top: 8px;
+  flex-wrap: wrap;
+}
+#pde-painel .btn-mais-pista {
+  flex: 1;
+  background: linear-gradient(135deg, #38BDF8 0%, #0369A1 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #0C4A6E;
+}
+#pde-painel .btn-mais-pista:active { transform: translateY(2px); box-shadow: 0 1px 0 #0C4A6E; }
+#pde-painel .btn-mais-pista:disabled { opacity: 0.5; cursor: not-allowed; }
+#pde-painel .btn-tentar {
+  flex: 1;
+  background: linear-gradient(135deg, #22C55E 0%, #15803D 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #14532D;
+}
+#pde-painel .btn-tentar:active { transform: translateY(2px); box-shadow: 0 1px 0 #14532D; }
+
+/* OPÇÕES DE RESPOSTA */
+#pde-painel .area-opcoes {
+  background: white;
+  border: 3px solid #FBBF24;
+  border-radius: 12px;
+  padding: 10px;
+}
+#pde-painel .opcoes-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 0.92rem;
+  margin-bottom: 6px;
+  text-align: center;
+}
+#pde-painel .opcoes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+@media (max-width: 480px) {
+  #pde-painel .opcoes-grid { grid-template-columns: 1fr; }
+}
+#pde-painel .opcao-resp {
+  background: white;
+  border: 2px solid #FBBF24;
+  border-radius: 10px;
+  padding: 9px 12px;
+  cursor: pointer;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1E324A;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s;
+}
+#pde-painel .opcao-resp:hover { background: #FEF3C7; transform: translateY(-1px); }
+#pde-painel .opcao-resp .letra-opcao {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  background: #FBBF24;
+  color: #92400E;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+#pde-painel .opcao-resp .emoji-op {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+#pde-painel .opcao-resp .nome-op {
+  flex: 1;
+}
+#pde-painel .opcao-resp.correta-mostrada {
+  background: linear-gradient(135deg, #DCFCE7 0%, #86EFAC 100%);
+  border-color: #16A34A;
+  color: #14532D;
+}
+#pde-painel .opcao-resp.correta-mostrada .letra-opcao {
+  background: #16A34A; color: white;
+}
+#pde-painel .opcao-resp.errada-mostrada {
+  background: linear-gradient(135deg, #FEE2E2 0%, #FCA5A5 100%);
+  border-color: #DC2626;
+  color: #7F1D1D;
+}
+#pde-painel .opcao-resp.errada-mostrada .letra-opcao {
+  background: #DC2626; color: white;
+}
+#pde-painel .opcao-resp:disabled,
+#pde-painel .opcao-resp.bloqueada { cursor: not-allowed; }
+
+/* RESULTADO DA RODADA */
+#pde-painel .resultado-rodada {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FBBF24 100%);
+  border: 3px solid #92400E;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  animation: aparecer 0.4s ease-out;
+}
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+#pde-painel .resultado-rodada h3 {
+  font-family: 'Fredoka',sans-serif;
+  color: #92400E;
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+}
+#pde-painel .resultado-rodada .animal-revelado {
+  font-size: 3rem;
+  line-height: 1;
+  margin: 4px 0;
+}
+#pde-painel .resultado-rodada .nome-revelado {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: #1E324A;
+  margin-bottom: 4px;
+}
+#pde-painel .resultado-rodada .estrelas {
+  font-size: 1.5rem;
+  letter-spacing: 4px;
+  margin: 4px 0;
+}
+#pde-painel .resultado-rodada .pts-ganhos {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #92400E;
+}
+#pde-painel .resultado-rodada .acoes-fim-rodada {
+  margin-top: 10px;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 480px) {
+  #pde-painel .resultado-rodada .acoes-fim-rodada { grid-template-columns: 1fr; }
+}
+#pde-painel .btn-prox-rodada {
+  background: linear-gradient(135deg, #14B8A6 0%, #0F766E 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #134E4A;
+}
+#pde-painel .btn-prox-rodada:active { transform: translateY(2px); box-shadow: 0 1px 0 #134E4A; }
+#pde-painel .btn-encerrar {
+  background: white;
+  color: #94A3B8;
+  border: 2px solid #CBD5E1;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* PAINEL INFO LATERAL */
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg,#FEF3C7 0%,#FDE68A 100%);
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 2px solid #92400E;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 38px; height: 38px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #1E324A;
+  line-height: 1.2;
+  min-width: 0;
+  word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #92400E; font-weight: 700; }
+
+#pde-painel .placar-jogadores {
+  background: white;
+  border-radius: 10px;
+  padding: 6px;
+  margin-bottom: 6px;
+  border: 2px solid #0F766E;
+}
+#pde-painel .placar-jogadores h5 {
+  font-family: 'Fredoka',sans-serif;
+  margin: 0 0 4px;
+  color: #0F766E;
+  font-size: 0.85rem;
+  text-align: center;
+}
+#pde-painel .jog-linha {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px;
+  background: #CFFAFE;
+  border-radius: 6px;
+  margin-bottom: 3px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.82rem;
+}
+#pde-painel .jog-linha:last-child { margin-bottom: 0; }
+#pde-painel .jog-linha.vez-dele {
+  background: linear-gradient(135deg, #14B8A6 0%, #0F766E 100%);
+  color: white;
+  outline: 2px solid #134E4A;
+}
+#pde-painel .jog-linha.vez-dele .pts { background: white; color: #0F766E; }
+#pde-painel .jog-linha .pino-jog {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 0.72rem;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+#pde-painel .jog-linha .nome {
+  flex: 1; font-weight: 700;
+  color: #1E324A;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#pde-painel .jog-linha.vez-dele .nome { color: white; }
+#pde-painel .jog-linha .pts {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  background: #0F766E;
+  color: white;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+}
+
+#pde-painel .info-rodada {
+  background: linear-gradient(135deg,#CFFAFE 0%,#A7F3D0 100%);
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 2px solid #0F766E;
+}
+#pde-painel .info-rodada .linha {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.78rem;
+  color: #0F766E;
+  padding: 2px 0;
+}
+#pde-painel .info-rodada .linha .label { font-weight: 600; }
+#pde-painel .info-rodada .linha .valor { font-weight: 700; color: #1E324A; }
+
+#pde-painel .legenda-pontos {
+  background: #FFF9E6;
+  border: 2px solid #FBBF24;
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.7rem;
+  color: #92400E;
+  line-height: 1.3;
+}
+#pde-painel .legenda-pontos b { color: #1E324A; }
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(19,78,74,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #0F766E;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal { width: 100px; height: 100px; margin: 0 auto 8px; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #0F766E;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #1E324A; font-size: 0.95rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#14B8A6 0%,#0F766E 100%);
+  color: white; border: 3px solid #134E4A;
+  box-shadow: 0 4px 0 #134E4A;
+}
+#pde-painel .btn-confirmar.dourado {
+  background: linear-gradient(135deg,#FBBF24 0%,#92400E 100%);
+  color: white; border: 3px solid #451A03;
+  box-shadow: 0 4px 0 #451A03;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .vencedor-coroa { font-size: 4rem; animation: bounceCoroa 0.8s ease-out; }
+@keyframes bounceCoroa {
+  0% { transform: scale(0) rotate(-30deg); }
+  60% { transform: scale(1.3) rotate(10deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+#pde-painel .ranking-final {
+  background: #CFFAFE; border-radius: 10px; padding: 10px; margin: 10px 0; text-align: left;
+}
+#pde-painel .ranking-final h4 { font-family: 'Fredoka',sans-serif; text-align: center; color: #0F766E; margin: 0 0 6px; }
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #0F766E;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #1E324A; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+#pde-painel .tabela-pontos {
+  background: #FEF3C7; border-radius: 8px; padding: 8px 10px; margin: 8px 0; font-size: 0.82rem;
+}
+#pde-painel .tabela-pontos div { padding: 2px 0; font-family: 'Fredoka',sans-serif; }
+
+#pde-painel .a11y-grupo { background: #CFFAFE; border: 3px solid #0F766E; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #0F766E; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #0F766E; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#14B8A6 0%,#0F766E 100%); color: white; border-color: #134E4A; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #0F766E; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#14B8A6 0%,#0F766E 100%); color: white; border-color: #134E4A; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #134E4A; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #0F766E;
+  border: 2px solid #0F766E; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #0F766E; color: white; }
+
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #FBBF24; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #0F766E; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#0F766E,#134E4A); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.ciencias { background: linear-gradient(135deg,#38BDF8,#0369A1); }
+#pde-painel .selos-bncc .selo-icone.geografia { background: linear-gradient(135deg,#FBBF24,#B45309); color: #1E324A; }
+#pde-painel .selos-bncc .selo-icone.portugues { background: linear-gradient(135deg,#FB923C,#C2410C); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #0F766E; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #0F766E; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #CFFAFE; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FBBF24; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #0F766E; }
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 8px clamp(10px, 1.5vw, 18px) 14px; }
+  #pde-painel .lobby-card { padding: 14px; }
+  #pde-painel .area-jogo { padding: 12px 16px; }
+  #pde-painel .painel-info { padding: 10px 12px; }
+  #pde-painel .jogo-grid { grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .modal-conteudo h2 { font-size: 1.5rem; }
+  #pde-painel .modal-conteudo p { font-size: 1rem; }
+  #pde-painel .header h1 { font-size: 1.2rem; }
+  #pde-painel .btn-header { font-size: 0.85rem; padding: 6px 12px; }
+  #pde-painel .btn-comecar { font-size: 1.05rem; padding: 11px 20px; }
+  #pde-painel .pista-card { font-size: 1rem; }
+  #pde-painel .opcao-resp { font-size: 1rem; padding: 11px 14px; }
+}
+@media (min-width: 1440px) { #pde-painel { max-width: 1400px; } }
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>🔍 Adivinhe o Animal</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Olá! Sou o Detective Penas! 🔍🦉</strong>
+        <span>Vou te dar 5 pistas, da mais difícil pra mais fácil. Quanto antes adivinhar, mais estrelas leva!</span>
+      </div>
+    </div>
+
+    <div class="secao-titulo">🎮 Modo de jogo</div>
+    <div class="modo-grid" id="modo-grid"></div>
+
+    <div class="qtd-area" id="qtd-area">
+      <div class="secao-titulo">👥 Quantos jogadores?</div>
+      <div class="qtd-grid" id="qtd-grid"></div>
+    </div>
+
+    <div class="jogadores-area" id="jogadores-area">
+      <div class="secao-titulo">✏️ Nomes dos detectives</div>
+      <div class="jogadores-grid" id="jogadores-grid"></div>
+    </div>
+
+    <div class="filtros-area">
+      <div class="secao-titulo" style="margin-top:0">🌎 De onde vêm os animais?</div>
+      <div class="origem-grid" id="origem-grid"></div>
+      <div class="secao-titulo">🏞️ Habitat (filtro opcional)</div>
+      <div class="habitat-grid" id="habitat-grid"></div>
+      <div class="info-pool" id="info-pool">—</div>
+    </div>
+
+    <button class="btn-comecar" id="btn-comecar" onclick="comecarJogo()" disabled>🔍 Começar investigação!</button>
+  </div>
+
+  <div id="jogo" class="jogo-grid hidden">
+    <div class="area-jogo">
+      <div class="cab-jogo">
+        <div class="vez-jogador">
+          <div class="pino-vez" id="pino-vez">1</div>
+          <span id="nome-vez">—</span>
+        </div>
+        <div class="rodada" id="rodada-info">Rodada 1</div>
+      </div>
+
+      <div class="pistas-cont">
+        <div class="pistas-cab">
+          <div class="titulo-pistas" id="titulo-pistas">🔍 Pistas reveladas:</div>
+          <div class="pontos-atuais" id="pontos-atuais">Vale 10 pts ⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="pistas-lista" id="pistas-lista"></div>
+        <div class="acoes-pistas" id="acoes-pistas"></div>
+      </div>
+
+      <div id="opcoes-area"></div>
+
+      <div id="resultado-area"></div>
+    </div>
+
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Vamos lá!</div>
+      </div>
+      <div class="placar-jogadores" id="placar-jogadores">
+        <h5>🏆 Placar</h5>
+        <div id="placar-linhas"></div>
+      </div>
+      <div class="info-rodada">
+        <div class="linha"><span class="label">🎯 Rodada</span><span class="valor" id="rodada-info-side">1</span></div>
+        <div class="linha"><span class="label">✅ Acertos</span><span class="valor" id="acertos-info">0</span></div>
+        <div class="linha"><span class="label">⭐ Estrelas</span><span class="valor" id="estrelas-info">0</span></div>
+      </div>
+      <div class="legenda-pontos">
+        <b>🌟 Pontuação:</b> 1ª pista=10pts · 2ª=8 · 3ª=6 · 4ª=4 · 5ª=2 · errou=0
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-fim">
+    <div class="modal-conteudo">
+      <div class="vencedor-coroa">👑</div>
+      <h2 id="fim-titulo">🎉 Fim da investigação!</h2>
+      <p id="fim-msg">—</p>
+      <div class="ranking-final" id="ranking-final"></div>
+      <div class="acoes" id="fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🔍 Como brincar com o Detective Penas</h2>
+      <h3>🎯 Objetivo</h3>
+      <p>Adivinhar o animal misterioso usando o menor número de pistas possível. Quanto antes acertar, mais pontos leva!</p>
+
+      <h3>🎮 3 Modos disponíveis</h3>
+      <ul>
+        <li>👤 <b>Individual:</b> aluno joga sozinho, acumula pontos em várias rodadas</li>
+        <li>👨‍🏫 <b>Professor (lousa):</b> ideal pra projetar na sala. Professor lê as pistas e a turma adivinha</li>
+        <li>🏆 <b>Competitivo:</b> 2-4 jogadores se revezam, quem fizer mais pontos vence</li>
+      </ul>
+
+      <h3>📋 Como funciona uma rodada</h3>
+      <ol>
+        <li>A primeira pista é revelada (a mais difícil)</li>
+        <li>Você pode <b>"🔍 Ver mais pista"</b> (até 5) ou <b>"✓ Tentar adivinhar"</b></li>
+        <li>Quando tentar, aparecem 4 opções de animais</li>
+        <li>Acertou? Ganha pontos baseado em qual pista revelou. Errou? 0 pontos.</li>
+      </ol>
+
+      <h3>🌟 Sistema de pontos</h3>
+      <div class="tabela-pontos">
+        <div>⭐⭐⭐⭐⭐ Acertou na 1ª pista → <b>10 pontos</b></div>
+        <div>⭐⭐⭐⭐ Acertou na 2ª pista → <b>8 pontos</b></div>
+        <div>⭐⭐⭐ Acertou na 3ª pista → <b>6 pontos</b></div>
+        <div>⭐⭐ Acertou na 4ª pista → <b>4 pontos</b></div>
+        <div>⭐ Acertou na 5ª pista → <b>2 pontos</b></div>
+        <div>❌ Errou → <b>0 pontos</b></div>
+      </div>
+
+      <h3>🐾 Banco de animais</h3>
+      <p><b>60 animais</b> pré-cadastrados (30 brasileiros + 30 do mundo), com 5 pistas cada. Filtros por origem e habitat permitem adaptar à aula.</p>
+
+      <h3>📖 BNCC</h3>
+      <ul>
+        <li>Ciências (EF03CI04, EF05CI03) · Identificação de animais e habitats</li>
+        <li>Geografia (EF06GE03) · Comparação de biomas e fauna nacional/global</li>
+        <li>Português (EF03LP08) · Compreensão de descrições e características</li>
+        <li>Computação (EF06CO04) · Raciocínio dedutivo e eliminação de hipóteses</li>
+      </ul>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar dourado" onclick="fecharModal('modal-ajuda')">Bora investigar!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar dourado" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script id="script-jogo">
+/* BANCO DE ANIMAIS · Adivinhe Animal por Pistas
+ * 30 brasileiros + 30 mundo = 60 animais
+ * Cada animal: { nome, emoji, habitat, origem: 'BR' | 'MUNDO', pistas: [5] }
+ * Pistas: vagas → específicas → quase óbvias
+ */
+
+const ANIMAIS = [
+
+  /* ========== FAUNA BRASILEIRA · 30 ========== */
+
+  {
+    nome: 'Capivara', emoji: '🦫', habitat: 'aquatico', origem: 'BR',
+    pistas: [
+      'Sou um mamífero roedor.',
+      'Vivo em grupos, geralmente perto de rios ou lagoas.',
+      'Sou herbívoro e gosto de comer capim e plantas aquáticas.',
+      'Sou o MAIOR roedor do mundo.',
+      'No Brasil, sou comum no Pantanal e até em parques urbanos!'
+    ]
+  },
+  {
+    nome: 'Onça-pintada', emoji: '🐆', habitat: 'florestas', origem: 'BR',
+    pistas: [
+      'Sou um mamífero felino.',
+      'Tenho pelagem amarela com manchas escuras (rosetas).',
+      'Sou o maior felino das Américas.',
+      'Adoro nadar e caço até jacarés.',
+      'Sou o símbolo do Pantanal e da Amazônia brasileira.'
+    ]
+  },
+  {
+    nome: 'Tucano', emoji: '🦜', habitat: 'aereos', origem: 'BR',
+    pistas: [
+      'Sou uma ave.',
+      'Vivo em florestas tropicais.',
+      'Como frutas, insetos e às vezes ovos de outras aves.',
+      'Tenho um BICO grande e colorido.',
+      'Apareci na capa do antigo Real Plano de estabilização monetária do Brasil!'
+    ]
+  },
+  {
+    nome: 'Sucuri', emoji: '🐍', habitat: 'aquatico', origem: 'BR',
+    pistas: [
+      'Sou um réptil.',
+      'Não tenho patas e me arrasto.',
+      'Vivo perto de rios e pântanos.',
+      'Sou uma das MAIORES cobras do mundo.',
+      'Aperto minhas presas até sufocá-las (sou constritora).'
+    ]
+  },
+  {
+    nome: 'Tamanduá-bandeira', emoji: '🐜', habitat: 'outros', origem: 'BR',
+    pistas: [
+      'Sou um mamífero brasileiro.',
+      'Tenho pelagem longa e cauda em forma de bandeira.',
+      'Não tenho dentes!',
+      'Uso minha LÍNGUA enorme e pegajosa para me alimentar.',
+      'Como cupins e formigas (daí meu nome).'
+    ]
+  },
+  {
+    nome: 'Lobo-guará', emoji: '🐺', habitat: 'outros', origem: 'BR',
+    pistas: [
+      'Sou um mamífero carnívoro.',
+      'Tenho pelagem avermelhada.',
+      'Vivo no Cerrado brasileiro.',
+      'Tenho PERNAS muito longas, parece que estou em pernas de pau.',
+      'Apareço na nota de R$ 200 do real!'
+    ]
+  },
+  {
+    nome: 'Mico-leão-dourado', emoji: '🐒', habitat: 'florestas', origem: 'BR',
+    pistas: [
+      'Sou um primata pequeno.',
+      'Vivo na Mata Atlântica.',
+      'Como frutas e insetos.',
+      'Tenho pelagem DOURADA brilhante e uma juba como de leão.',
+      'Quase fui extinto, mas projetos de conservação me salvaram!'
+    ]
+  },
+  {
+    nome: 'Boto-rosa', emoji: '🐬', habitat: 'aquatico', origem: 'BR',
+    pistas: [
+      'Sou um mamífero aquático.',
+      'Vivo em rios, não no mar.',
+      'Habito a bacia do rio Amazonas.',
+      'Sou da cor ROSA (única no mundo).',
+      'Tenho lendas indígenas dizendo que viro homem nas festas.'
+    ]
+  },
+  {
+    nome: 'Arara-azul', emoji: '🦜', habitat: 'aereos', origem: 'BR',
+    pistas: [
+      'Sou uma ave grande.',
+      'Vivo em bandos no Pantanal e Cerrado.',
+      'Como castanhas e frutas com meu bico forte.',
+      'Tenho penas todas AZUIS.',
+      'Sou a maior arara do mundo!'
+    ]
+  },
+  {
+    nome: 'Tatu-bola', emoji: '🐾', habitat: 'outros', origem: 'BR',
+    pistas: [
+      'Sou um mamífero da Caatinga e Cerrado.',
+      'Tenho casco duro como uma armadura.',
+      'Sou pequeno e me alimento de insetos.',
+      'Quando me sinto ameaçado, me enrolo formando uma BOLA perfeita.',
+      'Fui mascote da Copa do Mundo de 2014 no Brasil!'
+    ]
+  },
+  {
+    nome: 'Preguiça', emoji: '🦥', habitat: 'florestas', origem: 'BR',
+    pistas: [
+      'Sou um mamífero que vive em árvores.',
+      'Como folhas, brotos e frutas.',
+      'Me movo muito DEVAGAR.',
+      'Algas verdes crescem na minha pelagem!',
+      'Meu nome é literalmente meu jeito de viver.'
+    ]
+  },
+  {
+    nome: 'Jacaré-açu', emoji: '🐊', habitat: 'aquatico', origem: 'BR',
+    pistas: [
+      'Sou um réptil.',
+      'Vivo em rios e pântanos.',
+      'Sou predador, como peixes e mamíferos pequenos.',
+      'Tenho mandíbulas muito fortes e dentes afiados.',
+      'Sou o maior crocodiliano da América do Sul, comum na Amazônia.'
+    ]
+  },
+  {
+    nome: 'Quati', emoji: '🦝', habitat: 'florestas', origem: 'BR',
+    pistas: [
+      'Sou um mamífero brasileiro.',
+      'Parece um guaxinim, mas com FOCINHO longo.',
+      'Vivo em bandos nas matas e parques (sou comum em Foz do Iguaçu).',
+      'Como frutas, insetos e até pequenos animais.',
+      'Costumo levantar a cauda quando ando.'
+    ]
+  },
+  {
+    nome: 'Pirarucu', emoji: '🐟', habitat: 'aquatico', origem: 'BR',
+    pistas: [
+      'Sou um peixe.',
+      'Vivo na bacia Amazônica.',
+      'Sou um peixe de água doce.',
+      'Posso atingir mais de 3 METROS de comprimento!',
+      'Sou conhecido como "bacalhau da Amazônia".'
+    ]
+  },
+  {
+    nome: 'Beija-flor', emoji: '🐦', habitat: 'aereos', origem: 'BR',
+    pistas: [
+      'Sou uma ave muito pequena.',
+      'Bato as asas com extrema velocidade.',
+      'Consigo VOAR para trás (única ave que faz isso).',
+      'Me alimento principalmente do néctar das flores.',
+      'No Brasil temos várias espécies coloridas e brilhantes.'
+    ]
+  },
+  {
+    nome: 'Saruê', emoji: '🐀', habitat: 'florestas', origem: 'BR',
+    pistas: [
+      'Sou um mamífero brasileiro.',
+      'Sou marsupial (carrego filhotes na bolsa).',
+      'Tenho focinho pontudo e cauda longa sem pelo.',
+      'Saio à NOITE pra procurar comida nos quintais.',
+      'Sou conhecido como gambá ou mucura em algumas regiões.'
+    ]
+  },
+  {
+    nome: 'Cutia', emoji: '🐿️', habitat: 'florestas', origem: 'BR',
+    pistas: [
+      'Sou um mamífero roedor.',
+      'Vivo em florestas tropicais.',
+      'Tenho pelagem marrom-avermelhada.',
+      'Como frutas e sementes — enterro algumas e elas viram árvores!',
+      'Sou pequena, mais ou menos do tamanho de um coelho.'
+    ]
+  },
+  {
+    nome: 'Anta', emoji: '🦌', habitat: 'florestas', origem: 'BR',
+    pistas: [
+      'Sou um mamífero.',
+      'Sou o maior mamífero terrestre do Brasil.',
+      'Pareço um porco, mas sou parente do cavalo e do rinoceronte.',
+      'Tenho uma TROMBA curta e flexível como uma minielefante.',
+      'Adoro nadar em rios e lagos.'
+    ]
+  },
+  {
+    nome: 'Cobra-coral', emoji: '🐍', habitat: 'florestas', origem: 'BR',
+    pistas: [
+      'Sou um réptil.',
+      'Não tenho patas e me arrasto.',
+      'Vivo em florestas e zonas rurais do Brasil.',
+      'Tenho anéis coloridos: VERMELHO, preto e amarelo.',
+      'Meu veneno é potente, mas pouco causo acidentes (sou tímida).'
+    ]
+  },
+  {
+    nome: 'Mutum', emoji: '🦃', habitat: 'aereos', origem: 'BR',
+    pistas: [
+      'Sou uma ave grande, parecida com peru.',
+      'Vivo em florestas tropicais.',
+      'Tenho plumagem escura e topete na cabeça.',
+      'Sou ameaçado de extinção no Brasil.',
+      'Como frutas e sementes do chão da mata.'
+    ]
+  },
+  {
+    nome: 'Surubim', emoji: '🐟', habitat: 'aquatico', origem: 'BR',
+    pistas: [
+      'Sou um peixe brasileiro.',
+      'Vivo em rios do Pantanal, Amazonas e Cerrado.',
+      'Sou peixe de couro (sem escamas).',
+      'Tenho corpo alongado com MANCHAS escuras.',
+      'Sou bastante pescado e apreciado na culinária ribeirinha.'
+    ]
+  },
+  {
+    nome: 'Veado-campeiro', emoji: '🦌', habitat: 'outros', origem: 'BR',
+    pistas: [
+      'Sou um mamífero herbívoro.',
+      'Tenho pelagem marrom-clara.',
+      'Vivo em campos abertos e Cerrado brasileiro.',
+      'Os machos têm CHIFRES (galhadas) que caem todo ano.',
+      'Sou parecido com o veado europeu mas menor.'
+    ]
+  },
+  {
+    nome: 'Pica-pau', emoji: '🐦', habitat: 'aereos', origem: 'BR',
+    pistas: [
+      'Sou uma ave que vive em árvores.',
+      'Tenho cores chamativas (vermelho, preto e branco).',
+      'Como insetos que vivem dentro da madeira.',
+      'BATO meu bico no tronco das árvores fazendo um som forte.',
+      'Virei até personagem de desenho animado!'
+    ]
+  },
+  {
+    nome: 'Tartaruga-da-amazônia', emoji: '🐢', habitat: 'aquatico', origem: 'BR',
+    pistas: [
+      'Sou um réptil.',
+      'Tenho carapaça (casco duro).',
+      'Vivo em rios amazônicos.',
+      'Sou a maior tartaruga de água doce das Américas.',
+      'Boto centenas de OVOS em praias de areia dos rios.'
+    ]
+  },
+  {
+    nome: 'Tamanduá-mirim', emoji: '🐜', habitat: 'florestas', origem: 'BR',
+    pistas: [
+      'Sou um mamífero brasileiro.',
+      'Sou menor que o tamanduá-bandeira.',
+      'Tenho pelagem creme com colete escuro nas costas.',
+      'Subo em árvores (sou arborícola).',
+      'Como formigas e cupins com minha língua pegajosa.'
+    ]
+  },
+  {
+    nome: 'Curió', emoji: '🐦', habitat: 'aereos', origem: 'BR',
+    pistas: [
+      'Sou uma ave pequena.',
+      'Os machos têm plumagem preta com branco nas asas.',
+      'Vivo em matas e capoeiras.',
+      'Sou famoso pelo meu CANTO bonito.',
+      'Sou muito procurado no canto ornamental (e ameaçado por isso).'
+    ]
+  },
+  {
+    nome: 'Ariranha', emoji: '🦦', habitat: 'aquatico', origem: 'BR',
+    pistas: [
+      'Sou um mamífero aquático.',
+      'Tenho pelagem marrom densa e impermeável.',
+      'Vivo em rios da Amazônia e Pantanal.',
+      'Sou a maior lontra do mundo.',
+      'Vivo em GRUPOS familiares e me comunico com assobios.'
+    ]
+  },
+  {
+    nome: 'Bugio', emoji: '🐒', habitat: 'florestas', origem: 'BR',
+    pistas: [
+      'Sou um primata brasileiro.',
+      'Vivo em florestas e Mata Atlântica.',
+      'Tenho pelagem ruiva, marrom ou preta.',
+      'Meu GRITO/uivo é tão forte que dá pra ouvir a 3 km de distância!',
+      'Vivo em bandos liderados por um macho alfa.'
+    ]
+  },
+  {
+    nome: 'Carcará', emoji: '🦅', habitat: 'aereos', origem: 'BR',
+    pistas: [
+      'Sou uma ave de rapina.',
+      'Vivo no Cerrado, Pantanal e Caatinga.',
+      'Tenho plumagem marrom e cabeça com TOPETE preto.',
+      'Como animais mortos (sou necrófago) e pequenos répteis.',
+      'Sou tema de música popular brasileira de João do Vale.'
+    ]
+  },
+  {
+    nome: 'Tuiuiú', emoji: '🦩', habitat: 'aquatico', origem: 'BR',
+    pistas: [
+      'Sou uma ave grande.',
+      'Vivo perto de rios e brejos.',
+      'Sou símbolo do Pantanal brasileiro.',
+      'Tenho pescoço PRETO e papo vermelho.',
+      'Como peixes, anfíbios e jacarés pequenos com meu bico longo.'
+    ]
+  },
+
+];
+/* ANIMAIS DO MUNDO · 30 */
+ANIMAIS.push(
+
+  {
+    nome: 'Leão', emoji: '🦁', habitat: 'outros', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero felino.',
+      'Vivo em savanas africanas.',
+      'Sou carnívoro e caço em grupo.',
+      'Os MACHOS têm juba (cabelos ao redor da cabeça).',
+      'Sou conhecido como "rei da selva".'
+    ]
+  },
+  {
+    nome: 'Elefante', emoji: '🐘', habitat: 'outros', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero herbívoro.',
+      'Vivo em manadas na África e Ásia.',
+      'Sou o maior mamífero TERRESTRE do mundo.',
+      'Tenho uma TROMBA longa e duas presas de marfim.',
+      'Tenho memória excelente e vivo até 70 anos!'
+    ]
+  },
+  {
+    nome: 'Girafa', emoji: '🦒', habitat: 'outros', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero herbívoro.',
+      'Vivo em savanas africanas.',
+      'Tenho pelagem com manchas marrom-claras.',
+      'Sou o animal TERRESTRE mais alto do mundo.',
+      'Meu PESCOÇO altíssimo me ajuda a alcançar folhas no alto das árvores.'
+    ]
+  },
+  {
+    nome: 'Panda', emoji: '🐼', habitat: 'florestas', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero.',
+      'Vivo em florestas montanhosas da China.',
+      'Tenho pelagem branca com MANCHAS pretas (especialmente nos olhos e orelhas).',
+      'Sou da família dos ursos.',
+      'Como principalmente bambu, o dia todo!'
+    ]
+  },
+  {
+    nome: 'Canguru', emoji: '🦘', habitat: 'outros', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero marsupial.',
+      'Vivo na Austrália.',
+      'Tenho pernas traseiras muito fortes.',
+      'Carrego meu filhote numa BOLSA na barriga.',
+      'Não ando, eu PULO muito alto e rápido.'
+    ]
+  },
+  {
+    nome: 'Coala', emoji: '🐨', habitat: 'florestas', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero marsupial.',
+      'Vivo em árvores na Austrália.',
+      'Tenho pelagem cinza e orelhas peludas grandes.',
+      'Como apenas folhas de EUCALIPTO.',
+      'Durmo 18-20 horas por dia (sou bem dorminhoco).'
+    ]
+  },
+  {
+    nome: 'Pinguim', emoji: '🐧', habitat: 'aquatico', origem: 'MUNDO',
+    pistas: [
+      'Sou uma ave aquática.',
+      'Não consigo voar.',
+      'Vivo em regiões frias, especialmente na Antártida.',
+      'Tenho plumagem PRETA nas costas e branca na barriga.',
+      'Ando gingando como se fosse manco e sou ótimo nadador.'
+    ]
+  },
+  {
+    nome: 'Tigre', emoji: '🐯', habitat: 'florestas', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero felino.',
+      'Sou o maior felino do mundo.',
+      'Vivo em florestas e selvas da Ásia.',
+      'Tenho pelagem laranja com LISTRAS pretas.',
+      'Sou solitário (não vivo em bandos como leões).'
+    ]
+  },
+  {
+    nome: 'Zebra', emoji: '🦓', habitat: 'outros', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero herbívoro.',
+      'Pareço um cavalo selvagem.',
+      'Vivo em manadas nas savanas africanas.',
+      'Tenho pelagem com LISTRAS pretas e brancas.',
+      'Minhas listras são únicas — como impressão digital humana!'
+    ]
+  },
+  {
+    nome: 'Polvo', emoji: '🐙', habitat: 'aquatico', origem: 'MUNDO',
+    pistas: [
+      'Sou um animal marinho.',
+      'Não tenho ossos (sou molusco).',
+      'Vivo no fundo do mar.',
+      'Tenho 8 BRAÇOS (tentáculos) com ventosas.',
+      'Solto tinta preta quando me sinto ameaçado.'
+    ]
+  },
+  {
+    nome: 'Tubarão', emoji: '🦈', habitat: 'aquatico', origem: 'MUNDO',
+    pistas: [
+      'Sou um animal marinho.',
+      'Sou um peixe muito antigo (existo há 400 milhões de anos!).',
+      'Sou predador.',
+      'Tenho fileiras de DENTES afiados que se renovam constantemente.',
+      'Posso sentir uma gota de sangue a 1 km de distância.'
+    ]
+  },
+  {
+    nome: 'Baleia-azul', emoji: '🐳', habitat: 'aquatico', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero marinho.',
+      'Vivo nos oceanos.',
+      'Como pequenos camarões (krill).',
+      'Sou o MAIOR animal que já viveu na Terra (até 30 metros).',
+      'Meu coração pesa mais de 100 kg!'
+    ]
+  },
+  {
+    nome: 'Coruja', emoji: '🦉', habitat: 'aereos', origem: 'MUNDO',
+    pistas: [
+      'Sou uma ave de rapina.',
+      'Tenho cabeça grande e OLHOS enormes voltados pra frente.',
+      'Caço durante a noite (sou animal noturno).',
+      'Posso girar a cabeça quase 270 graus.',
+      'Sou símbolo de sabedoria.'
+    ]
+  },
+  {
+    nome: 'Águia', emoji: '🦅', habitat: 'aereos', origem: 'MUNDO',
+    pistas: [
+      'Sou uma ave de rapina.',
+      'Tenho visão extremamente AGUÇADA.',
+      'Voo muito alto e plano com facilidade.',
+      'Tenho garras fortes e bico curvado.',
+      'Sou símbolo de muitos países (incluindo EUA, México e Alemanha).'
+    ]
+  },
+  {
+    nome: 'Cachorro', emoji: '🐕', habitat: 'domesticos', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero domesticado pelo homem.',
+      'Tenho variadas raças, tamanhos e cores.',
+      'Sou descendente do lobo.',
+      'Sou o "MELHOR amigo do homem".',
+      'LATIR é meu jeito principal de me comunicar.'
+    ]
+  },
+  {
+    nome: 'Gato', emoji: '🐱', habitat: 'domesticos', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero felino.',
+      'Sou domesticado e independente.',
+      'Como pequenos animais e alimentos prontos.',
+      'MIO para me comunicar e ronrono quando feliz.',
+      'No Egito antigo, eu era considerado um animal sagrado.'
+    ]
+  },
+  {
+    nome: 'Cavalo', emoji: '🐴', habitat: 'domesticos', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero herbívoro.',
+      'Fui domesticado pelo homem há milhares de anos.',
+      'Sou usado para transporte, trabalho e esporte.',
+      'Tenho cascos nas patas e uma CRINA bonita.',
+      'Sou o protagonista de provas de turfe (corridas).'
+    ]
+  },
+  {
+    nome: 'Vaca', emoji: '🐄', habitat: 'domesticos', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero herbívoro.',
+      'Sou animal de fazenda.',
+      'Como capim e rumino o alimento (mastigo várias vezes).',
+      'Produzo LEITE que é consumido pelas pessoas.',
+      'Tenho 4 estômagos!'
+    ]
+  },
+  {
+    nome: 'Porco', emoji: '🐖', habitat: 'domesticos', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero.',
+      'Sou criado em fazendas.',
+      'Sou onívoro (como de tudo).',
+      'Sou conhecido por amar LAMA (mas é pra me refrescar do calor).',
+      'Sou bem mais inteligente do que muita gente pensa!'
+    ]
+  },
+  {
+    nome: 'Galinha', emoji: '🐔', habitat: 'domesticos', origem: 'MUNDO',
+    pistas: [
+      'Sou uma ave doméstica.',
+      'Como grãos, insetos e minhocas.',
+      'Boto OVOS regularmente.',
+      'Não consigo voar bem, só dou voos curtos.',
+      'O macho da minha espécie chama-se galo.'
+    ]
+  },
+  {
+    nome: 'Macaco', emoji: '🐵', habitat: 'florestas', origem: 'MUNDO',
+    pistas: [
+      'Sou um primata.',
+      'Vivo em florestas tropicais.',
+      'Sou onívoro: como frutas, folhas e insetos.',
+      'Tenho mãos hábeis e geralmente cauda.',
+      'Sou parente próximo dos humanos na evolução.'
+    ]
+  },
+  {
+    nome: 'Crocodilo', emoji: '🐊', habitat: 'aquatico', origem: 'MUNDO',
+    pistas: [
+      'Sou um réptil grande.',
+      'Vivo em rios, pântanos e mangues tropicais.',
+      'Sou predador feroz, como peixes e mamíferos.',
+      'Tenho mandíbulas com força MUITO PODEROSA.',
+      'Existo desde a era dos dinossauros (sou um fóssil vivo).'
+    ]
+  },
+  {
+    nome: 'Camelo', emoji: '🐪', habitat: 'outros', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero herbívoro.',
+      'Vivo em desertos da África e Ásia.',
+      'Tenho pelagem que me protege do calor extremo.',
+      'Tenho uma ou duas CORCOVAS nas costas.',
+      'Posso ficar dias sem beber água.'
+    ]
+  },
+  {
+    nome: 'Urso polar', emoji: '🐻‍❄️', habitat: 'outros', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero.',
+      'Vivo no Ártico (região muito FRIA).',
+      'Sou ótimo nadador.',
+      'Tenho pelagem BRANCA densa que me camufla na neve.',
+      'Como focas e peixes — sou carnívoro.'
+    ]
+  },
+  {
+    nome: 'Hipopótamo', emoji: '🦛', habitat: 'aquatico', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero herbívoro.',
+      'Vivo em rios e lagos da África.',
+      'Tenho corpo gigante e pernas curtas.',
+      'Passo o dia dentro d\'ÁGUA pra me refrescar.',
+      'Apesar de pacífico parecer, sou um dos animais mais perigosos da África.'
+    ]
+  },
+  {
+    nome: 'Lobo', emoji: '🐺', habitat: 'florestas', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero carnívoro.',
+      'Vivo em florestas frias, montanhas e tundra.',
+      'Sou ancestral dos cães domésticos.',
+      'Vivo em ALCATEIAS (matilhas) com hierarquia.',
+      'Sou famoso por UIVAR para a lua.'
+    ]
+  },
+  {
+    nome: 'Rinoceronte', emoji: '🦏', habitat: 'outros', origem: 'MUNDO',
+    pistas: [
+      'Sou um mamífero herbívoro de grande porte.',
+      'Vivo em savanas africanas e na Ásia.',
+      'Tenho pele cinza muito grossa, parecendo armadura.',
+      'Tenho um ou dois CHIFRES grandes no focinho.',
+      'Sou ameaçado de extinção por causa da caça ao meu chifre.'
+    ]
+  },
+  {
+    nome: 'Gorila', emoji: '🦍', habitat: 'florestas', origem: 'MUNDO',
+    pistas: [
+      'Sou um primata grande.',
+      'Vivo em florestas africanas.',
+      'Sou o MAIOR primata do mundo.',
+      'Bato no peito quando quero exibir força.',
+      'Sou herbívoro: como folhas, brotos e frutas.'
+    ]
+  },
+  {
+    nome: 'Flamingo', emoji: '🦩', habitat: 'aquatico', origem: 'MUNDO',
+    pistas: [
+      'Sou uma ave aquática.',
+      'Vivo em lagoas e regiões salinas.',
+      'Tenho pernas longas e bico curvado.',
+      'Tenho plumagem ROSA (vem dos camarões que como).',
+      'Costumo dormir em pé sobre uma só perna.'
+    ]
+  },
+  {
+    nome: 'Cobra-rei', emoji: '🐍', habitat: 'florestas', origem: 'MUNDO',
+    pistas: [
+      'Sou um réptil.',
+      'Vivo em florestas do sudeste asiático.',
+      'Sou a maior cobra VENENOSA do mundo.',
+      'Levanto até 1/3 do meu corpo do chão quando ameaço.',
+      'Como outras cobras (até venenosas).'
+    ]
+  }
+
+);
+/* ============================================================
+ * ADIVINHE O ANIMAL · Portal do Educador NEWPC
+ * Mascote: Detective Penas (coruja sherlock holmes)
+ * ============================================================ */
+
+/* MASCOTE: coruja com lupa e cachimbo */
+function svgMascote(expressao = 'normal') {
+  let olhos;
+  if (expressao === 'feliz') {
+    olhos = `
+      <path d="M 34 46 Q 39 41, 44 46" fill="none" stroke="#1F2937" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M 56 46 Q 61 41, 66 46" fill="none" stroke="#1F2937" stroke-width="2.4" stroke-linecap="round"/>
+    `;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <circle cx="39" cy="48" r="6" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <circle cx="61" cy="48" r="6" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <circle cx="40" cy="49" r="2.5" fill="#1F2937"/>
+      <circle cx="62" cy="49" r="2.5" fill="#1F2937"/>
+    `;
+  } else if (expressao === 'surpresa') {
+    olhos = `
+      <ellipse cx="39" cy="48" rx="7" ry="8" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <ellipse cx="61" cy="48" rx="7" ry="8" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <circle cx="39" cy="49" r="3" fill="#1F2937"/>
+      <circle cx="61" cy="49" r="3" fill="#1F2937"/>
+    `;
+  } else {
+    // Normal: olhos grandes redondos de coruja
+    olhos = `
+      <circle cx="39" cy="48" r="7" fill="white" stroke="#1F2937" stroke-width="2"/>
+      <circle cx="61" cy="48" r="7" fill="white" stroke="#1F2937" stroke-width="2"/>
+      <circle cx="39.5" cy="49" r="3.5" fill="#1F2937"/>
+      <circle cx="61.5" cy="49" r="3.5" fill="#1F2937"/>
+      <circle cx="41" cy="47" r="1.2" fill="white"/>
+      <circle cx="63" cy="47" r="1.2" fill="white"/>
+    `;
+  }
+
+  return `
+    <!-- Sombra -->
+    <ellipse cx="50" cy="93" rx="30" ry="2.5" fill="rgba(0,0,0,0.2)"/>
+    <!-- Corpo da coruja (oval marrom-claro) -->
+    <ellipse cx="50" cy="58" rx="32" ry="32" fill="#A16207" stroke="#451A03" stroke-width="2.5"/>
+    <!-- Barriga clara -->
+    <ellipse cx="50" cy="65" rx="20" ry="22" fill="#FED7AA"/>
+    <!-- Penas escalonadas na barriga -->
+    <path d="M 38 58 Q 42 62, 46 58 Q 50 62, 54 58 Q 58 62, 62 58" fill="none" stroke="#92400E" stroke-width="1.3" opacity="0.6"/>
+    <path d="M 36 66 Q 40 70, 44 66 Q 48 70, 52 66 Q 56 70, 60 66 Q 64 70, 66 66" fill="none" stroke="#92400E" stroke-width="1.3" opacity="0.6"/>
+    <path d="M 38 74 Q 42 78, 46 74 Q 50 78, 54 74 Q 58 78, 62 74" fill="none" stroke="#92400E" stroke-width="1.3" opacity="0.6"/>
+    <!-- Cabeça (parte superior, sem separação clara) -->
+    <ellipse cx="50" cy="44" rx="28" ry="22" fill="#A16207" stroke="#451A03" stroke-width="2"/>
+    <!-- Tufos de penas no topo (orelhinhas) -->
+    <path d="M 28 30 L 24 22 L 32 28 Z" fill="#A16207" stroke="#451A03" stroke-width="1.5"/>
+    <path d="M 72 30 L 76 22 L 68 28 Z" fill="#A16207" stroke="#451A03" stroke-width="1.5"/>
+    <!-- Chapéu de detetive (sherlock holmes - deerstalker) -->
+    <ellipse cx="50" cy="22" rx="30" ry="6" fill="#451A03" stroke="#1F2937" stroke-width="1.5"/>
+    <path d="M 22 22 Q 26 10, 50 8 Q 74 10, 78 22 Z" fill="#78350F" stroke="#1F2937" stroke-width="1.5"/>
+    <!-- Padrão xadrez do chapéu -->
+    <line x1="32" y1="14" x2="36" y2="22" stroke="#451A03" stroke-width="0.6" opacity="0.7"/>
+    <line x1="44" y1="10" x2="48" y2="22" stroke="#451A03" stroke-width="0.6" opacity="0.7"/>
+    <line x1="56" y1="10" x2="60" y2="22" stroke="#451A03" stroke-width="0.6" opacity="0.7"/>
+    <line x1="64" y1="14" x2="68" y2="22" stroke="#451A03" stroke-width="0.6" opacity="0.7"/>
+    <!-- Olhos -->
+    ${olhos}
+    <!-- Bico amarelo -->
+    <path d="M 47 56 L 50 62 L 53 56 Z" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
+    <!-- Bochechas -->
+    <ellipse cx="28" cy="56" rx="3" ry="2" fill="#FB7185" opacity="0.5"/>
+    <ellipse cx="72" cy="56" rx="3" ry="2" fill="#FB7185" opacity="0.5"/>
+    <!-- LUPA (à direita, segurada por asa) -->
+    <line x1="83" y1="65" x2="93" y2="80" stroke="#451A03" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="80" cy="58" r="8" fill="none" stroke="#1F2937" stroke-width="2.5"/>
+    <circle cx="80" cy="58" r="6.5" fill="#BAE6FD" opacity="0.6"/>
+    <!-- Brilho na lupa -->
+    <path d="M 75 54 Q 78 52, 82 53" fill="none" stroke="white" stroke-width="1.5" opacity="0.7"/>
+    <!-- Pequena ponta interrogativa dentro da lupa -->
+    <text x="80" y="61" font-family="Baloo 2,sans-serif" font-weight="800" font-size="7" fill="#0F766E" text-anchor="middle">?</text>
+    <!-- Asa esquerda (que segura a lupa) -->
+    <ellipse cx="20" cy="65" rx="6" ry="13" fill="#92400E" stroke="#451A03" stroke-width="1.5" transform="rotate(-15 20 65)"/>
+    <!-- Patinhas amarelas -->
+    <ellipse cx="42" cy="89" rx="4" ry="2" fill="#FBBF24" stroke="#92400E" stroke-width="1.5"/>
+    <ellipse cx="58" cy="89" rx="4" ry="2" fill="#FBBF24" stroke="#92400E" stroke-width="1.5"/>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* CONFIGURAÇÕES */
+const MODOS = {
+  individual: { emoji: '👤', titulo: 'Individual', desc: 'Você joga sozinho, acumula pontos em várias rodadas.' },
+  professor:  { emoji: '👨‍🏫', titulo: 'Professor', desc: 'Lousa: professor lê pistas e turma adivinha em conjunto.' },
+  competitivo:{ emoji: '🏆', titulo: 'Competitivo', desc: '2-4 jogadores se revezam, quem fizer mais pontos vence.' }
+};
+
+const HABITATS = {
+  todos:      { emoji: '🌍', nome: 'Todos' },
+  florestas:  { emoji: '🌳', nome: 'Florestas' },
+  aquatico:   { emoji: '💧', nome: 'Aquáticos' },
+  aereos:     { emoji: '🦅', nome: 'Aéreos' },
+  domesticos: { emoji: '🏠', nome: 'Domésticos' },
+  outros:     { emoji: '🏜️', nome: 'Campos/Savanas' }
+};
+
+const ORIGENS = {
+  mix:    { emoji: '🌎', nome: 'Mix BR + Mundo' },
+  br:     { emoji: '🇧🇷', nome: 'Só brasileiros' },
+  mundo:  { emoji: '🌐', nome: 'Só do mundo' }
+};
+
+const CORES_PINOS = [
+  { fundo: '#DC2626', nome: 'Vermelho' },
+  { fundo: '#2563EB', nome: 'Azul' },
+  { fundo: '#16A34A', nome: 'Verde' },
+  { fundo: '#F59E0B', nome: 'Amarelo' }
+];
+
+const PONTOS_POR_PISTA = [10, 8, 6, 4, 2];
+const ESTRELAS_POR_PISTA = [5, 4, 3, 2, 1];
+const RODADAS_PADRAO = 5;
+
+const ELOGIOS = ['Detetive nato!', 'Sherlock aprova!', 'Sagaz!', 'Excelente dedução!', 'Mandou bem!'];
+const INCENTIVOS = ['Quase! Outra rodada vem aí.', 'Continua firme, detetive!', 'A próxima é sua!', 'Foco nas pistas!'];
+
+const STATE = {
+  modo: null,           // 'individual' | 'professor' | 'competitivo'
+  qtdJogadores: 2,
+  nomes: ['Detetive 1','Detetive 2','Detetive 3','Detetive 4'],
+  origem: 'mix',
+  habitat: 'todos',
+  partida: {
+    ativa: false,
+    rodada: 1,
+    rodadaMax: RODADAS_PADRAO,
+    jogadores: [],     // [{idx, nome, pontos, acertos, estrelas}]
+    vezAtual: 0,
+    animalAtual: null,
+    pistasReveladas: 0,
+    fase: null,        // 'revelar' | 'opcoes' | 'resultado'
+    opcoes: [],
+    respondeu: false,
+    poolUsado: []      // índices de animais já usados
+  }
+};
+
+function salvar() {
+  try {
+    localStorage.setItem('pde_animais_dados', JSON.stringify({
+      modo: STATE.modo, qtdJogadores: STATE.qtdJogadores, nomes: STATE.nomes,
+      origem: STATE.origem, habitat: STATE.habitat
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_animais_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.modo) STATE.modo = d.modo;
+    if (d.qtdJogadores) STATE.qtdJogadores = d.qtdJogadores;
+    if (Array.isArray(d.nomes)) STATE.nomes = d.nomes;
+    if (d.origem) STATE.origem = d.origem;
+    if (d.habitat) STATE.habitat = d.habitat;
+  } catch (e) {}
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function elogio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivo() { return INCENTIVOS[Math.floor(Math.random() * INCENTIVOS.length)]; }
+
+/* FILTRAR POOL DE ANIMAIS */
+function poolAtivo() {
+  let pool = ANIMAIS.slice();
+  if (STATE.origem === 'br')    pool = pool.filter(a => a.origem === 'BR');
+  if (STATE.origem === 'mundo') pool = pool.filter(a => a.origem === 'MUNDO');
+  if (STATE.habitat !== 'todos') pool = pool.filter(a => a.habitat === STATE.habitat);
+  return pool;
+}
+
+/* LOBBY */
+function renderLobby() {
+  // Modos
+  const modoCont = document.getElementById('modo-grid');
+  modoCont.innerHTML = '';
+  Object.entries(MODOS).forEach(([key, m]) => {
+    const card = document.createElement('div');
+    card.className = 'modo-card' + (STATE.modo === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <div class="modo-emoji">${m.emoji}</div>
+      <div class="modo-corpo">
+        <div class="modo-titulo">${m.titulo}</div>
+        <div class="modo-desc">${m.desc}</div>
+      </div>
+    `;
+    card.onclick = () => { STATE.modo = key; salvar(); renderLobby(); };
+    modoCont.appendChild(card);
+  });
+
+  // Qtd jogadores (só competitivo)
+  const qtdArea = document.getElementById('qtd-area');
+  if (STATE.modo === 'competitivo') {
+    qtdArea.classList.add('ativo');
+    const grid = document.getElementById('qtd-grid');
+    grid.innerHTML = '';
+    [2,3,4].forEach(n => {
+      const c = document.createElement('div');
+      c.className = 'qtd-card' + (STATE.qtdJogadores === n ? ' selecionado' : '');
+      c.innerHTML = `<span class="qtd-emoji">👥</span><span class="qtd-num">${n}</span>`;
+      c.onclick = () => { STATE.qtdJogadores = n; salvar(); renderLobby(); };
+      grid.appendChild(c);
+    });
+  } else {
+    qtdArea.classList.remove('ativo');
+  }
+
+  // Nomes (só competitivo)
+  const jogArea = document.getElementById('jogadores-area');
+  if (STATE.modo === 'competitivo') {
+    jogArea.classList.add('ativo');
+    const grid = document.getElementById('jogadores-grid');
+    grid.innerHTML = '';
+    for (let i = 0; i < STATE.qtdJogadores; i++) {
+      const pino = document.createElement('div');
+      pino.className = 'pino-mini';
+      pino.style.background = CORES_PINOS[i].fundo;
+      pino.textContent = (i+1);
+      const inp = document.createElement('input');
+      inp.type = 'text'; inp.maxLength = 20;
+      inp.value = STATE.nomes[i] || `Detetive ${i+1}`;
+      inp.oninput = (e) => { STATE.nomes[i] = e.target.value; salvar(); };
+      grid.appendChild(pino);
+      grid.appendChild(inp);
+    }
+  } else {
+    jogArea.classList.remove('ativo');
+  }
+
+  // Origem
+  const origCont = document.getElementById('origem-grid');
+  origCont.innerHTML = '';
+  Object.entries(ORIGENS).forEach(([key, o]) => {
+    const card = document.createElement('div');
+    card.className = 'origem-card' + (STATE.origem === key ? ' selecionado' : '');
+    card.innerHTML = `${o.emoji} ${o.nome}`;
+    card.onclick = () => { STATE.origem = key; salvar(); renderLobby(); };
+    origCont.appendChild(card);
+  });
+
+  // Habitat
+  const habCont = document.getElementById('habitat-grid');
+  habCont.innerHTML = '';
+  Object.entries(HABITATS).forEach(([key, h]) => {
+    const card = document.createElement('div');
+    card.className = 'habitat-card' + (STATE.habitat === key ? ' selecionado' : '');
+    card.innerHTML = `<span class="h-emoji">${h.emoji}</span>${h.nome}`;
+    card.onclick = () => { STATE.habitat = key; salvar(); renderLobby(); };
+    habCont.appendChild(card);
+  });
+
+  // Info pool
+  const pool = poolAtivo();
+  const elPool = document.getElementById('info-pool');
+  if (pool.length < 4) {
+    elPool.innerHTML = `⚠️ <b>${pool.length} animais</b> com esse filtro - precisa de pelo menos 4 para jogar.`;
+  } else {
+    elPool.innerHTML = `🐾 <b>${pool.length} animais</b> disponíveis com os filtros atuais.`;
+  }
+
+  // Botão
+  const btn = document.getElementById('btn-comecar');
+  const podeComecar = STATE.modo && pool.length >= 4;
+  btn.disabled = !podeComecar;
+  if (!STATE.modo) {
+    btn.textContent = '🔍 Escolha um modo de jogo';
+  } else if (pool.length < 4) {
+    btn.textContent = '⚠️ Filtros restritos demais';
+  } else {
+    btn.textContent = `🔍 Começar (${MODOS[STATE.modo].titulo})`;
+  }
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+/* INICIAR PARTIDA */
+function comecarJogo() {
+  if (!STATE.modo) return;
+  const pool = poolAtivo();
+  if (pool.length < 4) return;
+
+  // Configurar jogadores baseado no modo
+  STATE.partida.jogadores = [];
+  if (STATE.modo === 'individual') {
+    STATE.partida.jogadores.push({
+      idx: 0, nome: 'Você', pontos: 0, acertos: 0, estrelas: 0
+    });
+  } else if (STATE.modo === 'professor') {
+    STATE.partida.jogadores.push({
+      idx: 0, nome: 'Turma', pontos: 0, acertos: 0, estrelas: 0
+    });
+  } else { // competitivo
+    for (let i = 0; i < STATE.qtdJogadores; i++) {
+      STATE.partida.jogadores.push({
+        idx: i,
+        nome: STATE.nomes[i] || `Detetive ${i+1}`,
+        pontos: 0, acertos: 0, estrelas: 0
+      });
+    }
+  }
+
+  STATE.partida.rodada = 1;
+  STATE.partida.rodadaMax = RODADAS_PADRAO;
+  STATE.partida.vezAtual = 0;
+  STATE.partida.poolUsado = [];
+  STATE.partida.ativa = true;
+
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('jogo').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+
+  prepararRodada();
+}
+
+function jogadorAtual() {
+  return STATE.partida.jogadores[STATE.partida.vezAtual];
+}
+
+function prepararRodada() {
+  // Sortear animal sem repetir
+  const pool = poolAtivo();
+  let disponiveis = pool.map((a, i) => ({ a, i })).filter(o => !STATE.partida.poolUsado.includes(o.i));
+  if (disponiveis.length === 0) {
+    // Reset pool se esgotar
+    STATE.partida.poolUsado = [];
+    disponiveis = pool.map((a, i) => ({ a, i }));
+  }
+  const escolhido = disponiveis[Math.floor(Math.random() * disponiveis.length)];
+  STATE.partida.animalAtual = escolhido.a;
+  STATE.partida.poolUsado.push(escolhido.i);
+
+  // Montar opções: 1 correta + 3 distratoras
+  // Distratoras: preferir mesmo habitat se possível
+  const mesmoHabitat = pool.filter(a => a.habitat === escolhido.a.habitat && a.nome !== escolhido.a.nome);
+  const outrosHabitats = pool.filter(a => a.habitat !== escolhido.a.habitat);
+  let distratoras = [];
+  if (mesmoHabitat.length >= 3) {
+    distratoras = shuffle(mesmoHabitat).slice(0, 3);
+  } else {
+    distratoras = mesmoHabitat.slice();
+    const faltam = 3 - distratoras.length;
+    distratoras = distratoras.concat(shuffle(outrosHabitats).slice(0, faltam));
+  }
+  const opcoes = shuffle([escolhido.a, ...distratoras]);
+  STATE.partida.opcoes = opcoes;
+
+  STATE.partida.pistasReveladas = 1; // primeira pista já vem aberta
+  STATE.partida.fase = 'revelar';
+  STATE.partida.respondeu = false;
+
+  atualizarCabecalho();
+  renderPistas();
+  renderOpcoesArea();
+  renderPlacar();
+  atualizarInfoLateral();
+  document.getElementById('resultado-area').innerHTML = '';
+  renderMascote('svg-mascote-painel', 'pensando');
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Detective Penas:</b> Analise as pistas com cuidado!`;
+}
+
+function atualizarCabecalho() {
+  const j = jogadorAtual();
+  if (!j) return;
+  document.getElementById('pino-vez').textContent = j.idx + 1;
+  document.getElementById('pino-vez').style.background = CORES_PINOS[j.idx].fundo;
+  document.getElementById('nome-vez').textContent = `Vez de ${j.nome}`;
+  document.getElementById('rodada-info').textContent = `Rodada ${STATE.partida.rodada}/${STATE.partida.rodadaMax}`;
+}
+
+function atualizarInfoLateral() {
+  const j = jogadorAtual();
+  if (!j) return;
+  document.getElementById('rodada-info-side').textContent = `${STATE.partida.rodada}/${STATE.partida.rodadaMax}`;
+  document.getElementById('acertos-info').textContent = j.acertos;
+  document.getElementById('estrelas-info').textContent = j.estrelas;
+}
+
+function renderPistas() {
+  const cont = document.getElementById('pistas-lista');
+  cont.innerHTML = '';
+  const a = STATE.partida.animalAtual;
+  if (!a) return;
+  for (let i = 0; i < STATE.partida.pistasReveladas; i++) {
+    const card = document.createElement('div');
+    card.className = 'pista-card' + (i === 4 ? ' pista-ultima' : '');
+    card.innerHTML = `
+      <div class="pista-num">${i+1}</div>
+      <div class="pista-texto">${a.pistas[i]}</div>
+    `;
+    cont.appendChild(card);
+  }
+  // Atualizar pontos atuais
+  const pontosVale = PONTOS_POR_PISTA[STATE.partida.pistasReveladas - 1];
+  const estrelasAtuais = ESTRELAS_POR_PISTA[STATE.partida.pistasReveladas - 1];
+  document.getElementById('pontos-atuais').textContent = `Vale ${pontosVale} pts ` + '⭐'.repeat(estrelasAtuais);
+
+  // Ações
+  const acoes = document.getElementById('acoes-pistas');
+  acoes.innerHTML = '';
+  if (STATE.partida.pistasReveladas < 5) {
+    acoes.innerHTML = `
+      <button class="btn-mais-pista" onclick="revelarMaisPista()">🔍 Ver mais pista (vale menos)</button>
+      <button class="btn-tentar" onclick="mostrarOpcoes()">✓ Tentar adivinhar agora!</button>
+    `;
+  } else {
+    // Última pista, força a escolher
+    acoes.innerHTML = `<button class="btn-tentar" style="flex:1" onclick="mostrarOpcoes()">✓ Escolher uma opção (última pista!)</button>`;
+  }
+}
+
+function revelarMaisPista() {
+  if (STATE.partida.pistasReveladas >= 5) return;
+  STATE.partida.pistasReveladas++;
+  tocarSom('clique');
+  renderPistas();
+  // Limpa as opções se já estiverem mostradas (forçar nova tentativa)
+  if (STATE.partida.fase === 'opcoes') {
+    document.getElementById('opcoes-area').innerHTML = '';
+    STATE.partida.fase = 'revelar';
+  }
+}
+
+function mostrarOpcoes() {
+  STATE.partida.fase = 'opcoes';
+  renderOpcoesArea();
+}
+
+function renderOpcoesArea() {
+  const cont = document.getElementById('opcoes-area');
+  if (STATE.partida.fase !== 'opcoes') {
+    cont.innerHTML = '';
+    return;
+  }
+  const opcoes = STATE.partida.opcoes;
+  let html = `
+    <div class="area-opcoes">
+      <div class="opcoes-titulo">🎯 Qual é o animal?</div>
+      <div class="opcoes-grid">
+  `;
+  opcoes.forEach((op, i) => {
+    const letra = ['A','B','C','D'][i];
+    html += `
+      <button class="opcao-resp" onclick="responderOpcao(${i})">
+        <span class="letra-opcao">${letra}</span>
+        <span class="emoji-op">${op.emoji}</span>
+        <span class="nome-op">${op.nome}</span>
+      </button>
+    `;
+  });
+  html += '</div></div>';
+  cont.innerHTML = html;
+}
+
+function responderOpcao(idx) {
+  if (STATE.partida.respondeu) return;
+  STATE.partida.respondeu = true;
+  const opcao = STATE.partida.opcoes[idx];
+  const correto = opcao.nome === STATE.partida.animalAtual.nome;
+  const idxCorreto = STATE.partida.opcoes.findIndex(o => o.nome === STATE.partida.animalAtual.nome);
+
+  // Marcar visualmente
+  const botoes = document.querySelectorAll('#opcoes-area .opcao-resp');
+  botoes.forEach((b, i) => {
+    b.classList.add('bloqueada');
+    b.disabled = true;
+    if (i === idxCorreto) b.classList.add('correta-mostrada');
+    else if (i === idx)   b.classList.add('errada-mostrada');
+  });
+
+  // Calcular pontuação
+  const j = jogadorAtual();
+  let pontos = 0, estrelas = 0;
+  if (correto) {
+    pontos = PONTOS_POR_PISTA[STATE.partida.pistasReveladas - 1];
+    estrelas = ESTRELAS_POR_PISTA[STATE.partida.pistasReveladas - 1];
+    j.acertos++;
+    j.estrelas += estrelas;
+    j.pontos += pontos;
+    tocarSom('acerto');
+    renderMascote('svg-mascote-painel', 'feliz');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Detective:</b> ${elogio()}`;
+  } else {
+    tocarSom('erro');
+    renderMascote('svg-mascote-painel', 'surpresa');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Detective:</b> ${incentivo()}`;
+  }
+
+  // Mostrar resultado
+  setTimeout(() => mostrarResultadoRodada(correto, pontos, estrelas), 900);
+  atualizarInfoLateral();
+  renderPlacar();
+}
+
+function mostrarResultadoRodada(correto, pontos, estrelas) {
+  STATE.partida.fase = 'resultado';
+  const a = STATE.partida.animalAtual;
+  const cont = document.getElementById('resultado-area');
+  const j = jogadorAtual();
+  const ehUltimaRodada = STATE.partida.rodada >= STATE.partida.rodadaMax &&
+    (STATE.modo !== 'competitivo' || STATE.partida.vezAtual === STATE.partida.jogadores.length - 1);
+
+  cont.innerHTML = `
+    <div class="resultado-rodada">
+      <h3>${correto ? '✅ Acertou!' : '❌ Não foi dessa vez!'}</h3>
+      <div class="animal-revelado">${a.emoji}</div>
+      <div class="nome-revelado">${a.nome}</div>
+      ${correto ? `
+        <div class="estrelas">${'⭐'.repeat(estrelas)}${'☆'.repeat(5-estrelas)}</div>
+        <div class="pts-ganhos">+${pontos} pontos · ${j.nome} agora tem ${j.pontos} pts</div>
+      ` : `
+        <div class="pts-ganhos" style="color:#7F1D1D;">A resposta correta era ${a.nome}.</div>
+      `}
+      <div class="acoes-fim-rodada">
+        <button class="btn-prox-rodada" onclick="proximaRodada()">${ehUltimaRodada ? '🏁 Ver resultado final' : '➡️ Próxima rodada'}</button>
+        <button class="btn-encerrar" onclick="encerrarPartida()">🏠 Encerrar agora</button>
+      </div>
+    </div>
+  `;
+
+  // Esconder ações de pista
+  document.getElementById('acoes-pistas').innerHTML = '';
+}
+
+function proximaRodada() {
+  document.getElementById('resultado-area').innerHTML = '';
+  // Se competitivo, passar pra próximo jogador antes de incrementar rodada
+  if (STATE.modo === 'competitivo') {
+    STATE.partida.vezAtual = (STATE.partida.vezAtual + 1) % STATE.partida.jogadores.length;
+    if (STATE.partida.vezAtual === 0) STATE.partida.rodada++;
+  } else {
+    STATE.partida.rodada++;
+  }
+
+  if (STATE.partida.rodada > STATE.partida.rodadaMax) {
+    encerrarPartida();
+    return;
+  }
+  prepararRodada();
+}
+
+function encerrarPartida() {
+  STATE.partida.ativa = false;
+  // Mostrar modal de fim
+  const ordenados = STATE.partida.jogadores.slice().sort((a,b) => b.pontos - a.pontos);
+  const venc = ordenados[0];
+
+  document.getElementById('fim-titulo').textContent =
+    STATE.modo === 'competitivo' ? `🏆 ${venc.nome} venceu!` : `🎉 Investigação concluída!`;
+
+  if (STATE.modo === 'competitivo') {
+    document.getElementById('fim-msg').innerHTML = `Com <b>${venc.pontos} pontos</b> e <b>${venc.acertos} acertos</b> em ${STATE.partida.rodadaMax} rodadas!`;
+  } else {
+    document.getElementById('fim-msg').innerHTML = `${venc.nome === 'Turma' ? 'A turma' : 'Você'} fez <b>${venc.pontos} pontos</b> com <b>${venc.acertos}</b> acertos!`;
+  }
+
+  // Ranking
+  let html = '<h4>📊 Ranking final</h4>';
+  ordenados.forEach((j, pos) => {
+    const med = pos === 0 ? '🥇' : pos === 1 ? '🥈' : pos === 2 ? '🥉' : `${pos+1}º`;
+    html += `
+      <div class="jog-linha">
+        <div class="pino-jog" style="background:${CORES_PINOS[j.idx].fundo}">${j.idx+1}</div>
+        <div class="nome">${med} ${j.nome}</div>
+        <div class="pts">${j.pontos} pts</div>
+      </div>
+      <div style="font-size:0.72rem; color:#475569; padding:0 6px 4px; font-family:'Fredoka',sans-serif;">
+        ✅ ${j.acertos} acertos · ⭐ ${j.estrelas} estrelas
+      </div>
+    `;
+  });
+  document.getElementById('ranking-final').innerHTML = html;
+
+  // Ações
+  const acoes = document.getElementById('fim-acoes');
+  acoes.innerHTML = '';
+  const btn1 = document.createElement('button');
+  btn1.className = 'btn-confirmar dourado';
+  btn1.textContent = '↻ Jogar de novo';
+  btn1.onclick = () => { fecharModal('modal-fim'); comecarJogo(); };
+  acoes.appendChild(btn1);
+  const btn2 = document.createElement('button');
+  btn2.className = 'btn-cancelar';
+  btn2.textContent = '🏠 Menu';
+  btn2.onclick = () => { fecharModal('modal-fim'); voltarLobby(); };
+  acoes.appendChild(btn2);
+
+  document.getElementById('modal-fim').classList.add('aberto');
+  if (venc.pontos >= 30) criarConfetes();
+}
+
+function renderPlacar() {
+  const cont = document.getElementById('placar-linhas');
+  cont.innerHTML = '';
+  const ordenados = STATE.partida.jogadores.slice().sort((a,b) => b.pontos - a.pontos);
+  ordenados.forEach(j => {
+    const linha = document.createElement('div');
+    linha.className = 'jog-linha' + (j.idx === jogadorAtual().idx ? ' vez-dele' : '');
+    linha.innerHTML = `
+      <div class="pino-jog" style="background:${CORES_PINOS[j.idx].fundo}">${j.idx+1}</div>
+      <div class="nome">${j.nome}</div>
+      <div class="pts">${j.pontos}</div>
+    `;
+    cont.appendChild(linha);
+  });
+}
+
+function voltarLobby() {
+  if (STATE.partida.ativa && STATE.partida.rodada > 1) {
+    if (!confirm('Voltar ao menu? A investigação atual será perdida.')) return;
+  }
+  STATE.partida.ativa = false;
+  document.getElementById('jogo').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-fim');
+  renderLobby();
+}
+
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+/* SOM */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'acerto') {
+      const notas = [523, 659, 784, 1047];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t0 = c.currentTime + i * 0.07;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.18);
+        o.start(t0); o.stop(t0 + 0.2);
+      });
+    } else if (tipo === 'erro') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 320; o.type = 'sine';
+      g.gain.setValueAtTime(0.08, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.25);
+      o.frequency.exponentialRampToValueAtTime(180, c.currentTime + 0.25);
+      o.start(); o.stop(c.currentTime + 0.27);
+    } else if (tipo === 'clique') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 600; o.type = 'sine';
+      g.gain.setValueAtTime(0.06, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.08);
+      o.start(); o.stop(c.currentTime + 0.1);
+    }
+  } catch (e) {}
+}
+
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#0F766E','#14B8A6','#FBBF24','#22C55E','#3B82F6','#FB923C','#A16207'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* A11Y */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* WEBNODE EMBED */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => reportarAltura());
+  ro.observe(document.getElementById('pde-painel'));
+}
+
+/* SELOS BNCC */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'ciencias',
+      icone: 'CI',
+      titulo: 'BNCC Ciências da Natureza',
+      itens: [
+        { cod: 'EF03CI04', desc: 'Identificar características e modo de vida dos animais comuns no ambiente próximo.' },
+        { cod: 'EF04CI04', desc: 'Animais reproduzem-se de diferentes maneiras e características hereditárias.' },
+        { cod: 'EF05CI03', desc: 'Reconhecer adaptações dos animais ao ambiente em que vivem.' }
+      ]
+    },
+    {
+      tipo: 'geografia',
+      icone: 'GE',
+      titulo: 'BNCC Geografia',
+      itens: [
+        { cod: 'EF05GE02', desc: 'Identificar diferenças étnico-raciais e étnico-culturais e desigualdades sociais.' },
+        { cod: 'EF06GE03', desc: 'Comparar diferentes paisagens (biomas brasileiros e do mundo).' }
+      ]
+    },
+    {
+      tipo: 'portugues',
+      icone: 'LP',
+      titulo: 'BNCC Língua Portuguesa',
+      itens: [
+        { cod: 'EF03LP08', desc: 'Identificar características de animais através de descrições textuais.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Pensamento Computacional',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem.' },
+        { cod: 'EF06CO04', desc: 'Aplicar pensamento computacional: raciocínio dedutivo, eliminação de hipóteses, estratégia.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-fim'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+/* INIT */
+carregar();
+carregarA11y();
+renderLobby();
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+
+/* Expor pro smoke test */
+window.STATE = STATE;
+window.ANIMAIS = ANIMAIS;
+window.MODOS = MODOS;
+window.HABITATS = HABITATS;
+window.ORIGENS = ORIGENS;
+window.PONTOS_POR_PISTA = PONTOS_POR_PISTA;
+window.ESTRELAS_POR_PISTA = ESTRELAS_POR_PISTA;
+window.poolAtivo = poolAtivo;
+window.comecarJogo = comecarJogo;
+window.voltarLobby = voltarLobby;
+window.prepararRodada = prepararRodada;
+window.revelarMaisPista = revelarMaisPista;
+window.mostrarOpcoes = mostrarOpcoes;
+window.responderOpcao = responderOpcao;
+window.proximaRodada = proximaRodada;
+window.encerrarPartida = encerrarPartida;
+window.jogadorAtual = jogadorAtual;
+window.abrirAjuda = abrirAjuda;
+window.abrirAcessibilidade = abrirAcessibilidade;
+window.defA11y = defA11y;
+window.ESTADO_A11Y = ESTADO_A11Y;
+window.fecharModal = fecharModal;
+window.montarSelosBNCC = montarSelosBNCC;
+window.renderLobby = renderLobby;
+
+</script>
+</body>
+</html>

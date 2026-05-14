@@ -1,0 +1,1881 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Quiz da Bandeira · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #1E324A);
+  padding: 6px clamp(6px, 1.5vw, 12px) 10px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  --pde-cor-texto: #1E324A;
+  background: linear-gradient(180deg, #FEF3C7 0%, #FDE68A 50%, #84CC16 100%);
+  border-radius: 12px;
+}
+
+/* === FIX A11Y === */
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-quiz,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .modo-card,
+#pde-painel.alto-contraste .regiao-card { background: #000 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .modo-card.selecionado,
+#pde-painel.alto-contraste .regiao-card.selecionado { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .opcao-card { background: #1A1A1A !important; color: #FFF !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .opcao-card.acertado { background: #16A34A !important; color: #FFF !important; }
+#pde-painel.alto-contraste .opcao-card.errado { background: #450A0A !important; color: #FCA5A5 !important; }
+#pde-painel.alto-contraste .opcao-card.alvo-revelado { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+#pde-painel.alto-contraste .bandeira-mostra { background: #000; border-color: #FBBF24 !important; }
+
+#pde-painel.daltonico .opcao-card.acertado { background: linear-gradient(135deg,#3B82F6,#1E40AF) !important; color: white !important; border-color: #1E3A8A !important; }
+#pde-painel.daltonico .opcao-card.errado { background: #FFEDD5 !important; color: #9A3412 !important; border-color: #FB923C !important; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#15803D 0%,#14532D 100%);
+  border-radius: 10px;
+  padding: 6px 10px;
+  color: white;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 6px rgba(20,83,45,0.25);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 14px;
+  padding: 10px;
+  border: 2px solid #15803D;
+  box-shadow: 0 3px 8px rgba(21,128,61,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #DCFCE7 0%, #84CC16 100%);
+  border-radius: 10px;
+  padding: 7px 10px;
+  margin-bottom: 8px;
+  border: 2px solid #14532D;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 60px; height: 60px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 10px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #1E324A;
+  font-size: 0.85rem;
+  line-height: 1.25;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: '';
+  position: absolute;
+  left: -8px; top: 18px;
+  width: 0; height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #14532D;
+  font-size: 0.95rem;
+  margin-bottom: 1px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 5px; padding: 8px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 70px; height: 70px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+#pde-painel .secao-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #14532D;
+  font-size: 0.95rem;
+  margin: 8px 0 5px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* MODO DE QUIZ */
+#pde-painel .modo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr));
+  gap: 6px;
+  margin-bottom: 6px;
+}
+@media (max-width: 480px) {
+  #pde-painel .modo-grid { grid-template-columns: repeat(2, 1fr); }
+}
+#pde-painel .modo-card {
+  background: white;
+  border: 2px solid #BBF7D0;
+  border-radius: 10px;
+  padding: 7px 5px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #14532D;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #14532D;
+}
+#pde-painel .modo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 0 #14532D;
+}
+#pde-painel .modo-card.selecionado {
+  background: linear-gradient(135deg,#15803D 0%,#14532D 100%);
+  color: white;
+  border-color: #14532D;
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #14532D;
+}
+#pde-painel .modo-card .emoji-modo { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .modo-card .nome-modo { font-size: 0.88rem; }
+#pde-painel .modo-card .desc-modo { display: block; font-size: 0.66rem; font-weight: 500; opacity: 0.85; margin-top: 1px; }
+
+/* REGIÃO */
+#pde-painel .regiao-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(130px, 100%), 1fr));
+  gap: 6px;
+  margin-bottom: 6px;
+}
+@media (max-width: 480px) {
+  #pde-painel .regiao-grid { grid-template-columns: repeat(2, 1fr); }
+}
+#pde-painel .regiao-card {
+  background: white;
+  border: 2px solid #FDE68A;
+  border-radius: 10px;
+  padding: 7px 5px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #92400E;
+}
+#pde-painel .regiao-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 0 #92400E;
+}
+#pde-painel .regiao-card.selecionado {
+  background: linear-gradient(135deg,#FBBF24 0%,#92400E 100%);
+  color: white;
+  border-color: #451A03;
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #451A03;
+}
+#pde-painel .regiao-card .emoji-regiao { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .regiao-card .nome-regiao { font-size: 0.88rem; }
+#pde-painel .regiao-card .qtd-estados { display: block; font-size: 0.66rem; font-weight: 500; opacity: 0.85; margin-top: 1px; }
+
+#pde-painel .btn-comecar-aventura {
+  width: 100%;
+  background: linear-gradient(135deg,#15803D 0%,#14532D 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #14532D, 0 4px 10px rgba(20,83,45,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #14532D;
+  margin-top: 6px;
+}
+#pde-painel .btn-comecar-aventura:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #14532D, 0 2px 6px rgba(20,83,45,0.25);
+}
+#pde-painel .btn-comecar-aventura:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* QUIZ */
+@media (max-width: 720px) {
+  #pde-painel .quiz-grid { grid-template-columns: 1fr !important; gap: 8px; }
+  #pde-painel .area-quiz { order: 1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+/* QUANDO CARD DE INFO ESTÁ ATIVO: esconde opções (libera espaço vertical) */
+#pde-painel .area-quiz.modo-feedback .opcoes-grid {
+  display: none;
+}
+/* Resumo discreto da resposta dada (substitui opções) */
+#pde-painel .resumo-resposta {
+  background: white;
+  border: 2px dashed #94A3B8;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.82rem;
+  color: #475569;
+  text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  flex-wrap: wrap;
+}
+#pde-painel .resumo-resposta .badge-resp {
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+#pde-painel .resumo-resposta .badge-resp.acertou {
+  background: #DCFCE7; color: #15803D; border: 1px solid #22C55E;
+}
+#pde-painel .resumo-resposta .badge-resp.errou {
+  background: #FEE2E2; color: #991B1B; border: 1px solid #DC2626;
+}
+#pde-painel .resumo-resposta .resp-correta {
+  font-weight: 700; color: #14532D;
+}
+#pde-painel .area-quiz {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 10px;
+  border: 3px solid #15803D;
+  box-shadow: 0 2px 6px rgba(21,128,61,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  overflow: hidden;
+}
+#pde-painel .painel-info {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 10px;
+  border: 3px solid #14532D;
+  box-shadow: 0 2px 6px rgba(20,83,45,0.12);
+  min-width: 0;
+}
+#pde-painel .quiz-grid {
+  display: grid; gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: start;
+}
+#pde-painel .info-jogo {
+  display: flex; flex-direction: column; gap: 4px;
+  background: linear-gradient(135deg,#DCFCE7 0%,#BBF7D0 100%);
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 2px solid #14532D;
+}
+#pde-painel .info-jogo .linha {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.78rem;
+  color: #14532D;
+}
+#pde-painel .info-jogo .linha .label { font-weight: 600; }
+#pde-painel .info-jogo .linha .valor { font-weight: 700; color: #15803D; }
+#pde-painel .info-jogo .cronometro {
+  text-align: center;
+  font-family: 'Baloo 2','Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #14532D;
+  background: white;
+  border-radius: 6px;
+  padding: 2px;
+  border: 2px solid #FBBF24;
+  letter-spacing: 1px;
+}
+
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg,#FEF3C7 0%,#FDE68A 100%);
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 2px solid #92400E;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 38px; height: 38px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #1E324A;
+  line-height: 1.2;
+  min-width: 0;
+  word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #92400E; font-weight: 700; }
+
+/* CABEÇALHO DA PERGUNTA */
+#pde-painel .pergunta-cab {
+  background: linear-gradient(135deg, #15803D 0%, #14532D 100%);
+  border-radius: 10px;
+  padding: 6px 12px;
+  color: white;
+  text-align: center;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+#pde-painel .pergunta-cab .pergunta-num {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+#pde-painel .pergunta-cab .pergunta-texto {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.95rem, 3vw, 1.15rem);
+  line-height: 1.15;
+  margin-top: 2px;
+  word-wrap: break-word;
+}
+
+/* BANDEIRA EM DESTAQUE (modo Bandeiras) */
+#pde-painel .bandeira-mostra {
+  background: white;
+  border: 3px solid #15803D;
+  border-radius: 10px;
+  padding: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 0 auto;
+  max-width: 240px;
+  width: 100%;
+  min-height: 130px;
+}
+#pde-painel .bandeira-mostra svg,
+#pde-painel .bandeira-mostra img.bandeira-img-grande {
+  width: 100%;
+  height: auto;
+  max-width: 220px;
+  max-height: 150px;
+  border: 1px solid #94A3B8;
+  display: block;
+  background: #F1F5F9;
+  object-fit: contain;
+}
+#pde-painel .bandeira-img-grande {
+  aspect-ratio: 10 / 7;
+}
+#pde-painel .bandeira-fallback {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 10 / 7;
+  background: linear-gradient(135deg, #94A3B8, #475569);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  border-radius: 4px;
+  border: 1px solid #475569;
+  letter-spacing: 4px;
+}
+
+/* INFO DO ESTADO (modo Capitais/Regiões) - layout horizontal compacto */
+#pde-painel .info-estado {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border: 3px solid #92400E;
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+#pde-painel .info-estado .info-bloco-texto {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+#pde-painel .info-estado .nome-estado-grande {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+  color: #14532D;
+  margin: 0;
+  line-height: 1.1;
+}
+#pde-painel .info-estado .sigla-estado {
+  display: inline-block;
+  background: #15803D;
+  color: white;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 2px 10px;
+  border-radius: 999px;
+  letter-spacing: 1px;
+}
+#pde-painel .info-estado .bandeira-mini {
+  width: 90px; height: 63px;
+  display: inline-block;
+  border: 2px solid #92400E;
+  border-radius: 4px;
+  background: #F1F5F9;
+  flex-shrink: 0;
+}
+#pde-painel .info-estado .bandeira-mini svg,
+#pde-painel .info-estado .bandeira-mini img.bandeira-img-mini { width: 100%; height: 100%; display: block; object-fit: contain; }
+#pde-painel .info-estado .bandeira-mini .bandeira-fallback {
+  width: 100%; height: 100%;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  border-radius: 0;
+  aspect-ratio: auto;
+}
+
+/* OPÇÕES */
+#pde-painel .opcoes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+@media (max-width: 480px) {
+  #pde-painel .opcoes-grid { grid-template-columns: 1fr; }
+}
+#pde-painel .opcao-card {
+  background: white;
+  border: 2px solid #15803D;
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s, background 0.2s;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #14532D;
+  box-shadow: 0 2px 0 #14532D;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 42px;
+  position: relative;
+  text-align: center;
+  word-wrap: break-word;
+}
+#pde-painel .opcao-card:hover:not(:disabled):not(.acertado):not(.errado) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 0 #14532D;
+}
+#pde-painel .opcao-card:active:not(:disabled):not(.acertado):not(.errado) {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #14532D;
+}
+#pde-painel .opcao-card .letra-opc {
+  background: #FBBF24;
+  color: #14532D;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  position: absolute;
+  top: -9px; left: -9px;
+  border: 2px solid #14532D;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+#pde-painel .opcao-card.acertado {
+  background: linear-gradient(135deg,#86EFAC 0%,#22C55E 100%);
+  color: white;
+  border-color: #15803D;
+  animation: pulseAcerto 0.4s;
+}
+#pde-painel .opcao-card.acertado .letra-opc { background: white; color: #15803D; }
+#pde-painel .opcao-card.errado {
+  background: #FECACA;
+  border-color: #991B1B;
+  color: #7F1D1D;
+  animation: shake 0.4s;
+}
+#pde-painel .opcao-card.alvo-revelado {
+  background: #FFF59D;
+  border-color: #F57F17;
+  color: #92400E;
+  animation: piscarAlvo 0.6s ease-in-out 2;
+}
+@keyframes piscarAlvo { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+@keyframes pulseAcerto { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+/* CARD DE INFO PEDAGÓGICA (após responder) */
+#pde-painel .card-info {
+  background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+  border: 2px solid #1E40AF;
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin-top: 2px;
+  animation: aparecerFeedback 0.3s ease-out;
+}
+@keyframes aparecerFeedback { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+#pde-painel .card-info h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #1E40AF;
+  font-size: 1rem;
+  margin: 0 0 4px;
+  display: flex; align-items: center; gap: 6px;
+}
+#pde-painel .card-info .grid-info {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  font-size: 0.78rem;
+  margin: 4px 0;
+}
+@media (max-width: 720px) {
+  #pde-painel .card-info .grid-info { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  #pde-painel .card-info .grid-info { grid-template-columns: 1fr; }
+}
+#pde-painel .card-info .grid-info .item-info {
+  display: flex; flex-direction: column;
+  background: white; padding: 4px 6px; border-radius: 6px;
+  min-width: 0;
+}
+#pde-painel .card-info .grid-info .item-info .label {
+  font-size: 0.62rem; color: #64748B; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+}
+#pde-painel .card-info .grid-info .item-info .valor {
+  font-size: 0.82rem; color: #14532D; font-weight: 700;
+  word-wrap: break-word; overflow-wrap: anywhere;
+}
+#pde-painel .card-info .curiosidade {
+  font-size: 0.78rem;
+  color: #1E40AF;
+  line-height: 1.3;
+  margin-top: 4px;
+  background: white;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border-left: 3px solid #FBBF24;
+}
+#pde-painel .card-info .curiosidade b { color: #92400E; }
+#pde-painel .btn-proxima {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  background: linear-gradient(135deg,#15803D 0%,#14532D 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #14532D, 0 4px 10px rgba(20,83,45,0.2);
+  outline: 2px solid #14532D;
+  transition: transform 0.08s, box-shadow 0.08s;
+}
+#pde-painel .btn-proxima:hover { transform: translateY(-1px); }
+#pde-painel .btn-proxima:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #14532D, 0 2px 6px rgba(20,83,45,0.2);
+}
+@media (min-width: 1024px) {
+  #pde-painel .btn-proxima { font-size: 1.05rem; padding: 10px 16px; }
+}
+
+#pde-painel .feedback {
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-align: center;
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px;
+}
+#pde-painel .feedback.acerto {
+  background: linear-gradient(135deg,#86EFAC 0%,#22C55E 100%);
+  color: white;
+  border: 2px solid #15803D;
+}
+#pde-painel .feedback.erro {
+  background: linear-gradient(135deg,#FCA5A5 0%,#F87171 100%);
+  color: white;
+  border: 2px solid #991B1B;
+}
+
+#pde-painel .progresso-perg {
+  display: flex; gap: 3px; flex-wrap: wrap;
+  background: #FFF9E6;
+  border-radius: 8px;
+  padding: 4px 6px;
+  border: 2px solid #FBBF24;
+  margin-top: 2px;
+  justify-content: center;
+}
+#pde-painel .progresso-perg .estrelinha {
+  font-size: 0.9rem;
+  color: #CBD5E1;
+  transition: color 0.3s;
+  line-height: 1;
+}
+#pde-painel .progresso-perg .estrelinha.acerto { color: #22C55E; }
+#pde-painel .progresso-perg .estrelinha.erro { color: #EF4444; }
+#pde-painel .progresso-perg .estrelinha.atual { color: #FBBF24; animation: piscarAtual 0.8s ease-in-out infinite; }
+@keyframes piscarAtual { 0%,100% { transform: scale(1); } 50% { transform: scale(1.25); } }
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(20,83,45,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #15803D;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal { width: 100px; height: 100px; margin: 0 auto 8px; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #14532D;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #14532D; font-size: 0.95rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#86EFAC 0%,#22C55E 100%);
+  color: white; border: 3px solid #15803D;
+  box-shadow: 0 4px 0 #15803D;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .estrelas-conquistadas { font-size: 2.6rem; letter-spacing: 8px; margin: 10px 0; }
+#pde-painel .estrelas-conquistadas .ativa {
+  color: #FBBF24; display: inline-block; transform: scale(0);
+  text-shadow: 0 0 12px rgba(251,191,36,0.7);
+  animation: estrelaPopFinal 0.6s ease-out forwards;
+}
+#pde-painel .estrelas-conquistadas .ativa:nth-child(1) { animation-delay: 0.2s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(2) { animation-delay: 0.5s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(3) { animation-delay: 0.8s; }
+#pde-painel .estrelas-conquistadas .vazia { color: #E2E8F0; }
+@keyframes estrelaPopFinal {
+  0% { transform: scale(0) rotate(-180deg); }
+  60% { transform: scale(1.4) rotate(15deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #14532D;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #1E324A; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+
+/* A11Y MODAL */
+#pde-painel .a11y-grupo { background: #DCFCE7; border: 3px solid #15803D; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #14532D; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #15803D; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#15803D 0%,#14532D 100%); color: white; border-color: #14532D; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #15803D; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#86EFAC 0%,#22C55E 100%); color: white; border-color: #15803D; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #15803D; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #15803D;
+  border: 2px solid #15803D; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #15803D; color: white; }
+
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #FBBF24; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #14532D; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#15803D,#14532D); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.geografia { background: linear-gradient(135deg,#15803D,#14532D); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #14532D; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #14532D; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #E2E8F0; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FBBF24; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #14532D; }
+
+@media (max-width: 380px) {
+  #pde-painel { padding: 6px 4px 12px; }
+  #pde-painel .header h1 { font-size: 0.9rem; }
+  #pde-painel .btn-header { font-size: 0.7rem; padding: 4px 7px; }
+  #pde-painel .lobby-card,
+  #pde-painel .area-quiz,
+  #pde-painel .painel-info { padding: 10px; border-width: 2px; }
+}
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 8px clamp(10px, 1.5vw, 18px) 14px; }
+  #pde-painel .lobby-card { padding: 14px; }
+  #pde-painel .area-quiz { padding: 10px 14px; }
+  #pde-painel .painel-info { padding: 10px 12px; }
+  #pde-painel .quiz-grid { grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .modal-conteudo h2 { font-size: 1.5rem; }
+  #pde-painel .modal-conteudo p { font-size: 1rem; }
+  #pde-painel .header h1 { font-size: 1.2rem; }
+  #pde-painel .btn-header { font-size: 0.85rem; padding: 6px 12px; }
+  #pde-painel .btn-comecar-aventura { font-size: 1.05rem; padding: 11px 20px; }
+  #pde-painel .pergunta-cab { padding: 8px 16px; }
+  #pde-painel .pergunta-cab .pergunta-texto { font-size: 1.3rem; }
+  #pde-painel .pergunta-cab .pergunta-num { font-size: 0.82rem; }
+  #pde-painel .bandeira-mostra { max-width: 280px; padding: 8px; }
+  #pde-painel .bandeira-mostra svg,
+  #pde-painel .bandeira-mostra img.bandeira-img-grande { max-width: 260px; max-height: 170px; }
+  #pde-painel .bandeira-mostra .bandeira-fallback { max-width: 260px; }
+  #pde-painel .info-estado { padding: 10px 16px; gap: 14px; }
+  #pde-painel .info-estado .nome-estado-grande { font-size: 1.75rem; }
+  #pde-painel .info-estado .bandeira-mini { width: 110px; height: 77px; }
+  #pde-painel .opcoes-grid { max-width: 720px; gap: 8px; }
+  #pde-painel .opcao-card { font-size: 1rem; padding: 10px 12px; min-height: 50px; }
+  #pde-painel .opcao-card .letra-opc { width: 26px; height: 26px; font-size: 0.9rem; top: -11px; left: -11px; }
+  #pde-painel .modo-card { padding: 10px 6px; font-size: 0.95rem; }
+  #pde-painel .modo-card .emoji-modo { font-size: 1.7rem; }
+  #pde-painel .modo-card .nome-modo { font-size: 0.98rem; }
+  #pde-painel .regiao-card { padding: 10px 6px; font-size: 0.95rem; }
+  #pde-painel .regiao-card .emoji-regiao { font-size: 1.7rem; }
+  #pde-painel .regiao-card .nome-regiao { font-size: 0.98rem; }
+  #pde-painel .info-jogo .cronometro { font-size: 1.4rem; padding: 4px; }
+  #pde-painel .card-info { padding: 10px 14px; }
+  #pde-painel .card-info h3 { font-size: 1.15rem; }
+  #pde-painel .card-info .grid-info { font-size: 0.85rem; }
+  #pde-painel .card-info .grid-info .item-info .valor { font-size: 0.9rem; }
+  #pde-painel .card-info .grid-info .item-info .label { font-size: 0.68rem; }
+  #pde-painel .card-info .curiosidade { font-size: 0.88rem; padding: 7px 10px; }
+}
+@media (min-width: 1440px) {
+  #pde-painel { max-width: 1400px; }
+}
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>🇧🇷 Quiz da Bandeira</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Olá! Sou o Cabralzinho! 🗺️</strong>
+        <span>Vamos explorar o Brasil de Norte a Sul? Escolha um modo e uma região!</span>
+      </div>
+    </div>
+
+    <div class="secao-titulo">🎯 O que você quer treinar?</div>
+    <div class="modo-grid" id="modo-grid"></div>
+
+    <div class="secao-titulo">🗺️ Em qual parte do Brasil?</div>
+    <div class="regiao-grid" id="regiao-grid"></div>
+
+    <button class="btn-comecar-aventura" id="btn-comecar" onclick="comecarQuiz()" disabled>🚀 Começar o Quiz!</button>
+  </div>
+
+  <div id="quiz" class="quiz-grid hidden">
+    <div class="area-quiz">
+      <div class="pergunta-cab">
+        <div class="pergunta-num" id="pergunta-num">Pergunta 1 de 10</div>
+        <div class="pergunta-texto" id="pergunta-texto">—</div>
+      </div>
+      <div id="apresentacao-pergunta"></div>
+      <div class="opcoes-grid" id="opcoes-grid"></div>
+      <div id="card-info"></div>
+      <div id="feedback" class="feedback hidden"></div>
+      <div class="progresso-perg" id="progresso-perg"></div>
+    </div>
+
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Vamos lá!</div>
+      </div>
+      <div class="info-jogo">
+        <div class="linha"><span class="label">⏱️ Tempo</span><span class="valor" id="tempo-info">0:00</span></div>
+        <div class="cronometro" id="cronometro">0:00</div>
+        <div class="linha"><span class="label">🎯 Acertos</span><span class="valor" id="acertos-info">0/0</span></div>
+        <div class="linha"><span class="label">📍 Modo</span><span class="valor" id="modo-info">—</span></div>
+        <div class="linha"><span class="label">🗺️ Região</span><span class="valor" id="regiao-info">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-fim">
+    <div class="modal-conteudo">
+      <svg class="mascote-modal" viewBox="0 0 100 100" id="svg-mascote-fim"></svg>
+      <h2 id="fim-titulo">🎉 Quiz concluído!</h2>
+      <p id="fim-msg">Parabéns!</p>
+      <div class="estrelas-conquistadas" id="fim-estrelas"></div>
+      <p id="fim-detalhes" style="font-style:italic; color:#94A3B8;"></p>
+      <div class="acoes" id="fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🗺️ Como Brincar com o Cabralzinho</h2>
+      <h3>🎯 Objetivo</h3>
+      <p>Aprender sobre os 27 estados brasileiros: bandeiras, capitais e regiões.</p>
+
+      <h3>🎮 4 modos de quiz</h3>
+      <ul>
+        <li><b>🚩 Bandeiras:</b> Veja a bandeira e descubra de qual estado é</li>
+        <li><b>🏛️ Capitais:</b> Veja o estado e diga qual é a capital</li>
+        <li><b>🗺️ Regiões:</b> Veja o estado e diga em qual região fica</li>
+        <li><b>🎲 Misto:</b> Os 3 tipos misturados na mesma partida</li>
+      </ul>
+
+      <h3>🇧🇷 6 modos de região</h3>
+      <ul>
+        <li><b>🌳 Norte:</b> 7 estados (AM, AC, RR, RO, PA, AP, TO)</li>
+        <li><b>🌴 Nordeste:</b> 9 estados (BA, SE, AL, PE, PB, RN, CE, PI, MA)</li>
+        <li><b>🏛️ Centro-Oeste:</b> 4 estados (MS, MT, GO, DF)</li>
+        <li><b>🌆 Sudeste:</b> 4 estados (SP, RJ, MG, ES)</li>
+        <li><b>🍇 Sul:</b> 3 estados (PR, SC, RS)</li>
+        <li><b>🇧🇷 Brasil completo:</b> Todos os 27 estados</li>
+      </ul>
+
+      <h3>📚 BNCC Geografia</h3>
+      <ul>
+        <li>EF03GE03 (cidade e estado)</li>
+        <li>EF04GE10 (divisão político-administrativa)</li>
+        <li>EF04GE11 (paisagens das regiões)</li>
+        <li>EF05GE07 (mapas e localização)</li>
+      </ul>
+
+      <h3>🖼️ Sobre as bandeiras</h3>
+      <p style="font-size:0.85rem; color:#475569;">As imagens das bandeiras são as oficiais dos estados brasileiros, fornecidas pelo <b>Wikimedia Commons</b> (símbolos oficiais em domínio público). É necessário conexão com a internet para visualizá-las.</p>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-ajuda')">Bora explorar!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script id="script-jogo">
+/* BANDEIRAS DOS 27 ESTADOS BRASILEIROS
+ * Fonte: Wikimedia Commons (URLs canônicas Special:FilePath)
+ * Licença: domínio público (símbolos oficiais de estado)
+ *
+ * Formato Special:FilePath é à prova de mudanças de hash interno do Wikimedia.
+ * Parâmetro ?width=600 garante PNG renderizado de 600px (cache CDN do Wikimedia).
+ *
+ * Carregamento: cada bandeira é uma tag <img> com fallback gracioso
+ * caso a imagem falhe (sem internet, Wikimedia fora do ar, etc).
+ */
+
+const BANDEIRAS_URLS = {
+  /* NORTE (7) */
+  AC: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_Acre.svg?width=600',
+  AP: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_Amap%C3%A1.svg?width=600',
+  AM: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_Amazonas.svg?width=600',
+  PA: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_Par%C3%A1.svg?width=600',
+  RO: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_de_Rond%C3%B4nia.svg?width=600',
+  RR: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_de_Roraima.svg?width=600',
+  TO: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_Tocantins.svg?width=600',
+
+  /* NORDESTE (9) */
+  MA: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_Maranh%C3%A3o.svg?width=600',
+  PI: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_Piau%C3%AD.svg?width=600',
+  CE: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_Cear%C3%A1.svg?width=600',
+  RN: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_Rio_Grande_do_Norte.svg?width=600',
+  PB: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_da_Para%C3%ADba.svg?width=600',
+  PE: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_de_Pernambuco.svg?width=600',
+  AL: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_de_Alagoas.svg?width=600',
+  SE: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_de_Sergipe.svg?width=600',
+  BA: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_da_Bahia.svg?width=600',
+
+  /* CENTRO-OESTE (4) */
+  MS: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_de_Mato_Grosso_do_Sul.svg?width=600',
+  MT: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_de_Mato_Grosso.svg?width=600',
+  GO: 'https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Goi%C3%A1s.svg?width=600',
+  DF: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_Distrito_Federal_%28Brasil%29.svg?width=600',
+
+  /* SUDESTE (4) */
+  SP: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_estado_de_S%C3%A3o_Paulo.svg?width=600',
+  RJ: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_estado_do_Rio_de_Janeiro.svg?width=600',
+  MG: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_de_Minas_Gerais.svg?width=600',
+  ES: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_Esp%C3%ADrito_Santo.svg?width=600',
+
+  /* SUL (3) */
+  PR: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_Paran%C3%A1.svg?width=600',
+  SC: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_de_Santa_Catarina.svg?width=600',
+  RS: 'https://commons.wikimedia.org/wiki/Special:FilePath/Bandeira_do_Rio_Grande_do_Sul.svg?width=600'
+};
+
+/* Função pra gerar o HTML da bandeira com fallback gracioso.
+ * Se a imagem falhar (offline, Wikimedia fora), mostra placeholder com a sigla.
+ */
+function bandeiraHTML(sigla, classe = 'bandeira-img') {
+  const url = BANDEIRAS_URLS[sigla];
+  if (!url) return `<div class="bandeira-fallback">${sigla}</div>`;
+  // onerror substitui a img por um fallback visual
+  return `<img src="${url}" alt="Bandeira de ${sigla}" class="${classe}" loading="lazy" onerror="this.outerHTML='<div class=\'bandeira-fallback\'>${sigla}</div>'">`;
+}
+/* ============================================================
+ * QUIZ DA BANDEIRA · Portal do Educador NEWPC
+ * Mascote: Cabralzinho (jovem explorador com mapa do Brasil)
+ * ============================================================ */
+
+/* MASCOTE CABRALZINHO - explorador/cartógrafo jovem */
+function svgMascote(expressao = 'normal') {
+  let olhos;
+  if (expressao === 'feliz') {
+    olhos = `
+      <path d="M 38 47 Q 43 42, 48 47" fill="none" stroke="#451A03" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 52 47 Q 57 42, 62 47" fill="none" stroke="#451A03" stroke-width="2.5" stroke-linecap="round"/>
+    `;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <circle cx="43" cy="49" r="3" fill="#451A03"/>
+      <circle cx="57" cy="49" r="3" fill="#451A03"/>
+    `;
+  } else {
+    olhos = `
+      <ellipse cx="43" cy="49" rx="3.5" ry="4.5" fill="white" stroke="#451A03" stroke-width="1"/>
+      <ellipse cx="57" cy="49" rx="3.5" ry="4.5" fill="white" stroke="#451A03" stroke-width="1"/>
+      <circle cx="43.5" cy="50" r="2" fill="#451A03"/>
+      <circle cx="57.5" cy="50" r="2" fill="#451A03"/>
+      <circle cx="44.5" cy="49" r="0.7" fill="white"/>
+      <circle cx="58.5" cy="49" r="0.7" fill="white"/>
+    `;
+  }
+
+  let boca;
+  if (expressao === 'feliz') {
+    boca = `<path d="M 42 62 Q 50 70, 58 62" fill="#FB7185" stroke="#9F1239" stroke-width="1.2"/>`;
+  } else if (expressao === 'pensando') {
+    boca = `<line x1="46" y1="63" x2="54" y2="63" stroke="#451A03" stroke-width="2" stroke-linecap="round"/>`;
+  } else {
+    boca = `<path d="M 44 61 Q 50 65, 56 61" fill="none" stroke="#451A03" stroke-width="2" stroke-linecap="round"/>`;
+  }
+
+  return `
+    <!-- Sombra -->
+    <ellipse cx="50" cy="93" rx="28" ry="2.5" fill="rgba(0,0,0,0.18)"/>
+    <!-- Pernas com bermuda cáqui -->
+    <rect x="40" y="78" width="7" height="12" fill="#A16207" stroke="#713F12" stroke-width="1" rx="2"/>
+    <rect x="53" y="78" width="7" height="12" fill="#A16207" stroke="#713F12" stroke-width="1" rx="2"/>
+    <!-- Botas/Sapatos marrons -->
+    <ellipse cx="43.5" cy="92" rx="4.5" ry="2.5" fill="#78350F"/>
+    <ellipse cx="56.5" cy="92" rx="4.5" ry="2.5" fill="#78350F"/>
+    <!-- Camisa branca -->
+    <path d="M 30 60 L 30 80 L 70 80 L 70 60 Q 70 50, 60 48 L 40 48 Q 30 50, 30 60 Z"
+          fill="#FFFFFF" stroke="#475569" stroke-width="1.2"/>
+    <!-- Detalhes da camisa (gola V) -->
+    <path d="M 42 48 L 50 56 L 58 48" fill="#FFFFFF" stroke="#475569" stroke-width="1"/>
+    <!-- Cinto -->
+    <rect x="30" y="76" width="40" height="4" fill="#78350F" stroke="#451A03" stroke-width="0.5"/>
+    <rect x="48" y="75" width="4" height="6" fill="#FBBF24" stroke="#92400E" stroke-width="0.5"/>
+    <!-- Bracinhos com mangas brancas curtas -->
+    <ellipse cx="26" cy="62" rx="4.5" ry="9" fill="#FFFFFF" stroke="#475569" stroke-width="1.2" transform="rotate(-15 26 62)"/>
+    <ellipse cx="74" cy="62" rx="4.5" ry="9" fill="#FFFFFF" stroke="#475569" stroke-width="1.2" transform="rotate(15 74 62)"/>
+    <!-- Mãozinhas (segurando mapa) -->
+    <circle cx="22" cy="70" r="3.5" fill="#FED7AA" stroke="#9A3412" stroke-width="1"/>
+    <circle cx="78" cy="70" r="3.5" fill="#FED7AA" stroke="#9A3412" stroke-width="1"/>
+    <!-- MAPA DO BRASIL na mão direita (estilizado) -->
+    <rect x="13" y="65" width="14" height="10" fill="#FEF3C7" stroke="#78350F" stroke-width="1" rx="1"/>
+    <!-- Forma simplificada do Brasil no mapa -->
+    <path d="M 16 67 Q 20 67 22 70 Q 24 71 23 73 Q 21 74 18 73 Q 15 71 16 67 Z" fill="#1B5E20"/>
+    <!-- Bússola na outra mão -->
+    <circle cx="78" cy="70" r="3" fill="#FFFFFF" stroke="#212121" stroke-width="0.8"/>
+    <line x1="78" y1="68" x2="78" y2="72" stroke="#E53935" stroke-width="0.8"/>
+    <text x="78" y="71" font-size="2.5" text-anchor="middle" font-weight="bold" fill="#212121">N</text>
+    <!-- Cabeça -->
+    <circle cx="50" cy="40" r="20" fill="#FED7AA" stroke="#9A3412" stroke-width="1.5"/>
+    <!-- Cabelo castanho com franja por baixo do chapéu -->
+    <path d="M 30 38 Q 30 32, 35 30 Q 38 36, 45 32 Q 50 38, 55 32 Q 62 36, 65 30 Q 70 32, 70 38 Z"
+          fill="#78350F" stroke="#451A03" stroke-width="0.8"/>
+    <!-- CHAPÉU DE EXPLORADOR (safari) -->
+    <ellipse cx="50" cy="26" rx="26" ry="5" fill="#A16207" stroke="#713F12" stroke-width="1.5"/>
+    <!-- Copa do chapéu -->
+    <path d="M 38 26 Q 38 16, 50 14 Q 62 16, 62 26 Z" fill="#A16207" stroke="#713F12" stroke-width="1.5"/>
+    <!-- Faixa preta no chapéu -->
+    <rect x="38" y="22" width="24" height="3" fill="#1F2937" stroke="#0F172A" stroke-width="0.5"/>
+    <!-- Pequeno detalhe verde-amarelo na faixa (representando Brasil) -->
+    <rect x="48" y="22" width="2" height="3" fill="#1B5E20"/>
+    <rect x="50" y="22" width="2" height="3" fill="#FDD835"/>
+    <!-- Bochechinhas rosadas -->
+    <ellipse cx="34" cy="52" rx="3" ry="2" fill="#FB7185" opacity="0.5"/>
+    <ellipse cx="66" cy="52" rx="3" ry="2" fill="#FB7185" opacity="0.5"/>
+    <!-- Olhos -->
+    ${olhos}
+    <!-- Nariz pequeno -->
+    <path d="M 49 54 Q 50 56, 51 54" fill="none" stroke="#9A3412" stroke-width="1" stroke-linecap="round"/>
+    <!-- Boca -->
+    ${boca}
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* DADOS DOS 27 ESTADOS BRASILEIROS */
+const ESTADOS = {
+  /* NORTE */
+  AC: { nome: 'Acre',           sigla: 'AC', capital: 'Rio Branco',     regiao: 'Norte',        gentilico: 'acreano',         curio: 'Foi comprado da Bolívia em 1903 por 2 milhões de libras esterlinas.' },
+  AP: { nome: 'Amapá',          sigla: 'AP', capital: 'Macapá',         regiao: 'Norte',        gentilico: 'amapaense',        curio: 'Macapá é a única capital cortada pela linha do Equador.' },
+  AM: { nome: 'Amazonas',       sigla: 'AM', capital: 'Manaus',         regiao: 'Norte',        gentilico: 'amazonense',       curio: 'É o maior estado do Brasil em área e abriga grande parte da Floresta Amazônica.' },
+  PA: { nome: 'Pará',           sigla: 'PA', capital: 'Belém',          regiao: 'Norte',        gentilico: 'paraense',         curio: 'Belém é famosa pelo Círio de Nazaré, uma das maiores procissões católicas do mundo.' },
+  RO: { nome: 'Rondônia',       sigla: 'RO', capital: 'Porto Velho',    regiao: 'Norte',        gentilico: 'rondoniense',      curio: 'Foi criado em 1981 e tem o nome em homenagem ao Marechal Cândido Rondon.' },
+  RR: { nome: 'Roraima',        sigla: 'RR', capital: 'Boa Vista',      regiao: 'Norte',        gentilico: 'roraimense',       curio: 'É o ponto mais ao norte do Brasil. Boa Vista é a única capital totalmente acima da linha do Equador.' },
+  TO: { nome: 'Tocantins',      sigla: 'TO', capital: 'Palmas',         regiao: 'Norte',        gentilico: 'tocantinense',     curio: 'É o estado mais novo do Brasil, criado pela Constituição de 1988.' },
+  /* NORDESTE */
+  MA: { nome: 'Maranhão',       sigla: 'MA', capital: 'São Luís',       regiao: 'Nordeste',     gentilico: 'maranhense',       curio: 'São Luís é a única capital brasileira fundada por franceses, em 1612.' },
+  PI: { nome: 'Piauí',          sigla: 'PI', capital: 'Teresina',       regiao: 'Nordeste',     gentilico: 'piauiense',        curio: 'Teresina é a única capital do Nordeste que não está no litoral.' },
+  CE: { nome: 'Ceará',          sigla: 'CE', capital: 'Fortaleza',      regiao: 'Nordeste',     gentilico: 'cearense',         curio: 'Tem mais de 570 km de praias. Fortaleza é a 5ª maior cidade do Brasil.' },
+  RN: { nome: 'Rio Grande do Norte', sigla: 'RN', capital: 'Natal',     regiao: 'Nordeste',     gentilico: 'potiguar',         curio: 'Natal é considerada a "Capital do Sol" pela alta incidência de luz solar o ano todo.' },
+  PB: { nome: 'Paraíba',        sigla: 'PB', capital: 'João Pessoa',    regiao: 'Nordeste',     gentilico: 'paraibano',        curio: 'João Pessoa é a 3ª cidade mais antiga do Brasil, fundada em 1585.' },
+  PE: { nome: 'Pernambuco',     sigla: 'PE', capital: 'Recife',         regiao: 'Nordeste',     gentilico: 'pernambucano',     curio: 'Recife é chamada de "Veneza Brasileira" por ter muitas pontes e canais.' },
+  AL: { nome: 'Alagoas',        sigla: 'AL', capital: 'Maceió',         regiao: 'Nordeste',     gentilico: 'alagoano',         curio: 'É um dos menores estados do Brasil, mas tem belas praias de águas cristalinas.' },
+  SE: { nome: 'Sergipe',        sigla: 'SE', capital: 'Aracaju',        regiao: 'Nordeste',     gentilico: 'sergipano',        curio: 'É o menor estado do Brasil em área territorial.' },
+  BA: { nome: 'Bahia',          sigla: 'BA', capital: 'Salvador',       regiao: 'Nordeste',     gentilico: 'baiano',           curio: 'Salvador foi a primeira capital do Brasil, de 1549 a 1763.' },
+  /* CENTRO-OESTE */
+  MS: { nome: 'Mato Grosso do Sul', sigla: 'MS', capital: 'Campo Grande', regiao: 'Centro-Oeste', gentilico: 'sul-mato-grossense', curio: 'Foi criado em 1977 a partir do desmembramento de Mato Grosso. É a casa do Pantanal.' },
+  MT: { nome: 'Mato Grosso',    sigla: 'MT', capital: 'Cuiabá',         regiao: 'Centro-Oeste', gentilico: 'mato-grossense',   curio: 'É o estado com maior produção de soja do Brasil. Cuiabá é uma das cidades mais quentes do país.' },
+  GO: { nome: 'Goiás',          sigla: 'GO', capital: 'Goiânia',        regiao: 'Centro-Oeste', gentilico: 'goiano',           curio: 'Goiânia é uma cidade planejada, fundada em 1933 para ser a nova capital do estado.' },
+  DF: { nome: 'Distrito Federal', sigla: 'DF', capital: 'Brasília',     regiao: 'Centro-Oeste', gentilico: 'brasiliense',      curio: 'Brasília foi inaugurada em 1960 e é Patrimônio Cultural da Humanidade pela UNESCO.' },
+  /* SUDESTE */
+  SP: { nome: 'São Paulo',      sigla: 'SP', capital: 'São Paulo',      regiao: 'Sudeste',      gentilico: 'paulista',         curio: 'É o estado mais populoso do Brasil. A cidade de SP tem mais de 12 milhões de habitantes.' },
+  RJ: { nome: 'Rio de Janeiro', sigla: 'RJ', capital: 'Rio de Janeiro', regiao: 'Sudeste',      gentilico: 'fluminense',       curio: 'Foi capital do Brasil de 1763 a 1960. O Cristo Redentor é uma das 7 maravilhas do mundo moderno.' },
+  MG: { nome: 'Minas Gerais',   sigla: 'MG', capital: 'Belo Horizonte', regiao: 'Sudeste',      gentilico: 'mineiro',          curio: 'É famoso pela culinária (pão de queijo!) e pelas cidades históricas como Ouro Preto.' },
+  ES: { nome: 'Espírito Santo', sigla: 'ES', capital: 'Vitória',        regiao: 'Sudeste',      gentilico: 'capixaba',         curio: 'Vitória é uma cidade-ilha. Tem o maior porto exportador de minério do mundo.' },
+  /* SUL */
+  PR: { nome: 'Paraná',         sigla: 'PR', capital: 'Curitiba',       regiao: 'Sul',          gentilico: 'paranaense',       curio: 'Curitiba é considerada uma das capitais com melhor planejamento urbano do Brasil.' },
+  SC: { nome: 'Santa Catarina', sigla: 'SC', capital: 'Florianópolis',  regiao: 'Sul',          gentilico: 'catarinense',      curio: 'Tem 42 praias só na ilha de Florianópolis. Forte influência alemã e italiana.' },
+  RS: { nome: 'Rio Grande do Sul', sigla: 'RS', capital: 'Porto Alegre', regiao: 'Sul',         gentilico: 'gaúcho',           curio: 'É o estado mais ao sul do Brasil. Famoso pelo churrasco e pelo chimarrão.' }
+};
+
+const REGIOES = {
+  Norte:        { nome: 'Norte',         emoji: '🌳', estados: ['AC','AP','AM','PA','RO','RR','TO'] },
+  Nordeste:     { nome: 'Nordeste',      emoji: '🌴', estados: ['MA','PI','CE','RN','PB','PE','AL','SE','BA'] },
+  'Centro-Oeste': { nome: 'Centro-Oeste', emoji: '🏛️', estados: ['MS','MT','GO','DF'] },
+  Sudeste:      { nome: 'Sudeste',       emoji: '🌆', estados: ['SP','RJ','MG','ES'] },
+  Sul:          { nome: 'Sul',           emoji: '🍇', estados: ['PR','SC','RS'] },
+  Brasil:       { nome: 'Brasil completo', emoji: '🇧🇷', estados: Object.keys(ESTADOS) }
+};
+
+const MODOS = {
+  bandeiras: { nome: 'Bandeiras', emoji: '🚩', desc: 'Veja a bandeira, escolha o estado' },
+  capitais:  { nome: 'Capitais',  emoji: '🏛️', desc: 'Qual é a capital?' },
+  regioes:   { nome: 'Regiões',   emoji: '🗺️', desc: 'Em qual região fica?' },
+  misto:     { nome: 'Misto',     emoji: '🎲', desc: 'Os 3 tipos misturados' }
+};
+
+const ELOGIOS = ['Mandou bem!', 'Você é demais!', 'Geógrafo nato!', 'Conhece o Brasil!', 'Acertou em cheio!', 'Show!'];
+const INCENTIVOS = ['Quase! Vamos lembrar!', 'Olhe com atenção!', 'Você consegue!', 'Tente de novo!'];
+
+const STATE = {
+  modo: null,
+  regiao: null,
+  jogo: {
+    ativo: false,
+    perguntas: [], // [{tipo, estado, opcoes}]
+    indiceAtual: 0,
+    acertos: 0,
+    erros: 0,
+    bloqueado: false,
+    inicio: 0,
+    timer: null
+  }
+};
+
+function salvar() {
+  try {
+    localStorage.setItem('pde_bandeira_dados', JSON.stringify({
+      modo: STATE.modo,
+      regiao: STATE.regiao
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_bandeira_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    STATE.modo = d.modo || null;
+    STATE.regiao = d.regiao || null;
+  } catch (e) {}
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function elogio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivo() { return INCENTIVOS[Math.floor(Math.random() * INCENTIVOS.length)]; }
+
+/* LOBBY */
+function renderLobby() {
+  // Modos
+  const modoCont = document.getElementById('modo-grid');
+  modoCont.innerHTML = '';
+  Object.entries(MODOS).forEach(([key, modo]) => {
+    const card = document.createElement('div');
+    card.className = 'modo-card' + (STATE.modo === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="emoji-modo">${modo.emoji}</span>
+      <span class="nome-modo">${modo.nome}</span>
+      <span class="desc-modo">${modo.desc}</span>
+    `;
+    card.onclick = () => { STATE.modo = key; salvar(); renderLobby(); };
+    modoCont.appendChild(card);
+  });
+
+  // Regiões
+  const regCont = document.getElementById('regiao-grid');
+  regCont.innerHTML = '';
+  Object.entries(REGIOES).forEach(([key, reg]) => {
+    const card = document.createElement('div');
+    card.className = 'regiao-card' + (STATE.regiao === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="emoji-regiao">${reg.emoji}</span>
+      <span class="nome-regiao">${reg.nome}</span>
+      <span class="qtd-estados">${reg.estados.length} estados</span>
+    `;
+    card.onclick = () => { STATE.regiao = key; salvar(); renderLobby(); };
+    regCont.appendChild(card);
+  });
+
+  // Botão começar
+  const btn = document.getElementById('btn-comecar');
+  if (STATE.modo && STATE.regiao) {
+    btn.disabled = false;
+    const modo = MODOS[STATE.modo];
+    const reg = REGIOES[STATE.regiao];
+    btn.textContent = `🚀 Quiz ${modo.nome} · ${reg.nome}`;
+  } else {
+    btn.disabled = true;
+    btn.textContent = '🚀 Escolha modo e região';
+  }
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+
+/* GERAÇÃO DE PERGUNTAS */
+function gerarPerguntas() {
+  const reg = REGIOES[STATE.regiao];
+  const siglasDisp = reg.estados.slice();
+  // Quantas perguntas: 7 por região pequena, 10 para Brasil completo
+  const nPerguntas = STATE.regiao === 'Brasil' ? 10 : Math.min(7, siglasDisp.length);
+
+  // Embaralhar e pegar n estados
+  const escolhidos = shuffle(siglasDisp).slice(0, nPerguntas);
+
+  // Para modo "misto", alternar tipos
+  const tipos = ['bandeiras', 'capitais', 'regioes'];
+  const perguntas = escolhidos.map((sigla, i) => {
+    let tipo = STATE.modo === 'misto' ? tipos[i % 3] : STATE.modo;
+    return gerarPergunta(tipo, sigla, siglasDisp);
+  });
+
+  return perguntas;
+}
+
+function gerarPergunta(tipo, siglaCerta, siglasDisp) {
+  const certo = ESTADOS[siglaCerta];
+
+  if (tipo === 'bandeiras') {
+    // Pergunta: "De qual estado é esta bandeira?"
+    // Opções: 4 nomes de estado (1 certo + 3 distratores)
+    const distratores = shuffle(siglasDisp.filter(s => s !== siglaCerta)).slice(0, 3);
+    // Se não houver 3 distratores na região, completar com outros estados
+    if (distratores.length < 3) {
+      const outros = shuffle(Object.keys(ESTADOS).filter(s => s !== siglaCerta && !distratores.includes(s)));
+      while (distratores.length < 3) distratores.push(outros.shift());
+    }
+    const opcoes = shuffle([siglaCerta, ...distratores]);
+    return {
+      tipo: 'bandeiras',
+      siglaCerta,
+      pergunta: 'De qual estado é esta bandeira?',
+      opcoes: opcoes.map(s => ({ valor: s, texto: ESTADOS[s].nome })),
+      apresentacao: 'bandeira'
+    };
+  }
+
+  if (tipo === 'capitais') {
+    // Pergunta: "Qual é a capital de X?"
+    // Opções: 4 capitais (1 certa + 3 distratores)
+    const capitalCerta = certo.capital;
+    const todas = Object.values(ESTADOS).map(e => e.capital).filter(c => c !== capitalCerta);
+    const distratores = shuffle(todas).slice(0, 3);
+    const opcoes = shuffle([capitalCerta, ...distratores]);
+    return {
+      tipo: 'capitais',
+      siglaCerta,
+      respostaCerta: capitalCerta,
+      pergunta: `Qual é a capital de <b>${certo.nome}</b>?`,
+      opcoes: opcoes.map(c => ({ valor: c, texto: c })),
+      apresentacao: 'estado'
+    };
+  }
+
+  if (tipo === 'regioes') {
+    // Pergunta: "Em qual região fica X?"
+    // Opções: 5 regiões
+    const regiaoCerta = certo.regiao;
+    const opcoes = ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul'].map(r => ({ valor: r, texto: r }));
+    // Não embaralhar para manter ordem geográfica
+    return {
+      tipo: 'regioes',
+      siglaCerta,
+      respostaCerta: regiaoCerta,
+      pergunta: `Em qual região fica <b>${certo.nome}</b>?`,
+      opcoes,
+      apresentacao: 'estado'
+    };
+  }
+}
+
+/* INICIAR QUIZ */
+function comecarQuiz() {
+  if (!STATE.modo || !STATE.regiao) return;
+  STATE.jogo.perguntas = gerarPerguntas();
+  STATE.jogo.indiceAtual = 0;
+  STATE.jogo.acertos = 0;
+  STATE.jogo.erros = 0;
+  STATE.jogo.ativo = true;
+  STATE.jogo.bloqueado = false;
+  STATE.jogo.inicio = Date.now();
+
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+  document.getElementById('modo-info').textContent = MODOS[STATE.modo].emoji + ' ' + MODOS[STATE.modo].nome;
+  document.getElementById('regiao-info').textContent = REGIOES[STATE.regiao].emoji + ' ' + REGIOES[STATE.regiao].nome;
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Cabralzinho:</b> Vamos viajar pelo Brasil!`;
+
+  renderMascote('svg-mascote-painel', 'normal');
+  renderProgresso();
+  iniciarCronometro();
+  apresentarPergunta();
+}
+
+function renderProgresso() {
+  const cont = document.getElementById('progresso-perg');
+  cont.innerHTML = '';
+  for (let i = 0; i < STATE.jogo.perguntas.length; i++) {
+    const e = document.createElement('span');
+    e.className = 'estrelinha';
+    if (i < STATE.jogo.indiceAtual) {
+      // Já respondeu - acerto ou erro
+      e.classList.add(STATE.jogo.perguntas[i]._resultado === 'acerto' ? 'acerto' : 'erro');
+    } else if (i === STATE.jogo.indiceAtual) {
+      e.classList.add('atual');
+    }
+    e.textContent = '★';
+    cont.appendChild(e);
+  }
+}
+
+function apresentarPergunta() {
+  STATE.jogo.bloqueado = false;
+  limparFeedback();
+  document.getElementById('card-info').innerHTML = '';
+  // Garantir que opções estejam visíveis na nova pergunta
+  const aq = document.querySelector('.area-quiz');
+  if (aq) aq.classList.remove('modo-feedback');
+
+  const pergunta = STATE.jogo.perguntas[STATE.jogo.indiceAtual];
+  const idx = STATE.jogo.indiceAtual + 1;
+  const total = STATE.jogo.perguntas.length;
+
+  document.getElementById('pergunta-num').textContent = `Pergunta ${idx} de ${total}`;
+  document.getElementById('pergunta-texto').innerHTML = pergunta.pergunta;
+  document.getElementById('acertos-info').textContent = `${STATE.jogo.acertos}/${total}`;
+
+  // Apresentação
+  const apr = document.getElementById('apresentacao-pergunta');
+  if (pergunta.apresentacao === 'bandeira') {
+    apr.innerHTML = `<div class="bandeira-mostra">${bandeiraHTML(pergunta.siglaCerta, 'bandeira-img-grande')}</div>`;
+  } else if (pergunta.apresentacao === 'estado') {
+    const est = ESTADOS[pergunta.siglaCerta];
+    apr.innerHTML = `
+      <div class="info-estado">
+        <div class="bandeira-mini">${bandeiraHTML(pergunta.siglaCerta, 'bandeira-img-mini')}</div>
+        <div class="info-bloco-texto">
+          <div class="nome-estado-grande">${est.nome}</div>
+          <span class="sigla-estado">${est.sigla}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // Opções
+  const opcCont = document.getElementById('opcoes-grid');
+  opcCont.innerHTML = '';
+  const letras = ['A', 'B', 'C', 'D', 'E'];
+  pergunta.opcoes.forEach((opc, i) => {
+    const card = document.createElement('div');
+    card.className = 'opcao-card';
+    card.dataset.valor = opc.valor;
+    card.innerHTML = `<span class="letra-opc">${letras[i]}</span><span>${opc.texto}</span>`;
+    card.addEventListener('click', () => responder(card, opc.valor, pergunta));
+    opcCont.appendChild(card);
+  });
+
+  renderProgresso();
+}
+
+function responder(card, valorEscolhido, pergunta) {
+  if (STATE.jogo.bloqueado) return;
+  STATE.jogo.bloqueado = true;
+
+  let valorCerto;
+  if (pergunta.tipo === 'bandeiras') valorCerto = pergunta.siglaCerta;
+  else if (pergunta.tipo === 'capitais') valorCerto = pergunta.respostaCerta;
+  else if (pergunta.tipo === 'regioes') valorCerto = pergunta.respostaCerta;
+
+  const correto = valorEscolhido === valorCerto;
+  pergunta._resultado = correto ? 'acerto' : 'erro';
+
+  // Texto da resposta escolhida (achar pelo valor)
+  const opcEscolhida = pergunta.opcoes.find(o => o.valor === valorEscolhido);
+  const opcCerta = pergunta.opcoes.find(o => o.valor === valorCerto);
+  const textoEscolhido = opcEscolhida ? opcEscolhida.texto : valorEscolhido;
+  const textoCerto = opcCerta ? opcCerta.texto : valorCerto;
+
+  if (correto) {
+    card.classList.add('acertado');
+    STATE.jogo.acertos++;
+    tocarSom('acerto');
+    renderMascote('svg-mascote-painel', 'feliz');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Cabralzinho:</b> Acertou!`;
+  } else {
+    card.classList.add('errado');
+    STATE.jogo.erros++;
+    tocarSom('erro');
+    renderMascote('svg-mascote-painel', 'pensando');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Cabralzinho:</b> Vamos aprender!`;
+  }
+
+  // Renderizar resumo da resposta dada (substitui opções)
+  const fbEl = document.getElementById('feedback');
+  fbEl.className = 'resumo-resposta';
+  fbEl.classList.remove('hidden');
+  if (correto) {
+    fbEl.innerHTML = `<span class="badge-resp acertou">✓ Acertou!</span> <span>Resposta: <span class="resp-correta">${textoCerto}</span></span>`;
+  } else {
+    fbEl.innerHTML = `<span class="badge-resp errou">✗ Errou</span> <span>Sua resposta: <span>${textoEscolhido}</span></span> <span>Correta: <span class="resp-correta">${textoCerto}</span></span>`;
+  }
+
+  // Ativar modo-feedback (esconde opções via CSS)
+  document.querySelector('.area-quiz').classList.add('modo-feedback');
+
+  // Card de informação pedagógica COM botão "Próxima"
+  const est = ESTADOS[pergunta.siglaCerta];
+  const cardInfo = document.getElementById('card-info');
+  const ultimaPergunta = (STATE.jogo.indiceAtual + 1) >= STATE.jogo.perguntas.length;
+  const labelBotao = ultimaPergunta ? '🎉 Ver resultado' : '➡️ Próxima pergunta';
+  cardInfo.innerHTML = `
+    <div class="card-info">
+      <h3>📍 ${est.nome} <span style="font-size:0.85rem; opacity:0.7;">(${est.sigla})</span></h3>
+      <div class="grid-info">
+        <div class="item-info"><span class="label">🏛️ Capital</span><span class="valor">${est.capital}</span></div>
+        <div class="item-info"><span class="label">🗺️ Região</span><span class="valor">${est.regiao}</span></div>
+        <div class="item-info"><span class="label">👥 Gentílico</span><span class="valor">${est.gentilico}</span></div>
+        <div class="item-info"><span class="label">📦 Total</span><span class="valor">${REGIOES[est.regiao].estados.length} estados</span></div>
+      </div>
+      <div class="curiosidade"><b>💡 Curiosidade:</b> ${est.curio}</div>
+      <button class="btn-proxima" onclick="avancarPergunta()">${labelBotao}</button>
+    </div>
+  `;
+
+  document.getElementById('acertos-info').textContent = `${STATE.jogo.acertos}/${STATE.jogo.perguntas.length}`;
+  renderProgresso();
+}
+
+function avancarPergunta() {
+  // Remover classe modo-feedback (volta a mostrar opções na próxima)
+  document.querySelector('.area-quiz').classList.remove('modo-feedback');
+  STATE.jogo.indiceAtual++;
+  if (STATE.jogo.indiceAtual >= STATE.jogo.perguntas.length) {
+    finalizarQuiz();
+  } else {
+    apresentarPergunta();
+  }
+}
+
+/* CRONÔMETRO */
+function iniciarCronometro() {
+  if (STATE.jogo.timer) clearInterval(STATE.jogo.timer);
+  STATE.jogo.timer = setInterval(() => {
+    if (!STATE.jogo.ativo) {
+      clearInterval(STATE.jogo.timer);
+      return;
+    }
+    const seg = Math.floor((Date.now() - STATE.jogo.inicio) / 1000);
+    const m = Math.floor(seg / 60);
+    const s = seg % 60;
+    const txt = `${m}:${String(s).padStart(2, '0')}`;
+    document.getElementById('cronometro').textContent = txt;
+    document.getElementById('tempo-info').textContent = txt;
+  }, 1000);
+}
+
+/* FEEDBACK */
+function limparFeedback() {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback hidden';
+  fb.innerHTML = '';
+}
+function mostrarFeedback(tipo, texto) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback ' + tipo;
+  fb.innerHTML = texto;
+  fb.classList.remove('hidden');
+}
+
+/* FIM DO QUIZ */
+function finalizarQuiz() {
+  STATE.jogo.ativo = false;
+  if (STATE.jogo.timer) clearInterval(STATE.jogo.timer);
+
+  const total = STATE.jogo.perguntas.length;
+  const aprov = STATE.jogo.acertos / total;
+  let estrelas;
+  if (aprov >= 0.9) estrelas = 3;
+  else if (aprov >= 0.6) estrelas = 2;
+  else estrelas = 1;
+
+  const segundos = Math.floor((Date.now() - STATE.jogo.inicio) / 1000);
+  const m = Math.floor(segundos / 60);
+  const s = segundos % 60;
+  const tempoTxt = `${m}:${String(s).padStart(2, '0')}`;
+
+  document.getElementById('fim-titulo').textContent = estrelas === 3 ? '🏆 Geógrafo de mão cheia!' : (estrelas === 2 ? '🎉 Muito bem!' : '💪 Bom esforço!');
+  document.getElementById('fim-msg').innerHTML = `Modo: <b>${MODOS[STATE.modo].nome}</b> · Região: <b>${REGIOES[STATE.regiao].nome}</b>`;
+  document.getElementById('fim-detalhes').textContent = `${STATE.jogo.acertos} acertos de ${total} em ${tempoTxt}`;
+
+  let estrelasHtml = '';
+  for (let i = 0; i < 3; i++) {
+    estrelasHtml += i < estrelas ? '<span class="ativa">★</span>' : '<span class="vazia">★</span>';
+  }
+  document.getElementById('fim-estrelas').innerHTML = estrelasHtml;
+
+  const acoes = document.getElementById('fim-acoes');
+  acoes.innerHTML = '';
+  const btnNovo = document.createElement('button');
+  btnNovo.className = 'btn-confirmar';
+  btnNovo.textContent = '↻ Jogar de novo';
+  btnNovo.onclick = () => { fecharModal('modal-fim'); comecarQuiz(); };
+  acoes.appendChild(btnNovo);
+  const btnLobby = document.createElement('button');
+  btnLobby.className = 'btn-cancelar';
+  btnLobby.textContent = '🏠 Mudar modo';
+  btnLobby.onclick = () => { fecharModal('modal-fim'); voltarLobby(); };
+  acoes.appendChild(btnLobby);
+
+  renderMascote('svg-mascote-fim', 'feliz');
+  document.getElementById('modal-fim').classList.add('aberto');
+  if (estrelas >= 2) criarConfetes();
+}
+
+function voltarLobby() {
+  if (STATE.jogo.ativo && (STATE.jogo.acertos + STATE.jogo.erros) > 0) {
+    if (!confirm('Voltar ao menu? Sua partida será perdida.')) return;
+  }
+  STATE.jogo.ativo = false;
+  if (STATE.jogo.timer) clearInterval(STATE.jogo.timer);
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-fim');
+  renderLobby();
+}
+
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+
+/* SOM */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'acerto') {
+      const notas = [523, 659, 784, 1047];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t0 = c.currentTime + i * 0.07;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.18);
+        o.start(t0); o.stop(t0 + 0.2);
+      });
+    } else {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 320; o.type = 'sine';
+      g.gain.setValueAtTime(0.08, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.25);
+      o.frequency.exponentialRampToValueAtTime(180, c.currentTime + 0.25);
+      o.start(); o.stop(c.currentTime + 0.27);
+    }
+  } catch (e) {}
+}
+
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#15803D','#FBBF24','#FB923C','#1E40AF','#FDD835','#E53935'];
+  for (let i = 0; i < 50; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* A11Y */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* WEBNODE EMBED */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => reportarAltura());
+  ro.observe(document.getElementById('pde-painel'));
+}
+
+/* SELOS BNCC */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'geografia',
+      icone: 'GEO',
+      titulo: 'BNCC Geografia · Conexões e Escalas',
+      itens: [
+        { cod: 'EF03GE03', desc: 'Reconhecer os diferentes modos de vida de povos e comunidades tradicionais em distintos lugares.' },
+        { cod: 'EF04GE10', desc: 'Comparar tipos variados de mapas, identificando suas características, elaboradores, finalidades, diferenças e semelhanças.' },
+        { cod: 'EF04GE11', desc: 'Identificar as características das paisagens naturais e antrópicas (relevo, cobertura vegetal, rios etc.) no ambiente em que vive, bem como a ação humana na preservação ou degradação dessas áreas.' },
+        { cod: 'EF05GE07', desc: 'Identificar os diferentes tipos de impactos ambientais e suas consequências.' },
+        { cod: 'EF06GE12', desc: 'Identificar o papel do Estado na organização do território, considerando a infraestrutura para o desenvolvimento das atividades econômicas.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Cultura Digital',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-fim'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+/* INIT */
+carregar();
+carregarA11y();
+renderLobby();
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+
+</script>
+</body>
+</html>

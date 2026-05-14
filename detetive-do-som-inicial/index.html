@@ -1,0 +1,2391 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Detetive do Som Inicial · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #1E324A);
+  padding: 6px clamp(6px, 1.5vw, 12px) 10px;
+  width: 100%; max-width: 100%; overflow-x: hidden; margin: 0 auto;
+  user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+  --pde-cor-texto: #1E324A;
+  background: linear-gradient(180deg, #F3E8FF 0%, #C084FC 50%, #4C1D95 100%);
+  border-radius: 12px;
+}
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-jogo,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .nivel-card,
+#pde-painel.alto-contraste .modo-card,
+#pde-painel.alto-contraste .qtd-card,
+#pde-painel.alto-contraste .tempo-card { background: #000 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .nivel-card.selecionado,
+#pde-painel.alto-contraste .modo-card.selecionado,
+#pde-painel.alto-contraste .qtd-card.selecionado,
+#pde-painel.alto-contraste .tempo-card.selecionado { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .letra-opcao { background: #1F2937 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#7C3AED 0%,#4C1D95 100%);
+  border-radius: 10px;
+  padding: 6px 10px;
+  color: white;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 6px rgba(76,29,149,0.25);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 14px;
+  padding: 10px;
+  border: 2px solid #7C3AED;
+  box-shadow: 0 3px 8px rgba(124,58,237,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #F3E8FF 0%, #C084FC 100%);
+  border-radius: 10px;
+  padding: 7px 10px;
+  margin-bottom: 8px;
+  border: 2px solid #7C3AED;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 72px; height: 72px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 10px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #1E324A;
+  font-size: 0.85rem;
+  line-height: 1.25;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: ''; position: absolute;
+  left: -8px; top: 18px;
+  width: 0; height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #7C3AED;
+  font-size: 0.95rem;
+  margin-bottom: 1px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 5px; padding: 8px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 78px; height: 78px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+#pde-painel .secao-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #7C3AED;
+  font-size: 0.92rem;
+  margin: 8px 0 5px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* MODO */
+#pde-painel .modo-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 5px; margin-bottom: 6px;
+}
+@media (min-width: 700px) { #pde-painel .modo-grid { grid-template-columns: repeat(4, 1fr); } }
+#pde-painel .modo-card {
+  background: white; border: 2px solid #7C3AED; border-radius: 10px;
+  padding: 7px; cursor: pointer; text-align: center;
+  font-family: 'Fredoka',sans-serif; color: #1E324A; font-size: 0.78rem;
+  transition: all 0.15s; box-shadow: 0 2px 0 #4C1D95;
+}
+#pde-painel .modo-card:hover { transform: translateY(-2px); }
+#pde-painel .modo-card.selecionado {
+  background: linear-gradient(135deg,#7C3AED 0%,#4C1D95 100%);
+  color: white; border-color: #2E1065; transform: translateY(2px);
+}
+#pde-painel .modo-card .modo-emoji { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .modo-card .modo-titulo { font-weight: 700; font-size: 0.85rem; }
+#pde-painel .modo-card .modo-desc { font-size: 0.7rem; opacity: 0.85; margin-top: 1px; line-height: 1.2; }
+
+/* NÍVEL */
+#pde-painel .nivel-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 5px; margin-bottom: 6px;
+}
+@media (min-width: 700px) { #pde-painel .nivel-grid { grid-template-columns: repeat(4, 1fr); } }
+#pde-painel .nivel-card {
+  background: white; border: 2px solid #EAB308; border-radius: 10px;
+  padding: 7px; cursor: pointer; text-align: center;
+  font-family: 'Fredoka',sans-serif; color: #713F12; font-size: 0.78rem;
+  transition: all 0.15s; box-shadow: 0 2px 0 #713F12;
+}
+#pde-painel .nivel-card:hover { transform: translateY(-2px); }
+#pde-painel .nivel-card.selecionado {
+  background: linear-gradient(135deg,#EAB308 0%,#713F12 100%);
+  color: white; border-color: #422006; transform: translateY(2px);
+}
+#pde-painel .nivel-card .nivel-emoji { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .nivel-card .nivel-titulo { font-weight: 700; font-size: 0.85rem; }
+#pde-painel .nivel-card .nivel-desc { font-size: 0.7rem; opacity: 0.85; margin-top: 1px; line-height: 1.2; }
+
+/* QTD */
+#pde-painel .qtd-area, #pde-painel .jogadores-area, #pde-painel .tempo-area {
+  display: none; margin-bottom: 6px;
+}
+#pde-painel .qtd-area.ativo, #pde-painel .jogadores-area.ativo, #pde-painel .tempo-area.ativo {
+  display: block;
+}
+#pde-painel .qtd-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px;
+}
+#pde-painel .qtd-card {
+  background: white; border: 2px solid #C084FC; border-radius: 10px;
+  padding: 8px 5px; cursor: pointer; text-align: center;
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #6B21A8;
+  font-size: 0.92rem; transition: all 0.15s; box-shadow: 0 2px 0 #6B21A8;
+}
+#pde-painel .qtd-card:hover { transform: translateY(-2px); }
+#pde-painel .qtd-card.selecionado {
+  background: linear-gradient(135deg,#C084FC 0%,#6B21A8 100%);
+  color: white; border-color: #4C1D95; transform: translateY(2px);
+}
+#pde-painel .qtd-card .qtd-emoji { display: block; font-size: 1.3rem; line-height: 1; }
+#pde-painel .qtd-card .qtd-num { display: block; font-size: 1rem; margin-top: 2px; }
+
+#pde-painel .jogadores-grid {
+  display: grid; grid-template-columns: 70px 1fr; gap: 5px 8px; align-items: center;
+}
+#pde-painel .jogadores-grid .pino-mini {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 3px solid #1E324A;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  font-size: 1.05rem; color: white; justify-self: center;
+}
+#pde-painel .jogadores-grid input {
+  font-family: 'Fredoka',sans-serif; font-size: 0.92rem;
+  padding: 5px 8px; border: 2px solid #7C3AED; border-radius: 6px;
+  background: white; color: #1E324A; font-weight: 600; width: 100%;
+}
+#pde-painel .jogadores-grid input:focus { outline: none; border-color: #4C1D95; }
+
+/* TEMPO */
+#pde-painel .tempo-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px;
+}
+#pde-painel .tempo-card {
+  background: white; border: 2px solid #C084FC; border-radius: 10px;
+  padding: 6px 4px; cursor: pointer; text-align: center;
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #6B21A8;
+  font-size: 0.82rem; transition: all 0.15s; box-shadow: 0 2px 0 #6B21A8;
+}
+#pde-painel .tempo-card:hover { transform: translateY(-2px); }
+#pde-painel .tempo-card.selecionado {
+  background: linear-gradient(135deg,#C084FC 0%,#6B21A8 100%);
+  color: white; border-color: #4C1D95; transform: translateY(2px);
+}
+
+#pde-painel .info-pool {
+  margin-top: 4px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.75rem;
+  color: #475569;
+  text-align: center;
+}
+#pde-painel .info-pool b { color: #7C3AED; }
+
+#pde-painel .btn-comecar {
+  width: 100%;
+  background: linear-gradient(135deg,#7C3AED 0%,#4C1D95 100%);
+  color: white; border: 2px solid white; border-radius: 10px;
+  padding: 9px 16px; font-family: 'Fredoka',sans-serif;
+  font-weight: 700; font-size: 1rem; cursor: pointer;
+  box-shadow: 0 3px 0 #2E1065, 0 4px 10px rgba(76,29,149,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #2E1065; margin-top: 6px;
+}
+#pde-painel .btn-comecar:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #2E1065, 0 2px 6px rgba(76,29,149,0.25);
+}
+#pde-painel .btn-comecar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* JOGO */
+#pde-painel .jogo-grid {
+  display: grid; gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #pde-painel .jogo-grid { grid-template-columns: 1fr !important; gap: 8px; }
+  #pde-painel .area-jogo { order: 1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+#pde-painel .area-jogo {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 3px solid #7C3AED;
+  box-shadow: 0 2px 6px rgba(124,58,237,0.12);
+  display: flex; flex-direction: column; gap: 8px;
+  min-width: 0;
+}
+#pde-painel .painel-info {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 10px;
+  border: 3px solid #7C3AED;
+  box-shadow: 0 2px 6px rgba(124,58,237,0.12);
+  min-width: 0;
+}
+
+#pde-painel .cab-jogo {
+  background: linear-gradient(135deg, #7C3AED 0%, #4C1D95 100%);
+  border-radius: 10px;
+  padding: 6px 12px; color: white; border: 2px solid white;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; flex-wrap: wrap;
+}
+#pde-painel .cab-jogo .vez-jogador {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Fredoka',sans-serif; font-size: 0.92rem; font-weight: 700;
+}
+#pde-painel .cab-jogo .pino-vez {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2.5px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  font-size: 0.95rem; color: white; flex-shrink: 0;
+}
+#pde-painel .cab-jogo .info-rodada-cab {
+  font-family: 'Fredoka',sans-serif; font-size: 0.78rem;
+  background: rgba(0,0,0,0.2); padding: 2px 10px; border-radius: 999px;
+}
+#pde-painel .cab-jogo .cronometro {
+  font-family: 'Baloo 2',sans-serif; font-size: 1.05rem; font-weight: 800;
+  background: rgba(0,0,0,0.3); padding: 4px 12px; border-radius: 999px;
+  border: 2px solid white;
+}
+#pde-painel .cab-jogo .cronometro.urgente {
+  background: #DC2626; animation: pulsa 0.7s ease-in-out infinite;
+}
+@keyframes pulsa { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+
+/* IMAGEM/EMOJI DA PALAVRA */
+#pde-painel .imagem-palavra {
+  background: linear-gradient(135deg, #F3E8FF 0%, #DDD6FE 100%);
+  border: 3px solid #7C3AED;
+  border-radius: 16px;
+  padding: 12px;
+  text-align: center;
+  position: relative;
+}
+#pde-painel .imagem-palavra .emoji-grande {
+  font-size: clamp(4rem, 14vw, 6.5rem);
+  line-height: 1;
+  display: inline-block;
+  filter: drop-shadow(0 4px 8px rgba(76,29,149,0.2));
+  animation: pulse-suave 2s ease-in-out infinite;
+}
+@keyframes pulse-suave {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+#pde-painel .imagem-palavra .palavra-revelada {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  color: #4C1D95;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: none;
+}
+#pde-painel .imagem-palavra.revelada .palavra-revelada { display: block; }
+
+#pde-painel .btn-ouvir-grande {
+  background: linear-gradient(135deg, #EAB308 0%, #713F12 100%);
+  color: white;
+  border: 3px solid white;
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #422006, 0 6px 12px rgba(66,32,6,0.25);
+  margin: 0 auto;
+  display: block;
+  transition: transform 0.08s;
+}
+#pde-painel .btn-ouvir-grande:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #422006;
+}
+
+/* PERGUNTA */
+#pde-painel .pergunta-detetive {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border: 3px dashed #713F12;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+}
+#pde-painel .pergunta-detetive .frase {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #713F12;
+  line-height: 1.3;
+}
+
+/* OPÇÕES DE LETRA */
+#pde-painel .opcoes-letras {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+#pde-painel .letra-opcao {
+  background: white;
+  border: 3px solid #7C3AED;
+  border-radius: 14px;
+  padding: 14px 6px;
+  cursor: pointer;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  color: #4C1D95;
+  text-align: center;
+  transition: all 0.15s;
+  box-shadow: 0 4px 0 #4C1D95;
+  min-height: 64px;
+}
+#pde-painel .letra-opcao:hover {
+  transform: translateY(-2px);
+  background: #F3E8FF;
+}
+#pde-painel .letra-opcao:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #4C1D95;
+}
+#pde-painel .letra-opcao.correta {
+  background: linear-gradient(135deg, #BBF7D0 0%, #16A34A 100%);
+  color: white;
+  border-color: #14532D;
+  box-shadow: 0 4px 0 #14532D;
+  animation: brilhar 0.5s ease-out;
+}
+@keyframes brilhar {
+  0%, 100% { box-shadow: 0 4px 0 #14532D; }
+  50% { box-shadow: 0 4px 0 #14532D, 0 0 20px #16A34A; }
+}
+#pde-painel .letra-opcao.errada {
+  background: linear-gradient(135deg, #FECACA 0%, #DC2626 100%);
+  color: white;
+  border-color: #7F1D1D;
+  box-shadow: 0 4px 0 #7F1D1D;
+  animation: tremer 0.4s ease-in-out;
+}
+@keyframes tremer {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+#pde-painel .letra-opcao.revela-correta {
+  background: linear-gradient(135deg, #BBF7D0 0%, #16A34A 100%);
+  color: white;
+  border-color: #14532D;
+}
+#pde-painel .letra-opcao:disabled {
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+/* FEEDBACK */
+#pde-painel .feedback-rodada {
+  background: linear-gradient(135deg, #F3E8FF 0%, #C084FC 100%);
+  border: 3px solid #4C1D95;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  animation: aparecer 0.4s ease-out;
+}
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+#pde-painel .feedback-rodada h3 {
+  font-family: 'Fredoka',sans-serif;
+  color: #4C1D95; margin: 0 0 6px;
+  font-size: 1.1rem;
+}
+#pde-painel .feedback-rodada .pts-info {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  color: #4C1D95; font-size: 0.95rem;
+}
+
+#pde-painel .btn-proxima {
+  width: 100%;
+  background: linear-gradient(135deg, #7C3AED 0%, #4C1D95 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700; font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #2E1065;
+  margin-top: 8px;
+}
+#pde-painel .btn-proxima:active { transform: translateY(2px); box-shadow: 0 1px 0 #2E1065; }
+
+#pde-painel .btn-comparacao {
+  background: linear-gradient(135deg, #EAB308 0%, #713F12 100%);
+  color: white;
+  border: 3px solid white;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700; font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #422006;
+  margin: 8px auto 0;
+  display: block;
+}
+#pde-painel .btn-comparacao:active { transform: translateY(2px); box-shadow: 0 1px 0 #422006; }
+
+/* AUTO-AVANÇO · barra de progresso visual */
+#pde-painel .auto-avanco-info {
+  margin-top: 8px;
+}
+#pde-painel .auto-avanco-barra {
+  height: 5px;
+  background: rgba(124, 58, 237, 0.15);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 0 auto;
+  max-width: 240px;
+}
+#pde-painel .auto-avanco-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7C3AED 0%, #C084FC 100%);
+  width: 0%;
+  animation: encherBarra 2.5s linear forwards;
+  border-radius: 999px;
+}
+@keyframes encherBarra {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+#pde-painel.sem-animacoes .auto-avanco-fill { animation: none; width: 100%; }
+#pde-painel .btn-skip-auto:hover { color: #4C1D95 !important; }
+
+/* PAINEL INFO LATERAL */
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg,#F3E8FF 0%,#C084FC 100%);
+  border-radius: 10px; padding: 6px 8px;
+  margin-bottom: 6px; border: 2px solid #7C3AED;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 42px; height: 42px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1; font-family: 'Fredoka',sans-serif; font-weight: 600;
+  font-size: 0.78rem; color: #1E324A; line-height: 1.2;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #7C3AED; font-weight: 700; }
+
+#pde-painel .placar-jogadores {
+  background: white; border-radius: 10px; padding: 6px;
+  margin-bottom: 6px; border: 2px solid #7C3AED;
+}
+#pde-painel .placar-jogadores h5 {
+  font-family: 'Fredoka',sans-serif; margin: 0 0 4px;
+  color: #7C3AED; font-size: 0.85rem; text-align: center;
+}
+#pde-painel .jog-linha {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px; background: #F3E8FF; border-radius: 6px;
+  margin-bottom: 3px;
+  font-family: 'Fredoka',sans-serif; font-size: 0.82rem;
+}
+#pde-painel .jog-linha:last-child { margin-bottom: 0; }
+#pde-painel .jog-linha.vez-dele {
+  background: linear-gradient(135deg, #7C3AED 0%, #4C1D95 100%);
+  color: white; outline: 2px solid #2E1065;
+}
+#pde-painel .jog-linha.vez-dele .pts { background: white; color: #7C3AED; }
+#pde-painel .jog-linha .pino-jog {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  font-size: 0.72rem; color: white; flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+#pde-painel .jog-linha .nome {
+  flex: 1; font-weight: 700; color: #1E324A;
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#pde-painel .jog-linha.vez-dele .nome { color: white; }
+#pde-painel .jog-linha .pts {
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  background: #7C3AED; color: white;
+  padding: 1px 8px; border-radius: 999px; font-size: 0.72rem;
+}
+
+#pde-painel .info-rodada {
+  background: linear-gradient(135deg,#F3E8FF 0%,#C084FC 100%);
+  border-radius: 10px; padding: 6px 8px;
+  margin-bottom: 6px; border: 2px solid #7C3AED;
+}
+#pde-painel .info-rodada .linha {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'Fredoka',sans-serif; font-size: 0.78rem;
+  color: #7C3AED; padding: 2px 0;
+}
+#pde-painel .info-rodada .linha .label { font-weight: 600; }
+#pde-painel .info-rodada .linha .valor { font-weight: 700; color: #1E324A; }
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(76,29,149,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #7C3AED;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal { width: 100px; height: 100px; margin: 0 auto 8px; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #7C3AED;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #1E324A; font-size: 0.95rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#7C3AED 0%,#4C1D95 100%);
+  color: white; border: 3px solid #2E1065;
+  box-shadow: 0 4px 0 #2E1065;
+}
+#pde-painel .btn-confirmar.dourado {
+  background: linear-gradient(135deg,#EAB308 0%,#713F12 100%);
+  color: white; border: 3px solid #422006;
+  box-shadow: 0 4px 0 #422006;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .vencedor-coroa { font-size: 4rem; animation: bounceCoroa 0.8s ease-out; }
+@keyframes bounceCoroa {
+  0% { transform: scale(0) rotate(-30deg); }
+  60% { transform: scale(1.3) rotate(10deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+#pde-painel .ranking-final {
+  background: #F3E8FF; border-radius: 10px; padding: 10px; margin: 10px 0; text-align: left;
+}
+#pde-painel .ranking-final h4 { font-family: 'Fredoka',sans-serif; text-align: center; color: #7C3AED; margin: 0 0 6px; }
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #7C3AED;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #1E324A; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+
+#pde-painel .a11y-grupo { background: #F3E8FF; border: 3px solid #7C3AED; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #7C3AED; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #7C3AED; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#7C3AED 0%,#4C1D95 100%); color: white; border-color: #2E1065; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #7C3AED; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#7C3AED 0%,#4C1D95 100%); color: white; border-color: #2E1065; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #2E1065; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #7C3AED;
+  border: 2px solid #7C3AED; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #7C3AED; color: white; }
+
+/* MODO COMPARAÇÃO FONÉTICA · diferencial pedagógico */
+#pde-painel .modal-comparacao .par-fonemas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 14px 0;
+}
+#pde-painel .modal-comparacao .fonema-card {
+  background: linear-gradient(135deg, #F3E8FF 0%, #C084FC 100%);
+  border: 3px solid #4C1D95;
+  border-radius: 14px;
+  padding: 14px 10px;
+  text-align: center;
+}
+#pde-painel .modal-comparacao .fonema-card.surda {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border-color: #713F12;
+}
+#pde-painel .modal-comparacao .fonema-card.sonora {
+  background: linear-gradient(135deg, #BBF7D0 0%, #16A34A 100%);
+  border-color: #14532D;
+}
+#pde-painel .modal-comparacao .fonema-letra {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.5rem, 8vw, 3.5rem);
+  line-height: 1;
+  color: #1E324A;
+}
+#pde-painel .modal-comparacao .fonema-card.sonora .fonema-letra { color: white; }
+#pde-painel .modal-comparacao .fonema-tipo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: #475569;
+  margin-top: 4px;
+}
+#pde-painel .modal-comparacao .fonema-card.sonora .fonema-tipo { color: white; }
+#pde-painel .modal-comparacao .btn-ouvir-fonema {
+  background: white;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-top: 8px;
+  color: #4C1D95;
+}
+#pde-painel .modal-comparacao .fonema-card.sonora .btn-ouvir-fonema {
+  background: white;
+  color: #14532D;
+  border-color: white;
+}
+#pde-painel .modal-comparacao .fonema-card.surda .btn-ouvir-fonema {
+  color: #713F12;
+  border-color: #713F12;
+}
+#pde-painel .modal-comparacao .instrucao-mao {
+  background: #FEF3C7;
+  border-left: 4px solid #EAB308;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-align: left;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.88rem;
+  color: #713F12;
+  margin: 10px 0;
+  line-height: 1.4;
+}
+#pde-painel .modal-comparacao .instrucao-mao strong { color: #4C1D95; }
+
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #EAB308; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #7C3AED; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#7C3AED,#4C1D95); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.portugues { background: linear-gradient(135deg,#7C3AED,#4C1D95); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#EAB308,#713F12); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #7C3AED; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #7C3AED; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #F3E8FF; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FBBF24; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #7C3AED; }
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 8px clamp(10px, 1.5vw, 18px) 14px; }
+  #pde-painel .lobby-card { padding: 14px; }
+  #pde-painel .area-jogo { padding: 12px 16px; }
+  #pde-painel .painel-info { padding: 10px 12px; }
+  #pde-painel .jogo-grid { grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .opcoes-letras { gap: 12px; }
+}
+@media (min-width: 1440px) { #pde-painel { max-width: 1400px; } }
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>🔍 Detetive do Som Inicial</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Au au! Sou o Beto Beagle! 🐶🔍</strong>
+        <span>Eu farejo os sons das palavras! Você ouve, eu te ajudo a descobrir com que letra a palavra COMEÇA. Vamos investigar?</span>
+      </div>
+    </div>
+
+    <div class="secao-titulo">🎮 Modo de jogo</div>
+    <div class="modo-grid" id="modo-grid"></div>
+
+    <div class="qtd-area" id="qtd-area">
+      <div class="secao-titulo">👥 Quantos jogadores?</div>
+      <div class="qtd-grid" id="qtd-grid"></div>
+    </div>
+
+    <div class="jogadores-area" id="jogadores-area">
+      <div class="secao-titulo">✏️ Nomes</div>
+      <div class="jogadores-grid" id="jogadores-grid"></div>
+    </div>
+
+    <div class="tempo-area" id="tempo-area">
+      <div class="secao-titulo">⏱️ Tempo total (modo contra o relógio)</div>
+      <div class="tempo-grid" id="tempo-grid"></div>
+    </div>
+
+    <div class="secao-titulo">📊 Nível de dificuldade</div>
+    <div class="nivel-grid" id="nivel-grid"></div>
+    <div class="info-pool" id="info-pool">—</div>
+
+    <button class="btn-comecar" id="btn-comecar" onclick="comecarJogo()" disabled>🔍 Começar a investigar!</button>
+  </div>
+
+  <div id="jogo" class="jogo-grid hidden">
+    <div class="area-jogo">
+      <div class="cab-jogo">
+        <div class="vez-jogador">
+          <div class="pino-vez" id="pino-vez">1</div>
+          <span id="nome-vez">—</span>
+        </div>
+        <div id="info-rodada-cab" class="info-rodada-cab">Rodada 1</div>
+        <div class="cronometro hidden" id="cronometro">--:--</div>
+      </div>
+
+      <div class="imagem-palavra" id="imagem-palavra">
+        <div class="emoji-grande" id="emoji-palavra">❓</div>
+        <div class="palavra-revelada" id="palavra-revelada">—</div>
+      </div>
+
+      <button class="btn-ouvir-grande" id="btn-ouvir-palavra" onclick="ouvirPalavra()">🔊 Ouvir a palavra</button>
+
+      <div class="pergunta-detetive">
+        <div class="frase" id="pergunta-frase">Com qual letra a palavra começa?</div>
+      </div>
+
+      <div class="opcoes-letras" id="opcoes-letras"></div>
+
+      <div id="feedback-area"></div>
+    </div>
+
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Vamos investigar!</div>
+      </div>
+      <div class="placar-jogadores" id="placar-jogadores">
+        <h5>🏆 Placar</h5>
+        <div id="placar-linhas"></div>
+      </div>
+      <div class="info-rodada">
+        <div class="linha"><span class="label">🔍 Rodada</span><span class="valor" id="rodada-info-side">1</span></div>
+        <div class="linha"><span class="label">✅ Acertos</span><span class="valor" id="acertos-info">0</span></div>
+        <div class="linha"><span class="label">📊 Nível</span><span class="valor" id="nivel-info">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-comparacao">
+    <div class="modal-conteudo modal-comparacao">
+      <h2 id="comp-titulo">🔬 Comparação de Sons</h2>
+      <p id="comp-explicacao">—</p>
+      <div class="par-fonemas">
+        <div class="fonema-card surda" id="comp-card-surda">
+          <div class="fonema-letra" id="comp-letra-surda">P</div>
+          <div class="fonema-tipo">SEM voz</div>
+          <button class="btn-ouvir-fonema" onclick="ouvirFonema('surda')">🔊 Ouvir</button>
+        </div>
+        <div class="fonema-card sonora" id="comp-card-sonora">
+          <div class="fonema-letra" id="comp-letra-sonora">B</div>
+          <div class="fonema-tipo">COM voz</div>
+          <button class="btn-ouvir-fonema" onclick="ouvirFonema('sonora')">🔊 Ouvir</button>
+        </div>
+      </div>
+      <div class="instrucao-mao" id="comp-instrucao">—</div>
+      <div class="acoes solo">
+        <button id="btn-fechar-comparacao" class="btn-confirmar dourado" onclick="fecharComparacao()">Entendi! 🐶</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-fim">
+    <div class="modal-conteudo">
+      <div class="vencedor-coroa">👑</div>
+      <h2 id="fim-titulo">🎉 Fim!</h2>
+      <p id="fim-msg">—</p>
+      <div class="ranking-final" id="ranking-final"></div>
+      <div class="acoes" id="fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🔍 Como brincar com o Beto Beagle</h2>
+      <h3>🎯 Objetivo</h3>
+      <p>Identificar com qual som/letra a palavra começa. O Beto fareja o som, você decide qual é!</p>
+
+      <h3>🎮 4 modos disponíveis</h3>
+      <ul>
+        <li>👤 <b>Individual:</b> sem pressão</li>
+        <li>👨‍🏫 <b>Professor (lousa):</b> turma colabora</li>
+        <li>⏱️ <b>Contra o relógio:</b> máximo de palavras no tempo</li>
+        <li>🏆 <b>Competitivo:</b> 2-4 jogadores se revezam</li>
+      </ul>
+
+      <h3>📊 4 níveis progressivos</h3>
+      <ul>
+        <li>🌱 <b>Filhote</b> - sons MUITO distintos (1º ano)</li>
+        <li>🌿 <b>Aprendiz</b> - vogais, nasais (M/N), líquidas (L/R) (1º/2º ano)</li>
+        <li>🌳 <b>Farejador</b> - pares mínimos P/B, T/D, F/V (2º ano)</li>
+        <li>🏆 <b>Mestre Detetive</b> - CH/J, S/Z, NH, LH (3º ano)</li>
+      </ul>
+
+      <h3>⚡ Avanço automático</h3>
+      <p>O jogo avança sozinho após cada palavra (2,5 segundos), pra manter o ritmo da criança. Você pode tocar em "pular" pra ir imediatamente. <b>Modo Professor</b> mantém botão manual para o professor controlar o ritmo da turma.</p>
+
+      <h3>🔬 Modo Comparação Fonética (exclusivo!)</h3>
+      <p>Errou um par mínimo como P/B? Beto Beagle abre automaticamente uma comparação especial mostrando:</p>
+      <ul>
+        <li>Os DOIS sons lado a lado</li>
+        <li>Como sentir a vibração da garganta</li>
+        <li>Instrução prática para fonoaudiologia em sala</li>
+      </ul>
+      <p><b>Isso é fonoaudiologia aplicada</b>, recurso valioso para AEE e crianças com TPAC.</p>
+
+      <h3>🌟 Pontuação</h3>
+      <ul>
+        <li>🌱 Filhote = <b>2 pts</b> · 🌿 Aprendiz = <b>4 pts</b></li>
+        <li>🌳 Farejador = <b>6 pts</b> · 🏆 Mestre = <b>8 pts</b></li>
+      </ul>
+
+      <h3>📖 BNCC</h3>
+      <ul>
+        <li>Português EF01LP02, EF01LP04 (consciência fonológica e relação grafema-fonema)</li>
+        <li>Computação EF15CO01, EF06CO04 (dispositivos digitais e classificação)</li>
+      </ul>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar dourado" onclick="fecharModal('modal-ajuda')">Bora investigar!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar dourado" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script id="script-jogo">
+/* ====================================================================
+ * BANCO DE PALAVRAS · Detetive do Som Inicial
+ *
+ * 70 palavras curadas com fonema inicial + pares mínimos
+ *
+ * Estrutura:
+ *   {
+ *     palavra: 'pato',
+ *     emoji: '🦆',
+ *     nivel: 'farejador',
+ *     fonema: 'P',           // som/letra inicial pra resposta
+ *     paresMinimos: ['B']    // sons que confundem (ativa Modo Comparação ao errar)
+ *   }
+ *
+ * Níveis pedagógicos:
+ *   Filhote (1º ano)       · sons MUITO distintos · sem pares mínimos
+ *   Aprendiz (1º-2º ano)   · vogais + nasais + líquidas (M/N, L/R)
+ *   Farejador (2º ano)     · pares mínimos clássicos P/B, T/D, F/V
+ *   Mestre Detetive (3º)   · CH/J, S/Z, NH, LH (sons complexos)
+ * ==================================================================== */
+
+const PALAVRAS = [
+  /* ============ NÍVEL 1: FILHOTE · 20 palavras · sons distintos ============ */
+  { palavra: 'abacaxi', emoji: '🍍', nivel: 'filhote', fonema: 'A', paresMinimos: [] },
+  { palavra: 'avião',   emoji: '✈️', nivel: 'filhote', fonema: 'A', paresMinimos: [] },
+  { palavra: 'bola',    emoji: '⚽', nivel: 'filhote', fonema: 'B', paresMinimos: [] },
+  { palavra: 'bebê',    emoji: '👶', nivel: 'filhote', fonema: 'B', paresMinimos: [] },
+  { palavra: 'casa',    emoji: '🏠', nivel: 'filhote', fonema: 'C', paresMinimos: [] },
+  { palavra: 'cama',    emoji: '🛏️', nivel: 'filhote', fonema: 'C', paresMinimos: [] },
+  { palavra: 'dedo',    emoji: '👆', nivel: 'filhote', fonema: 'D', paresMinimos: [] },
+  { palavra: 'macaco',  emoji: '🐵', nivel: 'filhote', fonema: 'M', paresMinimos: [] },
+  { palavra: 'mão',     emoji: '✋', nivel: 'filhote', fonema: 'M', paresMinimos: [] },
+  { palavra: 'pato',    emoji: '🦆', nivel: 'filhote', fonema: 'P', paresMinimos: [] },
+  { palavra: 'pé',      emoji: '🦶', nivel: 'filhote', fonema: 'P', paresMinimos: [] },
+  { palavra: 'rato',    emoji: '🐭', nivel: 'filhote', fonema: 'R', paresMinimos: [] },
+  { palavra: 'rei',     emoji: '👑', nivel: 'filhote', fonema: 'R', paresMinimos: [] },
+  { palavra: 'sol',     emoji: '☀️', nivel: 'filhote', fonema: 'S', paresMinimos: [] },
+  { palavra: 'sapo',    emoji: '🐸', nivel: 'filhote', fonema: 'S', paresMinimos: [] },
+  { palavra: 'tigre',   emoji: '🐯', nivel: 'filhote', fonema: 'T', paresMinimos: [] },
+  { palavra: 'urso',    emoji: '🐻', nivel: 'filhote', fonema: 'U', paresMinimos: [] },
+  { palavra: 'vaca',    emoji: '🐄', nivel: 'filhote', fonema: 'V', paresMinimos: [] },
+  { palavra: 'lua',     emoji: '🌙', nivel: 'filhote', fonema: 'L', paresMinimos: [] },
+  { palavra: 'fogo',    emoji: '🔥', nivel: 'filhote', fonema: 'F', paresMinimos: [] },
+
+  /* ============ NÍVEL 2: APRENDIZ · 20 palavras · vogais/nasais/líquidas ============ */
+  { palavra: 'amigo',     emoji: '👫', nivel: 'aprendiz', fonema: 'A', paresMinimos: ['E'] },
+  { palavra: 'estrela',   emoji: '⭐', nivel: 'aprendiz', fonema: 'E', paresMinimos: ['A'] },
+  { palavra: 'igreja',    emoji: '⛪', nivel: 'aprendiz', fonema: 'I', paresMinimos: ['E'] },
+  { palavra: 'ilha',      emoji: '🏝️', nivel: 'aprendiz', fonema: 'I', paresMinimos: ['E'] },
+  { palavra: 'ovo',       emoji: '🥚', nivel: 'aprendiz', fonema: 'O', paresMinimos: ['U'] },
+  { palavra: 'olho',      emoji: '👁️', nivel: 'aprendiz', fonema: 'O', paresMinimos: ['U'] },
+  { palavra: 'uva',       emoji: '🍇', nivel: 'aprendiz', fonema: 'U', paresMinimos: ['O'] },
+  { palavra: 'urubu',     emoji: '🦅', nivel: 'aprendiz', fonema: 'U', paresMinimos: ['O'] },
+  { palavra: 'menino',    emoji: '👦', nivel: 'aprendiz', fonema: 'M', paresMinimos: ['N'] },
+  { palavra: 'menina',    emoji: '👧', nivel: 'aprendiz', fonema: 'M', paresMinimos: ['N'] },
+  { palavra: 'navio',     emoji: '🚢', nivel: 'aprendiz', fonema: 'N', paresMinimos: ['M'] },
+  { palavra: 'nuvem',     emoji: '☁️', nivel: 'aprendiz', fonema: 'N', paresMinimos: ['M'] },
+  { palavra: 'lápis',     emoji: '✏️', nivel: 'aprendiz', fonema: 'L', paresMinimos: ['R'] },
+  { palavra: 'livro',     emoji: '📕', nivel: 'aprendiz', fonema: 'L', paresMinimos: ['R'] },
+  { palavra: 'leite',     emoji: '🥛', nivel: 'aprendiz', fonema: 'L', paresMinimos: ['R'] },
+  { palavra: 'rosa',      emoji: '🌹', nivel: 'aprendiz', fonema: 'R', paresMinimos: ['L'] },
+  { palavra: 'roupa',     emoji: '👕', nivel: 'aprendiz', fonema: 'R', paresMinimos: ['L'] },
+  { palavra: 'relógio',   emoji: '⌚', nivel: 'aprendiz', fonema: 'R', paresMinimos: ['L'] },
+  { palavra: 'água',      emoji: '💧', nivel: 'aprendiz', fonema: 'A', paresMinimos: ['E'] },
+  { palavra: 'elefante',  emoji: '🐘', nivel: 'aprendiz', fonema: 'E', paresMinimos: ['A'] },
+
+  /* ============ NÍVEL 3: FAREJADOR · 20 palavras · PARES MÍNIMOS CLÁSSICOS ============ */
+  /* P/B - bilabiais surda/sonora */
+  { palavra: 'pão',     emoji: '🍞', nivel: 'farejador', fonema: 'P', paresMinimos: ['B'] },
+  { palavra: 'porta',   emoji: '🚪', nivel: 'farejador', fonema: 'P', paresMinimos: ['B'] },
+  { palavra: 'panela',  emoji: '🍲', nivel: 'farejador', fonema: 'P', paresMinimos: ['B'] },
+  { palavra: 'banana',  emoji: '🍌', nivel: 'farejador', fonema: 'B', paresMinimos: ['P'] },
+  { palavra: 'boneca',  emoji: '🪆', nivel: 'farejador', fonema: 'B', paresMinimos: ['P'] },
+  { palavra: 'borboleta', emoji: '🦋', nivel: 'farejador', fonema: 'B', paresMinimos: ['P'] },
+  /* T/D - dentais surda/sonora */
+  { palavra: 'tomate',  emoji: '🍅', nivel: 'farejador', fonema: 'T', paresMinimos: ['D'] },
+  { palavra: 'tartaruga', emoji: '🐢', nivel: 'farejador', fonema: 'T', paresMinimos: ['D'] },
+  { palavra: 'telefone', emoji: '📞', nivel: 'farejador', fonema: 'T', paresMinimos: ['D'] },
+  { palavra: 'dado',    emoji: '🎲', nivel: 'farejador', fonema: 'D', paresMinimos: ['T'] },
+  { palavra: 'dragão',  emoji: '🐉', nivel: 'farejador', fonema: 'D', paresMinimos: ['T'] },
+  { palavra: 'doce',    emoji: '🍬', nivel: 'farejador', fonema: 'D', paresMinimos: ['T'] },
+  /* F/V - labiodentais surda/sonora */
+  { palavra: 'faca',    emoji: '🔪', nivel: 'farejador', fonema: 'F', paresMinimos: ['V'] },
+  { palavra: 'flor',    emoji: '🌸', nivel: 'farejador', fonema: 'F', paresMinimos: ['V'] },
+  { palavra: 'foca',    emoji: '🦭', nivel: 'farejador', fonema: 'F', paresMinimos: ['V'] },
+  { palavra: 'vela',    emoji: '🕯️', nivel: 'farejador', fonema: 'V', paresMinimos: ['F'] },
+  { palavra: 'violão',  emoji: '🎸', nivel: 'farejador', fonema: 'V', paresMinimos: ['F'] },
+  { palavra: 'vento',   emoji: '💨', nivel: 'farejador', fonema: 'V', paresMinimos: ['F'] },
+  /* K(C)/G - velares surda/sonora */
+  { palavra: 'gato',    emoji: '🐱', nivel: 'farejador', fonema: 'G', paresMinimos: ['C'] },
+  { palavra: 'galinha', emoji: '🐔', nivel: 'farejador', fonema: 'G', paresMinimos: ['C'] },
+
+  /* ============ NÍVEL 4: MESTRE DETETIVE · 10 palavras · sons complexos ============ */
+  /* CH/J - pós-alveolares surda/sonora */
+  { palavra: 'chave',     emoji: '🔑', nivel: 'mestre',    fonema: 'CH', paresMinimos: ['J'] },
+  { palavra: 'chuva',     emoji: '🌧️', nivel: 'mestre',    fonema: 'CH', paresMinimos: ['J'] },
+  { palavra: 'jaca',      emoji: '🥭', nivel: 'mestre',    fonema: 'J',  paresMinimos: ['CH'] },
+  { palavra: 'jacaré',    emoji: '🐊', nivel: 'mestre',    fonema: 'J',  paresMinimos: ['CH'] },
+  /* S/Z - alveolares surda/sonora */
+  { palavra: 'selo',      emoji: '📮', nivel: 'mestre',    fonema: 'S',  paresMinimos: ['Z'] },
+  { palavra: 'zebra',     emoji: '🦓', nivel: 'mestre',    fonema: 'Z',  paresMinimos: ['S'] },
+  /* NH - palatal nasal */
+  { palavra: 'minhoca',   emoji: '🪱', nivel: 'mestre',    fonema: 'M',  paresMinimos: [] },
+  { palavra: 'ninho',     emoji: '🪺', nivel: 'mestre',    fonema: 'N',  paresMinimos: ['M'] },
+  /* LH - palatal lateral */
+  { palavra: 'milho',     emoji: '🌽', nivel: 'mestre',    fonema: 'M',  paresMinimos: [] },
+  { palavra: 'palhaço',   emoji: '🤡', nivel: 'mestre',    fonema: 'P',  paresMinimos: ['B'] }
+];
+
+/* ====================================================================
+ * INFO DOS NÍVEIS
+ * ==================================================================== */
+const NIVEIS_INFO = {
+  filhote: {
+    emoji: '🌱',
+    titulo: 'Filhote',
+    desc: 'Sons distintos · 1º ano',
+    ano: '1º ano',
+    pontos: 2,
+    distratoras: 3,    // total de 4 opções (1 correta + 3 distratoras)
+    paresMinimos: false
+  },
+  aprendiz: {
+    emoji: '🌿',
+    titulo: 'Aprendiz',
+    desc: 'Vogais e nasais · 1º/2º ano',
+    ano: '1º/2º ano',
+    pontos: 4,
+    distratoras: 3,
+    paresMinimos: 'leve' // pode mostrar par mínimo se errar (M/N, L/R)
+  },
+  farejador: {
+    emoji: '🌳',
+    titulo: 'Farejador',
+    desc: 'Pares P/B, T/D, F/V · 2º ano',
+    ano: '2º ano',
+    pontos: 6,
+    distratoras: 3,
+    paresMinimos: 'ativo' // SEMPRE força par mínimo entre as opções
+  },
+  mestre: {
+    emoji: '🏆',
+    titulo: 'Mestre Detetive',
+    desc: 'CH/J, S/Z, NH, LH · 3º ano',
+    ano: '3º ano',
+    pontos: 8,
+    distratoras: 3,
+    paresMinimos: 'ativo'
+  }
+};
+
+/* ====================================================================
+ * EXPLICAÇÕES FONÉTICAS · Modo Comparação
+ * ==================================================================== */
+const EXPLICACOES_FONETICAS = {
+  'P|B': {
+    titulo: 'P e B · sons bilabiais',
+    par: ['P', 'B'],
+    explicacao: 'Os dois sons são feitos com os lábios juntos! A diferença é a GARGANTA.',
+    instrucao: 'Coloque a mão na garganta. Fale "P"... agora "B". Sentiu? O B faz a garganta tremer, o P não!',
+    surda: 'P',
+    sonora: 'B',
+    cor: '#7C3AED'
+  },
+  'B|P': { /* alias reverso */
+    titulo: 'P e B · sons bilabiais',
+    par: ['P', 'B'],
+    explicacao: 'Os dois sons são feitos com os lábios juntos! A diferença é a GARGANTA.',
+    instrucao: 'Coloque a mão na garganta. Fale "P"... agora "B". Sentiu? O B faz a garganta tremer, o P não!',
+    surda: 'P',
+    sonora: 'B',
+    cor: '#7C3AED'
+  },
+  'T|D': {
+    titulo: 'T e D · sons dentais',
+    par: ['T', 'D'],
+    explicacao: 'Os dois sons batem a língua nos dentes de cima! A diferença é a GARGANTA.',
+    instrucao: 'Mão na garganta. Fale "T"... agora "D". O D treme, o T não!',
+    surda: 'T',
+    sonora: 'D',
+    cor: '#7C3AED'
+  },
+  'D|T': {
+    titulo: 'T e D · sons dentais',
+    par: ['T', 'D'],
+    explicacao: 'Os dois sons batem a língua nos dentes de cima! A diferença é a GARGANTA.',
+    instrucao: 'Mão na garganta. Fale "T"... agora "D". O D treme, o T não!',
+    surda: 'T',
+    sonora: 'D',
+    cor: '#7C3AED'
+  },
+  'F|V': {
+    titulo: 'F e V · sons labiodentais',
+    par: ['F', 'V'],
+    explicacao: 'Os dois sons encostam o dente de cima no lábio de baixo! A diferença é a GARGANTA.',
+    instrucao: 'Mão na garganta. Fale "F" parece vento... "V" parece motor. O V treme, o F não!',
+    surda: 'F',
+    sonora: 'V',
+    cor: '#7C3AED'
+  },
+  'V|F': {
+    titulo: 'F e V · sons labiodentais',
+    par: ['F', 'V'],
+    explicacao: 'Os dois sons encostam o dente de cima no lábio de baixo! A diferença é a GARGANTA.',
+    instrucao: 'Mão na garganta. Fale "F" parece vento... "V" parece motor. O V treme, o F não!',
+    surda: 'F',
+    sonora: 'V',
+    cor: '#7C3AED'
+  },
+  'C|G': {
+    titulo: 'C e G · sons velares',
+    par: ['C', 'G'],
+    explicacao: 'Os dois sons são feitos no fundo da boca! A diferença é a GARGANTA.',
+    instrucao: 'Mão na garganta. Fale "C" de casa... "G" de gato. O G treme, o C não!',
+    surda: 'C',
+    sonora: 'G',
+    cor: '#7C3AED'
+  },
+  'G|C': {
+    titulo: 'C e G · sons velares',
+    par: ['C', 'G'],
+    explicacao: 'Os dois sons são feitos no fundo da boca! A diferença é a GARGANTA.',
+    instrucao: 'Mão na garganta. Fale "C" de casa... "G" de gato. O G treme, o C não!',
+    surda: 'C',
+    sonora: 'G',
+    cor: '#7C3AED'
+  },
+  'S|Z': {
+    titulo: 'S e Z · sons alveolares',
+    par: ['S', 'Z'],
+    explicacao: 'O S é o som da cobra: SSSSS. O Z é o som da abelha: ZZZZZ.',
+    instrucao: 'Mão na garganta. Fale "S" de sapo... "Z" de zebra. O Z faz a garganta tremer!',
+    surda: 'S',
+    sonora: 'Z',
+    cor: '#7C3AED'
+  },
+  'Z|S': {
+    titulo: 'S e Z · sons alveolares',
+    par: ['S', 'Z'],
+    explicacao: 'O S é o som da cobra: SSSSS. O Z é o som da abelha: ZZZZZ.',
+    instrucao: 'Mão na garganta. Fale "S" de sapo... "Z" de zebra. O Z faz a garganta tremer!',
+    surda: 'S',
+    sonora: 'Z',
+    cor: '#7C3AED'
+  },
+  'CH|J': {
+    titulo: 'CH e J · sons pós-alveolares',
+    par: ['CH', 'J'],
+    explicacao: 'Os dois sons são feitos com a língua atrás dos dentes! O CH é silencioso, o J vibra.',
+    instrucao: 'Mão na garganta. Fale "CH" de chave... "J" de jaca. O J faz a garganta tremer!',
+    surda: 'CH',
+    sonora: 'J',
+    cor: '#7C3AED'
+  },
+  'J|CH': {
+    titulo: 'CH e J · sons pós-alveolares',
+    par: ['CH', 'J'],
+    explicacao: 'Os dois sons são feitos com a língua atrás dos dentes! O CH é silencioso, o J vibra.',
+    instrucao: 'Mão na garganta. Fale "CH" de chave... "J" de jaca. O J faz a garganta tremer!',
+    surda: 'CH',
+    sonora: 'J',
+    cor: '#7C3AED'
+  },
+  'M|N': {
+    titulo: 'M e N · sons nasais',
+    par: ['M', 'N'],
+    explicacao: 'Os dois sons saem pelo NARIZ! A diferença é onde está a língua.',
+    instrucao: 'Fale "M" com os lábios fechados... "N" com a língua nos dentes de cima!',
+    surda: 'M',
+    sonora: 'N',
+    cor: '#7C3AED'
+  },
+  'N|M': {
+    titulo: 'M e N · sons nasais',
+    par: ['M', 'N'],
+    explicacao: 'Os dois sons saem pelo NARIZ! A diferença é onde está a língua.',
+    instrucao: 'Fale "M" com os lábios fechados... "N" com a língua nos dentes de cima!',
+    surda: 'M',
+    sonora: 'N',
+    cor: '#7C3AED'
+  },
+  'L|R': {
+    titulo: 'L e R · sons líquidos',
+    par: ['L', 'R'],
+    explicacao: 'O L é firme: a língua para nos dentes. O R é vibrante: a língua treme!',
+    instrucao: 'Fale "L" devagar (la-la-la)... "R" parece motor (rrrrr). Sente a diferença na língua?',
+    surda: 'L',
+    sonora: 'R',
+    cor: '#7C3AED'
+  },
+  'R|L': {
+    titulo: 'L e R · sons líquidos',
+    par: ['L', 'R'],
+    explicacao: 'O L é firme: a língua para nos dentes. O R é vibrante: a língua treme!',
+    instrucao: 'Fale "L" devagar (la-la-la)... "R" parece motor (rrrrr). Sente a diferença na língua?',
+    surda: 'L',
+    sonora: 'R',
+    cor: '#7C3AED'
+  }
+};
+
+/* Letras que podem aparecer como opções (incluindo dígrafos especiais) */
+const LETRAS_OPCOES = ['A','B','C','D','E','F','G','I','J','L','M','N','O','P','R','S','T','U','V','Z','CH'];
+
+/* Normalização (mesma da Letrinha Mágica) */
+function semAcento(str) {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+}
+/* ============================================================
+ * DETETIVE DO SOM INICIAL · Portal do Educador NEWPC
+ * Mascote: Beto Beagle (cachorro detetive sonoro)
+ * ============================================================ */
+
+function svgMascote(expressao = 'normal') {
+  let olhos, boca, oreOff = 0;
+  if (expressao === 'feliz') {
+    olhos = `
+      <path d="M 34 42 Q 39 37, 44 42" fill="none" stroke="#1F2937" stroke-width="2" stroke-linecap="round"/>
+      <path d="M 56 42 Q 61 37, 66 42" fill="none" stroke="#1F2937" stroke-width="2" stroke-linecap="round"/>
+    `;
+    boca = `<path d="M 40 56 Q 50 64 60 56" fill="none" stroke="#1F2937" stroke-width="2.2" stroke-linecap="round"/>
+            <ellipse cx="50" cy="60" rx="6" ry="3" fill="#FB7185" opacity="0.4"/>`;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <circle cx="39" cy="44" r="4.5" fill="white" stroke="#1F2937" stroke-width="1.2"/>
+      <circle cx="61" cy="44" r="4.5" fill="white" stroke="#1F2937" stroke-width="1.2"/>
+      <circle cx="40" cy="44" r="2" fill="#1F2937"/>
+      <circle cx="62" cy="44" r="2" fill="#1F2937"/>
+    `;
+    boca = `<path d="M 45 55 Q 50 58 55 55" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round"/>`;
+  } else if (expressao === 'surpresa') {
+    olhos = `
+      <ellipse cx="39" cy="44" rx="5" ry="6" fill="white" stroke="#1F2937" stroke-width="1.4"/>
+      <ellipse cx="61" cy="44" rx="5" ry="6" fill="white" stroke="#1F2937" stroke-width="1.4"/>
+      <circle cx="39" cy="45" r="2.2" fill="#1F2937"/>
+      <circle cx="61" cy="45" r="2.2" fill="#1F2937"/>
+    `;
+    boca = `<ellipse cx="50" cy="58" rx="3.5" ry="4.5" fill="#1F2937"/>`;
+  } else {
+    olhos = `
+      <ellipse cx="39" cy="44" rx="3.5" ry="5" fill="#1F2937"/>
+      <ellipse cx="61" cy="44" rx="3.5" ry="5" fill="#1F2937"/>
+      <ellipse cx="40" cy="42" rx="1" ry="1.5" fill="white"/>
+      <ellipse cx="62" cy="42" rx="1" ry="1.5" fill="white"/>
+    `;
+    boca = `<path d="M 45 55 Q 50 60 55 55" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round"/>`;
+  }
+
+  return `
+    <!-- Sombra -->
+    <ellipse cx="50" cy="93" rx="28" ry="2.5" fill="rgba(0,0,0,0.2)"/>
+    <!-- Corpo cachorro bege/marrom -->
+    <ellipse cx="50" cy="62" rx="26" ry="26" fill="#D4A574" stroke="#7C4A21" stroke-width="2"/>
+    <!-- Barriga clara -->
+    <ellipse cx="50" cy="68" rx="14" ry="16" fill="#F5E6D3"/>
+    <!-- Manchas marrons (típico de beagle) -->
+    <ellipse cx="30" cy="55" rx="6" ry="8" fill="#7C4A21" opacity="0.6"/>
+    <ellipse cx="70" cy="55" rx="6" ry="8" fill="#7C4A21" opacity="0.6"/>
+    <ellipse cx="50" cy="48" rx="10" ry="6" fill="#7C4A21" opacity="0.55"/>
+    <!-- Cabeça -->
+    <ellipse cx="50" cy="42" rx="24" ry="22" fill="#D4A574" stroke="#7C4A21" stroke-width="1.8"/>
+    <!-- Mancha marrom em cima da cabeça (típico beagle) -->
+    <path d="M 32 38 Q 50 30 68 38 Q 65 28 50 26 Q 35 28 32 38 Z" fill="#7C4A21"/>
+    <!-- Orelhas caídas (caracteristíca do beagle) -->
+    <ellipse cx="22" cy="48" rx="9" ry="14" fill="#7C4A21" stroke="#4A2C12" stroke-width="1.5" transform="rotate(15 22 48)"/>
+    <ellipse cx="78" cy="48" rx="9" ry="14" fill="#7C4A21" stroke="#4A2C12" stroke-width="1.5" transform="rotate(-15 78 48)"/>
+    <!-- Olhos -->
+    ${olhos}
+    <!-- Focinho -->
+    <ellipse cx="50" cy="54" rx="7" ry="5" fill="#F5E6D3" stroke="#7C4A21" stroke-width="1"/>
+    <!-- Nariz -->
+    <ellipse cx="50" cy="51" rx="3" ry="2.5" fill="#1F2937"/>
+    <!-- Boca -->
+    ${boca}
+    <!-- Bochechas -->
+    <ellipse cx="28" cy="52" rx="3" ry="2" fill="#FB7185" opacity="0.4"/>
+    <ellipse cx="72" cy="52" rx="3" ry="2" fill="#FB7185" opacity="0.4"/>
+    <!-- LUPA na pata direita (detetive!) -->
+    <line x1="80" y1="68" x2="92" y2="80" stroke="#7C2D12" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="76" cy="64" r="8" fill="rgba(167,243,208,0.4)" stroke="#7C2D12" stroke-width="2.5"/>
+    <circle cx="76" cy="64" r="8" fill="none" stroke="#EAB308" stroke-width="1.5" opacity="0.6"/>
+    <!-- Patas -->
+    <ellipse cx="34" cy="78" rx="6" ry="8" fill="#D4A574" stroke="#7C4A21" stroke-width="1.5"/>
+    <ellipse cx="66" cy="78" rx="6" ry="8" fill="#D4A574" stroke="#7C4A21" stroke-width="1.5"/>
+    <!-- Lente sonora amarela no ouvido (símbolo de detetive sonoro) -->
+    <path d="M 15 38 Q 8 35 12 28 Q 18 32 20 36 Z" fill="#EAB308" stroke="#713F12" stroke-width="1.2" opacity="0.85"/>
+    <circle cx="13" cy="33" r="2" fill="#FBBF24"/>
+    <!-- Coleira roxa com plaquinha -->
+    <path d="M 30 65 Q 50 70 70 65" fill="none" stroke="#7C3AED" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="50" cy="70" r="3" fill="#EAB308" stroke="#713F12" stroke-width="0.8"/>
+    <!-- Cauda balançando -->
+    <path d="M 76 80 Q 88 78 90 70" fill="none" stroke="#D4A574" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 76 80 Q 88 78 90 70" fill="none" stroke="#7C4A21" stroke-width="1.5" stroke-linecap="round"/>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* CONFIGURAÇÕES */
+const MODOS = {
+  individual:  { emoji: '👤', titulo: 'Individual', desc: 'Sem pressão de tempo' },
+  professor:   { emoji: '👨‍🏫', titulo: 'Professor', desc: 'Lousa, turma colabora' },
+  relogio:     { emoji: '⏱️', titulo: 'Contra o relógio', desc: 'Máximo no tempo' },
+  competitivo: { emoji: '🏆', titulo: 'Competitivo', desc: '2-4 jogadores' }
+};
+
+const TEMPOS = {
+  1: '1 min', 3: '3 min', 5: '5 min', 7: '7 min', 10: '10 min'
+};
+
+const CORES_PINOS = [
+  { fundo: '#DC2626', nome: 'Vermelho' },
+  { fundo: '#2563EB', nome: 'Azul' },
+  { fundo: '#16A34A', nome: 'Verde' },
+  { fundo: '#F59E0B', nome: 'Laranja' }
+];
+
+const RODADAS_PADRAO = 10;
+const ELOGIOS = ['Farejou direitinho! 🐾', 'Olfato apurado!', 'Detetive afiado!', 'Som identificado!', 'Caso resolvido!'];
+const INCENTIVOS = ['Quase! Vamos farejar de novo.', 'Escuta com atenção.', 'Boa tentativa!', 'Cada palavra ensina algo!'];
+
+const STATE = {
+  modo: null,
+  qtdJogadores: 2,
+  nomes: ['Jogador 1','Jogador 2','Jogador 3','Jogador 4'],
+  nivel: null,
+  tempoMin: 5,
+  partida: {
+    ativa: false,
+    rodada: 1,
+    rodadaMax: RODADAS_PADRAO,
+    jogadores: [],
+    vezAtual: 0,
+    palavraAtual: null,
+    opcoes: [],
+    respostaCorreta: null,
+    palavrasUsadas: [],
+    fase: null,           // 'mostrando' | 'feedback'
+    respondeu: false,
+    tempoSeg: 0,
+    timerInterval: null,
+    erroUltimo: null,         // letra clicada no erro (pra Modo Comparação)
+    autoAvancoTimer: null,    // setTimeout do auto-avanço
+    aguardandoFechamentoComparacao: false  // flag pro Modo Comparação automático
+  }
+};
+
+/* Tempo em milissegundos antes de avançar automaticamente após acerto/erro comum */
+const TEMPO_AUTO_AVANCO = 2500;
+
+function salvar() {
+  try {
+    localStorage.setItem('pde_detetive_dados', JSON.stringify({
+      modo: STATE.modo, qtdJogadores: STATE.qtdJogadores, nomes: STATE.nomes,
+      nivel: STATE.nivel, tempoMin: STATE.tempoMin
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_detetive_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.modo) STATE.modo = d.modo;
+    if (d.qtdJogadores) STATE.qtdJogadores = d.qtdJogadores;
+    if (Array.isArray(d.nomes)) STATE.nomes = d.nomes;
+    if (d.nivel) STATE.nivel = d.nivel;
+    if (d.tempoMin) STATE.tempoMin = d.tempoMin;
+  } catch (e) {}
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function elogio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivo() { return INCENTIVOS[Math.floor(Math.random() * INCENTIVOS.length)]; }
+
+/* POOL DE PALAVRAS */
+function poolPalavras() {
+  if (!STATE.nivel) return [];
+  // Cada nível inclui o atual (não acumulativo aqui · evita misturar dificuldades)
+  return PALAVRAS.filter(p => p.nivel === STATE.nivel);
+}
+
+/* LOBBY */
+function renderLobby() {
+  const modoCont = document.getElementById('modo-grid');
+  modoCont.innerHTML = '';
+  Object.entries(MODOS).forEach(([key, m]) => {
+    const card = document.createElement('div');
+    card.className = 'modo-card' + (STATE.modo === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="modo-emoji">${m.emoji}</span>
+      <div class="modo-titulo">${m.titulo}</div>
+      <div class="modo-desc">${m.desc}</div>
+    `;
+    card.onclick = () => { STATE.modo = key; salvar(); renderLobby(); };
+    modoCont.appendChild(card);
+  });
+
+  const qtdArea = document.getElementById('qtd-area');
+  const jogArea = document.getElementById('jogadores-area');
+  if (STATE.modo === 'competitivo') {
+    qtdArea.classList.add('ativo');
+    jogArea.classList.add('ativo');
+    const grid = document.getElementById('qtd-grid');
+    grid.innerHTML = '';
+    [2,3,4].forEach(n => {
+      const c = document.createElement('div');
+      c.className = 'qtd-card' + (STATE.qtdJogadores === n ? ' selecionado' : '');
+      c.innerHTML = `<span class="qtd-emoji">👥</span><span class="qtd-num">${n}</span>`;
+      c.onclick = () => { STATE.qtdJogadores = n; salvar(); renderLobby(); };
+      grid.appendChild(c);
+    });
+    const jgrid = document.getElementById('jogadores-grid');
+    jgrid.innerHTML = '';
+    for (let i = 0; i < STATE.qtdJogadores; i++) {
+      const pino = document.createElement('div');
+      pino.className = 'pino-mini';
+      pino.style.background = CORES_PINOS[i].fundo;
+      pino.textContent = (i+1);
+      const inp = document.createElement('input');
+      inp.type = 'text'; inp.maxLength = 20;
+      inp.value = STATE.nomes[i] || `Jogador ${i+1}`;
+      inp.oninput = (e) => { STATE.nomes[i] = e.target.value; salvar(); };
+      jgrid.appendChild(pino);
+      jgrid.appendChild(inp);
+    }
+  } else {
+    qtdArea.classList.remove('ativo');
+    jogArea.classList.remove('ativo');
+  }
+
+  const tempoArea = document.getElementById('tempo-area');
+  if (STATE.modo === 'relogio') {
+    tempoArea.classList.add('ativo');
+    const grid = document.getElementById('tempo-grid');
+    grid.innerHTML = '';
+    Object.entries(TEMPOS).forEach(([min, label]) => {
+      const minN = parseInt(min);
+      const c = document.createElement('div');
+      c.className = 'tempo-card' + (STATE.tempoMin === minN ? ' selecionado' : '');
+      c.textContent = label;
+      c.onclick = () => { STATE.tempoMin = minN; salvar(); renderLobby(); };
+      grid.appendChild(c);
+    });
+  } else {
+    tempoArea.classList.remove('ativo');
+  }
+
+  const nivCont = document.getElementById('nivel-grid');
+  nivCont.innerHTML = '';
+  Object.entries(NIVEIS_INFO).forEach(([key, n]) => {
+    const card = document.createElement('div');
+    card.className = 'nivel-card' + (STATE.nivel === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="nivel-emoji">${n.emoji}</span>
+      <div class="nivel-titulo">${n.titulo}</div>
+      <div class="nivel-desc">${n.desc}</div>
+    `;
+    card.onclick = () => { STATE.nivel = key; salvar(); renderLobby(); };
+    nivCont.appendChild(card);
+  });
+
+  const elPool = document.getElementById('info-pool');
+  if (!STATE.nivel) {
+    elPool.innerHTML = '👉 Escolha um nível pra continuar';
+  } else {
+    const pool = poolPalavras();
+    elPool.innerHTML = `🔍 <b>${pool.length} palavras</b> no nível ${NIVEIS_INFO[STATE.nivel].titulo}`;
+  }
+
+  const btn = document.getElementById('btn-comecar');
+  const podeComecar = STATE.modo && STATE.nivel;
+  btn.disabled = !podeComecar;
+  if (!STATE.modo)        btn.textContent = '🔍 Escolha um modo';
+  else if (!STATE.nivel)  btn.textContent = '🔍 Escolha um nível';
+  else                    btn.textContent = `🔍 Começar (${MODOS[STATE.modo].titulo} · ${NIVEIS_INFO[STATE.nivel].titulo})`;
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+/* ============================================================
+ * LÓGICA DO JOGO + MODO COMPARAÇÃO FONÉTICA + TTS
+ * ============================================================ */
+
+/* TTS · Speech Synthesis */
+function falar(texto, opcoes = {}) {
+  try {
+    if (typeof speechSynthesis === 'undefined') return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(texto);
+    u.lang = 'pt-BR';
+    u.rate = opcoes.rate || 1.0;
+    u.pitch = opcoes.pitch || 1.0;
+    u.volume = opcoes.volume || 1.0;
+    speechSynthesis.speak(u);
+  } catch (e) { /* sem TTS, ignora */ }
+}
+
+function falarFonema(letra) {
+  // Pronunciar o som da letra (não o nome dela)
+  const sonsDestacados = {
+    'P': 'pê',
+    'B': 'bê',
+    'T': 'tê',
+    'D': 'dê',
+    'F': 'efe',
+    'V': 'vê',
+    'C': 'cê',
+    'G': 'gê',
+    'S': 'esse',
+    'Z': 'zê',
+    'CH': 'xê',
+    'J': 'jota',
+    'M': 'eme',
+    'N': 'ene',
+    'L': 'éle',
+    'R': 'erre',
+    'A': 'á', 'E': 'é', 'I': 'i', 'O': 'ó', 'U': 'u'
+  };
+  const palavra = sonsDestacados[letra] || letra;
+  falar(palavra, { rate: 0.75 });
+}
+
+function ouvirPalavra() {
+  if (!STATE.partida.palavraAtual) return;
+  falar(STATE.partida.palavraAtual.palavra);
+}
+
+/* INICIAR PARTIDA */
+function comecarJogo() {
+  if (!STATE.modo || !STATE.nivel) return;
+
+  STATE.partida.jogadores = [];
+  if (STATE.modo === 'individual' || STATE.modo === 'relogio') {
+    STATE.partida.jogadores.push({ idx: 0, nome: 'Você', pontos: 0, acertos: 0 });
+  } else if (STATE.modo === 'professor') {
+    STATE.partida.jogadores.push({ idx: 0, nome: 'Turma', pontos: 0, acertos: 0 });
+  } else {
+    for (let i = 0; i < STATE.qtdJogadores; i++) {
+      STATE.partida.jogadores.push({
+        idx: i, nome: STATE.nomes[i] || `Jogador ${i+1}`,
+        pontos: 0, acertos: 0
+      });
+    }
+  }
+
+  STATE.partida.rodada = 1;
+  STATE.partida.rodadaMax = STATE.modo === 'relogio' ? 999 : RODADAS_PADRAO;
+  STATE.partida.vezAtual = 0;
+  STATE.partida.palavrasUsadas = [];
+  STATE.partida.ativa = true;
+
+  if (STATE.modo === 'relogio') {
+    STATE.partida.tempoSeg = STATE.tempoMin * 60;
+    iniciarCronometro();
+    document.getElementById('cronometro').classList.remove('hidden');
+  } else {
+    document.getElementById('cronometro').classList.add('hidden');
+  }
+
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('jogo').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+
+  prepararRodada();
+}
+
+function jogadorAtual() {
+  return STATE.partida.jogadores[STATE.partida.vezAtual];
+}
+
+function iniciarCronometro() {
+  if (STATE.partida.timerInterval) clearInterval(STATE.partida.timerInterval);
+  atualizarCronometro();
+  STATE.partida.timerInterval = setInterval(() => {
+    STATE.partida.tempoSeg--;
+    atualizarCronometro();
+    if (STATE.partida.tempoSeg <= 0) {
+      clearInterval(STATE.partida.timerInterval);
+      encerrarPartida();
+    }
+  }, 1000);
+}
+
+function atualizarCronometro() {
+  const el = document.getElementById('cronometro');
+  if (!el) return;
+  const min = Math.floor(STATE.partida.tempoSeg / 60);
+  const seg = STATE.partida.tempoSeg % 60;
+  el.textContent = `${min}:${seg.toString().padStart(2,'0')}`;
+  if (STATE.partida.tempoSeg <= 30) el.classList.add('urgente');
+  else el.classList.remove('urgente');
+}
+
+/* PREPARAR RODADA · sorteia palavra única */
+function prepararRodada() {
+  const pool = poolPalavras();
+  let disponiveis = pool.filter(p => !STATE.partida.palavrasUsadas.includes(p.palavra));
+  if (disponiveis.length === 0) {
+    // Esgotou nível, recicla
+    STATE.partida.palavrasUsadas = [];
+    disponiveis = pool;
+  }
+  STATE.partida.palavraAtual = disponiveis[Math.floor(Math.random() * disponiveis.length)];
+  STATE.partida.palavrasUsadas.push(STATE.partida.palavraAtual.palavra);
+  STATE.partida.opcoes = gerarOpcoes(STATE.partida.palavraAtual);
+  STATE.partida.respostaCorreta = STATE.partida.palavraAtual.fonema;
+  STATE.partida.fase = 'mostrando';
+  STATE.partida.respondeu = false;
+  STATE.partida.erroUltimo = null;
+
+  atualizarCabecalho();
+  atualizarInfoLateral();
+  document.getElementById('feedback-area').innerHTML = '';
+  document.getElementById('imagem-palavra').classList.remove('revelada');
+
+  // Mostrar emoji
+  document.getElementById('emoji-palavra').textContent = STATE.partida.palavraAtual.emoji;
+  document.getElementById('palavra-revelada').textContent = STATE.partida.palavraAtual.palavra.toUpperCase();
+
+  // Renderizar opções de letra
+  const cont = document.getElementById('opcoes-letras');
+  cont.innerHTML = '';
+  STATE.partida.opcoes.forEach(letra => {
+    const btn = document.createElement('button');
+    btn.className = 'letra-opcao';
+    btn.textContent = letra;
+    btn.onclick = () => responder(letra, btn);
+    cont.appendChild(btn);
+  });
+
+  renderPlacar();
+  renderMascote('svg-mascote-painel', 'pensando');
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Beto:</b> Aperte o botão pra ouvir a palavra!`;
+
+  // Falar automaticamente após pequeno delay (UX)
+  setTimeout(() => {
+    if (STATE.partida.fase === 'mostrando' && !STATE.partida.respondeu) {
+      falar(STATE.partida.palavraAtual.palavra);
+    }
+  }, 400);
+}
+
+function atualizarCabecalho() {
+  const j = jogadorAtual();
+  if (!j) return;
+  document.getElementById('pino-vez').textContent = j.idx + 1;
+  document.getElementById('pino-vez').style.background = CORES_PINOS[j.idx].fundo;
+  document.getElementById('nome-vez').textContent = `Vez de ${j.nome}`;
+  const txt = STATE.modo === 'relogio' ? `Rodada ${STATE.partida.rodada}` : `Rodada ${STATE.partida.rodada}/${STATE.partida.rodadaMax}`;
+  document.getElementById('info-rodada-cab').textContent = txt;
+}
+
+function atualizarInfoLateral() {
+  const j = jogadorAtual();
+  if (!j) return;
+  const txt = STATE.modo === 'relogio' ? `${STATE.partida.rodada}` : `${STATE.partida.rodada}/${STATE.partida.rodadaMax}`;
+  document.getElementById('rodada-info-side').textContent = txt;
+  document.getElementById('acertos-info').textContent = j.acertos;
+  document.getElementById('nivel-info').textContent = NIVEIS_INFO[STATE.nivel].titulo;
+}
+
+/* GERAR OPÇÕES · 4 letras (1 correta + 3 distratoras inteligentes) */
+function gerarOpcoes(palavra) {
+  const correta = palavra.fonema;
+  const opcoes = new Set([correta]);
+  const nivel = NIVEIS_INFO[STATE.nivel];
+
+  // ESTRATÉGIA DISTRATORAS:
+  // 1. Se for nível Farejador/Mestre ou Aprendiz com par mínimo: SEMPRE inclui um par mínimo da palavra
+  //    Isso é o ponto pedagógico crítico!
+  if (palavra.paresMinimos && palavra.paresMinimos.length > 0 &&
+      (nivel.paresMinimos === 'ativo' || nivel.paresMinimos === 'leve')) {
+    palavra.paresMinimos.forEach(par => opcoes.add(par));
+  }
+
+  // 2. Completar com letras distintas que existem no banco
+  const todasLetras = [...new Set(PALAVRAS.map(p => p.fonema))];
+  const restantes = shuffle(todasLetras.filter(l => !opcoes.has(l)));
+  for (const l of restantes) {
+    if (opcoes.size >= 4) break;
+    opcoes.add(l);
+  }
+
+  return shuffle(Array.from(opcoes).slice(0, 4));
+}
+
+/* RESPONDER */
+function responder(letra, btnEl) {
+  if (STATE.partida.respondeu) return;
+  STATE.partida.respondeu = true;
+
+  const correta = letra === STATE.partida.respostaCorreta;
+  document.querySelectorAll('.letra-opcao').forEach(b => b.disabled = true);
+
+  // Feedback visual
+  if (correta) {
+    btnEl.classList.add('correta');
+  } else {
+    btnEl.classList.add('errada');
+    STATE.partida.erroUltimo = letra;
+    // Revelar correta
+    document.querySelectorAll('.letra-opcao').forEach(b => {
+      if (b.textContent === STATE.partida.respostaCorreta) {
+        b.classList.add('revela-correta');
+      }
+    });
+  }
+
+  // Revelar palavra
+  document.getElementById('imagem-palavra').classList.add('revelada');
+
+  const j = jogadorAtual();
+  let pontos = 0;
+  if (correta) {
+    pontos = NIVEIS_INFO[STATE.nivel].pontos;
+    j.pontos += pontos;
+    j.acertos++;
+    tocarSom('acerto');
+    renderMascote('svg-mascote-painel', 'feliz');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Beto:</b> ${elogio()}`;
+    // Feedback auditivo: repetir palavra destacando som
+    setTimeout(() => falar(`${STATE.partida.respostaCorreta} de ${STATE.partida.palavraAtual.palavra}`, { rate: 0.85 }), 300);
+  } else {
+    tocarSom('erro');
+    renderMascote('svg-mascote-painel', 'surpresa');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Beto:</b> ${incentivo()}`;
+    // Feedback auditivo: revelar correta destacando
+    setTimeout(() => falar(`${STATE.partida.respostaCorreta} de ${STATE.partida.palavraAtual.palavra}`, { rate: 0.75 }), 300);
+  }
+
+  setTimeout(() => mostrarFeedbackRodada(correta, pontos), 1200);
+  renderPlacar();
+  atualizarInfoLateral();
+}
+
+function mostrarFeedbackRodada(correta, pontos) {
+  STATE.partida.fase = 'feedback';
+  const cont = document.getElementById('feedback-area');
+  const j = jogadorAtual();
+
+  const ehUltimaRodada = STATE.modo !== 'relogio' && STATE.partida.rodada >= STATE.partida.rodadaMax &&
+    (STATE.modo !== 'competitivo' || STATE.partida.vezAtual === STATE.partida.jogadores.length - 1);
+
+  // Verificar se errou par mínimo (gatilho do Modo Comparação)
+  let temParMinimo = false;
+  if (!correta && STATE.partida.erroUltimo) {
+    const chave = `${STATE.partida.respostaCorreta}|${STATE.partida.erroUltimo}`;
+    if (EXPLICACOES_FONETICAS[chave]) temParMinimo = true;
+  }
+
+  // MODO PROFESSOR sempre mostra botão manual · auto-avanço fica desligado
+  const modoManual = STATE.modo === 'professor';
+
+  cont.innerHTML = `
+    <div class="feedback-rodada">
+      <h3>${correta ? '✅ Mandou bem!' : '❌ Não foi dessa vez!'}</h3>
+      <div class="pts-info">
+        ${correta
+          ? `+${pontos} pontos · ${j.nome}: ${j.pontos} pts`
+          : `A palavra era ${STATE.partida.palavraAtual.palavra.toUpperCase()} · começa com <b>${STATE.partida.respostaCorreta}</b>`}
+      </div>
+      ${(modoManual || ehUltimaRodada || temParMinimo) ? `
+        ${temParMinimo && !modoManual ? `
+          <div style="font-family:'Fredoka',sans-serif; font-size:0.82rem; color:#7C3AED; margin-top:6px;">
+            🔬 Abrindo comparação dos sons...
+          </div>
+        ` : `
+          <button class="btn-proxima" onclick="proximaRodada()">
+            ${ehUltimaRodada ? '🏁 Ver resultado final' : '➡️ Próxima palavra'}
+          </button>
+        `}
+      ` : `
+        <div class="auto-avanco-info" id="auto-avanco-info">
+          <div class="auto-avanco-barra"><div class="auto-avanco-fill"></div></div>
+          <div style="font-family:'Fredoka',sans-serif; font-size:0.78rem; color:#7C3AED; margin-top:4px; text-align:center;">
+            Próxima palavra em instantes...
+            <button class="btn-skip-auto" onclick="proximaRodada()" style="background:none; border:none; color:#7C3AED; text-decoration:underline; cursor:pointer; font-family:inherit; font-size:0.78rem; padding:0 4px;">pular</button>
+          </div>
+        </div>
+      `}
+    </div>
+  `;
+
+  // LÓGICA DE AUTO-AVANÇO
+  if (modoManual) {
+    // Modo Professor: nada automático, espera o botão
+    return;
+  }
+
+  if (temParMinimo) {
+    // Errou par mínimo: abre comparação automaticamente após 1s
+    STATE.partida.aguardandoFechamentoComparacao = true;
+    if (STATE.partida.autoAvancoTimer) clearTimeout(STATE.partida.autoAvancoTimer);
+    STATE.partida.autoAvancoTimer = setTimeout(() => {
+      abrirComparacao(STATE.partida.respostaCorreta, STATE.partida.erroUltimo, true);
+    }, 1000);
+    return;
+  }
+
+  // Acerto OU erro comum: auto-avança após 2,5s
+  if (STATE.partida.autoAvancoTimer) clearTimeout(STATE.partida.autoAvancoTimer);
+  STATE.partida.autoAvancoTimer = setTimeout(() => {
+    proximaRodada();
+  }, TEMPO_AUTO_AVANCO);
+}
+
+/* MODO COMPARAÇÃO FONÉTICA · diferencial pedagógico */
+function abrirComparacao(correta, erro, automatico = false) {
+  const chave = `${correta}|${erro}`;
+  const exp = EXPLICACOES_FONETICAS[chave];
+  if (!exp) return;
+
+  document.getElementById('comp-titulo').textContent = '🔬 ' + exp.titulo;
+  document.getElementById('comp-explicacao').textContent = exp.explicacao;
+  document.getElementById('comp-letra-surda').textContent = exp.surda;
+  document.getElementById('comp-letra-sonora').textContent = exp.sonora;
+  document.getElementById('comp-instrucao').innerHTML = `<strong>🤚 Experimente:</strong> ${exp.instrucao}`;
+
+  // Ajustar botão do modal conforme contexto
+  const btnFechar = document.getElementById('btn-fechar-comparacao');
+  if (btnFechar) {
+    if (automatico) {
+      btnFechar.textContent = 'Entendi! Próxima palavra ➡️';
+    } else {
+      btnFechar.textContent = 'Entendi! 🐶';
+    }
+  }
+
+  window._compAtual = exp;
+  document.getElementById('modal-comparacao').classList.add('aberto');
+}
+
+function ouvirFonema(tipo) {
+  const exp = window._compAtual;
+  if (!exp) return;
+  const letra = tipo === 'surda' ? exp.surda : exp.sonora;
+  falarFonema(letra);
+}
+
+function proximaRodada() {
+  // Limpar timer pendente (caso usuário tenha clicado pular ou modo professor)
+  if (STATE.partida.autoAvancoTimer) {
+    clearTimeout(STATE.partida.autoAvancoTimer);
+    STATE.partida.autoAvancoTimer = null;
+  }
+  STATE.partida.aguardandoFechamentoComparacao = false;
+
+  if (STATE.modo === 'competitivo') {
+    STATE.partida.vezAtual = (STATE.partida.vezAtual + 1) % STATE.partida.jogadores.length;
+    if (STATE.partida.vezAtual === 0) STATE.partida.rodada++;
+  } else {
+    STATE.partida.rodada++;
+  }
+
+  if (STATE.modo !== 'relogio' && STATE.partida.rodada > STATE.partida.rodadaMax) {
+    encerrarPartida();
+    return;
+  }
+  prepararRodada();
+}
+
+function encerrarPartida() {
+  STATE.partida.ativa = false;
+  if (STATE.partida.timerInterval) {
+    clearInterval(STATE.partida.timerInterval);
+    STATE.partida.timerInterval = null;
+  }
+  if (STATE.partida.autoAvancoTimer) {
+    clearTimeout(STATE.partida.autoAvancoTimer);
+    STATE.partida.autoAvancoTimer = null;
+  }
+  STATE.partida.aguardandoFechamentoComparacao = false;
+  if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+
+  const ordenados = STATE.partida.jogadores.slice().sort((a,b) => b.pontos - a.pontos);
+  const venc = ordenados[0];
+
+  let titulo = '';
+  let msg = '';
+  if (STATE.modo === 'competitivo') {
+    titulo = `🏆 ${venc.nome} venceu!`;
+    msg = `Com <b>${venc.pontos} pontos</b> e <b>${venc.acertos}</b> sons identificados!`;
+  } else if (STATE.modo === 'relogio') {
+    titulo = `⏱️ Tempo esgotado!`;
+    msg = `${venc.nome === 'Você' ? 'Você' : venc.nome} identificou <b>${venc.acertos}</b> sons em ${STATE.tempoMin} min, totalizando <b>${venc.pontos} pontos</b>.`;
+  } else {
+    titulo = `🎉 Fim do jogo!`;
+    msg = `${venc.nome === 'Turma' ? 'A turma' : 'Você'} fez <b>${venc.pontos} pontos</b> com <b>${venc.acertos}</b> sons corretos em ${STATE.partida.rodadaMax} rodadas.`;
+  }
+
+  document.getElementById('fim-titulo').textContent = titulo;
+  document.getElementById('fim-msg').innerHTML = msg;
+
+  let html = '<h4>📊 Ranking final</h4>';
+  ordenados.forEach((j, pos) => {
+    const med = pos === 0 ? '🥇' : pos === 1 ? '🥈' : pos === 2 ? '🥉' : `${pos+1}º`;
+    html += `
+      <div class="jog-linha">
+        <div class="pino-jog" style="background:${CORES_PINOS[j.idx].fundo}">${j.idx+1}</div>
+        <div class="nome">${med} ${j.nome}</div>
+        <div class="pts">${j.pontos} pts</div>
+      </div>
+      <div style="font-size:0.72rem; color:#475569; padding:0 6px 4px; font-family:'Fredoka',sans-serif;">
+        ✅ ${j.acertos} sons corretos
+      </div>
+    `;
+  });
+  document.getElementById('ranking-final').innerHTML = html;
+
+  const acoes = document.getElementById('fim-acoes');
+  acoes.innerHTML = '';
+  const btn1 = document.createElement('button');
+  btn1.className = 'btn-confirmar dourado';
+  btn1.textContent = '↻ Jogar de novo';
+  btn1.onclick = () => { fecharModal('modal-fim'); comecarJogo(); };
+  acoes.appendChild(btn1);
+  const btn2 = document.createElement('button');
+  btn2.className = 'btn-cancelar';
+  btn2.textContent = '🏠 Menu';
+  btn2.onclick = () => { fecharModal('modal-fim'); voltarLobby(); };
+  acoes.appendChild(btn2);
+
+  document.getElementById('modal-fim').classList.add('aberto');
+  if (venc.acertos >= 6) criarConfetes();
+}
+
+function renderPlacar() {
+  const cont = document.getElementById('placar-linhas');
+  cont.innerHTML = '';
+  const ordenados = STATE.partida.jogadores.slice().sort((a,b) => b.pontos - a.pontos);
+  ordenados.forEach(j => {
+    const linha = document.createElement('div');
+    linha.className = 'jog-linha' + (j.idx === jogadorAtual().idx ? ' vez-dele' : '');
+    linha.innerHTML = `
+      <div class="pino-jog" style="background:${CORES_PINOS[j.idx].fundo}">${j.idx+1}</div>
+      <div class="nome">${j.nome}</div>
+      <div class="pts">${j.pontos}</div>
+    `;
+    cont.appendChild(linha);
+  });
+}
+
+function voltarLobby() {
+  if (STATE.partida.ativa && STATE.partida.rodada > 1) {
+    if (!confirm('Voltar ao menu? A partida atual será perdida.')) return;
+  }
+  STATE.partida.ativa = false;
+  if (STATE.partida.timerInterval) {
+    clearInterval(STATE.partida.timerInterval);
+    STATE.partida.timerInterval = null;
+  }
+  if (STATE.partida.autoAvancoTimer) {
+    clearTimeout(STATE.partida.autoAvancoTimer);
+    STATE.partida.autoAvancoTimer = null;
+  }
+  STATE.partida.aguardandoFechamentoComparacao = false;
+  if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+  document.getElementById('jogo').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-fim');
+  fecharModal('modal-comparacao');
+  renderLobby();
+}
+
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+
+/* Fechar Modo Comparação · avança rodada se foi automático */
+function fecharComparacao() {
+  document.getElementById('modal-comparacao').classList.remove('aberto');
+  if (STATE.partida.aguardandoFechamentoComparacao) {
+    STATE.partida.aguardandoFechamentoComparacao = false;
+    // Pequeno delay pra UX (criança vê o modal fechar antes de mudar palavra)
+    setTimeout(() => proximaRodada(), 250);
+  }
+}
+/* SOM */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'acerto') {
+      const notas = [523, 659, 784, 1047];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t0 = c.currentTime + i * 0.07;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.18);
+        o.start(t0); o.stop(t0 + 0.2);
+      });
+    } else if (tipo === 'erro') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 320; o.type = 'sine';
+      g.gain.setValueAtTime(0.08, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.25);
+      o.frequency.exponentialRampToValueAtTime(180, c.currentTime + 0.25);
+      o.start(); o.stop(c.currentTime + 0.27);
+    } else if (tipo === 'clique') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 600; o.type = 'sine';
+      g.gain.setValueAtTime(0.06, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.08);
+      o.start(); o.stop(c.currentTime + 0.1);
+    }
+  } catch (e) {}
+}
+
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#7C3AED','#4C1D95','#EAB308','#713F12','#C084FC','#FBBF24'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* A11Y */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    ESTADO_A11Y.escala = 'normal'; // escala sempre inicia normal
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* WEBNODE EMBED */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => reportarAltura());
+  ro.observe(document.getElementById('pde-painel'));
+}
+
+/* SELOS BNCC */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'portugues',
+      icone: 'LP',
+      titulo: 'BNCC Língua Portuguesa · Alfabetização',
+      itens: [
+        { cod: 'EF01LP02', desc: 'Escrever espontaneamente palavras representando fonemas.' },
+        { cod: 'EF01LP04', desc: 'Distinguir as letras do alfabeto.' },
+        { cod: 'EF02LP01', desc: 'Utilizar conhecimento sobre as relações fonema-grafema.' },
+        { cod: 'EF02LP02', desc: 'Segmentar palavras em sílabas e remover/substituir fonemas.' },
+        { cod: 'EF03LP01', desc: 'Ler/escrever palavras com correspondências regulares e irregulares.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Pensamento Computacional',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais como apoio à aprendizagem.' },
+        { cod: 'EF06CO04', desc: 'Reconhecer padrões e aplicar classificação.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, TTS pt-BR, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão + AEE</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recurso de discriminação auditiva e consciência fonológica, útil para AEE, TPAC e disgrafia/dislexia</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-fim'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+/* INIT */
+carregar();
+carregarA11y();
+renderLobby();
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => {
+    if (e.target === m) {
+      if (m.id === 'modal-comparacao') fecharComparacao();
+      else m.classList.remove('aberto');
+    }
+  });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.aberto').forEach(m => {
+      if (m.id === 'modal-comparacao') fecharComparacao();
+      else m.classList.remove('aberto');
+    });
+  }
+});
+
+/* Expor pro smoke test */
+window.STATE = STATE;
+window.PALAVRAS = PALAVRAS;
+window.NIVEIS_INFO = NIVEIS_INFO;
+window.EXPLICACOES_FONETICAS = EXPLICACOES_FONETICAS;
+window.MODOS = MODOS;
+window.CORES_PINOS = CORES_PINOS;
+window.ELOGIOS = ELOGIOS;
+window.INCENTIVOS = INCENTIVOS;
+window.poolPalavras = poolPalavras;
+window.comecarJogo = comecarJogo;
+window.voltarLobby = voltarLobby;
+window.prepararRodada = prepararRodada;
+window.responder = responder;
+window.gerarOpcoes = gerarOpcoes;
+window.proximaRodada = proximaRodada;
+window.encerrarPartida = encerrarPartida;
+window.jogadorAtual = jogadorAtual;
+window.abrirAjuda = abrirAjuda;
+window.abrirAcessibilidade = abrirAcessibilidade;
+window.abrirComparacao = abrirComparacao;
+window.ouvirFonema = ouvirFonema;
+window.ouvirPalavra = ouvirPalavra;
+window.falar = falar;
+window.falarFonema = falarFonema;
+window.defA11y = defA11y;
+window.ESTADO_A11Y = ESTADO_A11Y;
+window.fecharModal = fecharModal;
+window.fecharComparacao = fecharComparacao;
+window.renderLobby = renderLobby;
+window.montarSelosBNCC = montarSelosBNCC;
+window.svgMascote = svgMascote;
+
+</script>
+</body>
+</html>

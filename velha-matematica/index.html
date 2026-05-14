@@ -1,0 +1,2370 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Jogo da Velha Matemático · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #1E324A);
+  padding: 6px clamp(6px, 1.5vw, 12px) 10px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  --pde-cor-texto: #1E324A;
+  background: linear-gradient(180deg, #E0F2FE 0%, #B6D752 60%, #1E324A 100%);
+  border-radius: 12px;
+}
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-jogo,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .modo-card,
+#pde-painel.alto-contraste .adv-card,
+#pde-painel.alto-contraste .nivel-card,
+#pde-painel.alto-contraste .op-card,
+#pde-painel.alto-contraste .faixa-card { background: #000 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .modo-card.selecionado,
+#pde-painel.alto-contraste .adv-card.selecionado,
+#pde-painel.alto-contraste .nivel-card.selecionado,
+#pde-painel.alto-contraste .op-card.ligada,
+#pde-painel.alto-contraste .faixa-card.selecionado { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .casa { background: #000 !important; border-color: #FBBF24 !important; color: #FBBF24 !important; }
+#pde-painel.alto-contraste .casa.x { color: #38BDF8 !important; }
+#pde-painel.alto-contraste .casa.o { color: #FB923C !important; }
+#pde-painel.alto-contraste .input-resposta { background: #000 !important; border-color: #FBBF24 !important; color: #FBBF24 !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+
+#pde-painel.daltonico .casa.x { color: #1E40AF !important; }
+#pde-painel.daltonico .casa.o { color: #F97316 !important; }
+#pde-painel.daltonico .casa.linha-vencedora { background: linear-gradient(135deg, #DBEAFE, #93C5FD) !important; border-color: #1E40AF !important; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#1E324A 0%,#0F172A 100%);
+  border-radius: 10px;
+  padding: 6px 10px;
+  color: white;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 6px rgba(15,23,42,0.25);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 14px;
+  padding: 10px;
+  border: 2px solid #1E324A;
+  box-shadow: 0 3px 8px rgba(30,50,74,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #E0F2FE 0%, #37B1DA 100%);
+  border-radius: 10px;
+  padding: 7px 10px;
+  margin-bottom: 8px;
+  border: 2px solid #1E324A;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 64px; height: 64px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 10px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #1E324A;
+  font-size: 0.85rem;
+  line-height: 1.25;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: ''; position: absolute;
+  left: -8px; top: 18px;
+  width: 0; height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #1E324A;
+  font-size: 0.95rem;
+  margin-bottom: 1px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 5px; padding: 8px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 70px; height: 70px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+#pde-painel .secao-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #1E324A;
+  font-size: 0.92rem;
+  margin: 8px 0 5px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* MODO MATEMÁTICO */
+#pde-painel .modo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 6px;
+}
+@media (max-width: 600px) {
+  #pde-painel .modo-grid { grid-template-columns: 1fr; }
+}
+#pde-painel .modo-card {
+  background: white;
+  border: 2px solid #37B1DA;
+  border-radius: 10px;
+  padding: 8px 6px;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Fredoka',sans-serif;
+  color: #1E324A;
+  font-size: 0.82rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #1E324A;
+  display: flex; gap: 8px; align-items: flex-start;
+}
+#pde-painel .modo-card:hover { transform: translateY(-2px); box-shadow: 0 4px 0 #1E324A; }
+#pde-painel .modo-card.selecionado {
+  background: linear-gradient(135deg,#1E324A 0%,#0F172A 100%);
+  color: white;
+  border-color: #0F172A;
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #0F172A;
+}
+#pde-painel .modo-card .modo-letra {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  background: #B6D752;
+  color: #1E324A;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  border: 2px solid #1E324A;
+}
+#pde-painel .modo-card.selecionado .modo-letra { background: #B6D752; color: #1E324A; }
+#pde-painel .modo-card .modo-corpo { flex: 1; min-width: 0; }
+#pde-painel .modo-card .modo-titulo { font-weight: 700; font-size: 0.92rem; }
+#pde-painel .modo-card .modo-desc { font-size: 0.72rem; opacity: 0.85; margin-top: 2px; line-height: 1.2; }
+
+/* ADVERSÁRIO */
+#pde-painel .adv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  margin-bottom: 6px;
+}
+#pde-painel .adv-card {
+  background: white;
+  border: 2px solid #FBBF24;
+  border-radius: 10px;
+  padding: 7px 6px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 0.88rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #92400E;
+}
+#pde-painel .adv-card:hover { transform: translateY(-2px); }
+#pde-painel .adv-card.selecionado {
+  background: linear-gradient(135deg,#F59E0B 0%,#92400E 100%);
+  color: white;
+  border-color: #451A03;
+  transform: translateY(2px);
+}
+#pde-painel .adv-card .adv-emoji { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .adv-card .adv-nome { font-size: 0.88rem; }
+
+/* NÍVEL IA (só aparece se adversário = computador) */
+#pde-painel .nivel-area { display: none; margin-bottom: 6px; }
+#pde-painel .nivel-area.ativo { display: block; }
+#pde-painel .nivel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+#pde-painel .nivel-card {
+  background: white;
+  border: 2px solid #BBF7D0;
+  border-radius: 10px;
+  padding: 6px 5px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #14532D;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #14532D;
+}
+#pde-painel .nivel-card:hover { transform: translateY(-2px); }
+#pde-painel .nivel-card.selecionado {
+  background: linear-gradient(135deg,#15803D 0%,#14532D 100%);
+  color: white;
+  border-color: #14532D;
+  transform: translateY(2px);
+}
+#pde-painel .nivel-card .niv-emoji { display: block; font-size: 1.2rem; line-height: 1; }
+
+/* JOGADORES (só aparece se 2 jogadores) */
+#pde-painel .jogadores-area { display: none; margin-bottom: 6px; }
+#pde-painel .jogadores-area.ativo { display: block; }
+#pde-painel .jogadores-grid {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 5px 8px;
+  align-items: center;
+}
+#pde-painel .jogadores-grid label {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #1E324A;
+  font-size: 0.85rem;
+}
+#pde-painel .jogadores-grid input {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.92rem;
+  padding: 5px 8px;
+  border: 2px solid #37B1DA;
+  border-radius: 6px;
+  background: white;
+  color: #1E324A;
+  font-weight: 600;
+  width: 100%;
+}
+#pde-painel .jogadores-grid input:focus { outline: none; border-color: #1E324A; }
+
+/* CONFIG MATEMÁTICA */
+#pde-painel .config-mat {
+  background: #F1F5F9;
+  border: 2px solid #94A3B8;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 6px;
+}
+#pde-painel .ops-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  margin-bottom: 6px;
+}
+#pde-painel .op-card {
+  background: white;
+  border: 2px solid #CBD5E1;
+  border-radius: 10px;
+  padding: 6px 4px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #475569;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #475569;
+}
+#pde-painel .op-card:hover { transform: translateY(-2px); }
+#pde-painel .op-card.ligada {
+  background: linear-gradient(135deg,#37B1DA 0%,#1E324A 100%);
+  color: white;
+  border-color: #1E324A;
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #0F172A;
+}
+#pde-painel .op-card .op-simbolo {
+  font-family: 'Baloo 2',sans-serif;
+  font-size: 1.5rem;
+  line-height: 1;
+  display: block;
+}
+#pde-painel .op-card .op-nome {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 2px;
+  display: block;
+}
+
+#pde-painel .faixa-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+#pde-painel .faixa-card {
+  background: white;
+  border: 2px solid #C4B5FD;
+  border-radius: 10px;
+  padding: 6px 4px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #5B21B6;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 #5B21B6;
+}
+#pde-painel .faixa-card:hover { transform: translateY(-2px); }
+#pde-painel .faixa-card.selecionado {
+  background: linear-gradient(135deg,#8B5CF6 0%,#5B21B6 100%);
+  color: white;
+  border-color: #4C1D95;
+  transform: translateY(2px);
+}
+
+#pde-painel .btn-comecar {
+  width: 100%;
+  background: linear-gradient(135deg,#B6D752 0%,#84CC16 100%);
+  color: #1E324A;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #4D7C0F, 0 4px 10px rgba(132,204,22,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #4D7C0F;
+  margin-top: 6px;
+}
+#pde-painel .btn-comecar:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #4D7C0F, 0 2px 6px rgba(132,204,22,0.25);
+}
+#pde-painel .btn-comecar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* JOGO */
+#pde-painel .jogo-grid {
+  display: grid; gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #pde-painel .jogo-grid { grid-template-columns: 1fr !important; gap: 8px; }
+  #pde-painel .area-jogo { order: 1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+#pde-painel .area-jogo {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 3px solid #1E324A;
+  box-shadow: 0 2px 6px rgba(30,50,74,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+#pde-painel .painel-info {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 10px;
+  border: 3px solid #1E324A;
+  box-shadow: 0 2px 6px rgba(30,50,74,0.12);
+  min-width: 0;
+}
+
+#pde-painel .cab-jogo {
+  background: linear-gradient(135deg, #1E324A 0%, #0F172A 100%);
+  border-radius: 10px;
+  padding: 6px 12px;
+  color: white;
+  text-align: center;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; flex-wrap: wrap;
+}
+#pde-painel .cab-jogo .modo-info {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+#pde-painel .cab-jogo .vez {
+  background: rgba(255,255,255,0.2);
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+#pde-painel .cab-jogo .vez.x { background: #38BDF8; color: white; }
+#pde-painel .cab-jogo .vez.o { background: #FB923C; color: white; }
+
+/* CONTA ATIVA (modos A e C) */
+#pde-painel .conta-ativa {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FBBF24 100%);
+  border: 3px dashed #92400E;
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: center;
+}
+#pde-painel .conta-ativa .conta-texto {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  color: #92400E;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+#pde-painel .conta-ativa .conta-instrucao {
+  font-family: 'Fredoka',sans-serif;
+  color: #1E324A;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+#pde-painel .conta-ativa .input-area {
+  display: flex; gap: 6px; margin-top: 8px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+#pde-painel .input-resposta {
+  font-family: 'Baloo 2',sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  padding: 8px 14px;
+  border: 3px solid #1E324A;
+  border-radius: 10px;
+  background: white;
+  color: #1E324A;
+  text-align: center;
+  width: 120px;
+  max-width: 50vw;
+}
+#pde-painel .input-resposta:focus { outline: none; border-color: #F59E0B; box-shadow: 0 0 0 4px rgba(245,158,11,0.2); }
+#pde-painel .btn-conta {
+  background: linear-gradient(135deg,#16A34A 0%,#15803D 100%);
+  color: white;
+  border: 3px solid white;
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #14532D;
+}
+#pde-painel .btn-conta:active { transform: translateY(2px); box-shadow: 0 1px 0 #14532D; }
+#pde-painel .btn-conta:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* MODO B: ALVO PRA SOMAR */
+#pde-painel .alvo-info {
+  background: linear-gradient(135deg, #E0F2FE 0%, #37B1DA 100%);
+  border: 3px solid #1E324A;
+  border-radius: 12px;
+  padding: 8px 12px;
+  text-align: center;
+}
+#pde-painel .alvo-info .alvo-label {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.85rem;
+  color: #1E324A;
+  font-weight: 600;
+}
+#pde-painel .alvo-info .alvo-numero {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 2.4rem;
+  line-height: 1;
+  color: #1E324A;
+  margin: 2px 0;
+}
+#pde-painel .alvo-info .alvo-instrucao {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.78rem;
+  color: #075985;
+}
+
+/* TABULEIRO */
+#pde-painel .tabuleiro {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 5px;
+  max-width: 380px;
+  width: 100%;
+  margin: 0 auto;
+  aspect-ratio: 1;
+}
+#pde-painel .casa {
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
+  border: 3px solid #1E324A;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 6vw, 2.5rem);
+  color: #1E324A;
+  transition: transform 0.1s, background 0.15s;
+  position: relative;
+  box-shadow: 0 3px 0 #1E324A;
+  min-height: 0;
+  min-width: 0;
+}
+#pde-painel .casa:not(.preenchida):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #1E324A;
+  background: linear-gradient(135deg, #DBEAFE 0%, #93C5FD 100%);
+}
+#pde-painel .casa.x {
+  color: #1E40AF;
+  background: linear-gradient(135deg, #DBEAFE 0%, #93C5FD 100%);
+}
+#pde-painel .casa.o {
+  color: #C2410C;
+  background: linear-gradient(135deg, #FED7AA 0%, #FB923C 100%);
+}
+#pde-painel .casa.preenchida { cursor: not-allowed; }
+#pde-painel .casa.aguardando {
+  cursor: wait;
+  opacity: 0.6;
+}
+#pde-painel .casa.selecionada {
+  outline: 4px solid #F59E0B;
+  outline-offset: -3px;
+  animation: pulsoSelec 0.6s ease infinite;
+}
+@keyframes pulsoSelec {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+#pde-painel .casa.linha-vencedora {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FBBF24 100%) !important;
+  border-color: #92400E !important;
+  animation: vitoria 0.8s ease;
+}
+@keyframes vitoria {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+#pde-painel .casa.casa-conta {
+  /* Modos A e C: mostram a conta no canto */
+  flex-direction: column;
+}
+#pde-painel .casa.casa-conta .conta-mini {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.78rem, 2.2vw, 1rem);
+  color: #475569;
+  margin-bottom: 2px;
+}
+#pde-painel .casa.casa-conta .resposta {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.2rem, 4vw, 1.7rem);
+  color: #1E324A;
+}
+#pde-painel .casa.casa-numero {
+  /* Modo B: número grande centralizado */
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 7vw, 3rem);
+}
+#pde-painel .casa.errada-c {
+  /* Modo C: casa que ERROU (resposta não bate com regra) */
+  background: linear-gradient(135deg, #FECACA 0%, #F87171 100%);
+  border-color: #991B1B;
+  color: #7F1D1D;
+  animation: shake 0.4s;
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* FEEDBACK */
+#pde-painel .feedback {
+  margin-top: 4px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-align: center;
+  border: 2px solid;
+}
+#pde-painel .feedback.acerto {
+  background: linear-gradient(135deg, #DCFCE7, #86EFAC);
+  color: #14532D;
+  border-color: #15803D;
+}
+#pde-painel .feedback.erro {
+  background: linear-gradient(135deg, #FEE2E2, #FCA5A5);
+  color: #7F1D1D;
+  border-color: #DC2626;
+}
+#pde-painel .feedback.info {
+  background: linear-gradient(135deg, #DBEAFE, #93C5FD);
+  color: #1E40AF;
+  border-color: #1E3A8A;
+}
+
+/* PAINEL INFO */
+#pde-painel .info-jogo {
+  background: linear-gradient(135deg,#E0F2FE 0%,#BAE6FD 100%);
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 2px solid #1E324A;
+}
+#pde-painel .info-jogo .linha {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.78rem;
+  color: #1E324A;
+  padding: 2px 0;
+}
+#pde-painel .info-jogo .linha .label { font-weight: 600; }
+#pde-painel .info-jogo .linha .valor { font-weight: 700; color: #075985; }
+
+#pde-painel .placar-jogadores {
+  background: linear-gradient(135deg, #B6D752 0%, #84CC16 100%);
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 6px;
+  border: 2px solid #4D7C0F;
+}
+#pde-painel .placar-jogadores .jog-linha {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px;
+  background: white;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.85rem;
+}
+#pde-painel .placar-jogadores .jog-linha:last-child { margin-bottom: 0; }
+#pde-painel .placar-jogadores .jog-linha .marcador {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: white;
+}
+#pde-painel .placar-jogadores .jog-linha .marcador.x { background: #1E40AF; }
+#pde-painel .placar-jogadores .jog-linha .marcador.o { background: #C2410C; }
+#pde-painel .placar-jogadores .jog-linha .nome { flex: 1; font-weight: 700; color: #1E324A; min-width: 0; word-wrap: break-word; }
+#pde-painel .placar-jogadores .jog-linha .vit {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  background: #FBBF24;
+  color: #92400E;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+}
+#pde-painel .placar-jogadores .jog-linha.vez-dele {
+  outline: 2px solid #1E324A;
+  outline-offset: 2px;
+}
+
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg,#FEF3C7 0%,#FDE68A 100%);
+  border-radius: 10px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 2px solid #92400E;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 38px; height: 38px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #1E324A;
+  line-height: 1.2;
+  min-width: 0;
+  word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #1E324A; font-weight: 700; }
+
+#pde-painel .legenda-modo {
+  background: #FFF9E6;
+  border: 2px solid #FBBF24;
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.72rem;
+  color: #92400E;
+  line-height: 1.4;
+}
+#pde-painel .legenda-modo b { color: #1E324A; }
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(15,23,42,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #1E324A;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal { width: 100px; height: 100px; margin: 0 auto 8px; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #1E324A;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #1E324A; font-size: 0.95rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#B6D752 0%,#84CC16 100%);
+  color: #1E324A; border: 3px solid #4D7C0F;
+  box-shadow: 0 4px 0 #3F6212;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .placar-final {
+  background: #F1F5F9;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0;
+  text-align: left;
+}
+#pde-painel .placar-final h4 { font-family: 'Fredoka',sans-serif; margin: 0 0 6px; color: #1E324A; font-size: 0.95rem; text-align: center; }
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #1E324A;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #1E324A; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+#pde-painel .modal-ajuda .badge-modo {
+  display: inline-block;
+  background: #B6D752;
+  color: #1E324A;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  margin-right: 4px;
+}
+
+#pde-painel .a11y-grupo { background: #E0F2FE; border: 3px solid #1E324A; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #1E324A; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #1E324A; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#1E324A 0%,#0F172A 100%); color: white; border-color: #0F172A; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #1E324A; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#37B1DA 0%,#1E324A 100%); color: white; border-color: #0F172A; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #0F172A; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #1E324A;
+  border: 2px solid #1E324A; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #1E324A; color: white; }
+
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #FBBF24; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #1E324A; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#1E324A,#0F172A); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.mat { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#475569,#1E293B); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #1E324A; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #1E324A; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #E0F2FE; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FBBF24; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #1E324A; }
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 8px clamp(10px, 1.5vw, 18px) 14px; }
+  #pde-painel .lobby-card { padding: 14px; }
+  #pde-painel .area-jogo { padding: 12px 16px; }
+  #pde-painel .painel-info { padding: 10px 12px; }
+  #pde-painel .jogo-grid { grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .modal-conteudo h2 { font-size: 1.5rem; }
+  #pde-painel .modal-conteudo p { font-size: 1rem; }
+  #pde-painel .header h1 { font-size: 1.2rem; }
+  #pde-painel .btn-header { font-size: 0.85rem; padding: 6px 12px; }
+  #pde-painel .btn-comecar { font-size: 1.05rem; padding: 11px 20px; }
+  #pde-painel .tabuleiro { max-width: 460px; }
+}
+@media (min-width: 1440px) {
+  #pde-painel { max-width: 1400px; }
+}
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>🎲 Jogo da Velha Matemático</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Olá! Sou o Calculino! 🔢</strong>
+        <span>Escolha o modo, o adversário e as operações. Vamos pensar enquanto jogamos a velha!</span>
+      </div>
+    </div>
+
+    <div class="secao-titulo">🎮 Modo matemático</div>
+    <div class="modo-grid" id="modo-grid"></div>
+
+    <div class="secao-titulo">🤺 Adversário</div>
+    <div class="adv-grid" id="adv-grid"></div>
+
+    <div class="nivel-area" id="nivel-area">
+      <div class="secao-titulo">🧠 Nível do computador</div>
+      <div class="nivel-grid" id="nivel-grid"></div>
+    </div>
+
+    <div class="jogadores-area" id="jogadores-area">
+      <div class="secao-titulo">👥 Nomes dos jogadores</div>
+      <div class="jogadores-grid" id="jogadores-grid"></div>
+    </div>
+
+    <div class="config-mat">
+      <div class="secao-titulo" style="margin-top:0">🧮 Operações ativas (clique pra ligar/desligar)</div>
+      <div class="ops-grid" id="ops-grid"></div>
+      <div class="secao-titulo">📊 Faixa numérica</div>
+      <div class="faixa-grid" id="faixa-grid"></div>
+    </div>
+
+    <button class="btn-comecar" id="btn-comecar" onclick="comecarJogo()" disabled>🎲 Começar a partida!</button>
+  </div>
+
+  <div id="jogo" class="jogo-grid hidden">
+    <div class="area-jogo">
+      <div class="cab-jogo">
+        <div class="modo-info" id="modo-info-cab">—</div>
+        <div class="vez" id="vez-cab">Vez de: —</div>
+      </div>
+
+      <div id="conta-area"></div>
+
+      <div class="tabuleiro" id="tabuleiro"></div>
+
+      <div id="feedback-area"></div>
+    </div>
+
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Vamos lá!</div>
+      </div>
+      <div class="placar-jogadores" id="placar-jogadores"></div>
+      <div class="info-jogo">
+        <div class="linha"><span class="label">🎮 Modo</span><span class="valor" id="modo-info-side">—</span></div>
+        <div class="linha"><span class="label">🤺 Adversário</span><span class="valor" id="adv-info-side">—</span></div>
+        <div class="linha"><span class="label">🔢 Faixa</span><span class="valor" id="faixa-info-side">—</span></div>
+        <div class="linha"><span class="label">🎯 Rodada</span><span class="valor" id="rodada-info-side">1</span></div>
+      </div>
+      <div class="legenda-modo" id="legenda-modo"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-fim">
+    <div class="modal-conteudo">
+      <svg class="mascote-modal" viewBox="0 0 100 100" id="svg-mascote-fim"></svg>
+      <h2 id="fim-titulo">🎉 Fim de jogo!</h2>
+      <p id="fim-msg">—</p>
+      <div class="placar-final" id="placar-final"></div>
+      <div class="acoes" id="fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🎲 Como brincar com o Calculino</h2>
+      <h3>🎯 Objetivo</h3>
+      <p>Como no jogo da velha clássico, você ganha quando consegue 3 marcas em linha (horizontal, vertical ou diagonal). Mas pra marcar, tem que resolver matemática!</p>
+
+      <h3>🎮 3 modos disponíveis</h3>
+      <ul>
+        <li><span class="badge-modo">A</span><b>Conta na casa:</b> cada casa tem uma operação. Pra marcar X ou O, resolva a conta corretamente. Errou? A vez passa pro outro.</li>
+        <li><span class="badge-modo">B</span><b>Soma alvo:</b> as 9 casas têm números 1-9. O Calculino mostra um número-alvo (ex: 15). Faça 3 em linha cujos números <b>somem</b> o alvo!</li>
+        <li><span class="badge-modo">C</span><b>Filtro de respostas:</b> cada casa tem uma conta com resultado. O Calculino define uma regra (ex: "marque só as casas com resultado PAR"). Errou? A vez passa pro outro.</li>
+      </ul>
+
+      <h3>🤺 Adversários</h3>
+      <ul>
+        <li><b>Computador (Calculino):</b> 3 níveis — Fácil (joga aleatório), Médio (bloqueia jogadas óbvias), Difícil (joga estratégico)</li>
+        <li><b>2 jogadores:</b> revezamento no mesmo dispositivo, com placar acumulado entre rodadas</li>
+      </ul>
+
+      <h3>🧮 Configuração matemática</h3>
+      <p>O professor escolhe quais operações entram em jogo (➕ ➖ ✖️ ➗) e a faixa numérica (até 20, 50, 100 ou 999). Permite adaptar do 1º ao 7º ano.</p>
+
+      <h3>📖 BNCC</h3>
+      <ul>
+        <li>EF01MA06 / EF02MA05 (adição e subtração)</li>
+        <li>EF03MA03 / EF04MA03 (multiplicação e divisão)</li>
+        <li>EF05MA07 (resolver problemas com 4 operações)</li>
+        <li>EF06MA03 (operações com números naturais)</li>
+      </ul>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-ajuda')">Bora jogar!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script id="script-jogo">
+/* ============================================================
+ * JOGO DA VELHA MATEMÁTICO · Portal do Educador NEWPC
+ * Mascote: Calculino (calculadora antropomorfizada)
+ * ============================================================ */
+
+/* MASCOTE CALCULINO - calculadora amarela com olhos no display */
+function svgMascote(expressao = 'normal') {
+  let olhos;
+  if (expressao === 'feliz') {
+    olhos = `
+      <path d="M 36 36 Q 42 32, 48 36" fill="none" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 52 36 Q 58 32, 64 36" fill="none" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round"/>
+    `;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <circle cx="42" cy="38" r="2.8" fill="#0F172A"/>
+      <circle cx="58" cy="38" r="2.8" fill="#0F172A"/>
+    `;
+  } else if (expressao === 'surpresa') {
+    olhos = `
+      <ellipse cx="42" cy="38" rx="4" ry="5" fill="white" stroke="#0F172A" stroke-width="1.5"/>
+      <ellipse cx="58" cy="38" rx="4" ry="5" fill="white" stroke="#0F172A" stroke-width="1.5"/>
+      <circle cx="42" cy="39" r="2.5" fill="#0F172A"/>
+      <circle cx="58" cy="39" r="2.5" fill="#0F172A"/>
+    `;
+  } else {
+    olhos = `
+      <ellipse cx="42" cy="38" rx="3.5" ry="4.5" fill="white" stroke="#0F172A" stroke-width="1"/>
+      <ellipse cx="58" cy="38" rx="3.5" ry="4.5" fill="white" stroke="#0F172A" stroke-width="1"/>
+      <circle cx="42.5" cy="39" r="2.2" fill="#0F172A"/>
+      <circle cx="58.5" cy="39" r="2.2" fill="#0F172A"/>
+      <circle cx="43.5" cy="38" r="0.8" fill="white"/>
+      <circle cx="59.5" cy="38" r="0.8" fill="white"/>
+    `;
+  }
+
+  let boca;
+  if (expressao === 'feliz') {
+    boca = `<path d="M 42 50 Q 50 56, 58 50" fill="#FB7185" stroke="#9F1239" stroke-width="1.2"/>`;
+  } else if (expressao === 'pensando') {
+    boca = `<line x1="46" y1="50" x2="54" y2="50" stroke="#0F172A" stroke-width="2" stroke-linecap="round"/>`;
+  } else if (expressao === 'surpresa') {
+    boca = `<ellipse cx="50" cy="50" rx="3" ry="4" fill="#9F1239"/>`;
+  } else {
+    boca = `<path d="M 44 48 Q 50 52, 56 48" fill="none" stroke="#0F172A" stroke-width="2" stroke-linecap="round"/>`;
+  }
+
+  return `
+    <!-- Sombra -->
+    <ellipse cx="50" cy="93" rx="30" ry="2.5" fill="rgba(0,0,0,0.18)"/>
+    <!-- Pés -->
+    <rect x="32" y="86" width="10" height="5" rx="2" fill="#1E324A"/>
+    <rect x="58" y="86" width="10" height="5" rx="2" fill="#1E324A"/>
+    <!-- Corpo: calculadora amarela retangular -->
+    <rect x="20" y="20" width="60" height="70" rx="10" fill="#FBBF24" stroke="#92400E" stroke-width="3"/>
+    <!-- Display (rosto) -->
+    <rect x="26" y="26" width="48" height="28" rx="5" fill="#1E324A" stroke="#0F172A" stroke-width="2"/>
+    <!-- Brilho no display -->
+    <rect x="28" y="28" width="20" height="3" rx="1" fill="#475569" opacity="0.6"/>
+    <!-- Display interno (rosto) -->
+    <rect x="29" y="30" width="42" height="22" rx="3" fill="#B6D752"/>
+    <!-- Olhos -->
+    ${olhos}
+    <!-- Boca -->
+    ${boca}
+    <!-- Teclas (4 fileiras de 4) -->
+    <!-- Linha 1 -->
+    <rect x="26" y="58" width="9" height="6" rx="1.5" fill="#1E324A"/>
+    <rect x="37" y="58" width="9" height="6" rx="1.5" fill="#1E324A"/>
+    <rect x="48" y="58" width="9" height="6" rx="1.5" fill="#1E324A"/>
+    <rect x="59" y="58" width="15" height="6" rx="1.5" fill="#DC2626"/>
+    <text x="30.5" y="63" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">7</text>
+    <text x="41.5" y="63" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">8</text>
+    <text x="52.5" y="63" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">9</text>
+    <text x="66.5" y="63" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">÷</text>
+    <!-- Linha 2 -->
+    <rect x="26" y="66" width="9" height="6" rx="1.5" fill="#1E324A"/>
+    <rect x="37" y="66" width="9" height="6" rx="1.5" fill="#1E324A"/>
+    <rect x="48" y="66" width="9" height="6" rx="1.5" fill="#1E324A"/>
+    <rect x="59" y="66" width="15" height="6" rx="1.5" fill="#F59E0B"/>
+    <text x="30.5" y="71" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">4</text>
+    <text x="41.5" y="71" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">5</text>
+    <text x="52.5" y="71" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">6</text>
+    <text x="66.5" y="71" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">×</text>
+    <!-- Linha 3 -->
+    <rect x="26" y="74" width="9" height="6" rx="1.5" fill="#1E324A"/>
+    <rect x="37" y="74" width="9" height="6" rx="1.5" fill="#1E324A"/>
+    <rect x="48" y="74" width="9" height="6" rx="1.5" fill="#1E324A"/>
+    <rect x="59" y="74" width="15" height="6" rx="1.5" fill="#F59E0B"/>
+    <text x="30.5" y="79" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">1</text>
+    <text x="41.5" y="79" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">2</text>
+    <text x="52.5" y="79" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">3</text>
+    <text x="66.5" y="79" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">−</text>
+    <!-- Linha 4 -->
+    <rect x="26" y="82" width="20" height="6" rx="1.5" fill="#1E324A"/>
+    <rect x="48" y="82" width="9" height="6" rx="1.5" fill="#1E324A"/>
+    <rect x="59" y="82" width="15" height="6" rx="1.5" fill="#16A34A"/>
+    <text x="36" y="87" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">0</text>
+    <text x="52.5" y="87" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">.</text>
+    <text x="66.5" y="87" font-family="Baloo 2,sans-serif" font-weight="800" font-size="5" fill="white" text-anchor="middle">=</text>
+    <!-- Bracinhos finos -->
+    <ellipse cx="14" cy="50" rx="4" ry="9" fill="#FBBF24" stroke="#92400E" stroke-width="1.5" transform="rotate(-15 14 50)"/>
+    <ellipse cx="86" cy="50" rx="4" ry="9" fill="#FBBF24" stroke="#92400E" stroke-width="1.5" transform="rotate(15 86 50)"/>
+    <!-- Antena com bolinha (vibe nerd/robô) -->
+    <line x1="50" y1="20" x2="50" y2="14" stroke="#92400E" stroke-width="2"/>
+    <circle cx="50" cy="12" r="3" fill="#B6D752" stroke="#92400E" stroke-width="1.5"/>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* CONFIGURAÇÕES */
+const MODOS = {
+  A: { letra: 'A', titulo: 'Conta na casa', desc: 'Acertou a conta = marcou X ou O na casa' },
+  B: { letra: 'B', titulo: 'Soma alvo', desc: 'Casas 1-9. Faça 3 em linha que somem o alvo' },
+  C: { letra: 'C', titulo: 'Filtro de regra', desc: 'Marque só casas cujo resultado obedece à regra' }
+};
+
+const ADVERSARIOS = {
+  computador: { emoji: '🤖', nome: 'Computador' },
+  dois:       { emoji: '👥', nome: '2 jogadores' }
+};
+
+const NIVEIS_IA = {
+  facil:    { emoji: '🌱', nome: 'Fácil' },
+  medio:    { emoji: '🌳', nome: 'Médio' },
+  dificil:  { emoji: '🌲', nome: 'Difícil' }
+};
+
+const OPERACOES_INFO = {
+  '+': { simbolo: '+', nome: 'Adição' },
+  '-': { simbolo: '−', nome: 'Subtração' },
+  '×': { simbolo: '×', nome: 'Multiplicação' },
+  '÷': { simbolo: '÷', nome: 'Divisão' }
+};
+
+const FAIXAS = [
+  { id: 20,  label: 'Até 20' },
+  { id: 50,  label: 'Até 50' },
+  { id: 100, label: 'Até 100' },
+  { id: 999, label: 'Até 999' }
+];
+
+const ELOGIOS = ['Mandou bem!', 'Show!', 'Boa essa!', 'Excelente!', 'Calculino aprova!'];
+const INCENTIVOS = ['Tente de novo!', 'Quase!', 'Calma e revise!', 'Concentre-se!'];
+
+const STATE = {
+  modo: null,       // 'A', 'B' ou 'C'
+  adversario: null, // 'computador' | 'dois'
+  nivelIA: 'medio',
+  nomes: ['Jogador 1', 'Jogador 2'],
+  ops: { '+': true, '-': true, '×': false, '÷': false }, // operações ativas
+  faixa: 20,
+  vitorias: [0, 0], // [jogador 0 (X), jogador 1 (O ou IA)]
+  rodada: 1,
+  partida: {
+    ativa: false,
+    tabuleiro: [null, null, null, null, null, null, null, null, null], // 'X' | 'O' | null
+    contasNasCasas: [],   // modo A/C: [{esq, op, dir, resp}]; modo B: [1..9]
+    regraC: null,          // modo C: {tipo: 'par'|'impar'|'maior'|'menor', valor}
+    alvoB: null,           // modo B: número alvo
+    vez: 0,                // 0 = X (jogador 1) | 1 = O (jogador 2/IA)
+    casaSelecionada: null, // modo A: índice da casa "tentando marcar"
+    aguardandoIA: false,
+    vencedor: null,
+    linhaVencedora: null,
+    bloqueado: false
+  }
+};
+
+const LINHAS_VITORIA = [
+  [0,1,2], [3,4,5], [6,7,8],  // horizontais
+  [0,3,6], [1,4,7], [2,5,8],  // verticais
+  [0,4,8], [2,4,6]            // diagonais
+];
+
+/* PERSISTÊNCIA */
+function salvar() {
+  try {
+    localStorage.setItem('pde_velha_dados', JSON.stringify({
+      modo: STATE.modo,
+      adversario: STATE.adversario,
+      nivelIA: STATE.nivelIA,
+      nomes: STATE.nomes,
+      ops: STATE.ops,
+      faixa: STATE.faixa
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_velha_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.modo) STATE.modo = d.modo;
+    if (d.adversario) STATE.adversario = d.adversario;
+    if (d.nivelIA) STATE.nivelIA = d.nivelIA;
+    if (Array.isArray(d.nomes)) STATE.nomes = d.nomes;
+    if (d.ops) STATE.ops = d.ops;
+    if (d.faixa) STATE.faixa = d.faixa;
+  } catch (e) {}
+}
+
+function elogio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivo() { return INCENTIVOS[Math.floor(Math.random() * INCENTIVOS.length)]; }
+
+function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* GERAR UMA CONTA com as ops ligadas e faixa */
+function gerarConta() {
+  const opsAtivas = Object.keys(STATE.ops).filter(k => STATE.ops[k]);
+  if (opsAtivas.length === 0) {
+    // fallback: forçar soma
+    return { esq: 1, op: '+', dir: 1, resp: 2 };
+  }
+  const op = opsAtivas[Math.floor(Math.random() * opsAtivas.length)];
+  const max = STATE.faixa;
+  let esq, dir, resp;
+  if (op === '+') {
+    // Soma resultando em <= faixa
+    esq = rnd(1, Math.max(2, Math.floor(max / 2)));
+    dir = rnd(1, max - esq);
+    resp = esq + dir;
+  } else if (op === '-') {
+    // Subtração resultado >= 0
+    esq = rnd(2, max);
+    dir = rnd(1, esq);
+    resp = esq - dir;
+  } else if (op === '×') {
+    // Multiplicação resultado <= faixa
+    if (max <= 20)        { esq = rnd(1, 5); dir = rnd(1, 4); }
+    else if (max <= 50)   { esq = rnd(1, 7); dir = rnd(2, 7); }
+    else if (max <= 100)  { esq = rnd(2, 10); dir = rnd(2, 10); }
+    else                  { esq = rnd(2, 15); dir = rnd(2, 30); }
+    resp = esq * dir;
+    if (resp > max) { return gerarConta(); }
+  } else if (op === '÷') {
+    // Divisão exata
+    if (max <= 20)        { dir = rnd(2, 5); esq = dir * rnd(1, 4); }
+    else if (max <= 50)   { dir = rnd(2, 9); esq = dir * rnd(2, Math.floor(max/dir)); }
+    else if (max <= 100)  { dir = rnd(2, 12); esq = dir * rnd(2, Math.floor(max/dir)); }
+    else                  { dir = rnd(2, 20); esq = dir * rnd(2, Math.floor(max/dir)); }
+    resp = esq / dir;
+    if (esq > max || !Number.isInteger(resp) || resp <= 0) { return gerarConta(); }
+  }
+  return { esq, op, dir, resp };
+}
+
+/* LOBBY */
+function renderLobby() {
+  // Modos
+  const modoCont = document.getElementById('modo-grid');
+  modoCont.innerHTML = '';
+  Object.entries(MODOS).forEach(([key, m]) => {
+    const card = document.createElement('div');
+    card.className = 'modo-card' + (STATE.modo === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <div class="modo-letra">${m.letra}</div>
+      <div class="modo-corpo">
+        <div class="modo-titulo">${m.titulo}</div>
+        <div class="modo-desc">${m.desc}</div>
+      </div>
+    `;
+    card.onclick = () => { STATE.modo = key; salvar(); renderLobby(); };
+    modoCont.appendChild(card);
+  });
+
+  // Adversário
+  const advCont = document.getElementById('adv-grid');
+  advCont.innerHTML = '';
+  Object.entries(ADVERSARIOS).forEach(([key, a]) => {
+    const card = document.createElement('div');
+    card.className = 'adv-card' + (STATE.adversario === key ? ' selecionado' : '');
+    card.innerHTML = `<span class="adv-emoji">${a.emoji}</span><span class="adv-nome">${a.nome}</span>`;
+    card.onclick = () => { STATE.adversario = key; salvar(); renderLobby(); };
+    advCont.appendChild(card);
+  });
+
+  // Nível IA (só se computador)
+  const nivelArea = document.getElementById('nivel-area');
+  if (STATE.adversario === 'computador') {
+    nivelArea.classList.add('ativo');
+    const nivCont = document.getElementById('nivel-grid');
+    nivCont.innerHTML = '';
+    Object.entries(NIVEIS_IA).forEach(([key, n]) => {
+      const card = document.createElement('div');
+      card.className = 'nivel-card' + (STATE.nivelIA === key ? ' selecionado' : '');
+      card.innerHTML = `<span class="niv-emoji">${n.emoji}</span>${n.nome}`;
+      card.onclick = () => { STATE.nivelIA = key; salvar(); renderLobby(); };
+      nivCont.appendChild(card);
+    });
+  } else {
+    nivelArea.classList.remove('ativo');
+  }
+
+  // Jogadores (só se 2 jogadores)
+  const jogArea = document.getElementById('jogadores-area');
+  if (STATE.adversario === 'dois') {
+    jogArea.classList.add('ativo');
+    const grid = document.getElementById('jogadores-grid');
+    grid.innerHTML = '';
+    for (let i = 0; i < 2; i++) {
+      const l = document.createElement('label');
+      l.textContent = (i === 0 ? '❌ X:' : '⭕ O:');
+      const inp = document.createElement('input');
+      inp.type = 'text'; inp.maxLength = 20;
+      inp.value = STATE.nomes[i] || `Jogador ${i+1}`;
+      inp.oninput = (e) => { STATE.nomes[i] = e.target.value; salvar(); };
+      grid.appendChild(l);
+      grid.appendChild(inp);
+    }
+  } else {
+    jogArea.classList.remove('ativo');
+  }
+
+  // Operações
+  const opsCont = document.getElementById('ops-grid');
+  opsCont.innerHTML = '';
+  Object.entries(OPERACOES_INFO).forEach(([op, info]) => {
+    const card = document.createElement('div');
+    card.className = 'op-card' + (STATE.ops[op] ? ' ligada' : '');
+    card.innerHTML = `<span class="op-simbolo">${info.simbolo}</span><span class="op-nome">${info.nome}</span>`;
+    card.onclick = () => {
+      // Pelo menos 1 operação tem que ficar ligada
+      const ligadas = Object.values(STATE.ops).filter(v => v).length;
+      if (STATE.ops[op] && ligadas <= 1) return; // não pode desligar a última
+      STATE.ops[op] = !STATE.ops[op];
+      salvar(); renderLobby();
+    };
+    opsCont.appendChild(card);
+  });
+
+  // Faixa
+  const faixaCont = document.getElementById('faixa-grid');
+  faixaCont.innerHTML = '';
+  FAIXAS.forEach(f => {
+    const card = document.createElement('div');
+    card.className = 'faixa-card' + (STATE.faixa === f.id ? ' selecionado' : '');
+    card.textContent = f.label;
+    card.onclick = () => { STATE.faixa = f.id; salvar(); renderLobby(); };
+    faixaCont.appendChild(card);
+  });
+
+  // Botão começar
+  const btn = document.getElementById('btn-comecar');
+  const podeComecar = STATE.modo && STATE.adversario;
+  // Modo B ignora operações (usa números 1-9 direto), mas modos A e C precisam
+  const opsLigadas = Object.values(STATE.ops).filter(v => v).length;
+  if (podeComecar && (STATE.modo === 'B' || opsLigadas >= 1)) {
+    btn.disabled = false;
+    if (STATE.modo === 'B') btn.textContent = '🎲 Começar (modo B usa números 1-9)';
+    else btn.textContent = `🎲 Modo ${STATE.modo} · ${ADVERSARIOS[STATE.adversario].nome}`;
+  } else {
+    btn.disabled = true;
+    btn.textContent = '🎲 Escolha modo e adversário';
+  }
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+/* INICIAR PARTIDA */
+function comecarJogo() {
+  if (!STATE.modo || !STATE.adversario) return;
+  prepararNovaRodada();
+
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('jogo').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+
+  document.getElementById('modo-info-cab').textContent = `Modo ${STATE.modo} · ${MODOS[STATE.modo].titulo}`;
+  document.getElementById('modo-info-side').textContent = `Modo ${STATE.modo}`;
+  document.getElementById('adv-info-side').textContent =
+    STATE.adversario === 'computador'
+      ? `🤖 IA ${NIVEIS_IA[STATE.nivelIA].nome}`
+      : '👥 2 jogadores';
+  document.getElementById('faixa-info-side').textContent = `0 a ${STATE.faixa}`;
+  atualizarPlacar();
+}
+
+function prepararNovaRodada() {
+  STATE.partida.tabuleiro = [null, null, null, null, null, null, null, null, null];
+  STATE.partida.contasNasCasas = [];
+  STATE.partida.regraC = null;
+  STATE.partida.alvoB = null;
+  STATE.partida.vez = STATE.rodada % 2 === 1 ? 0 : 1; // alterna quem começa
+  STATE.partida.casaSelecionada = null;
+  STATE.partida.aguardandoIA = false;
+  STATE.partida.vencedor = null;
+  STATE.partida.linhaVencedora = null;
+  STATE.partida.bloqueado = false;
+  STATE.partida.ativa = true;
+
+  document.getElementById('rodada-info-side').textContent = STATE.rodada;
+
+  // Setup específico por modo
+  if (STATE.modo === 'A') {
+    // Gera 9 contas, uma por casa
+    for (let i = 0; i < 9; i++) STATE.partida.contasNasCasas.push(gerarConta());
+    document.getElementById('legenda-modo').innerHTML = `<b>Modo A:</b> clique numa casa, resolva a conta, acertou marca X/O. Errou? Vez passa pro outro.`;
+  } else if (STATE.modo === 'B') {
+    STATE.partida.contasNasCasas = [1,2,3,4,5,6,7,8,9];
+    // Alvo aleatório plausível (entre 6 e 24, evitando alvos impossíveis)
+    const alvosPossiveis = [];
+    for (let s = 6; s <= 24; s++) alvosPossiveis.push(s);
+    // Mas alguns são difíceis (1-2-3=6 só uma combinação, 7-8-9=24 só uma).
+    // Equilibrar pegando do meio
+    STATE.partida.alvoB = 9 + Math.floor(Math.random() * 12); // entre 9 e 20
+    document.getElementById('legenda-modo').innerHTML = `<b>Modo B:</b> as casas têm números 1-9. Faça 3 em linha cujos números <b>somem ${STATE.partida.alvoB}</b>!`;
+  } else if (STATE.modo === 'C') {
+    // Gera 9 contas + uma regra
+    for (let i = 0; i < 9; i++) STATE.partida.contasNasCasas.push(gerarConta());
+    const regras = [
+      { tipo: 'par',    label: 'PAR (terminam em 0, 2, 4, 6, 8)' },
+      { tipo: 'impar',  label: 'ÍMPAR (terminam em 1, 3, 5, 7, 9)' }
+    ];
+    if (STATE.faixa >= 50) {
+      regras.push({ tipo: 'maior', valor: Math.floor(STATE.faixa/3), label: `MAIORES que ${Math.floor(STATE.faixa/3)}` });
+      regras.push({ tipo: 'menor', valor: Math.floor(STATE.faixa/3), label: `MENORES que ${Math.floor(STATE.faixa/3)}` });
+    }
+    STATE.partida.regraC = regras[Math.floor(Math.random() * regras.length)];
+    // Garantir que pelo menos 3 contas obedecem à regra (senão fica injusto)
+    let tentativas = 0;
+    while (tentativas < 5 && contagemContasValidas() < 4) {
+      STATE.partida.contasNasCasas = [];
+      for (let i = 0; i < 9; i++) STATE.partida.contasNasCasas.push(gerarConta());
+      tentativas++;
+    }
+    document.getElementById('legenda-modo').innerHTML = `<b>Modo C:</b> marque só as casas cujo <b>resultado da conta</b> obedeça à regra: <b>${STATE.partida.regraC.label}</b>. Errou? Vez passa pro outro.`;
+  }
+
+  renderConta();
+  renderTabuleiro();
+  atualizarVez();
+  renderMascote('svg-mascote-painel', 'normal');
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Calculino:</b> Boa partida!`;
+
+  // Se IA começa, deixa ela jogar
+  if (STATE.adversario === 'computador' && STATE.partida.vez === 1 && !STATE.partida.bloqueado) {
+    setTimeout(() => jogarIA(), 600);
+  }
+}
+
+function contagemContasValidas() {
+  if (!STATE.partida.regraC) return 9;
+  return STATE.partida.contasNasCasas.filter(c => respeitaRegra(c.resp, STATE.partida.regraC)).length;
+}
+
+function respeitaRegra(valor, regra) {
+  if (regra.tipo === 'par') return valor % 2 === 0;
+  if (regra.tipo === 'impar') return valor % 2 !== 0;
+  if (regra.tipo === 'maior') return valor > regra.valor;
+  if (regra.tipo === 'menor') return valor < regra.valor;
+  return true;
+}
+
+function nomeJogador(idx) {
+  if (idx === 0) return STATE.adversario === 'dois' ? STATE.nomes[0] : 'Você';
+  if (idx === 1) return STATE.adversario === 'dois' ? STATE.nomes[1] : `Calculino ${NIVEIS_IA[STATE.nivelIA].nome}`;
+  return '—';
+}
+
+function atualizarVez() {
+  const vez = STATE.partida.vez;
+  const cab = document.getElementById('vez-cab');
+  cab.className = 'vez ' + (vez === 0 ? 'x' : 'o');
+  cab.textContent = `Vez de: ${nomeJogador(vez)} (${vez === 0 ? '❌' : '⭕'})`;
+}
+
+function atualizarPlacar() {
+  const cont = document.getElementById('placar-jogadores');
+  cont.innerHTML = '';
+  for (let i = 0; i < 2; i++) {
+    const linha = document.createElement('div');
+    linha.className = 'jog-linha' + (STATE.partida.ativa && STATE.partida.vez === i ? ' vez-dele' : '');
+    linha.innerHTML = `
+      <div class="marcador ${i === 0 ? 'x' : 'o'}">${i === 0 ? 'X' : 'O'}</div>
+      <div class="nome">${nomeJogador(i)}</div>
+      <div class="vit">${STATE.vitorias[i]} vit</div>
+    `;
+    cont.appendChild(linha);
+  }
+}
+
+/* RENDER ÁREA DE CONTA ATIVA (modos A e C) */
+function renderConta() {
+  const cont = document.getElementById('conta-area');
+  if (STATE.modo === 'B') {
+    cont.innerHTML = `
+      <div class="alvo-info">
+        <div class="alvo-label">🎯 Forme uma linha que some:</div>
+        <div class="alvo-numero">${STATE.partida.alvoB}</div>
+        <div class="alvo-instrucao">Clique numa casa pra marcar (X ou O conforme sua vez)</div>
+      </div>
+    `;
+    return;
+  }
+  if (STATE.modo === 'C') {
+    cont.innerHTML = `
+      <div class="alvo-info" style="background:linear-gradient(135deg,#FEF3C7 0%,#FBBF24 100%); border-color:#92400E;">
+        <div class="alvo-label" style="color:#92400E;">🎯 Regra desta rodada:</div>
+        <div class="alvo-numero" style="color:#92400E; font-size:1.3rem;">${STATE.partida.regraC.label}</div>
+        <div class="alvo-instrucao" style="color:#475569;">Clique numa casa cujo <b>resultado da conta</b> obedeça à regra.</div>
+      </div>
+    `;
+    return;
+  }
+  // Modo A: a conta da casa selecionada aparece aqui
+  if (STATE.partida.casaSelecionada !== null) {
+    const c = STATE.partida.contasNasCasas[STATE.partida.casaSelecionada];
+    cont.innerHTML = `
+      <div class="conta-ativa">
+        <div class="conta-texto">${c.esq} ${c.op} ${c.dir} = ?</div>
+        <div class="conta-instrucao">Resolva pra marcar esta casa!</div>
+        <div class="input-area">
+          <input type="number" class="input-resposta" id="input-resp" inputmode="numeric" autocomplete="off">
+          <button class="btn-conta" onclick="confirmarResposta()">✓ Confirmar</button>
+          <button class="btn-secundario" onclick="cancelarSelecao()" style="padding:6px 12px;">Cancelar</button>
+        </div>
+      </div>
+    `;
+    setTimeout(() => {
+      const inp = document.getElementById('input-resp');
+      if (inp) {
+        inp.focus();
+        inp.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); confirmarResposta(); } };
+      }
+    }, 50);
+  } else {
+    cont.innerHTML = `
+      <div class="alvo-info" style="background:linear-gradient(135deg,#E0F2FE 0%,#BAE6FD 100%);">
+        <div class="alvo-label">📝 Clique numa casa pra ver a conta!</div>
+        <div class="alvo-instrucao">Cada casa tem uma operação. Resolva pra marcar.</div>
+      </div>
+    `;
+  }
+}
+
+/* RENDER TABULEIRO */
+function renderTabuleiro() {
+  const tab = document.getElementById('tabuleiro');
+  tab.innerHTML = '';
+  for (let i = 0; i < 9; i++) {
+    const casa = document.createElement('div');
+    casa.className = 'casa';
+    const marca = STATE.partida.tabuleiro[i];
+
+    if (STATE.modo === 'A') {
+      casa.classList.add('casa-conta');
+      const c = STATE.partida.contasNasCasas[i];
+      if (marca) {
+        casa.classList.add('preenchida', marca.toLowerCase());
+        casa.textContent = marca;
+      } else {
+        casa.innerHTML = `
+          <div class="conta-mini">${c.esq} ${c.op} ${c.dir}</div>
+          <div class="resposta">= ?</div>
+        `;
+      }
+      if (STATE.partida.casaSelecionada === i) casa.classList.add('selecionada');
+      if (STATE.partida.aguardandoIA && !marca) casa.classList.add('aguardando');
+    } else if (STATE.modo === 'B') {
+      casa.classList.add('casa-numero');
+      if (marca) {
+        casa.classList.add('preenchida', marca.toLowerCase());
+        casa.textContent = marca;
+      } else {
+        casa.textContent = STATE.partida.contasNasCasas[i];
+      }
+      if (STATE.partida.aguardandoIA && !marca) casa.classList.add('aguardando');
+    } else if (STATE.modo === 'C') {
+      casa.classList.add('casa-conta');
+      const c = STATE.partida.contasNasCasas[i];
+      if (marca) {
+        casa.classList.add('preenchida', marca.toLowerCase());
+        casa.textContent = marca;
+      } else {
+        casa.innerHTML = `
+          <div class="conta-mini">${c.esq} ${c.op} ${c.dir}</div>
+          <div class="resposta">= ${c.resp}</div>
+        `;
+      }
+      if (STATE.partida.aguardandoIA && !marca) casa.classList.add('aguardando');
+    }
+
+    if (STATE.partida.linhaVencedora && STATE.partida.linhaVencedora.includes(i)) {
+      casa.classList.add('linha-vencedora');
+    }
+
+    casa.dataset.idx = i;
+    casa.onclick = () => clicarCasa(i);
+    tab.appendChild(casa);
+  }
+}
+
+/* CLICAR EM CASA */
+function clicarCasa(idx) {
+  if (STATE.partida.bloqueado || STATE.partida.aguardandoIA) return;
+  if (STATE.partida.tabuleiro[idx]) return;
+  if (STATE.adversario === 'computador' && STATE.partida.vez === 1) return;
+
+  if (STATE.modo === 'A') {
+    // Mostra a conta pra resolver
+    STATE.partida.casaSelecionada = idx;
+    renderConta();
+    renderTabuleiro();
+    return;
+  }
+
+  if (STATE.modo === 'B') {
+    // Modo B: clique direto marca
+    fazerJogada(idx);
+    return;
+  }
+
+  if (STATE.modo === 'C') {
+    // Modo C: verifica se o resultado obedece à regra
+    const c = STATE.partida.contasNasCasas[idx];
+    if (respeitaRegra(c.resp, STATE.partida.regraC)) {
+      fazerJogada(idx);
+      mostrarFeedback('acerto', `✅ ${c.esq} ${c.op} ${c.dir} = ${c.resp} · obedece à regra!`);
+    } else {
+      // Errou: vez passa, mas a casa fica destacada como errada
+      const casaEl = document.querySelector(`.casa[data-idx="${idx}"]`);
+      if (casaEl) {
+        casaEl.classList.add('errada-c');
+        setTimeout(() => casaEl.classList.remove('errada-c'), 600);
+      }
+      tocarSom('erro');
+      mostrarFeedback('erro', `❌ ${c.esq} ${c.op} ${c.dir} = ${c.resp} · não obedece à regra! Vez passa.`);
+      passarVez();
+    }
+  }
+}
+
+/* MODO A: CONFIRMAR RESPOSTA À CONTA */
+function confirmarResposta() {
+  if (STATE.partida.casaSelecionada === null) return;
+  const inp = document.getElementById('input-resp');
+  if (!inp) return;
+  const valor = parseInt(inp.value, 10);
+  if (isNaN(valor)) {
+    mostrarFeedback('erro', 'Digite um número.');
+    return;
+  }
+  const idx = STATE.partida.casaSelecionada;
+  const c = STATE.partida.contasNasCasas[idx];
+  if (valor === c.resp) {
+    // Acertou
+    STATE.partida.casaSelecionada = null;
+    fazerJogada(idx);
+    mostrarFeedback('acerto', `✅ ${c.esq} ${c.op} ${c.dir} = ${c.resp} · correto!`);
+  } else {
+    // Errou: vez passa
+    STATE.partida.casaSelecionada = null;
+    renderConta();
+    tocarSom('erro');
+    mostrarFeedback('erro', `❌ ${c.esq} ${c.op} ${c.dir} = ${c.resp}, não ${valor}. Vez passa.`);
+    passarVez();
+  }
+}
+
+function cancelarSelecao() {
+  STATE.partida.casaSelecionada = null;
+  renderConta();
+  renderTabuleiro();
+}
+
+/* FAZER JOGADA EFETIVA - marca X ou O na casa */
+function fazerJogada(idx) {
+  const marca = STATE.partida.vez === 0 ? 'X' : 'O';
+  STATE.partida.tabuleiro[idx] = marca;
+  tocarSom('marca');
+  renderConta();
+  renderTabuleiro();
+
+  // Checar vitória
+  const venc = verificarVitoria();
+  if (venc) {
+    STATE.partida.vencedor = venc.jogador;
+    STATE.partida.linhaVencedora = venc.linha;
+    STATE.partida.bloqueado = true;
+    STATE.partida.ativa = false;
+    STATE.vitorias[venc.jogador]++;
+    renderTabuleiro();
+    atualizarPlacar();
+    setTimeout(() => terminouRodada('vitoria'), 700);
+    return;
+  }
+
+  // Checar empate
+  if (STATE.partida.tabuleiro.every(c => c !== null)) {
+    STATE.partida.vencedor = null;
+    STATE.partida.bloqueado = true;
+    STATE.partida.ativa = false;
+    setTimeout(() => terminouRodada('empate'), 500);
+    return;
+  }
+
+  // Passa vez normalmente
+  passarVez();
+}
+
+function passarVez() {
+  STATE.partida.vez = 1 - STATE.partida.vez;
+  atualizarVez();
+  atualizarPlacar();
+  renderConta();
+  renderTabuleiro();
+
+  // Se virou pra IA, ela joga
+  if (STATE.adversario === 'computador' && STATE.partida.vez === 1 && STATE.partida.ativa) {
+    setTimeout(() => jogarIA(), 700);
+  }
+}
+
+/* VERIFICAR VITÓRIA */
+function verificarVitoria() {
+  if (STATE.modo === 'B') {
+    // Modo B: vitória = 3 em linha cuja soma == alvoB E todas marcadas pelo mesmo jogador
+    for (const linha of LINHAS_VITORIA) {
+      const [a, b, c] = linha;
+      const ma = STATE.partida.tabuleiro[a];
+      const mb = STATE.partida.tabuleiro[b];
+      const mc = STATE.partida.tabuleiro[c];
+      if (ma && mb && mc && ma === mb && mb === mc) {
+        const soma = STATE.partida.contasNasCasas[a] + STATE.partida.contasNasCasas[b] + STATE.partida.contasNasCasas[c];
+        if (soma === STATE.partida.alvoB) {
+          return { jogador: ma === 'X' ? 0 : 1, linha };
+        }
+      }
+    }
+    return null;
+  }
+  // Modos A e C: vitória clássica (3 em linha do mesmo jogador)
+  for (const linha of LINHAS_VITORIA) {
+    const [a, b, c] = linha;
+    const ma = STATE.partida.tabuleiro[a];
+    if (ma && ma === STATE.partida.tabuleiro[b] && ma === STATE.partida.tabuleiro[c]) {
+      return { jogador: ma === 'X' ? 0 : 1, linha };
+    }
+  }
+  return null;
+}
+
+/* FEEDBACK */
+function mostrarFeedback(tipo, texto) {
+  const cont = document.getElementById('feedback-area');
+  cont.innerHTML = `<div class="feedback ${tipo}">${texto}</div>`;
+  setTimeout(() => {
+    if (cont.innerHTML.includes(texto)) cont.innerHTML = '';
+  }, 2500);
+}
+
+/* FIM DE RODADA */
+function terminouRodada(tipo) {
+  let titulo, msg;
+  if (tipo === 'vitoria') {
+    const venc = STATE.partida.vencedor;
+    titulo = `🏆 ${nomeJogador(venc)} venceu!`;
+    msg = `Marcou 3 em linha · ${venc === 0 ? '❌' : '⭕'}`;
+    if (venc === 0) criarConfetes(); // só celebra se o "humano X" venceu (motivação)
+    else if (STATE.adversario === 'dois') criarConfetes(); // 2 jogadores: celebra qualquer vitória humana
+    renderMascote('svg-mascote-fim', venc === 0 || STATE.adversario === 'dois' ? 'feliz' : 'pensando');
+  } else {
+    titulo = '🤝 Empate!';
+    msg = 'Ninguém fez 3 em linha. Vamos pra próxima!';
+    renderMascote('svg-mascote-fim', 'normal');
+  }
+
+  document.getElementById('fim-titulo').textContent = titulo;
+  document.getElementById('fim-msg').textContent = msg;
+
+  // Placar
+  let pl = '<h4>📊 Placar geral</h4>';
+  for (let i = 0; i < 2; i++) {
+    pl += `<div class="jog-linha">
+      <div class="marcador ${i === 0 ? 'x' : 'o'}">${i === 0 ? 'X' : 'O'}</div>
+      <div class="nome">${nomeJogador(i)}</div>
+      <div class="vit">${STATE.vitorias[i]} vitórias</div>
+    </div>`;
+  }
+  document.getElementById('placar-final').innerHTML = pl;
+
+  // Ações
+  const acoes = document.getElementById('fim-acoes');
+  acoes.innerHTML = '';
+  const btnPlay = document.createElement('button');
+  btnPlay.className = 'btn-confirmar';
+  btnPlay.textContent = '↻ Próxima rodada';
+  btnPlay.onclick = () => {
+    fecharModal('modal-fim');
+    STATE.rodada++;
+    prepararNovaRodada();
+    atualizarPlacar();
+  };
+  acoes.appendChild(btnPlay);
+  const btnEnd = document.createElement('button');
+  btnEnd.className = 'btn-cancelar';
+  btnEnd.textContent = '🏠 Encerrar partida';
+  btnEnd.onclick = () => {
+    fecharModal('modal-fim');
+    voltarLobby();
+  };
+  acoes.appendChild(btnEnd);
+
+  document.getElementById('modal-fim').classList.add('aberto');
+}
+
+/* ===== IA ===== */
+function jogarIA() {
+  if (!STATE.partida.ativa || STATE.partida.vez !== 1) return;
+  STATE.partida.aguardandoIA = true;
+  renderTabuleiro();
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Calculino:</b> Pensando...`;
+  renderMascote('svg-mascote-painel', 'pensando');
+
+  const delay = 600 + Math.random() * 700; // simula "pensando"
+  setTimeout(() => {
+    STATE.partida.aguardandoIA = false;
+    let idx;
+    if (STATE.nivelIA === 'facil')      idx = iaJogadaFacil();
+    else if (STATE.nivelIA === 'medio') idx = iaJogadaMedia();
+    else                                  idx = iaJogadaDificil();
+
+    if (idx === null || idx === undefined) {
+      // Sem casas: empate
+      passarVez();
+      return;
+    }
+
+    // Pra modos A e C, IA "acerta sempre" (não tem sentido errar)
+    // No modo A só não joga uma casa errada
+    fazerJogada(idx);
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Calculino:</b> Sua vez!`;
+    renderMascote('svg-mascote-painel', 'normal');
+  }, delay);
+}
+
+function casasLivres() {
+  const livres = [];
+  for (let i = 0; i < 9; i++) if (!STATE.partida.tabuleiro[i]) livres.push(i);
+  return livres;
+}
+
+/* No modo C, a IA só pode jogar em casas que respeitam a regra */
+function casasJogaveisIA() {
+  const livres = casasLivres();
+  if (STATE.modo === 'C' && STATE.partida.regraC) {
+    return livres.filter(i => respeitaRegra(STATE.partida.contasNasCasas[i].resp, STATE.partida.regraC));
+  }
+  return livres;
+}
+
+function iaJogadaFacil() {
+  const livres = casasJogaveisIA();
+  if (livres.length === 0) {
+    // No modo C, se não há casas válidas, joga em qualquer livre (vai errar = passa vez)
+    const todasLivres = casasLivres();
+    return todasLivres.length > 0 ? todasLivres[Math.floor(Math.random() * todasLivres.length)] : null;
+  }
+  return livres[Math.floor(Math.random() * livres.length)];
+}
+
+function iaJogadaMedia() {
+  // Bloqueia ataques óbvios + tenta ganhar se possível
+  const livres = casasJogaveisIA();
+  if (livres.length === 0) return iaJogadaFacil();
+
+  // 1. Tentar ganhar agora
+  for (const idx of livres) {
+    if (testarJogadaVence(idx, 'O')) return idx;
+  }
+  // 2. Bloquear adversário
+  for (const idx of livres) {
+    if (testarJogadaVence(idx, 'X')) return idx;
+  }
+  // 3. Centro
+  if (livres.includes(4)) return 4;
+  // 4. Cantos
+  const cantos = [0,2,6,8].filter(c => livres.includes(c));
+  if (cantos.length > 0) return cantos[Math.floor(Math.random() * cantos.length)];
+  // 5. Qualquer
+  return livres[Math.floor(Math.random() * livres.length)];
+}
+
+function iaJogadaDificil() {
+  // Minimax simples pra modos A e C (vitória = clássica)
+  // Modo B é complicado pra minimax (peso da soma), uso heurística melhorada
+  const livres = casasJogaveisIA();
+  if (livres.length === 0) return iaJogadaFacil();
+
+  // Trapaceia 15% pra não ficar invencível e desmotivar
+  if (Math.random() < 0.15) return iaJogadaMedia();
+
+  if (STATE.modo === 'B') return iaJogadaDificilB();
+
+  // 1. Ganhar
+  for (const idx of livres) {
+    if (testarJogadaVence(idx, 'O')) return idx;
+  }
+  // 2. Bloquear
+  for (const idx of livres) {
+    if (testarJogadaVence(idx, 'X')) return idx;
+  }
+  // 3. Minimax simplificado pra próximas 3 jogadas (mais que isso fica lento e desnecessário)
+  let melhorScore = -Infinity;
+  let melhorIdx = livres[0];
+  for (const idx of livres) {
+    STATE.partida.tabuleiro[idx] = 'O';
+    const score = minimax(STATE.partida.tabuleiro, 3, false);
+    STATE.partida.tabuleiro[idx] = null;
+    if (score > melhorScore) {
+      melhorScore = score;
+      melhorIdx = idx;
+    }
+  }
+  return melhorIdx;
+}
+
+function minimax(tab, profundidade, maximizando) {
+  const venc = verificarVitoriaSim(tab);
+  if (venc === 'O') return 10 + profundidade;
+  if (venc === 'X') return -10 - profundidade;
+  if (profundidade === 0 || tab.every(c => c !== null)) return 0;
+
+  const marca = maximizando ? 'O' : 'X';
+  const livres = [];
+  for (let i = 0; i < 9; i++) if (!tab[i]) livres.push(i);
+  // No modo C: filtrar pelas casas que obedecem à regra
+  let livresValidas = livres;
+  if (STATE.modo === 'C' && STATE.partida.regraC) {
+    livresValidas = livres.filter(i => respeitaRegra(STATE.partida.contasNasCasas[i].resp, STATE.partida.regraC));
+    if (livresValidas.length === 0) livresValidas = livres; // fallback
+  }
+
+  let melhor = maximizando ? -Infinity : Infinity;
+  for (const i of livresValidas) {
+    tab[i] = marca;
+    const score = minimax(tab, profundidade - 1, !maximizando);
+    tab[i] = null;
+    if (maximizando) melhor = Math.max(melhor, score);
+    else            melhor = Math.min(melhor, score);
+  }
+  return melhor;
+}
+
+function verificarVitoriaSim(tab) {
+  for (const linha of LINHAS_VITORIA) {
+    const [a, b, c] = linha;
+    if (tab[a] && tab[a] === tab[b] && tab[a] === tab[c]) {
+      if (STATE.modo === 'B') {
+        const soma = STATE.partida.contasNasCasas[a] + STATE.partida.contasNasCasas[b] + STATE.partida.contasNasCasas[c];
+        if (soma === STATE.partida.alvoB) return tab[a];
+      } else {
+        return tab[a];
+      }
+    }
+  }
+  return null;
+}
+
+function testarJogadaVence(idx, marca) {
+  STATE.partida.tabuleiro[idx] = marca;
+  const venc = verificarVitoria();
+  STATE.partida.tabuleiro[idx] = null;
+  return venc && (venc.jogador === (marca === 'X' ? 0 : 1));
+}
+
+/* IA Difícil específica para modo B (soma alvo) */
+function iaJogadaDificilB() {
+  const livres = casasLivres();
+  if (livres.length === 0) return null;
+
+  // 1. Ganhar agora
+  for (const idx of livres) {
+    if (testarJogadaVence(idx, 'O')) return idx;
+  }
+  // 2. Bloquear: testar jogada de X
+  for (const idx of livres) {
+    if (testarJogadaVence(idx, 'X')) return idx;
+  }
+  // 3. Heurística: preferir casas que mais aparecem em linhas onde a soma == alvoB
+  const scores = {};
+  livres.forEach(idx => { scores[idx] = 0; });
+  for (const linha of LINHAS_VITORIA) {
+    const [a, b, c] = linha;
+    const valores = [STATE.partida.contasNasCasas[a], STATE.partida.contasNasCasas[b], STATE.partida.contasNasCasas[c]];
+    const soma = valores[0] + valores[1] + valores[2];
+    const marcas = [STATE.partida.tabuleiro[a], STATE.partida.tabuleiro[b], STATE.partida.tabuleiro[c]];
+    // Se linha tem 'X' do oponente, não vale a pena pra mim
+    if (marcas.some(m => m === 'X')) continue;
+    // Se a soma da linha == alvo
+    if (soma === STATE.partida.alvoB) {
+      // Quantas já são minhas
+      const minhas = marcas.filter(m => m === 'O').length;
+      const bonus = (minhas + 1) * 5;
+      linha.forEach(i => { if (livres.includes(i)) scores[i] += bonus; });
+    }
+  }
+  // Pegar o de maior score
+  let melhor = livres[0], melhorScore = -1;
+  livres.forEach(idx => {
+    if (scores[idx] > melhorScore) {
+      melhorScore = scores[idx];
+      melhor = idx;
+    }
+  });
+  // Se tudo tá zero, pega centro/cantos
+  if (melhorScore === 0) {
+    if (livres.includes(4)) return 4;
+    const cantos = [0,2,6,8].filter(c => livres.includes(c));
+    if (cantos.length > 0) return cantos[Math.floor(Math.random() * cantos.length)];
+  }
+  return melhor;
+}
+
+function voltarLobby() {
+  if (STATE.partida.ativa && STATE.partida.tabuleiro.some(c => c !== null)) {
+    if (!confirm('Voltar ao menu? A partida atual será perdida.')) return;
+  }
+  STATE.partida.ativa = false;
+  STATE.vitorias = [0, 0];
+  STATE.rodada = 1;
+  document.getElementById('jogo').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-fim');
+  renderLobby();
+}
+
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+/* SOM */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'marca') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 660; o.type = 'sine';
+      g.gain.setValueAtTime(0.1, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.15);
+      o.start(); o.stop(c.currentTime + 0.17);
+    } else if (tipo === 'erro') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 320; o.type = 'sine';
+      g.gain.setValueAtTime(0.08, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.25);
+      o.frequency.exponentialRampToValueAtTime(180, c.currentTime + 0.25);
+      o.start(); o.stop(c.currentTime + 0.27);
+    } else if (tipo === 'vitoria') {
+      const notas = [523, 659, 784, 1047];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t0 = c.currentTime + i * 0.08;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.22);
+        o.start(t0); o.stop(t0 + 0.25);
+      });
+    }
+  } catch (e) {}
+}
+
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#1E324A','#37B1DA','#B6D752','#FBBF24','#84CC16','#0EA5E9'];
+  for (let i = 0; i < 50; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  tocarSom('vitoria');
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* A11Y */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* WEBNODE EMBED */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => reportarAltura());
+  ro.observe(document.getElementById('pde-painel'));
+}
+
+/* SELOS BNCC */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'mat',
+      icone: 'MA',
+      titulo: 'BNCC Matemática · Números e Operações',
+      itens: [
+        { cod: 'EF01MA06', desc: 'Construir fatos básicos da adição e utilizá-los em procedimentos de cálculo para resolver problemas.' },
+        { cod: 'EF02MA05', desc: 'Construir fatos básicos da adição e subtração e utilizá-los no cálculo mental ou escrito.' },
+        { cod: 'EF03MA03', desc: 'Construir e utilizar fatos básicos da adição e da multiplicação para o cálculo mental ou escrito.' },
+        { cod: 'EF04MA03', desc: 'Resolver e elaborar problemas com números naturais envolvendo adição e subtração, utilizando estratégias diversas.' },
+        { cod: 'EF05MA07', desc: 'Resolver e elaborar problemas de adição e subtração com números naturais e com números racionais, cuja representação decimal seja finita.' },
+        { cod: 'EF06MA03', desc: 'Resolver e elaborar problemas que envolvam cálculos com números naturais com as quatro operações.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Pensamento Computacional e Cultura Digital',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem.' },
+        { cod: 'EF06CO04', desc: 'Aplicar pensamento computacional na resolução de problemas (estratégia, sequência de jogadas, antecipação).' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-fim'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+/* INIT */
+carregar();
+carregarA11y();
+renderLobby();
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+
+/* Expor pro debug e smoke test */
+window.STATE = STATE;
+window.LINHAS_VITORIA = LINHAS_VITORIA;
+window.gerarConta = gerarConta;
+window.respeitaRegra = respeitaRegra;
+window.comecarJogo = comecarJogo;
+window.voltarLobby = voltarLobby;
+window.abrirAjuda = abrirAjuda;
+window.abrirAcessibilidade = abrirAcessibilidade;
+window.defA11y = defA11y;
+window.ESTADO_A11Y = ESTADO_A11Y;
+window.fecharModal = fecharModal;
+window.clicarCasa = clicarCasa;
+window.confirmarResposta = confirmarResposta;
+window.cancelarSelecao = cancelarSelecao;
+window.verificarVitoria = verificarVitoria;
+window.fazerJogada = fazerJogada;
+window.passarVez = passarVez;
+window.jogarIA = jogarIA;
+window.iaJogadaFacil = iaJogadaFacil;
+window.iaJogadaMedia = iaJogadaMedia;
+window.iaJogadaDificil = iaJogadaDificil;
+window.prepararNovaRodada = prepararNovaRodada;
+window.montarSelosBNCC = montarSelosBNCC;
+
+</script>
+</body>
+</html>

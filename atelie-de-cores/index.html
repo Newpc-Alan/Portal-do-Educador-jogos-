@@ -1,0 +1,2248 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Atelier de Cores · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #2D1B14);
+  padding: 8px clamp(6px, 2vw, 16px) 16px;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  --pde-escala: 1;
+  --pde-cor-texto: #2D1B14;
+  font-size: calc(1rem * var(--pde-escala));
+  background: linear-gradient(180deg, #FFF8E7 0%, #FFE4B5 100%);
+  border-radius: 16px;
+}
+
+#pde-painel.txt-grande   { --pde-escala: 1.18; }
+#pde-painel.txt-enorme   { --pde-escala: 1.42; }
+#pde-painel.txt-gigante  { --pde-escala: 1.72; }
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-treino,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .opcao-btn { background: #1A1A1A; color: #FFF; border-color: #FBBF24; }
+#pde-painel.alto-contraste .opcao-btn.acerto { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .opcao-btn.erro { background: #450A0A !important; color: #FCA5A5 !important; }
+#pde-painel.alto-contraste .opcao-btn.alt-correta { background: #FEF3C7 !important; color: #000 !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+
+#pde-painel.daltonico .opcao-btn.acerto { background: linear-gradient(135deg,#3B82F6,#1E3A8A); color: white; border-color: #1E3A8A; }
+#pde-painel.daltonico .opcao-btn.acerto::after { content: " ✓"; }
+#pde-painel.daltonico .opcao-btn.erro { background: #FFEDD5; color: #9A3412; border-color: #FB923C; }
+#pde-painel.daltonico .opcao-btn.erro::after { content: " ✗"; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#1E324A 0%,#2C4A6B 100%);
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: white;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 8px rgba(30,50,74,0.15);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.95rem, 2.2vw, 1.3rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0;
+  word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 18px;
+  padding: 14px;
+  border: 3px solid #FB923C;
+  box-shadow: 0 4px 12px rgba(251,146,60,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, #FFB347 0%, #E91E63 50%, #9C27B0 100%);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 2px solid #C2185B;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 80px; height: 80px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1;
+  background: white;
+  padding: 9px 12px;
+  border-radius: 12px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #2D1B14;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: '';
+  position: absolute;
+  left: -10px; top: 24px;
+  width: 0; height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 12px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #C2185B;
+  font-size: 1.05rem;
+  margin-bottom: 2px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 6px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 90px; height: 90px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+#pde-painel .input-nome {
+  width: 100%;
+  border: 3px solid #FB923C;
+  border-radius: 14px;
+  padding: 11px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  background: white;
+  color: #2D1B14;
+  margin-bottom: 12px;
+}
+#pde-painel .input-nome:focus { outline: none; border-color: #EA580C; box-shadow: 0 0 0 4px rgba(251,146,60,0.25); }
+
+/* MAPA NO LOBBY */
+#pde-painel .mapa-aventura {
+  background: linear-gradient(180deg,#FBBF24 0%,#F59E0B 100%);
+  border-radius: 16px;
+  padding: 14px 12px;
+  margin-bottom: 12px;
+  border: 3px solid #B45309;
+}
+#pde-painel .mapa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr));
+  gap: 6px;
+}
+@media (max-width: 480px) {
+  #pde-painel .mapa-grid { grid-template-columns: repeat(2, 1fr); }
+}
+#pde-painel .mapa-etapa {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.12s;
+  border: 2px solid #FED7AA;
+  position: relative;
+}
+#pde-painel .mapa-etapa:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.12); }
+#pde-painel .mapa-etapa .circulo {
+  width: 36px; height: 36px;
+  background: #FB923C;
+  border: 2px solid #EA580C;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 4px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: white;
+}
+#pde-painel .mapa-etapa .emoji-lugar { font-size: 1.7rem; line-height: 1; display: block; margin-bottom: 2px; }
+#pde-painel .mapa-etapa .nome-lugar {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.74rem;
+  color: #2D1B14;
+  line-height: 1.1;
+  display: block;
+}
+#pde-painel .mapa-etapa .estrelas-lugar { margin-top: 2px; font-size: 0.78rem; letter-spacing: 1px; }
+#pde-painel .mapa-etapa .estrelas-lugar .ativa { color: #FBBF24; }
+#pde-painel .mapa-etapa .estrelas-lugar .vazia { color: #CBD5E1; }
+#pde-painel .mapa-etapa.feita {
+  background: linear-gradient(135deg,#A8E6CF 0%,#7FC8A9 100%);
+  border-color: #5BA084;
+}
+#pde-painel .mapa-etapa.feita .circulo { background: #6BCB77; color: white; border-color: #4DA85A; }
+#pde-painel .mapa-etapa.atual {
+  background: linear-gradient(135deg,#FFD54F 0%,#FFA726 100%);
+  border-color: #FB8C00;
+  box-shadow: 0 4px 12px rgba(251,140,0,0.3);
+}
+#pde-painel .mapa-etapa.atual .circulo { background: #C2185B; color: white; border-color: #880E4F; }
+#pde-painel .mapa-etapa.bloqueada {
+  background: #E2E8F0;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+#pde-painel .mapa-etapa.bloqueada::after {
+  content: '🔒';
+  position: absolute;
+  top: 4px; right: 6px;
+  font-size: 1rem;
+}
+#pde-painel .mapa-etapa.bloqueada .circulo { background: #94A3B8; color: #475569; border-color: #64748B; }
+
+#pde-painel .btn-comecar-aventura {
+  width: 100%;
+  background: linear-gradient(135deg,#E91E63 0%,#9C27B0 100%);
+  color: white;
+  border: 3px solid white;
+  border-radius: 14px;
+  padding: 12px 20px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #6A1B9A, 0 6px 12px rgba(106,27,154,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #6A1B9A;
+}
+#pde-painel .btn-comecar-aventura:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #6A1B9A, 0 3px 6px rgba(106,27,154,0.25);
+}
+
+/* TELA DE TREINO - RESPONSIVIDADE ROBUSTA */
+#pde-painel .treino-grid {
+  display: grid; gap: 12px;
+  grid-template-columns: 240px minmax(0, 1fr);
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #pde-painel .treino-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  #pde-painel .area-treino { order: -1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+#pde-painel .painel-info {
+  background: white;
+  border-radius: 16px;
+  padding: 12px;
+  border: 3px solid #C2185B;
+  box-shadow: 0 2px 8px rgba(194,24,91,0.12);
+  min-width: 0;
+}
+#pde-painel .area-treino {
+  background: white;
+  border-radius: 16px;
+  padding: 10px;
+  border: 3px solid #FB923C;
+  box-shadow: 0 2px 8px rgba(251,146,60,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg,#FCE4EC 0%,#F8BBD0 100%);
+  border-radius: 12px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 2px solid #C2185B;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 44px; height: 44px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #2D1B14;
+  line-height: 1.25;
+  min-width: 0;
+  word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #C2185B; font-weight: 700; }
+
+#pde-painel .etapa-titulo-grande {
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #C2185B;
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+}
+#pde-painel .etapa-titulo-grande .emoji-lugar { font-size: 1.3rem; margin-right: 4px; }
+
+#pde-painel .estrelinhas-prog {
+  display: flex; flex-wrap: wrap; gap: 3px;
+  justify-content: center;
+  background: #FFF9E6;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 2px solid #FBBF24;
+}
+#pde-painel .estrelinhas-prog .estrelinha {
+  font-size: 1.1rem;
+  color: #CBD5E1;
+  transition: color 0.3s;
+}
+#pde-painel .estrelinhas-prog .estrelinha.ativa { color: #FBBF24; text-shadow: 0 0 6px rgba(251,191,36,0.5); }
+
+#pde-painel .mini-mapa { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+#pde-painel .mini-mapa-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #2D1B14;
+  font-size: 0.78rem;
+  margin-bottom: 2px;
+}
+#pde-painel .mini-mapa-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px; border-radius: 8px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.74rem;
+  color: #94A3B8;
+  background: #F8FAFC;
+}
+#pde-painel .mini-mapa-item .num-mini {
+  width: 18px; height: 18px;
+  background: #CBD5E1;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  color: white;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+#pde-painel .mini-mapa-item.feita { color: #6BCB77; background: #E0F7E9; }
+#pde-painel .mini-mapa-item.feita .num-mini { background: #6BCB77; }
+#pde-painel .mini-mapa-item.atual {
+  color: white;
+  background: linear-gradient(135deg,#C2185B 0%,#9C27B0 100%);
+  font-weight: 700;
+}
+#pde-painel .mini-mapa-item.atual .num-mini { background: #FBBF24; color: #2D1B14; }
+
+/* PERGUNTA */
+#pde-painel .pergunta-grande {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.95rem, 4vw, 1.15rem);
+  color: #C2185B;
+  text-align: center;
+  margin-bottom: 4px;
+  padding: 0 4px;
+  word-wrap: break-word;
+}
+
+/* ATIVIDADE 1 - GRID DE CORES (RECONHECER) */
+#pde-painel .cores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+#pde-painel .cor-card {
+  background: white;
+  border: 3px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+  box-shadow: 0 3px 0 #CBD5E1;
+}
+#pde-painel .cor-card:hover { transform: translateY(-2px); box-shadow: 0 5px 0 #CBD5E1; }
+#pde-painel .cor-card:active { transform: translateY(2px); box-shadow: 0 1px 0 #CBD5E1; }
+#pde-painel .cor-card .swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  border: 2px solid rgba(0,0,0,0.15);
+  margin-bottom: 6px;
+}
+#pde-painel .cor-card .nome-cor {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #2D1B14;
+}
+#pde-painel .cor-card.acerto {
+  background: linear-gradient(135deg,#6BCB77,#4DA85A);
+  border-color: #2E7D32;
+  box-shadow: 0 3px 0 #2E7D32;
+  animation: pulseAcerto 0.4s;
+}
+#pde-painel .cor-card.acerto .nome-cor { color: white; }
+#pde-painel .cor-card.erro {
+  background: #FFCDD2;
+  border-color: #C62828;
+  animation: shake 0.4s;
+}
+#pde-painel .cor-card.alt-correta {
+  background: #FFF59D;
+  border-color: #F57F17;
+}
+
+/* ATIVIDADE 2 - MISTURADOR DE CORES */
+#pde-painel .misturador {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+#pde-painel .pote-cor {
+  width: clamp(60px, 18vw, 90px);
+  height: clamp(60px, 18vw, 90px);
+  border-radius: 50%;
+  border: 4px solid #2D1B14;
+  cursor: pointer;
+  transition: transform 0.15s;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.2), inset 0 -8px 12px rgba(0,0,0,0.15), inset 0 4px 8px rgba(255,255,255,0.4);
+  position: relative;
+}
+#pde-painel .pote-cor:hover { transform: scale(1.05); }
+#pde-painel .pote-cor.selecionado {
+  transform: scale(1.1);
+  border-color: #FBBF24;
+  box-shadow: 0 0 0 4px rgba(251,191,36,0.5), 0 4px 0 rgba(0,0,0,0.2);
+}
+#pde-painel .pote-cor::after {
+  content: attr(data-nome);
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: #2D1B14;
+  white-space: nowrap;
+}
+#pde-painel .potes-disponiveis {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  padding-bottom: 22px;
+}
+#pde-painel .area-mistura {
+  background: linear-gradient(135deg, #F5F5DC 0%, #E8DCC4 100%);
+  border: 4px dashed #8B4513;
+  border-radius: 16px;
+  padding: 14px;
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+#pde-painel .balde {
+  width: clamp(80px, 22vw, 110px);
+  height: clamp(80px, 22vw, 110px);
+  border-radius: 50%;
+  border: 4px solid #2D1B14;
+  background: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 -10px 16px rgba(0,0,0,0.2), inset 0 6px 12px rgba(255,255,255,0.3);
+}
+#pde-painel .balde-fluido {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: white;
+  transition: background 0.5s, height 0.5s;
+}
+#pde-painel .info-mistura {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: #2D1B14;
+  text-align: center;
+  min-height: 1.2em;
+}
+#pde-painel .info-mistura .resultado {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #C2185B;
+}
+#pde-painel .botoes-mistura {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+#pde-painel .btn-mist {
+  background: white;
+  border: 2px solid #C2185B;
+  color: #C2185B;
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+#pde-painel .btn-mist:hover { background: #C2185B; color: white; }
+#pde-painel .alvo-info {
+  background: linear-gradient(135deg, #FFF8E7 0%, #FFE4B5 100%);
+  border: 2px solid #FB923C;
+  border-radius: 10px;
+  padding: 8px 12px;
+  text-align: center;
+  width: 100%;
+  max-width: 320px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #2D1B14;
+  font-size: 0.9rem;
+}
+#pde-painel .alvo-info .swatch-alvo {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 2px solid #2D1B14;
+  vertical-align: middle;
+  margin: 0 4px;
+}
+#pde-painel .alvo-info b { color: #C2185B; }
+
+/* ATIVIDADE 3 - TEMPERATURA (QUENTE/FRIA) */
+#pde-painel .temperatura-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+#pde-painel .cor-mostra {
+  width: clamp(120px, 30vw, 180px);
+  height: clamp(120px, 30vw, 180px);
+  border-radius: 16px;
+  border: 4px solid #2D1B14;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+#pde-painel .escolha-dupla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 380px;
+}
+#pde-painel .opcao-dupla {
+  border-radius: 14px;
+  padding: 16px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-align: center;
+  border: 3px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 70px;
+}
+#pde-painel .opcao-dupla.quente {
+  background: linear-gradient(135deg, #FED7AA 0%, #FB923C 100%);
+  color: #7C2D12;
+  border-color: #C2410C;
+  box-shadow: 0 3px 0 #9A3412;
+}
+#pde-painel .opcao-dupla.fria {
+  background: linear-gradient(135deg, #DBEAFE 0%, #60A5FA 100%);
+  color: #1E3A8A;
+  border-color: #1E40AF;
+  box-shadow: 0 3px 0 #1E3A8A;
+}
+#pde-painel .opcao-dupla:hover { transform: translateY(-2px); }
+#pde-painel .opcao-dupla:active { transform: translateY(2px); }
+#pde-painel .opcao-dupla.acerto {
+  background: linear-gradient(135deg,#6BCB77,#4DA85A) !important;
+  color: white !important;
+  border-color: #2E7D32 !important;
+  animation: pulseAcerto 0.4s;
+}
+#pde-painel .opcao-dupla.erro {
+  background: #FFCDD2 !important;
+  color: #C62828 !important;
+  border-color: #C62828 !important;
+  animation: shake 0.4s;
+}
+
+/* ATIVIDADE 4 - COMPLEMENTARES */
+#pde-painel .complemento-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+#pde-painel .cor-pivot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #F8FAFC;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 2px dashed #94A3B8;
+}
+#pde-painel .cor-pivot .swatch-pivot {
+  width: clamp(50px, 14vw, 70px);
+  height: clamp(50px, 14vw, 70px);
+  border-radius: 12px;
+  border: 3px solid #2D1B14;
+}
+#pde-painel .cor-pivot .label-pivot {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #2D1B14;
+}
+#pde-painel .cor-pivot .label-pivot small {
+  display: block;
+  color: #64748B;
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+/* ATIVIDADE 5 - ILUSTRAÇÃO ORIGINAL */
+#pde-painel .ilustracao-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+#pde-painel .svg-ilustracao {
+  width: clamp(160px, 40vw, 240px);
+  height: clamp(160px, 40vw, 240px);
+  background: #F0F9FF;
+  border: 3px solid #C2185B;
+  border-radius: 16px;
+  padding: 8px;
+}
+#pde-painel .svg-ilustracao svg { width: 100%; height: 100%; display: block; }
+
+/* OPÇÕES GENÉRICAS */
+#pde-painel .opcoes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+}
+#pde-painel .opcao-btn {
+  background: white;
+  border: 3px solid #FB923C;
+  border-radius: 12px;
+  padding: 12px 8px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.92rem, 3.5vw, 1.05rem);
+  color: #2D1B14;
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s;
+  box-shadow: 0 3px 0 #EA580C;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-wrap: break-word;
+  line-height: 1.2;
+}
+#pde-painel .opcao-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 0 #EA580C; }
+#pde-painel .opcao-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 #EA580C; }
+#pde-painel .opcao-btn:disabled { cursor: default; }
+#pde-painel .opcao-btn.acerto {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  color: white;
+  border-color: #4DA85A;
+  box-shadow: 0 3px 0 #2E7D32;
+  animation: pulseAcerto 0.4s;
+}
+@keyframes pulseAcerto { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+#pde-painel .opcao-btn.erro {
+  background: #FFCDD2;
+  color: #C62828;
+  border-color: #C62828;
+  animation: shake 0.4s;
+}
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+#pde-painel .opcao-btn.alt-correta {
+  background: #FFF59D;
+  color: #E65100;
+  border-color: #F57F17;
+}
+#pde-painel .opcao-btn .swatch-mini {
+  display: inline-block;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,0,0,0.2);
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+/* Feedback */
+#pde-painel .feedback {
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px;
+  animation: aparecerFeedback 0.3s ease-out;
+}
+@keyframes aparecerFeedback { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+#pde-painel .feedback.acerto {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  color: white;
+  border: 3px solid #2E7D32;
+}
+#pde-painel .feedback.erro {
+  background: linear-gradient(135deg,#FFCDD2 0%,#EF9A9A 100%);
+  color: #6B1414;
+  border: 3px solid #C62828;
+}
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(45,27,20,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #FB923C;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal { width: 100px; height: 100px; margin: 0 auto 8px; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #C2185B;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #2D1B14; font-size: 0.95rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  color: white; border: 3px solid #2E7D32;
+  box-shadow: 0 4px 0 #2E7D32;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .estrelas-conquistadas { font-size: 2.6rem; letter-spacing: 8px; margin: 10px 0; }
+#pde-painel .estrelas-conquistadas .ativa {
+  color: #FBBF24; display: inline-block; transform: scale(0);
+  text-shadow: 0 0 12px rgba(251,191,36,0.7);
+  animation: estrelaPopFinal 0.6s ease-out forwards;
+}
+#pde-painel .estrelas-conquistadas .ativa:nth-child(1) { animation-delay: 0.2s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(2) { animation-delay: 0.5s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(3) { animation-delay: 0.8s; }
+#pde-painel .estrelas-conquistadas .vazia { color: #E2E8F0; }
+@keyframes estrelaPopFinal {
+  0% { transform: scale(0) rotate(-180deg); }
+  60% { transform: scale(1.4) rotate(15deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #C2185B;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #2D1B14; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+
+#pde-painel .a11y-grupo { background: #FCE4EC; border: 3px solid #C2185B; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #C2185B; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #C2185B; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#C2185B 0%,#9C27B0 100%); color: white; border-color: #6A1B9A; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #C2185B; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%); color: white; border-color: #2E7D32; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #2E7D32; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #C2185B;
+  border: 2px solid #C2185B; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #C2185B; color: white; }
+
+/* Confetes */
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #FBBF24; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #C2185B; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#37B1DA,#1E324A); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.artes { background: linear-gradient(135deg,#E91E63,#9C27B0); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #2D1B14; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #2D1B14; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #E2E8F0; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FBBF24; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #C2185B; }
+
+@media (max-width: 380px) {
+  #pde-painel { padding: 6px 4px 12px; }
+  #pde-painel .header h1 { font-size: 0.9rem; }
+  #pde-painel .btn-header { font-size: 0.7rem; padding: 4px 7px; }
+  #pde-painel .lobby-card,
+  #pde-painel .area-treino,
+  #pde-painel .painel-info { padding: 10px; border-width: 2px; }
+}
+
+/* ============================================ */
+/* PATCH UNIFICADO v2                            */
+/* 1. Acessibilidade: escala de texto FUNCIONAL  */
+/* 2. Desktop-wide: aproveita tela grande        */
+/* ============================================ */
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 12px clamp(12px, 2vw, 24px) 24px; }
+  #pde-painel .lobby-card { padding: 18px; }
+  #pde-painel .area-treino { padding: 16px; }
+  #pde-painel .painel-info { padding: 16px; }
+  #pde-painel .treino-grid { grid-template-columns: 280px minmax(0, 1fr); gap: 18px; }
+  #pde-painel .opcoes-grid {
+    max-width: 900px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  #pde-painel .fases-grid {
+    max-width: 1100px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  #pde-painel .fase-card { min-height: 170px; padding: 14px 8px; }
+  #pde-painel .fase-card .svg-fase { width: 110px; height: 110px; }
+  #pde-painel .fase-card .nome-fase { font-size: 0.92rem; }
+  #pde-painel .cores-grid {
+    max-width: 800px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .instrumentos-grid {
+    max-width: 720px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  #pde-painel .instrumento-btn { min-height: 110px; }
+  #pde-painel .instrumento-btn .icone-instr { font-size: 2.6rem; }
+  #pde-painel .instrumento-btn .nome-instr { font-size: 0.85rem; }
+  #pde-painel .mapa-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .mapa-etapa { padding: 12px 8px; }
+  #pde-painel .mapa-etapa .emoji-lugar { font-size: 2.2rem; }
+  #pde-painel .mapa-etapa .nome-lugar { font-size: 0.85rem; }
+  #pde-painel .pergunta-grande { font-size: 1.35rem; padding: 0 8px; margin-bottom: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .modal-conteudo h2 { font-size: 1.65rem; }
+  #pde-painel .modal-conteudo p { font-size: 1.05rem; }
+  #pde-painel .opcao-btn { min-height: 64px; font-size: 1.05rem; padding: 14px 12px; }
+  #pde-painel .area-mistura { max-width: 420px; }
+  #pde-painel .pista-musica { height: 280px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  #pde-painel .compositor-grid { grid-template-columns: 90px 1fr; max-width: 900px; margin: 0 auto; }
+  #pde-painel .passo-cel { min-height: 38px; }
+  #pde-painel .seq-progresso { padding: 14px; max-width: 720px; margin: 8px auto; }
+  #pde-painel .seq-progresso .seq-passo { width: 44px; height: 44px; font-size: 1.6rem; }
+  #pde-painel .estrelinhas-prog { padding: 12px; }
+  #pde-painel .header h1 { font-size: 1.45rem; }
+  #pde-painel .btn-header { font-size: 0.92rem; padding: 7px 14px; }
+  #pde-painel .input-nome { font-size: 1.1rem; padding: 14px 18px; }
+  #pde-painel .btn-comecar-aventura { font-size: 1.2rem; padding: 14px 24px; }
+  #pde-painel .quiz-pergunta { padding: 18px; }
+  #pde-painel .quiz-pergunta .qsvg { width: 160px; height: 160px; }
+  #pde-painel .quiz-pergunta .qtext { font-size: 1.25rem; }
+  #pde-painel .info-fase { padding: 14px 18px; max-width: 900px; margin-left: auto; margin-right: auto; }
+  #pde-painel .alvo-info { max-width: 480px; padding: 12px 18px; font-size: 1.05rem; }
+  #pde-painel .pote-cor { width: 100px; height: 100px; }
+  #pde-painel .balde { width: 130px; height: 130px; }
+  #pde-painel .escolha-dupla { max-width: 480px; gap: 14px; }
+  #pde-painel .opcao-dupla { font-size: 1.2rem; min-height: 90px; padding: 22px 12px; }
+  #pde-painel .cor-mostra { width: 200px; height: 200px; }
+  #pde-painel .svg-ilustracao { width: 280px; height: 280px; }
+  #pde-painel .mapa-jogo-wrap { max-width: 900px; margin: 0 auto; }
+}
+@media (min-width: 1440px) {
+  #pde-painel { max-width: 1400px; }
+  #pde-painel .opcoes-grid { max-width: 1000px; }
+  #pde-painel .fases-grid { max-width: 1240px; }
+}
+/* === FIM PATCH UNIFICADO v2 === */
+
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>🎨 Atelier de Cores · com Tinta</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="resetarProgresso()" title="Recomeçar">↻</button>
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <!-- LOBBY -->
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Olá! Eu sou a Tinta, sua paleta artística! 🎨</strong>
+        <span id="balao-saudacao">Vamos descobrir o mundo das cores juntos?</span>
+      </div>
+    </div>
+
+    <input type="text" id="nome-aluno" class="input-nome" placeholder="✏️ Qual é o seu nome?" maxlength="30" autocomplete="off">
+
+    <div class="mapa-aventura">
+      <div class="mapa-grid" id="mapa-grid"></div>
+    </div>
+
+    <button class="btn-comecar-aventura" id="btn-comecar" onclick="comecarEtapaAtual()">🚀 Começar a Aventura!</button>
+  </div>
+
+  <!-- TREINO -->
+  <div id="treino" class="treino-grid hidden">
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Vamos lá!</div>
+      </div>
+      <div class="etapa-titulo-grande" id="etapa-titulo">
+        <span class="emoji-lugar" id="etapa-emoji">🔴</span>
+        <span id="etapa-nome">—</span>
+      </div>
+      <div class="estrelinhas-prog" id="estrelinhas-prog"></div>
+      <div class="mini-mapa">
+        <div class="mini-mapa-titulo">🎨 Sua jornada</div>
+        <div id="mini-mapa-itens"></div>
+      </div>
+    </div>
+
+    <div class="area-treino">
+      <div id="arena"></div>
+      <div id="feedback" class="feedback hidden"></div>
+    </div>
+  </div>
+
+  <!-- MODAIS -->
+  <div class="modal-overlay" id="modal-etapa-fim">
+    <div class="modal-conteudo">
+      <svg class="mascote-modal" viewBox="0 0 100 100" id="svg-mascote-modal"></svg>
+      <h2 id="etapa-fim-titulo">Atividade concluída!</h2>
+      <p id="etapa-fim-msg">Muito bem!</p>
+      <div class="estrelas-conquistadas" id="etapa-fim-estrelas"></div>
+      <p id="etapa-fim-detalhes" style="font-style:italic; color:#94A3B8;"></p>
+      <div class="acoes" id="etapa-fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-trilha-completa">
+    <div class="modal-conteudo">
+      <svg class="mascote-modal" viewBox="0 0 100 100" id="svg-mascote-trofeu"></svg>
+      <h2>🏆 Mestre das Cores!</h2>
+      <p>Parabéns! Você dominou as 6 aventuras das cores!</p>
+      <div class="estrelas-conquistadas">
+        <span class="ativa">★</span><span class="ativa">★</span><span class="ativa">★</span>
+      </div>
+      <p style="font-weight:700; color:#C2185B; font-size:1.05rem; font-family:'Fredoka',sans-serif;">🎨 Você é uma Mestra/Mestre das Cores!</p>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="voltarLobby()">Voltar ao mapa</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🎨 Como Brincar com a Tinta</h2>
+      <h3>🎯 Objetivo</h3>
+      <p>Aprender o mundo das cores em 6 aventuras com a Tinta, sua paleta artística.</p>
+
+      <h3>📚 As 6 aventuras</h3>
+      <ul>
+        <li><b>🔴 Cores Primárias:</b> conheça as 3 cores que dão origem a todas as outras.</li>
+        <li><b>🧪 Misturando Cores:</b> arraste cores no balde e veja a mágica acontecer!</li>
+        <li><b>🌡️ Quentes ou Frias:</b> cada cor tem temperatura. Vermelho aquece, azul refresca!</li>
+        <li><b>🌗 Cores Complementares:</b> cores opostas que combinam (vermelho e verde, azul e laranja).</li>
+        <li><b>🌻 Cor na Arte:</b> identifique a cor predominante em ilustrações.</li>
+        <li><b>✨ Desafio Final:</b> tudo o que aprendeu!</li>
+      </ul>
+
+      <h3>⭐ Pontuação</h3>
+      <ul>
+        <li><b>3 estrelas:</b> 95% de aproveitamento ou mais</li>
+        <li><b>2 estrelas:</b> 75% a 94%</li>
+        <li><b>1 estrela:</b> abaixo de 75% (oferecemos repetir)</li>
+      </ul>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-ajuda')">Bora pintar!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script>
+/* MASCOTE TINTA - paleta de pintor com olhos e braços */
+function svgMascote(expressao = 'normal') {
+  let olhos;
+  if (expressao === 'feliz') {
+    olhos = `
+      <path d="M 36 44 Q 41 39, 46 44" fill="none" stroke="#2D1B14" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 54 44 Q 59 39, 64 44" fill="none" stroke="#2D1B14" stroke-width="2.5" stroke-linecap="round"/>
+    `;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <circle cx="41" cy="46" r="3" fill="#2D1B14"/>
+      <circle cx="59" cy="46" r="3" fill="#2D1B14"/>
+    `;
+  } else {
+    olhos = `
+      <ellipse cx="41" cy="46" rx="5" ry="6" fill="white" stroke="#2D1B14" stroke-width="1.5"/>
+      <ellipse cx="59" cy="46" rx="5" ry="6" fill="white" stroke="#2D1B14" stroke-width="1.5"/>
+      <circle cx="42" cy="47" r="2.5" fill="#2D1B14"/>
+      <circle cx="60" cy="47" r="2.5" fill="#2D1B14"/>
+      <circle cx="43" cy="46" r="0.8" fill="white"/>
+      <circle cx="61" cy="46" r="0.8" fill="white"/>
+    `;
+  }
+
+  let boca;
+  if (expressao === 'feliz') {
+    boca = `<path d="M 40 60 Q 50 70, 60 60" fill="#E91E63" stroke="#880E4F" stroke-width="1.5" stroke-linecap="round"/>`;
+  } else if (expressao === 'pensando') {
+    boca = `<line x1="46" y1="62" x2="54" y2="62" stroke="#2D1B14" stroke-width="2" stroke-linecap="round"/>`;
+  } else {
+    boca = `<path d="M 42 60 Q 50 66, 58 60" fill="none" stroke="#2D1B14" stroke-width="2" stroke-linecap="round"/>`;
+  }
+
+  return `
+    <!-- Sombra da paleta -->
+    <ellipse cx="50" cy="92" rx="32" ry="3" fill="rgba(0,0,0,0.15)"/>
+
+    <!-- Bracinhos (saindo dos lados) -->
+    <line x1="14" y1="50" x2="6" y2="62" stroke="#D2691E" stroke-width="3.5" stroke-linecap="round"/>
+    <line x1="86" y1="50" x2="94" y2="62" stroke="#D2691E" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- Mãos (luvas brancas) -->
+    <circle cx="6" cy="62" r="4" fill="white" stroke="#2D1B14" stroke-width="1.5"/>
+    <circle cx="94" cy="62" r="4" fill="white" stroke="#2D1B14" stroke-width="1.5"/>
+    <!-- Pincel na mão direita -->
+    <line x1="94" y1="62" x2="98" y2="50" stroke="#8B4513" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="97" cy="48" rx="2.5" ry="3.5" fill="#FBBF24" stroke="#9A3412" stroke-width="1" transform="rotate(20 97 48)"/>
+
+    <!-- CORPO PRINCIPAL: paleta de pintor (formato oval com furo no canto) -->
+    <ellipse cx="50" cy="55" rx="34" ry="28" fill="#D2691E" stroke="#5C3317" stroke-width="2"/>
+    <!-- Furo da paleta (canto inferior esquerdo) -->
+    <ellipse cx="22" cy="68" rx="6" ry="4" fill="#FFE4B5"/>
+    <!-- Detalhe de madeira -->
+    <path d="M 18 70 Q 30 55, 50 50 Q 70 55, 82 65" fill="none" stroke="#8B4513" stroke-width="0.6" opacity="0.4"/>
+
+    <!-- Gotinhas de tinta (cores variadas na paleta) -->
+    <circle cx="36" cy="40" r="5" fill="#DC2626"/>  <!-- vermelho -->
+    <circle cx="50" cy="36" r="5" fill="#FCD34D"/>  <!-- amarelo -->
+    <circle cx="64" cy="40" r="5" fill="#3B82F6"/>  <!-- azul -->
+    <circle cx="68" cy="58" r="4" fill="#16A34A"/>  <!-- verde -->
+    <circle cx="32" cy="58" r="4" fill="#9333EA"/>  <!-- roxo -->
+    <circle cx="50" cy="68" r="4" fill="#F97316"/>  <!-- laranja -->
+
+    <!-- Olhos (na parte superior central) -->
+    ${olhos}
+
+    <!-- Boca (logo abaixo dos olhos) -->
+    ${boca}
+
+    <!-- Brilho na paleta (highlight) -->
+    <ellipse cx="36" cy="44" rx="14" ry="6" fill="white" opacity="0.15"/>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* === DADOS === */
+// Cores primárias RYB tradicionais
+const VERMELHO = { hex: '#DC2626', nome: 'Vermelho' };
+const AMARELO  = { hex: '#FCD34D', nome: 'Amarelo' };
+const AZUL     = { hex: '#3B82F6', nome: 'Azul' };
+
+// Mistura RYB - resultados de misturas
+function misturarRYB(cor1, cor2) {
+  // Pares ordenados (sem repetição)
+  const par = [cor1, cor2].sort().join('|');
+  const misturas = {
+    'Amarelo|Vermelho': { hex: '#F97316', nome: 'Laranja', tipo: 'secundaria' },
+    'Amarelo|Azul':     { hex: '#16A34A', nome: 'Verde', tipo: 'secundaria' },
+    'Azul|Vermelho':    { hex: '#9333EA', nome: 'Roxo (Violeta)', tipo: 'secundaria' },
+  };
+  if (cor1 === cor2) {
+    // Mistura da mesma cor = ela mesma
+    if (cor1 === 'Vermelho') return { hex: VERMELHO.hex, nome: 'Vermelho', tipo: 'primaria' };
+    if (cor1 === 'Amarelo')  return { hex: AMARELO.hex, nome: 'Amarelo', tipo: 'primaria' };
+    if (cor1 === 'Azul')     return { hex: AZUL.hex, nome: 'Azul', tipo: 'primaria' };
+  }
+  return misturas[par] || null;
+}
+
+// Cores quentes vs frias
+const QUENTES = ['Vermelho', 'Laranja', 'Amarelo', 'Magenta', 'Salmão'];
+const FRIAS   = ['Azul', 'Verde', 'Roxo (Violeta)', 'Turquesa', 'Lilás'];
+
+const TODAS_CORES = [
+  { hex: '#DC2626', nome: 'Vermelho', tipo: 'primaria', temp: 'quente' },
+  { hex: '#FCD34D', nome: 'Amarelo', tipo: 'primaria', temp: 'quente' },
+  { hex: '#3B82F6', nome: 'Azul', tipo: 'primaria', temp: 'fria' },
+  { hex: '#F97316', nome: 'Laranja', tipo: 'secundaria', temp: 'quente' },
+  { hex: '#16A34A', nome: 'Verde', tipo: 'secundaria', temp: 'fria' },
+  { hex: '#9333EA', nome: 'Roxo', tipo: 'secundaria', temp: 'fria' },
+];
+
+// Pares complementares (cor → seu complemento)
+const COMPLEMENTARES = {
+  'Vermelho': 'Verde',
+  'Verde':    'Vermelho',
+  'Azul':     'Laranja',
+  'Laranja':  'Azul',
+  'Amarelo':  'Roxo',
+  'Roxo':     'Amarelo'
+};
+
+// Ilustrações originais para atividade 5 (SVG inline simples)
+const ILUSTRACOES = [
+  { 
+    nome: 'Girassol', 
+    cor_predom: 'Amarelo',
+    svg: `<svg viewBox="0 0 200 200">
+      <!-- Caule -->
+      <rect x="95" y="110" width="10" height="80" fill="#16A34A"/>
+      <!-- Folhas -->
+      <ellipse cx="80" cy="150" rx="20" ry="10" fill="#16A34A" transform="rotate(-30 80 150)"/>
+      <ellipse cx="120" cy="160" rx="20" ry="10" fill="#16A34A" transform="rotate(30 120 160)"/>
+      <!-- Pétalas amarelas -->
+      ${Array.from({length: 12}, (_, i) => {
+        const ang = (i * 30) * Math.PI / 180;
+        const x = 100 + Math.cos(ang) * 40;
+        const y = 90 + Math.sin(ang) * 40;
+        return `<ellipse cx="${x}" cy="${y}" rx="14" ry="22" fill="#FCD34D" stroke="#D97706" stroke-width="1.5" transform="rotate(${i*30} ${x} ${y})"/>`;
+      }).join('')}
+      <!-- Centro marrom -->
+      <circle cx="100" cy="90" r="22" fill="#78350F" stroke="#451A03" stroke-width="2"/>
+      <circle cx="100" cy="90" r="16" fill="#92400E"/>
+    </svg>`
+  },
+  { 
+    nome: 'Mar e Céu', 
+    cor_predom: 'Azul',
+    svg: `<svg viewBox="0 0 200 200">
+      <!-- Céu -->
+      <rect x="0" y="0" width="200" height="120" fill="#60A5FA"/>
+      <!-- Sol -->
+      <circle cx="155" cy="40" r="22" fill="#FCD34D"/>
+      <!-- Nuvens -->
+      <ellipse cx="50" cy="40" rx="20" ry="8" fill="white"/>
+      <ellipse cx="65" cy="35" rx="15" ry="7" fill="white"/>
+      <!-- Mar -->
+      <rect x="0" y="120" width="200" height="80" fill="#1E40AF"/>
+      <!-- Ondas -->
+      <path d="M 0 130 Q 25 122, 50 130 T 100 130 T 150 130 T 200 130 L 200 140 L 0 140 Z" fill="#3B82F6"/>
+      <path d="M 0 145 Q 25 138, 50 145 T 100 145 T 150 145 T 200 145 L 200 155 L 0 155 Z" fill="#2563EB"/>
+    </svg>`
+  },
+  {
+    nome: 'Fogueira',
+    cor_predom: 'Laranja',
+    svg: `<svg viewBox="0 0 200 200">
+      <!-- Lenha -->
+      <rect x="50" y="160" width="100" height="14" fill="#78350F" rx="3"/>
+      <rect x="60" y="170" width="80" height="14" fill="#92400E" rx="3"/>
+      <line x1="55" y1="167" x2="145" y2="167" stroke="#451A03" stroke-width="1.5"/>
+      <!-- Chama externa (vermelho) -->
+      <path d="M 60 160 Q 50 100, 100 60 Q 150 100, 140 160 Z" fill="#DC2626"/>
+      <!-- Chama média (laranja) -->
+      <path d="M 70 160 Q 65 110, 100 80 Q 135 110, 130 160 Z" fill="#F97316"/>
+      <!-- Chama interna (amarelo) -->
+      <path d="M 80 160 Q 80 120, 100 100 Q 120 120, 120 160 Z" fill="#FCD34D"/>
+    </svg>`
+  },
+  {
+    nome: 'Folhas',
+    cor_predom: 'Verde',
+    svg: `<svg viewBox="0 0 200 200">
+      <!-- Folhagem grande -->
+      <ellipse cx="60" cy="80" rx="35" ry="50" fill="#16A34A" transform="rotate(-20 60 80)"/>
+      <ellipse cx="140" cy="70" rx="40" ry="55" fill="#22C55E" transform="rotate(15 140 70)"/>
+      <ellipse cx="100" cy="120" rx="45" ry="55" fill="#15803D"/>
+      <ellipse cx="50" cy="150" rx="30" ry="40" fill="#16A34A" transform="rotate(-15 50 150)"/>
+      <ellipse cx="150" cy="155" rx="32" ry="42" fill="#22C55E" transform="rotate(20 150 155)"/>
+      <!-- Veias claras -->
+      <line x1="55" y1="60" x2="65" y2="105" stroke="#15803D" stroke-width="1" opacity="0.5"/>
+      <line x1="140" y1="50" x2="135" y2="100" stroke="#14532D" stroke-width="1" opacity="0.5"/>
+    </svg>`
+  },
+  {
+    nome: 'Uvas',
+    cor_predom: 'Roxo',
+    svg: `<svg viewBox="0 0 200 200">
+      <!-- Folhinha verde -->
+      <path d="M 100 60 Q 90 40, 110 30 Q 130 40, 120 60 Z" fill="#16A34A"/>
+      <line x1="115" y1="55" x2="115" y2="80" stroke="#78350F" stroke-width="2"/>
+      <!-- Cacho de uvas (linhas) -->
+      ${[
+        [100,90],[80,90],[120,90],
+        [70,110],[90,110],[110,110],[130,110],
+        [80,130],[100,130],[120,130],
+        [90,150],[110,150],
+        [100,170]
+      ].map(([cx,cy]) => `<circle cx="${cx}" cy="${cy}" r="11" fill="#9333EA" stroke="#581C87" stroke-width="1.5"/><circle cx="${cx-3}" cy="${cy-3}" r="2.5" fill="#C084FC" opacity="0.6"/>`).join('')}
+    </svg>`
+  },
+  {
+    nome: 'Tomate',
+    cor_predom: 'Vermelho',
+    svg: `<svg viewBox="0 0 200 200">
+      <!-- Folhinhas verdes -->
+      <path d="M 100 50 L 80 30 L 90 60 L 70 50 L 95 75 L 75 80 L 100 80" fill="#16A34A"/>
+      <path d="M 100 50 L 120 30 L 110 60 L 130 50 L 105 75 L 125 80 L 100 80" fill="#16A34A"/>
+      <!-- Cabinho marrom -->
+      <line x1="100" y1="50" x2="100" y2="75" stroke="#78350F" stroke-width="3"/>
+      <!-- Tomate vermelho -->
+      <ellipse cx="100" cy="125" rx="55" ry="50" fill="#DC2626" stroke="#7F1D1D" stroke-width="2"/>
+      <!-- Brilho -->
+      <ellipse cx="80" cy="105" rx="20" ry="14" fill="white" opacity="0.3"/>
+    </svg>`
+  }
+];
+
+/* === ETAPAS === */
+const ETAPAS = [
+  { id: 1, tipo: 'primarias', titulo: 'Cores Primárias', emoji: '🔴', total: 5,
+    instrucao: 'Aprenda as 3 cores que dão origem a todas!',
+    fala_inicio: 'As primárias são: vermelho, amarelo e azul!',
+    fala_sucesso: 'Acertou em cheio!' },
+  { id: 2, tipo: 'misturar', titulo: 'Misturando Cores', emoji: '🧪', total: 5,
+    instrucao: 'Misture duas cores para criar a cor pedida!',
+    fala_inicio: 'Hora da mágica das cores!',
+    fala_sucesso: 'Que mistura perfeita!' },
+  { id: 3, tipo: 'temperatura', titulo: 'Quentes ou Frias', emoji: '🌡️', total: 6,
+    instrucao: 'A cor é quente como fogo ou fria como gelo?',
+    fala_inicio: 'Cada cor tem uma temperatura!',
+    fala_sucesso: 'Você sentiu a temperatura!' },
+  { id: 4, tipo: 'complementar', titulo: 'Cores Complementares', emoji: '🌗', total: 6,
+    instrucao: 'Encontre a cor oposta no círculo cromático!',
+    fala_inicio: 'Cores opostas se atraem!',
+    fala_sucesso: 'Combinação perfeita!' },
+  { id: 5, tipo: 'arte', titulo: 'Cor na Arte', emoji: '🌻', total: 6,
+    instrucao: 'Identifique a cor predominante na ilustração!',
+    fala_inicio: 'Vamos olhar com olhos de artista!',
+    fala_sucesso: 'Olhar de artista!' },
+  { id: 6, tipo: 'desafio', titulo: 'Desafio Final', emoji: '✨', total: 8,
+    instrucao: 'Tudo que aprendeu, misturado!',
+    fala_inicio: 'Reta final, tô torcendo por você!',
+    fala_sucesso: 'Você é demais!' },
+];
+
+const ELOGIOS = ['Mandou bem!', 'Você é demais!', 'Excelente!', 'Que olho!', 'Brilhou!', 'Perfeito!'];
+const INCENTIVOS = ['Quase! Tente outra vez!', 'Vamos pensar de novo!', 'Você consegue!', 'Olha com calma!'];
+
+/* === ESTADO === */
+const STATE = {
+  nomeAluno: '',
+  etapaAtual: 1,
+  estrelasPorEtapa: {},
+  jogo: {
+    etapa: null,
+    progresso: 0,
+    acertos: 0,
+    erros: 0,
+    bloqueado: false,
+    ativo: false,
+    // Específico misturador:
+    mistAlvo: null,
+    mistSelecionadas: []
+  }
+};
+
+/* PERSISTÊNCIA */
+function salvar() {
+  try {
+    localStorage.setItem('pde_atelier_dados', JSON.stringify({
+      nomeAluno: STATE.nomeAluno,
+      etapaAtual: STATE.etapaAtual,
+      estrelasPorEtapa: STATE.estrelasPorEtapa
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_atelier_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    STATE.nomeAluno = d.nomeAluno || '';
+    STATE.etapaAtual = d.etapaAtual || 1;
+    STATE.estrelasPorEtapa = d.estrelasPorEtapa || {};
+    if (STATE.nomeAluno) document.getElementById('nome-aluno').value = STATE.nomeAluno;
+  } catch (e) {}
+}
+
+/* LOBBY */
+function renderLobby() {
+  const balaoSaud = document.getElementById('balao-saudacao');
+  const feitas = Object.keys(STATE.estrelasPorEtapa).length;
+  if (balaoSaud) {
+    if (feitas === 0) balaoSaud.textContent = 'Vamos descobrir o mundo das cores juntos?';
+    else if (feitas === ETAPAS.length) balaoSaud.textContent = 'Você é Mestra das Cores! 🏆';
+    else balaoSaud.textContent = `Você já fez ${feitas} de 6 aventuras. Continue!`;
+  }
+
+  const cont = document.getElementById('mapa-grid');
+  cont.innerHTML = '';
+  ETAPAS.forEach((e, idx) => {
+    const card = document.createElement('div');
+    const feita = !!STATE.estrelasPorEtapa[e.id];
+    const atual = e.id === STATE.etapaAtual && !feita;
+    const anterior = idx === 0 ? true : !!STATE.estrelasPorEtapa[ETAPAS[idx-1].id];
+    const bloqueada = !feita && !atual && !anterior;
+
+    card.className = 'mapa-etapa' + (feita ? ' feita' : '') + (atual ? ' atual' : '') + (bloqueada ? ' bloqueada' : '');
+
+    let estrelasMini = '';
+    const obtidas = STATE.estrelasPorEtapa[e.id] || 0;
+    for (let i = 0; i < 3; i++) estrelasMini += i < obtidas ? '<span class="ativa">★</span>' : '<span class="vazia">★</span>';
+
+    card.innerHTML = `
+      <div class="circulo">${e.id}</div>
+      <span class="emoji-lugar">${e.emoji}</span>
+      <span class="nome-lugar">${e.titulo}</span>
+      <div class="estrelas-lugar">${estrelasMini}</div>
+    `;
+    if (!bloqueada) {
+      card.onclick = () => { STATE.etapaAtual = e.id; comecarEtapaAtual(); };
+    }
+    cont.appendChild(card);
+  });
+
+  const btn = document.getElementById('btn-comecar');
+  if (feitas === ETAPAS.length) {
+    btn.textContent = '🏆 Aventura completa! Recomeçar';
+    btn.onclick = () => {
+      if (confirm('Recomeçar a aventura? Seu progresso será apagado.')) {
+        STATE.estrelasPorEtapa = {};
+        STATE.etapaAtual = 1;
+        salvar();
+        renderLobby();
+      }
+    };
+  } else {
+    const proxima = ETAPAS.find(e => !STATE.estrelasPorEtapa[e.id]);
+    if (proxima) {
+      STATE.etapaAtual = proxima.id;
+      btn.textContent = `🚀 ${proxima.emoji} ${proxima.titulo}`;
+      btn.onclick = comecarEtapaAtual;
+    }
+  }
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+
+function resetarProgresso() {
+  if (!confirm('Recomeçar a aventura? Seu progresso será apagado.')) return;
+  STATE.estrelasPorEtapa = {};
+  STATE.etapaAtual = 1;
+  salvar();
+  renderLobby();
+}
+
+/* UTILS */
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function elogio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivo() { return INCENTIVOS[Math.floor(Math.random() * INCENTIVOS.length)]; }
+
+/* COMEÇAR ETAPA */
+function comecarEtapaAtual() {
+  STATE.nomeAluno = document.getElementById('nome-aluno').value.trim();
+  salvar();
+  const etapa = ETAPAS.find(e => e.id === STATE.etapaAtual);
+  if (!etapa) return;
+  STATE.jogo.etapa = etapa;
+  STATE.jogo.progresso = 0;
+  STATE.jogo.acertos = 0;
+  STATE.jogo.erros = 0;
+  STATE.jogo.ativo = true;
+  STATE.jogo.bloqueado = false;
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('treino').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+  document.getElementById('etapa-emoji').textContent = etapa.emoji;
+  document.getElementById('etapa-nome').textContent = etapa.titulo;
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Tinta:</b> ${etapa.instrucao}`;
+  renderMascote('svg-mascote-painel', 'feliz');
+  atualizarUI();
+  renderMiniMapa();
+  iniciarExercicio();
+}
+
+function renderMiniMapa() {
+  const cont = document.getElementById('mini-mapa-itens');
+  cont.innerHTML = '';
+  ETAPAS.forEach(e => {
+    const div = document.createElement('div');
+    const feita = !!STATE.estrelasPorEtapa[e.id];
+    const atual = e.id === STATE.etapaAtual;
+    div.className = 'mini-mapa-item' + (feita ? ' feita' : '') + (atual ? ' atual' : '');
+    div.innerHTML = `<div class="num-mini">${e.id}</div><span>${e.emoji} ${e.titulo}</span>`;
+    cont.appendChild(div);
+  });
+}
+
+function atualizarUI() {
+  const cont = document.getElementById('estrelinhas-prog');
+  cont.innerHTML = '';
+  for (let i = 0; i < STATE.jogo.etapa.total; i++) {
+    const e = document.createElement('span');
+    e.className = 'estrelinha' + (i < STATE.jogo.progresso ? ' ativa' : '');
+    e.textContent = '★';
+    cont.appendChild(e);
+  }
+}
+
+function limparFeedback() {
+  const fb = document.getElementById('feedback');
+  fb.classList.add('hidden');
+  fb.className = 'feedback hidden';
+}
+function mostrarFeedback(tipo, texto) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback ' + tipo;
+  fb.innerHTML = texto;
+  fb.classList.remove('hidden');
+}
+
+/* DISPATCH */
+function iniciarExercicio() {
+  STATE.jogo.bloqueado = false;
+  limparFeedback();
+  const arena = document.getElementById('arena');
+  arena.innerHTML = '';
+  const tipo = STATE.jogo.etapa.tipo;
+  if (tipo === 'primarias') exPrimarias();
+  else if (tipo === 'misturar') exMisturar();
+  else if (tipo === 'temperatura') exTemperatura();
+  else if (tipo === 'complementar') exComplementar();
+  else if (tipo === 'arte') exArte();
+  else if (tipo === 'desafio') exDesafio();
+}
+
+/* ATIVIDADE 1: RECONHECER PRIMÁRIAS */
+function exPrimarias() {
+  // Sorteia uma cor (primária ou secundária) para perguntar se é primária
+  const todas = TODAS_CORES;
+  const sorteada = todas[Math.floor(Math.random() * todas.length)];
+  // Pergunta: "Esta cor é primária? Sim/Não" + nome
+  const arena = document.getElementById('arena');
+  arena.innerHTML = `
+    <div class="pergunta-grande">Qual o nome dessa cor? 🎨</div>
+    <div style="display:flex; justify-content:center; margin:8px 0;">
+      <div style="width:clamp(80px,20vw,120px); height:clamp(80px,20vw,120px); background:${sorteada.hex}; border-radius:50%; border:4px solid #2D1B14; box-shadow:0 4px 12px rgba(0,0,0,0.2);"></div>
+    </div>
+    <div class="opcoes-grid" id="opcoes-cont"></div>
+  `;
+  // Gera 4 opções com a correta + 3 distractors
+  const opcoes = new Set([sorteada.nome]);
+  while (opcoes.size < 4) {
+    const cand = todas[Math.floor(Math.random() * todas.length)].nome;
+    opcoes.add(cand);
+  }
+  const arr = shuffle([...opcoes]);
+  const cont = document.getElementById('opcoes-cont');
+  arr.forEach(nome => {
+    const corObj = todas.find(c => c.nome === nome);
+    const btn = document.createElement('button');
+    btn.className = 'opcao-btn';
+    btn.innerHTML = `<span class="swatch-mini" style="background:${corObj.hex}"></span>${nome}`;
+    btn.dataset.nome = nome;
+    btn.onclick = () => responder(nome === sorteada.nome, btn, sorteada.nome);
+    cont.appendChild(btn);
+  });
+}
+
+/* ATIVIDADE 2: MISTURADOR */
+function exMisturar() {
+  // Sorteia uma cor secundária como alvo
+  const secundarias = TODAS_CORES.filter(c => c.tipo === 'secundaria');
+  const alvo = secundarias[Math.floor(Math.random() * secundarias.length)];
+  STATE.jogo.mistAlvo = alvo;
+  STATE.jogo.mistSelecionadas = [];
+
+  const arena = document.getElementById('arena');
+  arena.innerHTML = `
+    <div class="pergunta-grande">Misture as cores para criar:</div>
+    <div class="alvo-info">
+      Cor desejada: <b>${alvo.nome}</b> <span class="swatch-alvo" style="background:${alvo.hex}"></span>
+    </div>
+    <div class="misturador">
+      <div class="potes-disponiveis">
+        <div class="pote-cor" data-cor="Vermelho" data-nome="Vermelho" style="background:${VERMELHO.hex}" onclick="adicionarMistura('Vermelho')"></div>
+        <div class="pote-cor" data-cor="Amarelo" data-nome="Amarelo" style="background:${AMARELO.hex}" onclick="adicionarMistura('Amarelo')"></div>
+        <div class="pote-cor" data-cor="Azul" data-nome="Azul" style="background:${AZUL.hex}" onclick="adicionarMistura('Azul')"></div>
+      </div>
+      <div class="area-mistura">
+        <div class="balde">
+          <div class="balde-fluido" id="balde-fluido" style="height:0"></div>
+        </div>
+        <div class="info-mistura" id="info-mistura">Toque nos potes acima!</div>
+        <div class="botoes-mistura">
+          <button class="btn-mist" onclick="limparMistura()">🗑️ Limpar</button>
+          <button class="btn-mist" onclick="conferirMistura()" style="background:#C2185B; color:white;">✓ Conferir</button>
+        </div>
+      </div>
+    </div>
+  `;
+  atualizarBalde();
+}
+
+function adicionarMistura(cor) {
+  if (STATE.jogo.bloqueado) return;
+  if (STATE.jogo.mistSelecionadas.length >= 2) {
+    // Substitui última se já tem 2
+    STATE.jogo.mistSelecionadas[1] = cor;
+  } else {
+    STATE.jogo.mistSelecionadas.push(cor);
+  }
+  document.querySelectorAll('.pote-cor').forEach(p => p.classList.remove('selecionado'));
+  STATE.jogo.mistSelecionadas.forEach(c => {
+    const pote = document.querySelector(`.pote-cor[data-cor="${c}"]`);
+    if (pote) pote.classList.add('selecionado');
+  });
+  atualizarBalde();
+}
+
+function limparMistura() {
+  STATE.jogo.mistSelecionadas = [];
+  document.querySelectorAll('.pote-cor').forEach(p => p.classList.remove('selecionado'));
+  atualizarBalde();
+}
+
+function atualizarBalde() {
+  const fluido = document.getElementById('balde-fluido');
+  const info = document.getElementById('info-mistura');
+  if (!fluido || !info) return;
+  const sels = STATE.jogo.mistSelecionadas;
+  if (sels.length === 0) {
+    fluido.style.height = '0';
+    fluido.style.background = 'white';
+    info.textContent = 'Toque nos potes acima!';
+  } else if (sels.length === 1) {
+    const cor = TODAS_CORES.find(c => c.nome === sels[0]);
+    fluido.style.height = '50%';
+    fluido.style.background = cor.hex;
+    info.innerHTML = `Selecionou: <b>${sels[0]}</b>. Adicione outra cor!`;
+  } else {
+    const resultado = misturarRYB(sels[0], sels[1]);
+    fluido.style.height = '90%';
+    if (resultado) {
+      fluido.style.background = resultado.hex;
+      info.innerHTML = `${sels[0]} + ${sels[1]} = <span class="resultado">${resultado.nome}</span>`;
+    } else {
+      fluido.style.background = '#94A3B8';
+      info.innerHTML = `${sels[0]} + ${sels[1]} = ?`;
+    }
+  }
+}
+
+function conferirMistura() {
+  if (STATE.jogo.bloqueado) return;
+  const sels = STATE.jogo.mistSelecionadas;
+  if (sels.length !== 2) {
+    mostrarFeedback('erro', '🤗 Você precisa misturar 2 cores!');
+    return;
+  }
+  STATE.jogo.bloqueado = true;
+  const resultado = misturarRYB(sels[0], sels[1]);
+  const correto = resultado && resultado.nome === STATE.jogo.mistAlvo.nome;
+  document.querySelectorAll('.pote-cor').forEach(p => { p.style.cursor = 'default'; p.onclick = null; });
+  document.querySelectorAll('.btn-mist').forEach(b => b.disabled = true);
+  finalizarComum(correto, null, STATE.jogo.mistAlvo.nome);
+}
+
+/* ATIVIDADE 3: TEMPERATURA */
+function exTemperatura() {
+  const cor = TODAS_CORES[Math.floor(Math.random() * TODAS_CORES.length)];
+  const arena = document.getElementById('arena');
+  arena.innerHTML = `
+    <div class="pergunta-grande">Esta cor é <b>quente</b> 🔥 ou <b>fria</b> ❄️?</div>
+    <div class="temperatura-wrap">
+      <div class="cor-mostra" style="background:${cor.hex}"></div>
+      <div class="escolha-dupla">
+        <button class="opcao-dupla quente" onclick="responderTemp('quente', '${cor.temp}', this)">🔥 Quente</button>
+        <button class="opcao-dupla fria" onclick="responderTemp('fria', '${cor.temp}', this)">❄️ Fria</button>
+      </div>
+    </div>
+  `;
+}
+
+function responderTemp(escolha, correta, btn) {
+  if (STATE.jogo.bloqueado) return;
+  STATE.jogo.bloqueado = true;
+  const certo = escolha === correta;
+  if (certo) {
+    btn.classList.add('acerto');
+  } else {
+    btn.classList.add('erro');
+    document.querySelectorAll('.opcao-dupla').forEach(b => {
+      if ((b.classList.contains('quente') && correta === 'quente') || (b.classList.contains('fria') && correta === 'fria')) {
+        b.style.opacity = '1';
+        b.style.boxShadow = '0 0 0 3px #FBBF24, 0 3px 0 rgba(0,0,0,0.2)';
+      }
+    });
+  }
+  document.querySelectorAll('.opcao-dupla').forEach(b => b.disabled = true);
+  finalizarComum(certo, null, correta === 'quente' ? 'Quente' : 'Fria');
+}
+
+/* ATIVIDADE 4: COMPLEMENTARES */
+function exComplementar() {
+  const cores = Object.keys(COMPLEMENTARES);
+  const cor = cores[Math.floor(Math.random() * cores.length)];
+  const corObj = TODAS_CORES.find(c => c.nome === cor);
+  const complementoCorreto = COMPLEMENTARES[cor];
+
+  const arena = document.getElementById('arena');
+  arena.innerHTML = `
+    <div class="pergunta-grande">Qual a cor complementar?</div>
+    <div class="complemento-wrap">
+      <div class="cor-pivot">
+        <div class="swatch-pivot" style="background:${corObj.hex}"></div>
+        <div class="label-pivot">${cor}<small>complementar = ?</small></div>
+      </div>
+      <div class="opcoes-grid" id="opcoes-cont"></div>
+    </div>
+  `;
+  // 4 opções: a correta + 3 distractors
+  const opcoes = new Set([complementoCorreto]);
+  while (opcoes.size < 4) {
+    const c = TODAS_CORES[Math.floor(Math.random() * TODAS_CORES.length)].nome;
+    if (c !== cor) opcoes.add(c);
+  }
+  const arr = shuffle([...opcoes]);
+  const cont = document.getElementById('opcoes-cont');
+  arr.forEach(nome => {
+    const cobj = TODAS_CORES.find(c => c.nome === nome);
+    const btn = document.createElement('button');
+    btn.className = 'opcao-btn';
+    btn.innerHTML = `<span class="swatch-mini" style="background:${cobj.hex}"></span>${nome}`;
+    btn.dataset.nome = nome;
+    btn.onclick = () => responder(nome === complementoCorreto, btn, complementoCorreto);
+    cont.appendChild(btn);
+  });
+}
+
+/* ATIVIDADE 5: COR EM ILUSTRAÇÃO ORIGINAL */
+function exArte() {
+  const ilus = ILUSTRACOES[Math.floor(Math.random() * ILUSTRACOES.length)];
+  const arena = document.getElementById('arena');
+  arena.innerHTML = `
+    <div class="pergunta-grande">Qual a cor predominante em <b>${ilus.nome}</b>?</div>
+    <div class="ilustracao-wrap">
+      <div class="svg-ilustracao">${ilus.svg}</div>
+      <div class="opcoes-grid" id="opcoes-cont"></div>
+    </div>
+  `;
+  // 4 opções
+  const opcoes = new Set([ilus.cor_predom]);
+  while (opcoes.size < 4) {
+    const c = TODAS_CORES[Math.floor(Math.random() * TODAS_CORES.length)].nome;
+    opcoes.add(c);
+  }
+  const arr = shuffle([...opcoes]);
+  const cont = document.getElementById('opcoes-cont');
+  arr.forEach(nome => {
+    const cobj = TODAS_CORES.find(c => c.nome === nome);
+    const btn = document.createElement('button');
+    btn.className = 'opcao-btn';
+    btn.innerHTML = cobj ? `<span class="swatch-mini" style="background:${cobj.hex}"></span>${nome}` : nome;
+    btn.dataset.nome = nome;
+    btn.onclick = () => responder(nome === ilus.cor_predom, btn, ilus.cor_predom);
+    cont.appendChild(btn);
+  });
+}
+
+/* ATIVIDADE 6: DESAFIO MISTO */
+function exDesafio() {
+  const tipos = ['primarias', 'temperatura', 'complementar', 'arte'];
+  const tipo = tipos[Math.floor(Math.random() * tipos.length)];
+  if (tipo === 'primarias') exPrimarias();
+  else if (tipo === 'temperatura') exTemperatura();
+  else if (tipo === 'complementar') exComplementar();
+  else exArte();
+}
+
+/* RESPONDER GENÉRICO (botões padrão) */
+function responder(correto, botao, respCorretaNome) {
+  if (STATE.jogo.bloqueado) return;
+  STATE.jogo.bloqueado = true;
+  document.querySelectorAll('.opcao-btn').forEach(b => {
+    b.disabled = true;
+    if (!correto && b.dataset.nome === respCorretaNome) b.classList.add('alt-correta');
+  });
+  if (correto) botao.classList.add('acerto');
+  else botao.classList.add('erro');
+  finalizarComum(correto, botao, respCorretaNome);
+}
+
+/* FINALIZAR EXERCÍCIO */
+function finalizarComum(correto, _btn, respCorretaTxt) {
+  if (correto) {
+    STATE.jogo.acertos++;
+    tocarSom('acerto');
+    mostrarFeedback('acerto', `🎉 ${elogio()}`);
+    renderMascote('svg-mascote-painel', 'feliz');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Tinta:</b> ${STATE.jogo.etapa.fala_sucesso} ✨`;
+  } else {
+    STATE.jogo.erros++;
+    tocarSom('erro');
+    mostrarFeedback('erro', `🤗 ${incentivo()} A resposta era <b>${respCorretaTxt}</b>.`);
+    renderMascote('svg-mascote-painel', 'pensando');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Tinta:</b> Vamos pra próxima!`;
+  }
+  STATE.jogo.progresso++;
+  atualizarUI();
+  setTimeout(() => {
+    if (STATE.jogo.progresso >= STATE.jogo.etapa.total) finalizarEtapa();
+    else iniciarExercicio();
+  }, correto ? 1500 : 2200);
+}
+
+/* FINALIZAR ETAPA + TRANSIÇÃO */
+function finalizarEtapa() {
+  STATE.jogo.ativo = false;
+  const etapa = STATE.jogo.etapa;
+  const total = STATE.jogo.acertos + STATE.jogo.erros;
+  const aprov = total > 0 ? STATE.jogo.acertos / total : 0;
+
+  let estrelas;
+  if (aprov >= 0.95) estrelas = 3;
+  else if (aprov >= 0.75) estrelas = 2;
+  else estrelas = 1;
+  if (STATE.jogo.erros > STATE.jogo.acertos) estrelas = 1;
+
+  const anterior = STATE.estrelasPorEtapa[etapa.id] || 0;
+  STATE.estrelasPorEtapa[etapa.id] = Math.max(anterior, estrelas);
+  if (STATE.etapaAtual === etapa.id && STATE.etapaAtual < ETAPAS.length) STATE.etapaAtual++;
+  salvar();
+
+  const todasFeitas = ETAPAS.every(e => STATE.estrelasPorEtapa[e.id]);
+  const proxima = ETAPAS.find(e => e.id > etapa.id);
+
+  if (todasFeitas) {
+    renderMascote('svg-mascote-trofeu', 'feliz');
+    document.getElementById('modal-trilha-completa').classList.add('aberto');
+    criarConfetes();
+    return;
+  }
+
+  if (estrelas === 1) {
+    renderMascote('svg-mascote-modal', 'pensando');
+    document.getElementById('etapa-fim-titulo').textContent = '💪 Vamos tentar de novo?';
+    document.getElementById('etapa-fim-msg').textContent = 'Praticar mais um pouquinho ajuda a aprender!';
+    let estrelasHtml = '';
+    for (let i = 0; i < 3; i++) {
+      estrelasHtml += i < estrelas ? '<span class="ativa">★</span>' : '<span class="vazia">★</span>';
+    }
+    document.getElementById('etapa-fim-estrelas').innerHTML = estrelasHtml;
+    document.getElementById('etapa-fim-detalhes').textContent = `${STATE.jogo.acertos} acerto${STATE.jogo.acertos !== 1 ? 's' : ''} · ${STATE.jogo.erros} erro${STATE.jogo.erros !== 1 ? 's' : ''}`;
+    const acoes = document.getElementById('etapa-fim-acoes');
+    acoes.innerHTML = '';
+    const btnRepetir = document.createElement('button');
+    btnRepetir.className = 'btn-confirmar';
+    btnRepetir.textContent = '↻ Repetir';
+    btnRepetir.onclick = () => { fecharModal('modal-etapa-fim'); comecarEtapaAtual(); };
+    acoes.appendChild(btnRepetir);
+    const btnAvancar = document.createElement('button');
+    btnAvancar.className = 'btn-cancelar';
+    btnAvancar.textContent = proxima ? '➡ Próxima' : '🏠 Voltar';
+    btnAvancar.onclick = () => {
+      fecharModal('modal-etapa-fim');
+      if (proxima) { STATE.etapaAtual = proxima.id; comecarEtapaAtual(); }
+      else voltarLobby();
+    };
+    acoes.appendChild(btnAvancar);
+    document.getElementById('modal-etapa-fim').classList.add('aberto');
+    return;
+  }
+
+  if (proxima) mostrarTransicaoAutomatica(estrelas, etapa, proxima);
+  else voltarLobby();
+}
+
+function mostrarTransicaoAutomatica(estrelas, etapaAtual, proxima) {
+  const overlay = document.createElement('div');
+  overlay.id = 'transicao-overlay';
+  overlay.style.cssText = `
+    position: fixed; inset: 0;
+    background: rgba(45,27,20,0.85);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999999;
+    backdrop-filter: blur(4px);
+    animation: transicaoFadeIn 0.3s ease-out;
+  `;
+  const card = document.createElement('div');
+  card.style.cssText = `
+    background: white;
+    border-radius: 20px;
+    padding: 24px 28px;
+    max-width: 420px;
+    text-align: center;
+    border: 4px solid #FB923C;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    animation: transicaoCardIn 0.4s ease-out;
+  `;
+  let estrelasHtml = '';
+  for (let i = 0; i < 3; i++) {
+    estrelasHtml += i < estrelas
+      ? '<span style="color:#FBBF24;">★</span>'
+      : '<span style="color:#E2E8F0;">★</span>';
+  }
+  card.innerHTML = `
+    <div style="font-size:3rem; line-height:1; margin-bottom:6px;">🎨</div>
+    <h2 style="font-family:'Fredoka',sans-serif; font-weight:700; color:#C2185B; font-size:1.4rem; margin:0 0 4px;">
+      ${estrelas === 3 ? 'Perfeito!' : 'Muito bom!'}
+    </h2>
+    <p style="font-family:'Fredoka',sans-serif; font-weight:500; color:#2D1B14; font-size:0.95rem; margin:0 0 8px;">
+      Você passou da <b>${etapaAtual.titulo}</b>!
+    </p>
+    <div style="font-size:2rem; letter-spacing:8px; margin:8px 0;">${estrelasHtml}</div>
+    <div style="background:#FFF9E6; border:2px dashed #FBBF24; border-radius:12px; padding:10px; margin-top:10px;">
+      <div style="font-family:'Fredoka',sans-serif; font-weight:600; color:#475569; font-size:0.82rem;">Próxima aventura:</div>
+      <div style="font-family:'Fredoka',sans-serif; font-weight:700; color:#C2185B; font-size:1.05rem;">
+        ${proxima.emoji} ${proxima.titulo}
+      </div>
+    </div>
+  `;
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+  tocarSom('acerto');
+  setTimeout(() => {
+    overlay.style.animation = 'transicaoFadeOut 0.3s ease-out forwards';
+    setTimeout(() => {
+      overlay.remove();
+      STATE.etapaAtual = proxima.id;
+      comecarEtapaAtual();
+    }, 300);
+  }, 2500);
+}
+
+function voltarLobby() {
+  if (STATE.jogo.ativo && (STATE.jogo.acertos + STATE.jogo.erros) > 0) {
+    if (!confirm('Voltar ao mapa? Seu progresso da aventura atual será perdido.')) return;
+  }
+  STATE.jogo.ativo = false;
+  document.getElementById('treino').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-etapa-fim');
+  fecharModal('modal-trilha-completa');
+  renderLobby();
+}
+
+/* MODAIS */
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+
+/* SOM */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'acerto') {
+      const notas = [523, 659, 784, 1047];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t0 = c.currentTime + i * 0.07;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.18);
+        o.start(t0); o.stop(t0 + 0.2);
+      });
+    } else {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 320; o.type = 'sine';
+      g.gain.setValueAtTime(0.1, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.3);
+      o.frequency.exponentialRampToValueAtTime(180, c.currentTime + 0.3);
+      o.start(); o.stop(c.currentTime + 0.32);
+    }
+  } catch (e) {}
+}
+
+/* CONFETES */
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#DC2626','#FCD34D','#3B82F6','#F97316','#16A34A','#9333EA'];
+  for (let i = 0; i < 50; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* ACESSIBILIDADE COMPARTILHADA */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    // Escala SEMPRE inicia em 'normal' (não persistir entre sessões; vários alunos compartilham dispositivo)
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* WEBNODE EMBED */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+const ro = new ResizeObserver(() => reportarAltura());
+ro.observe(document.getElementById('pde-painel'));
+
+/* SELOS BNCC */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'artes',
+      icone: 'ART',
+      titulo: 'BNCC Arte · Artes Visuais',
+      itens: [
+        { cod: 'EF15AR02', desc: 'Explorar e reconhecer elementos constitutivos das artes visuais (ponto, linha, forma, cor, espaço, movimento etc.).' },
+        { cod: 'EF15AR04', desc: 'Experimentar diferentes formas de expressão artística (desenho, pintura, colagem, modelagem) fazendo uso sustentável de materiais.' },
+        { cod: 'EF15AR05', desc: 'Experimentar a criação em artes visuais de modo individual, coletivo e colaborativo.' },
+        { cod: 'EF69AR04', desc: 'Analisar os elementos constitutivos das artes visuais (ponto, linha, forma, cor, espaço, movimento) na apreciação de diferentes produções artísticas.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Cultura Digital',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-etapa-fim', 'modal-trilha-completa'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+const styleTransicao = document.createElement('style');
+styleTransicao.textContent = `
+@keyframes transicaoFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes transicaoFadeOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes transicaoCardIn {
+  0% { transform: scale(0.7) translateY(20px); opacity: 0; }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}`;
+document.head.appendChild(styleTransicao);
+
+/* INICIALIZAÇÃO */
+carregar();
+carregarA11y();
+renderLobby();
+
+document.getElementById('nome-aluno').addEventListener('input', (e) => {
+  STATE.nomeAluno = e.target.value;
+  salvar();
+});
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+</script>
+
+</body>
+</html>

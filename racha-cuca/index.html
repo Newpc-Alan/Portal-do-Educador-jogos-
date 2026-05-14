@@ -1,0 +1,1678 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Racha Cuca · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #1E324A);
+  padding: 6px clamp(6px, 1.5vw, 12px) 10px;
+  width: 100%; max-width: 100%; overflow-x: hidden; margin: 0 auto;
+  user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+  --pde-cor-texto: #1E324A;
+  background: linear-gradient(180deg, #DBEAFE 0%, #93C5FD 50%, #1E40AF 100%);
+  border-radius: 12px;
+}
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-jogo,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .nivel-card,
+#pde-painel.alto-contraste .modo-card { background: #000 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .nivel-card.selecionado,
+#pde-painel.alto-contraste .modo-card.selecionado { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .peca-tile:not(.vazia) { background: #1F2937 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .peca-tile.correta { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#1E40AF 0%,#1E3A8A 100%);
+  border-radius: 10px; padding: 6px 10px; color: white;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 6px rgba(30,58,138,0.25);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white; border-radius: 14px; padding: 10px;
+  border: 2px solid #1E40AF;
+  box-shadow: 0 3px 8px rgba(30,64,175,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+  border-radius: 10px; padding: 7px 10px; margin-bottom: 8px;
+  border: 2px solid #1E40AF;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 72px; height: 72px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1; background: white; padding: 6px 10px; border-radius: 10px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif; font-weight: 600;
+  color: #1E324A; font-size: 0.85rem; line-height: 1.25;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: ''; position: absolute; left: -8px; top: 18px;
+  width: 0; height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  color: #1E40AF; font-size: 0.95rem; margin-bottom: 1px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 5px; padding: 8px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 78px; height: 78px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+#pde-painel .secao-titulo {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  color: #1E40AF; font-size: 0.92rem; margin: 8px 0 5px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+#pde-painel .modo-grid, #pde-painel .nivel-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 5px; margin-bottom: 6px;
+}
+@media (min-width: 700px) {
+  #pde-painel .modo-grid { grid-template-columns: repeat(2, 1fr); }
+  #pde-painel .nivel-grid { grid-template-columns: repeat(3, 1fr); }
+}
+#pde-painel .modo-card {
+  background: white; border: 2px solid #1E40AF; border-radius: 10px;
+  padding: 8px; cursor: pointer; text-align: center;
+  font-family: 'Fredoka',sans-serif; color: #1E324A; font-size: 0.78rem;
+  transition: all 0.15s; box-shadow: 0 2px 0 #1E3A8A;
+}
+#pde-painel .modo-card:hover { transform: translateY(-2px); }
+#pde-painel .modo-card.selecionado {
+  background: linear-gradient(135deg,#1E40AF 0%,#1E3A8A 100%);
+  color: white; border-color: #1E1B4B; transform: translateY(2px);
+}
+#pde-painel .modo-card .modo-emoji { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .modo-card .modo-titulo { font-weight: 700; font-size: 0.88rem; }
+#pde-painel .modo-card .modo-desc { font-size: 0.72rem; opacity: 0.85; margin-top: 1px; line-height: 1.2; }
+
+#pde-painel .nivel-card {
+  background: white; border: 2px solid #F59E0B; border-radius: 10px;
+  padding: 10px 6px; cursor: pointer; text-align: center;
+  font-family: 'Fredoka',sans-serif; color: #92400E; font-size: 0.78rem;
+  transition: all 0.15s; box-shadow: 0 2px 0 #92400E;
+}
+#pde-painel .nivel-card:hover { transform: translateY(-2px); }
+#pde-painel .nivel-card.selecionado {
+  background: linear-gradient(135deg,#F59E0B 0%,#92400E 100%);
+  color: white; border-color: #451A03; transform: translateY(2px);
+}
+#pde-painel .nivel-card .nivel-emoji { display: block; font-size: 1.5rem; line-height: 1; margin-bottom: 3px; }
+#pde-painel .nivel-card .nivel-titulo { font-weight: 700; font-size: 0.95rem; }
+#pde-painel .nivel-card .nivel-desc { font-size: 0.72rem; opacity: 0.85; margin-top: 1px; line-height: 1.2; }
+#pde-painel .nivel-card .nivel-recorde {
+  display: block; margin-top: 4px;
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  font-size: 0.75rem;
+}
+#pde-painel .nivel-card.selecionado .nivel-recorde { color: #FEF3C7; }
+
+#pde-painel .btn-comecar {
+  width: 100%;
+  background: linear-gradient(135deg,#1E40AF 0%,#1E3A8A 100%);
+  color: white; border: 2px solid white; border-radius: 10px;
+  padding: 9px 16px; font-family: 'Fredoka',sans-serif;
+  font-weight: 700; font-size: 1rem; cursor: pointer;
+  box-shadow: 0 3px 0 #1E1B4B, 0 4px 10px rgba(30,58,138,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #1E1B4B; margin-top: 6px;
+}
+#pde-painel .btn-comecar:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #1E1B4B, 0 2px 6px rgba(30,58,138,0.25);
+}
+#pde-painel .btn-comecar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* JOGO */
+#pde-painel .jogo-grid {
+  display: grid; gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #pde-painel .jogo-grid { grid-template-columns: 1fr !important; gap: 8px; }
+  #pde-painel .area-jogo { order: 1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+#pde-painel .area-jogo {
+  background: white; border-radius: 12px; padding: 10px 12px;
+  border: 3px solid #1E40AF;
+  box-shadow: 0 2px 6px rgba(30,64,175,0.12);
+  display: flex; flex-direction: column; gap: 8px; min-width: 0;
+}
+#pde-painel .painel-info {
+  background: white; border-radius: 12px; padding: 8px 10px;
+  border: 3px solid #1E40AF;
+  box-shadow: 0 2px 6px rgba(30,64,175,0.12);
+  min-width: 0;
+}
+
+#pde-painel .cab-jogo {
+  background: linear-gradient(135deg, #1E40AF 0%, #1E3A8A 100%);
+  border-radius: 10px; padding: 6px 12px; color: white;
+  border: 2px solid white;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; flex-wrap: wrap;
+}
+#pde-painel .cab-jogo .info-jogo {
+  font-family: 'Fredoka',sans-serif; font-size: 0.85rem; font-weight: 700;
+}
+#pde-painel .cab-jogo .cronometro {
+  font-family: 'Baloo 2',sans-serif; font-size: 1.05rem; font-weight: 800;
+  background: rgba(0,0,0,0.3); padding: 4px 12px; border-radius: 999px;
+  border: 2px solid white;
+}
+#pde-painel .cab-jogo .cronometro.urgente {
+  background: #DC2626; animation: pulsa 0.7s ease-in-out infinite;
+}
+@keyframes pulsa { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+#pde-painel .cab-jogo .estrelas {
+  font-family: 'Baloo 2',sans-serif; font-size: 1.1rem;
+  background: rgba(0,0,0,0.2); padding: 2px 10px; border-radius: 999px;
+  letter-spacing: 2px;
+}
+
+/* TABULEIRO · puzzle deslizante */
+#pde-painel .tabuleiro-wrap {
+  background: #1E1B4B;
+  padding: 8px;
+  border-radius: 14px;
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.35);
+  display: flex; align-items: center; justify-content: center;
+  margin: 4px auto;
+  width: 100%; max-width: 480px;
+}
+#pde-painel .tabuleiro {
+  display: grid;
+  gap: 6px;
+  aspect-ratio: 1;
+  width: 100%;
+}
+#pde-painel .peca-tile {
+  background: linear-gradient(145deg, #3B82F6, #1E40AF);
+  border: 2px solid #1E3A8A;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25), inset 0 2px 0 rgba(255,255,255,0.15);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+  user-select: none;
+  font-size: clamp(1.3rem, 4.5vw, 2.2rem);
+}
+#pde-painel .peca-tile:hover:not(.vazia) {
+  transform: scale(1.04);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+#pde-painel .peca-tile:active:not(.vazia) {
+  transform: scale(0.96);
+}
+#pde-painel .peca-tile.vazia {
+  background: transparent;
+  border: 3px dashed rgba(255,255,255,0.2);
+  box-shadow: none;
+  cursor: default;
+}
+#pde-painel .peca-tile.correta {
+  background: linear-gradient(145deg, #10B981, #047857);
+  border-color: #064E3B;
+}
+#pde-painel .peca-tile.dica {
+  animation: brilho-dica 1.1s ease infinite;
+}
+@keyframes brilho-dica {
+  0%, 100% { box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+  50% { box-shadow: 0 0 18px 6px rgba(245,158,11,0.85); }
+}
+#pde-painel .peca-tile.movendo {
+  animation: deslizou 0.25s ease-out;
+}
+@keyframes deslizou {
+  0% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* CONTROLES */
+#pde-painel .controles {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+}
+@media (max-width: 480px) {
+  #pde-painel .controles { grid-template-columns: 1fr 1fr; }
+  #pde-painel .controles .btn-estrategia { grid-column: 1 / -1; }
+}
+#pde-painel .btn-controle {
+  background: linear-gradient(145deg, #1E40AF, #1E3A8A);
+  color: white; border: none;
+  padding: 9px 8px; border-radius: 10px;
+  font-family: 'Fredoka',sans-serif; font-weight: 700; font-size: 0.85rem;
+  cursor: pointer; transition: transform 0.08s, box-shadow 0.08s;
+  box-shadow: 0 3px 0 #1E1B4B;
+}
+#pde-painel .btn-controle:active { transform: translateY(2px); box-shadow: 0 1px 0 #1E1B4B; }
+#pde-painel .btn-controle.dourado {
+  background: linear-gradient(145deg, #F59E0B, #B45309);
+  box-shadow: 0 3px 0 #78350F;
+}
+#pde-painel .btn-controle.dourado:active { box-shadow: 0 1px 0 #78350F; }
+#pde-painel .btn-controle.cinza {
+  background: linear-gradient(145deg, #6B7280, #374151);
+  box-shadow: 0 3px 0 #1F2937;
+}
+#pde-painel .btn-controle.cinza:active { box-shadow: 0 1px 0 #1F2937; }
+
+/* DICA E ESTRATÉGIA */
+#pde-painel .dica-msg {
+  background: rgba(245,158,11,0.15);
+  border: 2px solid #F59E0B;
+  padding: 8px 12px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #78350F;
+  font-weight: 700;
+  font-family: 'Fredoka',sans-serif;
+  display: none;
+  animation: slide-down 0.3s ease;
+}
+#pde-painel .dica-msg.show { display: block; }
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* PAINEL LATERAL */
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg,#DBEAFE 0%,#BFDBFE 100%);
+  border-radius: 10px; padding: 6px 8px;
+  margin-bottom: 6px; border: 2px solid #1E40AF;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 42px; height: 42px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1; font-family: 'Fredoka',sans-serif; font-weight: 600;
+  font-size: 0.78rem; color: #1E324A; line-height: 1.2;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #1E40AF; font-weight: 700; }
+
+#pde-painel .stats-jogo {
+  background: linear-gradient(135deg,#DBEAFE 0%,#BFDBFE 100%);
+  border-radius: 10px; padding: 6px 8px;
+  margin-bottom: 6px; border: 2px solid #1E40AF;
+}
+#pde-painel .stats-jogo .linha {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'Fredoka',sans-serif; font-size: 0.82rem;
+  color: #1E40AF; padding: 2px 0;
+}
+#pde-painel .stats-jogo .linha .label { font-weight: 600; }
+#pde-painel .stats-jogo .linha .valor {
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  color: #1E1B4B; font-size: 0.95rem;
+}
+
+#pde-painel .recorde-painel {
+  background: linear-gradient(135deg,#FEF3C7 0%,#FDE68A 100%);
+  border-radius: 10px; padding: 6px 8px;
+  margin-bottom: 6px; border: 2px solid #F59E0B;
+  text-align: center;
+}
+#pde-painel .recorde-painel h5 {
+  font-family: 'Fredoka',sans-serif; margin: 0 0 4px;
+  color: #92400E; font-size: 0.85rem;
+}
+#pde-painel .recorde-painel .recorde-linha {
+  font-family: 'Fredoka',sans-serif; font-size: 0.75rem;
+  color: #78350F; padding: 1px 0;
+}
+#pde-painel .recorde-painel .recorde-linha b { font-family: 'Baloo 2',sans-serif; }
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(30,27,75,0.75);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999; backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #1E40AF;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal { width: 100px; height: 100px; margin: 0 auto 8px; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #1E40AF;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #1E324A; font-size: 0.92rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#1E40AF 0%,#1E3A8A 100%);
+  color: white; border: 3px solid #1E1B4B;
+  box-shadow: 0 4px 0 #1E1B4B;
+}
+#pde-painel .btn-confirmar.dourado {
+  background: linear-gradient(135deg,#F59E0B 0%,#B45309 100%);
+  color: white; border: 3px solid #78350F;
+  box-shadow: 0 4px 0 #78350F;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .estrelas-vitoria {
+  font-size: 2.8rem; margin: 8px 0;
+  letter-spacing: 4px;
+  animation: bounce-estrelas 0.7s ease-out;
+}
+@keyframes bounce-estrelas {
+  0% { transform: scale(0) rotate(-15deg); opacity: 0; }
+  60% { transform: scale(1.2) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); }
+}
+#pde-painel .stats-vitoria {
+  background: #DBEAFE; border-radius: 10px; padding: 10px;
+  margin: 10px 0; text-align: left;
+}
+#pde-painel .stats-vitoria .linha-vit {
+  display: flex; justify-content: space-between;
+  padding: 3px 0;
+  font-family: 'Fredoka',sans-serif; font-size: 0.92rem;
+  color: #1E40AF;
+}
+#pde-painel .stats-vitoria .linha-vit b { color: #1E1B4B; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .feedback-pedag {
+  background: rgba(245,158,11,0.15);
+  border: 2px solid #F59E0B;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin: 10px 0;
+  text-align: left;
+}
+#pde-painel .feedback-pedag .feedback-titulo {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  color: #92400E; font-size: 0.88rem; margin-bottom: 4px;
+}
+#pde-painel .feedback-pedag .feedback-corpo {
+  font-family: 'Fredoka',sans-serif; font-size: 0.85rem;
+  color: #78350F; line-height: 1.4;
+}
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #1E40AF;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #1E324A; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+
+#pde-painel .a11y-grupo { background: #DBEAFE; border: 3px solid #1E40AF; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #1E40AF; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #1E40AF; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#1E40AF 0%,#1E3A8A 100%); color: white; border-color: #1E1B4B; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #1E40AF; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#1E40AF 0%,#1E3A8A 100%); color: white; border-color: #1E1B4B; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #1E1B4B; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #1E40AF;
+  border: 2px solid #1E40AF; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #1E40AF; color: white; }
+
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #F59E0B; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #1E40AF; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#1E40AF,#1E3A8A); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E40AF,#1E3A8A); }
+#pde-painel .selos-bncc .selo-icone.matematica { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#10B981,#047857); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#EC4899,#831843); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #1E40AF; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #1E40AF; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #DBEAFE; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #F59E0B; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #1E40AF; }
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 8px clamp(10px, 1.5vw, 18px) 14px; }
+  #pde-painel .lobby-card { padding: 14px; }
+  #pde-painel .area-jogo { padding: 12px 16px; }
+  #pde-painel .painel-info { padding: 10px 12px; }
+  #pde-painel .jogo-grid { grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .tabuleiro-wrap { max-width: 520px; }
+}
+@media (min-width: 1440px) { #pde-painel { max-width: 1400px; } }
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>🐢 Racha Cuca · Quebra-Cabeça Deslizante</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Oi! Sou a Cuca, a tartaruga raciocinadora 🐢🧠</strong>
+        <span>Devagar se vai longe! Deslize as peças até organizar a sequência. Quanto menos movimentos, mais estrelas você ganha. Bora racharmos a cuca?</span>
+      </div>
+    </div>
+
+    <div class="secao-titulo">🎮 Modo de jogo</div>
+    <div class="modo-grid" id="modo-grid"></div>
+
+    <div class="secao-titulo">📊 Nível de dificuldade</div>
+    <div class="nivel-grid" id="nivel-grid"></div>
+
+    <button class="btn-comecar" id="btn-comecar" onclick="comecarJogo()" disabled>🐢 Começar a racharmos a cuca!</button>
+  </div>
+
+  <div id="jogo" class="jogo-grid hidden">
+    <div class="area-jogo">
+      <div class="cab-jogo">
+        <div class="info-jogo" id="info-jogo">Nível —</div>
+        <div class="estrelas" id="estrelas-display">☆☆☆</div>
+        <div class="cronometro hidden" id="cronometro">00:00</div>
+      </div>
+
+      <div class="dica-msg" id="dica-msg"></div>
+
+      <div class="tabuleiro-wrap">
+        <div class="tabuleiro" id="tabuleiro"></div>
+      </div>
+
+      <div class="controles">
+        <button class="btn-controle dourado" onclick="pedirDica()">💡 Dica</button>
+        <button class="btn-controle" onclick="reiniciarPuzzle()">↻ Reiniciar</button>
+        <button class="btn-controle cinza btn-estrategia" onclick="abrirEstrategia()">📖 Estratégia</button>
+      </div>
+    </div>
+
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Vamos raciocinar juntos!</div>
+      </div>
+      <div class="stats-jogo">
+        <div class="linha"><span class="label">🎯 Movimentos</span><span class="valor" id="movimentos-info">0</span></div>
+        <div class="linha"><span class="label">📐 Ideais</span><span class="valor" id="ideais-info">—</span></div>
+        <div class="linha"><span class="label">💡 Dicas</span><span class="valor" id="dicas-info">0</span></div>
+        <div class="linha"><span class="label">✅ Corretas</span><span class="valor" id="corretas-info">0/0</span></div>
+      </div>
+      <div class="recorde-painel" id="recorde-painel">
+        <h5>🏆 Melhor recorde</h5>
+        <div id="recorde-corpo">
+          <div class="recorde-linha">Ainda sem recordes neste nível</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-fim">
+    <div class="modal-conteudo">
+      <h2 id="fim-titulo">🎉 Parabéns!</h2>
+      <div class="estrelas-vitoria" id="estrelas-vitoria">⭐⭐⭐</div>
+      <p id="fim-msg">—</p>
+      <div class="stats-vitoria" id="stats-vitoria"></div>
+      <div class="feedback-pedag">
+        <div class="feedback-titulo">📚 Feedback Pedagógico</div>
+        <div class="feedback-corpo" id="feedback-pedag-corpo">—</div>
+      </div>
+      <div class="acoes" id="fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🐢 Como brincar com a Cuca</h2>
+
+      <h3>🎯 Objetivo</h3>
+      <p>Organize as peças em ordem crescente (1, 2, 3...) deslizando-as para o espaço vazio. A última posição deve ficar vazia. Pareça óbvio, mas exige planejamento!</p>
+
+      <h3>🖱️ Como deslizar</h3>
+      <p>Toque numa peça que esteja <b>ao lado do espaço vazio</b> (acima, abaixo, esquerda ou direita). Ela desliza pra ocupar o espaço. Peças que não estão adjacentes ao vazio não podem se mover diretamente.</p>
+
+      <h3>⭐ Sistema de estrelas</h3>
+      <ul>
+        <li>⭐⭐⭐ <b>3 estrelas</b> · resolveu com até 120% dos movimentos ideais</li>
+        <li>⭐⭐ <b>2 estrelas</b> · até 150% dos movimentos ideais</li>
+        <li>⭐ <b>1 estrela</b> · até 200% dos movimentos ideais</li>
+      </ul>
+      <p>Movimentos ideais é uma estimativa baseada no tamanho do tabuleiro. Quanto menos cliques, mais estrelas!</p>
+
+      <h3>📊 Níveis</h3>
+      <ul>
+        <li>🐢 <b>Fácil (3×3)</b> · 8 peças · ideal pra começar · 6º ano</li>
+        <li>🎯 <b>Médio (4×4)</b> · 15 peças (clássico) · 7º/8º ano</li>
+        <li>🔥 <b>Difícil (5×5)</b> · 24 peças · pra quem rachou a cuca · 9º ano</li>
+      </ul>
+
+      <h3>🎮 Modos</h3>
+      <ul>
+        <li>👤 <b>Individual</b> · com cronômetro, pra você melhorar o próprio recorde</li>
+        <li>👨‍🏫 <b>Professor (lousa)</b> · sem cronômetro, a turma raciocina junto</li>
+      </ul>
+
+      <h3>💡 Dicas e Estratégia</h3>
+      <p>O botão <b>Dica</b> destaca a peça mais distante da posição correta · use com moderação (consome estatística). O botão <b>Estratégia</b> explica a técnica de resolução por linhas e colunas.</p>
+
+      <h3>📖 BNCC</h3>
+      <ul>
+        <li><b>Computação</b> EF15CO04, EF06CO03, EF06CO04, EF06CO05 (algoritmos, decomposição, padrões, abstração)</li>
+        <li><b>Matemática</b> EF03MA12, EF05MA14 (localização espacial, transformações geométricas)</li>
+      </ul>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar dourado" onclick="fecharModal('modal-ajuda')">Entendi, bora racharmos a cuca!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-estrategia">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>📖 Estratégia da Cuca</h2>
+      <p style="font-style: italic; color: #475569;">Esta é a técnica clássica que matemáticos usam pra resolver o puzzle deslizante.</p>
+
+      <h3>1️⃣ Organize linha por linha (de cima pra baixo)</h3>
+      <p>Comece pela <b>linha 1</b>: coloque as peças 1, 2, 3 (ou 1, 2, 3, 4 no 4×4) na ordem. Não se preocupe com o resto ainda.</p>
+
+      <h3>2️⃣ Faça as colunas da esquerda pra direita</h3>
+      <p>Depois das linhas superiores, organize as colunas restantes. Por exemplo: posicione a peça da 1ª coluna primeiro, depois a 2ª, etc.</p>
+
+      <h3>3️⃣ Os últimos 2×2 vão juntos</h3>
+      <p>O quadrado final (2×2) precisa ser resolvido como uma unidade. Faça as 4 últimas peças rotacionarem até a posição correta. Se travar, tente "girar" o ciclo.</p>
+
+      <h3>🧠 Por que isso funciona?</h3>
+      <p>Esse é o princípio do <b>pensamento algorítmico</b>: decompor um problema grande em problemas menores e resolvê-los em sequência. Mesma lógica que programadores usam pra resolver código complexo!</p>
+
+      <h3>⚠️ Cuidado matemático</h3>
+      <p>Nem toda configuração tem solução · só configurações com <b>paridade par de inversões</b> (em tabuleiros ímpares) ou <b>paridade combinada inversões+linha-vazia</b> (em pares) são solucionáveis. O jogo só te mostra puzzles solucionáveis!</p>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar dourado" onclick="fecharModal('modal-estrategia')">Vou aplicar!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos do Portal.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e brilhos</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar dourado" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script id="script-jogo">
+/* ============================================================
+ * RACHA CUCA · Portal do Educador NEWPC
+ * Mascote: Cuca, a tartaruga raciocinadora
+ * Puzzle deslizante com solvabilidade matemática garantida
+ * ============================================================ */
+
+function svgMascote(expressao = 'normal') {
+  let olhos, boca;
+  if (expressao === 'feliz') {
+    olhos = `
+      <path d="M 36 42 Q 41 37, 46 42" fill="none" stroke="#1F2937" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 54 42 Q 59 37, 64 42" fill="none" stroke="#1F2937" stroke-width="2.5" stroke-linecap="round"/>
+    `;
+    boca = `<path d="M 42 54 Q 50 60 58 54" fill="none" stroke="#1F2937" stroke-width="2.2" stroke-linecap="round"/>`;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <circle cx="42" cy="42" r="5" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <circle cx="58" cy="42" r="5" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <circle cx="44" cy="42" r="2.2" fill="#1F2937"/>
+      <circle cx="60" cy="42" r="2.2" fill="#1F2937"/>
+    `;
+    boca = `<path d="M 46 54 Q 50 56 54 54" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round"/>`;
+  } else if (expressao === 'surpresa') {
+    olhos = `
+      <ellipse cx="42" cy="42" rx="5" ry="6" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <ellipse cx="58" cy="42" rx="5" ry="6" fill="white" stroke="#1F2937" stroke-width="1.5"/>
+      <circle cx="42" cy="43" r="2.5" fill="#1F2937"/>
+      <circle cx="58" cy="43" r="2.5" fill="#1F2937"/>
+    `;
+    boca = `<ellipse cx="50" cy="54" rx="3" ry="4" fill="#1F2937"/>`;
+  } else {
+    olhos = `
+      <ellipse cx="42" cy="42" rx="3" ry="4" fill="#1F2937"/>
+      <ellipse cx="58" cy="42" rx="3" ry="4" fill="#1F2937"/>
+      <ellipse cx="43" cy="40" rx="0.9" ry="1.3" fill="white"/>
+      <ellipse cx="59" cy="40" rx="0.9" ry="1.3" fill="white"/>
+    `;
+    boca = `<path d="M 46 53 Q 50 56 54 53" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round"/>`;
+  }
+
+  return `
+    <!-- Sombra -->
+    <ellipse cx="50" cy="93" rx="32" ry="3" fill="rgba(0,0,0,0.2)"/>
+    <!-- Patinhas traseiras -->
+    <ellipse cx="20" cy="78" rx="6" ry="4" fill="#22C55E" stroke="#15803D" stroke-width="1.5"/>
+    <ellipse cx="80" cy="78" rx="6" ry="4" fill="#22C55E" stroke="#15803D" stroke-width="1.5"/>
+    <!-- Patinhas dianteiras -->
+    <ellipse cx="24" cy="68" rx="6" ry="4" fill="#22C55E" stroke="#15803D" stroke-width="1.5" transform="rotate(-15 24 68)"/>
+    <ellipse cx="76" cy="68" rx="6" ry="4" fill="#22C55E" stroke="#15803D" stroke-width="1.5" transform="rotate(15 76 68)"/>
+    <!-- Rabinho -->
+    <path d="M 50 86 L 45 92 L 55 92 Z" fill="#22C55E" stroke="#15803D" stroke-width="1.2"/>
+    <!-- Casco hexagonal -->
+    <path d="M 30 50 L 50 38 L 70 50 L 70 75 L 50 87 L 30 75 Z" fill="#15803D" stroke="#064E3B" stroke-width="2.5"/>
+    <!-- Padrão hexagonal no casco (números 1, 2, 3) -->
+    <g font-family="Baloo 2, sans-serif" font-weight="800" font-size="9" fill="#FEF3C7" text-anchor="middle">
+      <circle cx="42" cy="58" r="6" fill="#1E40AF" stroke="#FEF3C7" stroke-width="1"/>
+      <text x="42" y="61.5">1</text>
+      <circle cx="58" cy="58" r="6" fill="#1E40AF" stroke="#FEF3C7" stroke-width="1"/>
+      <text x="58" y="61.5">2</text>
+      <circle cx="50" cy="72" r="6" fill="#F59E0B" stroke="#FEF3C7" stroke-width="1"/>
+      <text x="50" y="75.5">3</text>
+    </g>
+    <!-- Cabeça verde -->
+    <ellipse cx="50" cy="42" rx="22" ry="20" fill="#22C55E" stroke="#15803D" stroke-width="2"/>
+    <!-- Pescoço (junção com casco) -->
+    <ellipse cx="50" cy="56" rx="10" ry="6" fill="#22C55E" stroke="#15803D" stroke-width="1.5"/>
+    <!-- Óculos redondos de geometria -->
+    <circle cx="42" cy="42" r="7" fill="rgba(255,255,255,0.15)" stroke="#1E40AF" stroke-width="2.2"/>
+    <circle cx="58" cy="42" r="7" fill="rgba(255,255,255,0.15)" stroke="#1E40AF" stroke-width="2.2"/>
+    <line x1="49" y1="42" x2="51" y2="42" stroke="#1E40AF" stroke-width="2.2"/>
+    <!-- Olhos -->
+    ${olhos}
+    <!-- Boca -->
+    ${boca}
+    <!-- Bochechas -->
+    <ellipse cx="32" cy="48" rx="3" ry="2" fill="#F472B6" opacity="0.5"/>
+    <ellipse cx="68" cy="48" rx="3" ry="2" fill="#F472B6" opacity="0.5"/>
+    <!-- Antena/topete (símbolo de raciocínio) -->
+    <line x1="50" y1="22" x2="50" y2="15" stroke="#15803D" stroke-width="2"/>
+    <circle cx="50" cy="13" r="3" fill="#F59E0B" stroke="#92400E" stroke-width="1"/>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* ============ CONFIGS ============ */
+const MODOS = {
+  individual: { emoji: '👤', titulo: 'Individual', desc: 'Com cronômetro, melhore seu recorde' },
+  professor:  { emoji: '👨‍🏫', titulo: 'Professor (lousa)', desc: 'Sem cronômetro, a turma raciocina junto' }
+};
+
+const NIVEIS_INFO = {
+  facil: {
+    emoji: '🐢',
+    titulo: 'Fácil',
+    desc: '3×3 · 8 peças · 6º ano',
+    size: 3,
+    ano: '6º ano'
+  },
+  medio: {
+    emoji: '🎯',
+    titulo: 'Médio',
+    desc: '4×4 · 15 peças · 7º/8º ano',
+    size: 4,
+    ano: '7º/8º ano'
+  },
+  dificil: {
+    emoji: '🔥',
+    titulo: 'Difícil',
+    desc: '5×5 · 24 peças · 9º ano',
+    size: 5,
+    ano: '9º ano'
+  }
+};
+
+const FALAS_INICIO = [
+  'Olha bem antes de mover! 🐢',
+  'Decomposição: linha por linha.',
+  'Cada movimento conta.',
+  'Devagar se vai longe!',
+  'Pense antes de clicar.'
+];
+const FALAS_ACERTO = [
+  'Boa! Peça no lugar certo. ✅',
+  'Estratégia funcionando!',
+  'Continua assim!',
+  'Aproximou da solução!'
+];
+const FALAS_PROXIMO = [
+  'A peça destacada é a mais distante!',
+  'Tenta a peça mais longe da posição certa.',
+  'Mova a peça brilhando, depois pense no resto.'
+];
+
+const STATE = {
+  modo: null,
+  nivel: null,
+  partida: {
+    ativa: false,
+    size: 0,
+    tiles: [],         /* matriz [row][col] de valores (0 = vazio) */
+    emptyPos: { row: 0, col: 0 },
+    movimentos: 0,
+    movimentosIdeais: 0,
+    dicasUsadas: 0,
+    segundos: 0,
+    iniciou: false,
+    timerInterval: null,
+    pecaDicaAtual: null  /* {row, col} da peça destacada pela dica */
+  }
+};
+
+function salvar() {
+  try {
+    localStorage.setItem('pde_rachacuca_dados', JSON.stringify({
+      modo: STATE.modo, nivel: STATE.nivel
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_rachacuca_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.modo) STATE.modo = d.modo;
+    if (d.nivel) STATE.nivel = d.nivel;
+  } catch (e) {}
+}
+
+function carregarRecordes() {
+  try {
+    const raw = localStorage.getItem('pde_rachacuca_recordes');
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) { return {}; }
+}
+function salvarRecorde(nivelKey, recorde) {
+  try {
+    const recordes = carregarRecordes();
+    const atual = recordes[nivelKey];
+    /* Salva se: não há recorde anterior, ou ganhou mais estrelas, ou empate em estrelas com menos movimentos */
+    if (!atual ||
+        recorde.estrelas > atual.estrelas ||
+        (recorde.estrelas === atual.estrelas && recorde.movimentos < atual.movimentos)) {
+      recordes[nivelKey] = recorde;
+      localStorage.setItem('pde_rachacuca_recordes', JSON.stringify(recordes));
+    }
+  } catch (e) {}
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ============ LOBBY ============ */
+function renderLobby() {
+  const modoCont = document.getElementById('modo-grid');
+  modoCont.innerHTML = '';
+  Object.entries(MODOS).forEach(([key, m]) => {
+    const card = document.createElement('div');
+    card.className = 'modo-card' + (STATE.modo === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="modo-emoji">${m.emoji}</span>
+      <div class="modo-titulo">${m.titulo}</div>
+      <div class="modo-desc">${m.desc}</div>
+    `;
+    card.onclick = () => { STATE.modo = key; salvar(); renderLobby(); };
+    modoCont.appendChild(card);
+  });
+
+  const recordes = carregarRecordes();
+  const nivCont = document.getElementById('nivel-grid');
+  nivCont.innerHTML = '';
+  Object.entries(NIVEIS_INFO).forEach(([key, n]) => {
+    const card = document.createElement('div');
+    card.className = 'nivel-card' + (STATE.nivel === key ? ' selecionado' : '');
+    let recordeHtml = '';
+    const r = recordes[key];
+    if (r) {
+      const estrelas = '⭐'.repeat(r.estrelas);
+      recordeHtml = `<span class="nivel-recorde">${estrelas} ${r.movimentos} mov</span>`;
+    } else {
+      recordeHtml = `<span class="nivel-recorde" style="opacity:0.5">sem recorde</span>`;
+    }
+    card.innerHTML = `
+      <span class="nivel-emoji">${n.emoji}</span>
+      <div class="nivel-titulo">${n.titulo}</div>
+      <div class="nivel-desc">${n.desc}</div>
+      ${recordeHtml}
+    `;
+    card.onclick = () => { STATE.nivel = key; salvar(); renderLobby(); };
+    nivCont.appendChild(card);
+  });
+
+  const btn = document.getElementById('btn-comecar');
+  const podeComecar = STATE.modo && STATE.nivel;
+  btn.disabled = !podeComecar;
+  if (!STATE.modo)        btn.textContent = '🐢 Escolha um modo';
+  else if (!STATE.nivel)  btn.textContent = '🐢 Escolha um nível';
+  else                    btn.textContent = `🐢 Começar (${NIVEIS_INFO[STATE.nivel].titulo} · ${MODOS[STATE.modo].titulo})`;
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+
+/* ============ INICIAR JOGO ============ */
+function comecarJogo() {
+  if (!STATE.modo || !STATE.nivel) return;
+
+  const info = NIVEIS_INFO[STATE.nivel];
+  STATE.partida.size = info.size;
+  STATE.partida.movimentos = 0;
+  STATE.partida.movimentosIdeais = Math.floor(info.size * info.size * 1.5);
+  STATE.partida.dicasUsadas = 0;
+  STATE.partida.segundos = 0;
+  STATE.partida.iniciou = false;
+  STATE.partida.pecaDicaAtual = null;
+  STATE.partida.ativa = true;
+
+  if (STATE.partida.timerInterval) {
+    clearInterval(STATE.partida.timerInterval);
+    STATE.partida.timerInterval = null;
+  }
+
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('jogo').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+
+  if (STATE.modo === 'individual') {
+    document.getElementById('cronometro').classList.remove('hidden');
+  } else {
+    document.getElementById('cronometro').classList.add('hidden');
+  }
+
+  document.getElementById('info-jogo').textContent = `${NIVEIS_INFO[STATE.nivel].titulo} · ${info.size}×${info.size}`;
+  document.getElementById('dica-msg').classList.remove('show');
+
+  inicializarTabuleiro();
+  atualizarDisplay();
+  renderRecordePainel();
+  renderMascote('svg-mascote-painel', 'pensando');
+  document.getElementById('balao-fala-painel').innerHTML =
+    `<b>Cuca:</b> ${FALAS_INICIO[Math.floor(Math.random() * FALAS_INICIO.length)]}`;
+}
+
+/* ============ TABULEIRO + SOLVABILIDADE ============ */
+function inicializarTabuleiro() {
+  const size = STATE.partida.size;
+  const tabuleiro = document.getElementById('tabuleiro');
+  tabuleiro.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+  tabuleiro.innerHTML = '';
+
+  /* Gerar números 1..N-1 + 0 (vazio) */
+  const totalPecas = size * size;
+  let numeros = Array.from({ length: totalPecas - 1 }, (_, i) => i + 1);
+  numeros.push(0);
+
+  /* Embaralhar até ter um puzzle solucionável e NÃO resolvido */
+  do {
+    numeros = shuffle(numeros);
+  } while (!ehSolucionavel(numeros, size) || ehResolvido(numeros));
+
+  STATE.partida.tiles = [];
+  for (let r = 0; r < size; r++) {
+    STATE.partida.tiles[r] = [];
+    for (let c = 0; c < size; c++) {
+      const valor = numeros[r * size + c];
+      STATE.partida.tiles[r][c] = valor;
+      if (valor === 0) STATE.partida.emptyPos = { row: r, col: c };
+    }
+  }
+
+  renderTabuleiro();
+}
+
+function ehSolucionavel(arr, size) {
+  let inversoes = 0;
+  const semVazio = arr.filter(x => x !== 0);
+  for (let i = 0; i < semVazio.length; i++) {
+    for (let j = i + 1; j < semVazio.length; j++) {
+      if (semVazio[i] > semVazio[j]) inversoes++;
+    }
+  }
+  if (size % 2 === 1) {
+    /* Tabuleiros ímpares (3x3, 5x5): solucionável se inversões for PAR */
+    return inversoes % 2 === 0;
+  } else {
+    /* Tabuleiros pares (4x4): solucionável se (inversões + linha-do-vazio-contada-de-baixo) for ÍMPAR
+     * Regra clássica do 15-puzzle: https://en.wikipedia.org/wiki/15_puzzle#Solvability */
+    const idxVazio = arr.indexOf(0);
+    const linhaVazio = Math.floor(idxVazio / size);
+    const linhaVazioDeBaixo = size - linhaVazio;
+    return (inversoes + linhaVazioDeBaixo) % 2 === 1;
+  }
+}
+
+function ehResolvido(arr) {
+  for (let i = 0; i < arr.length - 1; i++) {
+    if (arr[i] !== i + 1) return false;
+  }
+  return arr[arr.length - 1] === 0;
+}
+
+function renderTabuleiro() {
+  const tabuleiro = document.getElementById('tabuleiro');
+  const size = STATE.partida.size;
+  tabuleiro.innerHTML = '';
+  let posEsperada = 1;
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      const valor = STATE.partida.tiles[r][c];
+      const tile = document.createElement('div');
+      tile.className = 'peca-tile';
+      tile.dataset.row = r;
+      tile.dataset.col = c;
+      if (valor === 0) {
+        tile.classList.add('vazia');
+        tile.textContent = '';
+      } else {
+        tile.textContent = valor;
+        /* Última posição não conta como correta no critério visual */
+        const ehUltimaPosicao = (r === size - 1 && c === size - 1);
+        if (valor === posEsperada && !ehUltimaPosicao) {
+          tile.classList.add('correta');
+        }
+        tile.onclick = () => clicarPeca(r, c);
+      }
+      if (!(r === size - 1 && c === size - 1)) posEsperada++;
+      tabuleiro.appendChild(tile);
+    }
+  }
+}
+
+function podeMover(r, c) {
+  const { row: er, col: ec } = STATE.partida.emptyPos;
+  return (r === er && Math.abs(c - ec) === 1) ||
+         (c === ec && Math.abs(r - er) === 1);
+}
+
+function moverPeca(r, c) {
+  const { row: er, col: ec } = STATE.partida.emptyPos;
+  STATE.partida.tiles[er][ec] = STATE.partida.tiles[r][c];
+  STATE.partida.tiles[r][c] = 0;
+  STATE.partida.emptyPos = { row: r, col: c };
+}
+
+function clicarPeca(r, c) {
+  if (!podeMover(r, c)) return;
+
+  /* Limpa dica visual se houver */
+  if (STATE.partida.pecaDicaAtual) {
+    document.querySelectorAll('.peca-tile').forEach(t => t.classList.remove('dica'));
+    STATE.partida.pecaDicaAtual = null;
+  }
+
+  /* Inicia timer no primeiro movimento (se modo individual) */
+  if (!STATE.partida.iniciou) {
+    STATE.partida.iniciou = true;
+    if (STATE.modo === 'individual') iniciarCronometro();
+  }
+
+  tocarSom('clique');
+  moverPeca(r, c);
+  STATE.partida.movimentos++;
+  renderTabuleiro();
+  atualizarEstrelas();
+  atualizarDisplay();
+
+  /* Feedback no painel a cada 5 movimentos */
+  if (STATE.partida.movimentos % 5 === 0) {
+    renderMascote('svg-mascote-painel', 'pensando');
+    document.getElementById('balao-fala-painel').innerHTML =
+      `<b>Cuca:</b> ${FALAS_ACERTO[Math.floor(Math.random() * FALAS_ACERTO.length)]}`;
+  }
+
+  /* Verificar vitória */
+  if (verificarVitoria()) {
+    setTimeout(() => encerrarPartida(), 350);
+  }
+}
+
+function verificarVitoria() {
+  const size = STATE.partida.size;
+  let esperado = 1;
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      if (r === size - 1 && c === size - 1) {
+        return STATE.partida.tiles[r][c] === 0;
+      }
+      if (STATE.partida.tiles[r][c] !== esperado) return false;
+      esperado++;
+    }
+  }
+  return true;
+}
+
+function contarCorretas() {
+  const size = STATE.partida.size;
+  let corretas = 0;
+  let esperado = 1;
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      if (r === size - 1 && c === size - 1) break;
+      if (STATE.partida.tiles[r][c] === esperado) corretas++;
+      esperado++;
+    }
+  }
+  return { corretas, total: size * size - 1 };
+}
+
+function iniciarCronometro() {
+  if (STATE.partida.timerInterval) clearInterval(STATE.partida.timerInterval);
+  STATE.partida.timerInterval = setInterval(() => {
+    STATE.partida.segundos++;
+    atualizarDisplay();
+  }, 1000);
+}
+
+function atualizarDisplay() {
+  document.getElementById('movimentos-info').textContent = STATE.partida.movimentos;
+  document.getElementById('ideais-info').textContent = STATE.partida.movimentosIdeais;
+  document.getElementById('dicas-info').textContent = STATE.partida.dicasUsadas;
+  const cont = contarCorretas();
+  document.getElementById('corretas-info').textContent = `${cont.corretas}/${cont.total}`;
+  const min = Math.floor(STATE.partida.segundos / 60);
+  const seg = STATE.partida.segundos % 60;
+  document.getElementById('cronometro').textContent =
+    `${min.toString().padStart(2,'0')}:${seg.toString().padStart(2,'0')}`;
+}
+
+function calcularEstrelas() {
+  if (STATE.partida.movimentos === 0) return 0;
+  const eficiencia = STATE.partida.movimentos / STATE.partida.movimentosIdeais;
+  if (eficiencia <= 1.2) return 3;
+  if (eficiencia <= 1.5) return 2;
+  if (eficiencia <= 2.0) return 1;
+  return 0;
+}
+
+function atualizarEstrelas() {
+  const estrelas = calcularEstrelas();
+  const display = document.getElementById('estrelas-display');
+  display.textContent = '⭐'.repeat(estrelas) + '☆'.repeat(3 - estrelas);
+}
+
+/* ============ DICAS ============ */
+function pedirDica() {
+  if (!STATE.partida.iniciou) {
+    mostrarDicaMsg('Faça pelo menos um movimento primeiro!', 2500);
+    return;
+  }
+  STATE.partida.dicasUsadas++;
+  atualizarDisplay();
+
+  /* Limpa destaque anterior */
+  document.querySelectorAll('.peca-tile').forEach(t => t.classList.remove('dica'));
+
+  /* Buscar peças que podem mover e calcular distância de cada uma à posição correta */
+  const size = STATE.partida.size;
+  const moveis = [];
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      const v = STATE.partida.tiles[r][c];
+      if (v === 0) continue;
+      if (!podeMover(r, c)) continue;
+      const posEsperada = v - 1;
+      const rEsp = Math.floor(posEsperada / size);
+      const cEsp = posEsperada % size;
+      const distancia = Math.abs(r - rEsp) + Math.abs(c - cEsp);
+      moveis.push({ row: r, col: c, valor: v, distancia });
+    }
+  }
+  if (moveis.length === 0) return;
+  moveis.sort((a, b) => b.distancia - a.distancia);
+  const melhor = moveis[0];
+
+  const tile = document.querySelector(`.peca-tile[data-row="${melhor.row}"][data-col="${melhor.col}"]`);
+  if (tile) tile.classList.add('dica');
+  STATE.partida.pecaDicaAtual = { row: melhor.row, col: melhor.col };
+
+  mostrarDicaMsg(`💡 Mova a peça <b>${melhor.valor}</b> · ela está mais longe da posição correta!`, 3500);
+  renderMascote('svg-mascote-painel', 'surpresa');
+  document.getElementById('balao-fala-painel').innerHTML =
+    `<b>Cuca:</b> ${FALAS_PROXIMO[Math.floor(Math.random() * FALAS_PROXIMO.length)]}`;
+}
+
+function mostrarDicaMsg(html, duracao) {
+  const el = document.getElementById('dica-msg');
+  el.innerHTML = html;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), duracao);
+}
+
+/* ============ REINICIAR ============ */
+function reiniciarPuzzle() {
+  if (!confirm('Reiniciar o puzzle? O progresso atual será perdido.')) return;
+  if (STATE.partida.timerInterval) {
+    clearInterval(STATE.partida.timerInterval);
+    STATE.partida.timerInterval = null;
+  }
+  comecarJogo();
+}
+
+/* ============ ENCERRAR PARTIDA ============ */
+function encerrarPartida() {
+  STATE.partida.ativa = false;
+  if (STATE.partida.timerInterval) {
+    clearInterval(STATE.partida.timerInterval);
+    STATE.partida.timerInterval = null;
+  }
+
+  const estrelas = calcularEstrelas();
+  const eficiencia = STATE.partida.movimentos / STATE.partida.movimentosIdeais;
+  const min = Math.floor(STATE.partida.segundos / 60);
+  const seg = STATE.partida.segundos % 60;
+  const tempo = `${min.toString().padStart(2,'0')}:${seg.toString().padStart(2,'0')}`;
+
+  document.getElementById('estrelas-vitoria').textContent =
+    '⭐'.repeat(estrelas) + '☆'.repeat(3 - estrelas);
+
+  let titulo = '';
+  if (estrelas === 3) titulo = '🏆 Excelente! 3 estrelas!';
+  else if (estrelas === 2) titulo = '🎉 Muito bom! 2 estrelas!';
+  else if (estrelas === 1) titulo = '👍 Conseguiu!';
+  else titulo = '✅ Puzzle completo!';
+
+  document.getElementById('fim-titulo').textContent = titulo;
+  document.getElementById('fim-msg').innerHTML =
+    `Você racha-cuca-rou o <b>${NIVEIS_INFO[STATE.nivel].titulo}</b> (${STATE.partida.size}×${STATE.partida.size})!`;
+
+  document.getElementById('stats-vitoria').innerHTML = `
+    <div class="linha-vit"><span>🎯 Movimentos</span><b>${STATE.partida.movimentos}</b></div>
+    <div class="linha-vit"><span>📐 Movimentos ideais</span><b>${STATE.partida.movimentosIdeais}</b></div>
+    <div class="linha-vit"><span>📊 Eficiência</span><b>${(eficiencia * 100).toFixed(0)}%</b></div>
+    ${STATE.modo === 'individual' ? `<div class="linha-vit"><span>⏱️ Tempo</span><b>${tempo}</b></div>` : ''}
+    <div class="linha-vit"><span>💡 Dicas usadas</span><b>${STATE.partida.dicasUsadas}</b></div>
+  `;
+
+  document.getElementById('feedback-pedag-corpo').textContent = gerarFeedback(estrelas, eficiencia);
+
+  /* Salvar recorde (só no modo individual) */
+  if (STATE.modo === 'individual') {
+    salvarRecorde(STATE.nivel, {
+      movimentos: STATE.partida.movimentos,
+      segundos: STATE.partida.segundos,
+      estrelas: estrelas,
+      dicasUsadas: STATE.partida.dicasUsadas,
+      data: new Date().toISOString()
+    });
+  }
+
+  /* Botões */
+  const acoes = document.getElementById('fim-acoes');
+  acoes.innerHTML = '';
+  const btn1 = document.createElement('button');
+  btn1.className = 'btn-confirmar dourado';
+  btn1.textContent = '↻ Jogar de novo';
+  btn1.onclick = () => { fecharModal('modal-fim'); comecarJogo(); };
+  acoes.appendChild(btn1);
+  const btn2 = document.createElement('button');
+  btn2.className = 'btn-cancelar';
+  btn2.textContent = '🏠 Menu';
+  btn2.onclick = () => { fecharModal('modal-fim'); voltarLobby(); };
+  acoes.appendChild(btn2);
+
+  document.getElementById('modal-fim').classList.add('aberto');
+  if (estrelas >= 2) criarConfetes();
+  tocarSom('vitoria');
+}
+
+function gerarFeedback(estrelas, eficiencia) {
+  const feedbacks = {
+    3: [
+      'Excelente! Você demonstrou pensamento algorítmico avançado, resolvendo com alta eficiência. A técnica de decomposição (linha por linha) está dominada.',
+      'Perfeito! Sua estratégia foi exemplar. Você reconheceu padrões e aplicou o algoritmo certo. Próximo passo: tente um nível mais difícil.',
+      'Impressionante! Você usou bem o conceito de abstração, ignorando peças irrelevantes em cada etapa.'
+    ],
+    2: [
+      'Muito bom! Você está no caminho certo. Pra alcançar 3 estrelas, planeje uma sequência de 3-4 movimentos antes de executar.',
+      'Ótimo trabalho! Estratégia: comece pela linha 1, depois pela coluna 1, e por aí vai. Reduz movimentos repetidos.',
+      'Bom desempenho! Tente decompor mentalmente: primeiro organize só a primeira linha; depois, ignore-a e organize o resto.'
+    ],
+    1: [
+      'Parabéns por completar! Pra melhorar, use o botão Estratégia. A técnica linha-por-linha reduz muito os movimentos.',
+      'Você conseguiu! Dica: peças que já estão na posição correta (verdes) devem ficar paradas. Foque nas peças que ainda estão fora.',
+      'Completou o desafio! Próxima vez observe padrões: peças que precisam fazer um movimento circular pra entrar no lugar.'
+    ],
+    0: [
+      'Você completou o puzzle! Mesmo levando mais movimentos, chegou na solução. Use o botão Estratégia pra aprender técnicas eficientes.',
+      'Missão cumprida! Pratique mais: o segredo é resolver uma linha de cada vez, sem mexer nas que já estão prontas.',
+      'Parabéns! A próxima rodada tente usar o botão Dica menos vezes e planejar mais antes de mover.'
+    ]
+  };
+  const msgs = feedbacks[estrelas] || feedbacks[0];
+  return msgs[Math.floor(Math.random() * msgs.length)];
+}
+
+function renderRecordePainel() {
+  const recordes = carregarRecordes();
+  const r = recordes[STATE.nivel];
+  const cont = document.getElementById('recorde-corpo');
+  if (!r) {
+    cont.innerHTML = '<div class="recorde-linha">Ainda sem recordes neste nível</div>';
+    return;
+  }
+  const min = Math.floor(r.segundos / 60);
+  const seg = r.segundos % 60;
+  cont.innerHTML = `
+    <div class="recorde-linha"><b>${'⭐'.repeat(r.estrelas)}</b> ${r.movimentos} movimentos</div>
+    <div class="recorde-linha">⏱️ <b>${min.toString().padStart(2,'0')}:${seg.toString().padStart(2,'0')}</b> · 💡 ${r.dicasUsadas} dicas</div>
+  `;
+}
+
+function voltarLobby() {
+  if (STATE.partida.ativa && STATE.partida.iniciou && STATE.partida.movimentos > 0) {
+    if (!confirm('Voltar ao menu? A partida atual será perdida.')) return;
+  }
+  STATE.partida.ativa = false;
+  if (STATE.partida.timerInterval) {
+    clearInterval(STATE.partida.timerInterval);
+    STATE.partida.timerInterval = null;
+  }
+  document.getElementById('jogo').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-fim');
+  renderLobby();
+}
+
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirEstrategia() { document.getElementById('modal-estrategia').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+
+/* ============ SOM ============ */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'vitoria') {
+      const notas = [523, 659, 784, 1047, 1318];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t0 = c.currentTime + i * 0.09;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.22);
+        o.start(t0); o.stop(t0 + 0.25);
+      });
+    } else if (tipo === 'clique') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 540; o.type = 'sine';
+      g.gain.setValueAtTime(0.05, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.08);
+      o.start(); o.stop(c.currentTime + 0.1);
+    }
+  } catch (e) {}
+}
+
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#1E40AF','#1E3A8A','#3B82F6','#F59E0B','#FBBF24','#FEF3C7','#10B981'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* ============ A11Y ============ */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* ============ WEBNODE EMBED ============ */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => reportarAltura());
+  ro.observe(document.getElementById('pde-painel'));
+}
+
+/* ============ SELOS BNCC ============ */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Pensamento Computacional',
+      itens: [
+        { cod: 'EF15CO04', desc: 'Construir algoritmos para resolver problemas.' },
+        { cod: 'EF06CO03', desc: 'Aplicar decomposição de problemas complexos em partes menores.' },
+        { cod: 'EF06CO04', desc: 'Reconhecer padrões para resolver problemas com eficiência.' },
+        { cod: 'EF06CO05', desc: 'Aplicar abstração: focar no essencial, ignorar o irrelevante.' }
+      ]
+    },
+    {
+      tipo: 'matematica',
+      icone: '📐',
+      titulo: 'BNCC Matemática · Geometria e Localização',
+      itens: [
+        { cod: 'EF03MA12', desc: 'Descrever e representar localização espacial em malhas quadriculadas.' },
+        { cod: 'EF05MA14', desc: 'Utilizar e compreender diferentes representações para localização e movimentação.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Modo Professor sem cronômetro para alunos com diferentes ritmos cognitivos</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-fim'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+/* ============ INIT ============ */
+carregar();
+carregarA11y();
+renderLobby();
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+
+/* Expor pro smoke test */
+window.STATE = STATE;
+window.MODOS = MODOS;
+window.NIVEIS_INFO = NIVEIS_INFO;
+window.comecarJogo = comecarJogo;
+window.voltarLobby = voltarLobby;
+window.clicarPeca = clicarPeca;
+window.pedirDica = pedirDica;
+window.reiniciarPuzzle = reiniciarPuzzle;
+window.abrirAjuda = abrirAjuda;
+window.abrirEstrategia = abrirEstrategia;
+window.abrirAcessibilidade = abrirAcessibilidade;
+window.fecharModal = fecharModal;
+window.defA11y = defA11y;
+window.ESTADO_A11Y = ESTADO_A11Y;
+window.renderLobby = renderLobby;
+window.montarSelosBNCC = montarSelosBNCC;
+window.svgMascote = svgMascote;
+window.ehSolucionavel = ehSolucionavel;
+window.ehResolvido = ehResolvido;
+window.verificarVitoria = verificarVitoria;
+window.podeMover = podeMover;
+window.moverPeca = moverPeca;
+window.calcularEstrelas = calcularEstrelas;
+window.carregarRecordes = carregarRecordes;
+
+</script>
+</body>
+</html>

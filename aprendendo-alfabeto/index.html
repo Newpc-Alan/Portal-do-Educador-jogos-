@@ -1,0 +1,3119 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Aprendendo o Alfabeto · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===========================================================
+   PADRÃO PORTAL DO EDUCADOR · v2 LÚDICO
+   =========================================================== */
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #2D1B5C);
+  padding: 10px clamp(8px,1.5vw,16px) 16px;
+  max-width: 1280px;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  --pde-escala: 1;
+  --pde-cor-texto: #2D1B5C;
+  font-size: calc(1rem * var(--pde-escala));
+  background: linear-gradient(180deg, #FFF9E6 0%, #FFE5B4 100%);
+  border-radius: 16px;
+}
+
+/* A11Y · escala */
+#pde-painel.txt-grande   { --pde-escala: 1.18; }
+#pde-painel.txt-enorme   { --pde-escala: 1.42; }
+#pde-painel.txt-gigante  { --pde-escala: 1.72; }
+
+/* A11Y · alto contraste */
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-treino,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .lobby-secao { color: #FBBF24; }
+#pde-painel.alto-contraste .chip,
+#pde-painel.alto-contraste .modo-tab { background: #1A1A1A; color: #FFF; border-color: #444; }
+#pde-painel.alto-contraste .chip.ativo,
+#pde-painel.alto-contraste .modo-tab.ativo { background: #FBBF24; color: #000; border-color: #FFF; }
+#pde-painel.alto-contraste .letra-grande { background: #FBBF24 !important; color: #000 !important; border-color: #FFF; }
+#pde-painel.alto-contraste .letra-opcao { background: #1A1A1A; color: #FFF; border-color: #FBBF24; }
+#pde-painel.alto-contraste .letra-opcao.acerto { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .letra-opcao.erro { background: #450A0A !important; color: #FCA5A5 !important; }
+#pde-painel.alto-contraste .ord-slot { background: #1A1A1A; border-color: #FBBF24; color: #FFF; }
+#pde-painel.alto-contraste .ord-slot.preenchido { background: #FBBF24; color: #000; }
+#pde-painel.alto-contraste .ord-arrastavel { background: #FBBF24; color: #000; border-color: #FFF; }
+#pde-painel.alto-contraste .par-card { background: #1A1A1A; border-color: #FBBF24; color: #FFF; }
+#pde-painel.alto-contraste .par-card.par-correto { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .par-card.par-selecionado { background: #FBBF24; color: #000; border-color: #FFF; }
+#pde-painel.alto-contraste .palavra-letra-slot { background: #1A1A1A; color: #FBBF24; border-color: #FBBF24; }
+#pde-painel.alto-contraste .palavra-letra-slot.preenchida { background: #FBBF24; color: #000; }
+#pde-painel.alto-contraste .palavra-letra-disp { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .btn-acao { background: #FBBF24 !important; color: #000 !important; border: 3px solid #FFF; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+#pde-painel.alto-contraste .mapa-etapa.atual .circulo { background: #FBBF24; color: #000; }
+#pde-painel.alto-contraste .balao-fala { background: #1A1A1A; color: #FBBF24; border-color: #FBBF24; }
+#pde-painel.alto-contraste .voc-zona { background: #1A1A1A; border-color: #FBBF24; }
+
+/* A11Y · daltônico */
+#pde-painel.daltonico .letra-opcao.acerto { background: linear-gradient(135deg,#3B82F6,#1E3A8A); color: white; border-color: #1E3A8A; }
+#pde-painel.daltonico .letra-opcao.acerto::after { content: " ✓"; }
+#pde-painel.daltonico .letra-opcao.erro { background: #FFEDD5; color: #9A3412; border-color: #FB923C; }
+#pde-painel.daltonico .letra-opcao.erro::after { content: " ✗"; }
+
+/* A11Y · sem animações */
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container,
+#pde-painel.sem-animacoes .estrela-pop { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* ============== HEADER (institucional NEWPC) ============== */
+#pde-painel .header {
+  background: linear-gradient(135deg,#1E324A 0%,#2C4A6B 100%);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: white;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 2px 8px rgba(30,50,74,0.15);
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(1rem,2.2vw,1.3rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+}
+#pde-painel .header h1 .emoji-titulo {
+  display: inline-block;
+  margin-right: 6px;
+}
+#pde-painel .header .acoes { display: flex; gap: 8px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 6px 12px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.88rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* ============== LOBBY ============== */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 18px;
+  padding: 14px;
+  border: 3px solid #FFD93D;
+  box-shadow: 0 4px 12px rgba(255,107,107,0.1);
+  position: relative;
+}
+
+/* Boas-vindas com mascote */
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, #FFD93D 0%, #FFAB00 100%);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 2px solid #FFA500;
+}
+#pde-painel .boas-vindas .mascote-wrap {
+  flex-shrink: 0;
+  width: 70px; height: 70px;
+}
+#pde-painel .boas-vindas .balao {
+  flex: 1;
+  background: white;
+  padding: 9px 12px;
+  border-radius: 12px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #2D1B5C;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: '';
+  position: absolute;
+  left: -10px; top: 30px;
+  width: 0; height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 12px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #FF6B6B;
+  font-size: 1.15rem;
+  margin-bottom: 2px;
+}
+
+/* Mascote SVG: animação flutuar devagar (calma) */
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+/* "Dancar feliz" só dispara como animação ÚNICA quando ele acerta - não infinita */
+@keyframes dancarFelizUnica {
+  0%,100% { transform: rotate(0) scale(1); }
+  25% { transform: rotate(-8deg) scale(1.08); }
+  75% { transform: rotate(8deg) scale(1.08); }
+}
+#pde-painel .mascote-wrap.celebrando { animation: dancarFelizUnica 0.6s ease-in-out 2; }
+
+/* Nome do aluno */
+#pde-painel .input-nome {
+  width: 100%;
+  border: 3px solid #FFD93D;
+  border-radius: 14px;
+  padding: 11px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  background: white;
+  color: #2D1B5C;
+  margin-bottom: 14px;
+}
+#pde-painel .input-nome:focus { outline: none; border-color: #FF6B6B; box-shadow: 0 0 0 4px rgba(255,107,107,0.2); }
+
+/* Resumo de progresso (estrelas globais) */
+#pde-painel .resumo-progresso {
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(135deg, #4D96FF 0%, #2D6FE0 100%);
+  color: white;
+  border-radius: 12px;
+  padding: 8px 14px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+  border: 2px solid #1E50A8;
+}
+#pde-painel .resumo-progresso .estrelas {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+}
+#pde-painel .resumo-progresso .estrelas .ativa {
+  color: #FFD93D;
+  text-shadow: 0 0 8px rgba(255,217,61,0.6);
+}
+#pde-painel .resumo-progresso .estrelas .vazia { color: rgba(255,255,255,0.3); }
+#pde-painel .resumo-progresso .info {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+}
+#pde-painel .resumo-progresso .info b { font-weight: 700; }
+
+/* Configurações (cor de letra + voz) */
+#pde-painel .config-rapida {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  margin-bottom: 12px;
+}
+@media (max-width: 580px) { #pde-painel .config-rapida { grid-template-columns: 1fr; } }
+
+#pde-painel .config-card {
+  background: white;
+  border: 2px solid #6BCB77;
+  border-radius: 12px;
+  padding: 8px 10px;
+}
+#pde-painel .config-card .titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #2D1B5C;
+  font-size: 0.88rem;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 4px;
+}
+#pde-painel .chips-letras { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+#pde-painel .chip {
+  background: #F1F5F9;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 8px 4px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+  color: #475569;
+}
+#pde-painel .chip:hover { background: #FFE5B4; }
+#pde-painel .chip.ativo {
+  background: linear-gradient(135deg,#FF6B6B 0%,#EE5A52 100%);
+  color: white;
+  border-color: #C73E3E;
+  transform: scale(1.05);
+}
+#pde-painel .chip .desc { display: block; font-size: 0.65rem; font-weight: 600; opacity: 0.85; }
+
+/* Toggle Voz */
+#pde-painel .voz-toggle {
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer; user-select: none;
+  padding: 6px;
+  border-radius: 10px;
+  transition: all 0.15s;
+}
+#pde-painel .voz-toggle:hover { background: #F1F5F9; }
+#pde-painel .voz-toggle .switch {
+  width: 42px; height: 24px;
+  background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0;
+  transition: background 0.2s;
+}
+#pde-painel .voz-toggle .switch::after {
+  content: ""; position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; background: white; border-radius: 50%;
+  transition: left 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+#pde-painel .voz-toggle.ativo .switch { background: #6BCB77; }
+#pde-painel .voz-toggle.ativo .switch::after { left: 21px; }
+#pde-painel .voz-toggle .label-voz {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #2D1B5C;
+  flex: 1;
+}
+
+/* MAPA DE AVENTURA */
+#pde-painel .mapa-aventura {
+  background: linear-gradient(180deg,#A8E6CF 0%,#7FC8A9 100%);
+  border-radius: 16px;
+  padding: 14px 12px;
+  margin-bottom: 12px;
+  border: 3px solid #5BA084;
+  position: relative;
+}
+#pde-painel .mapa-titulo {
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: white;
+  font-size: 1.05rem;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  position: relative;
+  z-index: 2;
+}
+#pde-painel .mapa-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+}
+@media (max-width: 700px) { #pde-painel .mapa-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 380px) { #pde-painel .mapa-grid { grid-template-columns: repeat(2, 1fr); } }
+
+#pde-painel .mapa-etapa {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.12s;
+  border: 2px solid #B8E0D2;
+  position: relative;
+}
+#pde-painel .mapa-etapa:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.12); }
+#pde-painel .mapa-etapa .circulo {
+  width: 36px; height: 36px;
+  background: #FFD93D;
+  border: 2px solid #FFA500;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 4px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #2D1B5C;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+#pde-painel .mapa-etapa .emoji-lugar { font-size: 1.7rem; line-height: 1; display: block; margin-bottom: 2px; }
+#pde-painel .mapa-etapa .nome-lugar {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.74rem;
+  color: #2D1B5C;
+  line-height: 1.1;
+  display: block;
+}
+#pde-painel .mapa-etapa .estrelas-lugar {
+  margin-top: 2px;
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+}
+#pde-painel .mapa-etapa .estrelas-lugar .ativa { color: #FFD93D; }
+#pde-painel .mapa-etapa .estrelas-lugar .vazia { color: #CBD5E1; }
+#pde-painel .mapa-etapa.feita {
+  background: linear-gradient(135deg,#A8E6CF 0%,#7FC8A9 100%);
+  border-color: #5BA084;
+}
+#pde-painel .mapa-etapa.feita .circulo { background: #6BCB77; color: white; border-color: #4DA85A; }
+#pde-painel .mapa-etapa.atual {
+  background: linear-gradient(135deg,#FFD93D 0%,#FFAB00 100%);
+  border-color: #FF6B00;
+  box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+}
+#pde-painel .mapa-etapa.atual .circulo {
+  background: #FF6B6B;
+  color: white;
+  border-color: #C73E3E;
+}
+#pde-painel .mapa-etapa.bloqueada {
+  background: #E2E8F0;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+#pde-painel .mapa-etapa.bloqueada::after {
+  content: '🔒';
+  position: absolute;
+  top: 4px; right: 6px;
+  font-size: 1rem;
+}
+#pde-painel .mapa-etapa.bloqueada .circulo { background: #94A3B8; color: #475569; border-color: #64748B; }
+
+/* Botão "começar aventura" */
+#pde-painel .btn-comecar-aventura {
+  width: 100%;
+  background: linear-gradient(135deg,#FF6B6B 0%,#EE5A52 100%);
+  color: white;
+  border: 3px solid white;
+  border-radius: 14px;
+  padding: 12px 20px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #C73E3E, 0 6px 12px rgba(199,62,62,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #C73E3E;
+}
+#pde-painel .btn-comecar-aventura:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #C73E3E, 0 3px 6px rgba(199,62,62,0.25);
+}
+
+/* ============== TELA DE TREINO ============== */
+#pde-painel .treino-grid {
+  display: grid; gap: 14px;
+  grid-template-columns: 280px 1fr;
+  align-items: start;
+}
+@media (max-width: 880px) { #pde-painel .treino-grid { grid-template-columns: 1fr; } }
+
+#pde-painel .painel-info {
+  background: white;
+  border-radius: 16px;
+  padding: 12px;
+  border: 3px solid #4D96FF;
+  box-shadow: 0 2px 8px rgba(77,150,255,0.12);
+}
+#pde-painel .area-treino {
+  background: white;
+  border-radius: 16px;
+  padding: 14px;
+  border: 3px solid #FFD93D;
+  box-shadow: 0 2px 8px rgba(255,217,61,0.12);
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Mascote no painel */
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg,#FFE5B4 0%,#FFD9B4 100%);
+  border-radius: 12px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 2px solid #FFA500;
+}
+#pde-painel .mascote-painel .mascote-mini {
+  width: 44px; height: 44px;
+  flex-shrink: 0;
+}
+#pde-painel .mascote-painel .balao {
+  flex: 1;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #2D1B5C;
+  line-height: 1.25;
+}
+#pde-painel .mascote-painel .balao b { color: #FF6B6B; font-weight: 700; }
+
+/* Etapa título */
+#pde-painel .etapa-titulo-grande {
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #FF6B6B;
+  font-size: 1.1rem;
+  margin: 0 0 6px;
+}
+#pde-painel .etapa-titulo-grande .emoji-lugar { font-size: 1.4rem; margin-right: 4px; vertical-align: middle; }
+
+/* Progresso visual com estrelinhas */
+#pde-painel .estrelinhas-prog {
+  display: flex; flex-wrap: wrap; gap: 3px;
+  justify-content: center;
+  background: #FFF9E6;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 2px solid #FFD93D;
+}
+#pde-painel .estrelinhas-prog .estrelinha {
+  font-size: 1.2rem;
+  color: #CBD5E1;
+  transition: color 0.3s;
+  display: inline-block;
+}
+#pde-painel .estrelinhas-prog .estrelinha.ativa {
+  color: #FFD93D;
+  text-shadow: 0 0 8px rgba(255,217,61,0.7);
+  animation: estrelaPop 0.5s ease-out;
+}
+@keyframes estrelaPop {
+  0% { transform: scale(0) rotate(-180deg); }
+  60% { transform: scale(1.4) rotate(15deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+/* Mini-mapa lateral */
+#pde-painel .mini-mapa {
+  display: flex; flex-direction: column; gap: 4px;
+  margin-top: 6px;
+}
+#pde-painel .mini-mapa-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #2D1B5C;
+  font-size: 0.8rem;
+  margin-bottom: 2px;
+  display: flex; align-items: center; gap: 4px;
+}
+#pde-painel .mini-mapa-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px; border-radius: 8px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #94A3B8;
+  background: #F8FAFC;
+}
+#pde-painel .mini-mapa-item .num-mini {
+  width: 18px; height: 18px;
+  background: #CBD5E1;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  color: white;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+#pde-painel .mini-mapa-item.feita { color: #6BCB77; background: #E0F7E9; }
+#pde-painel .mini-mapa-item.feita .num-mini { background: #6BCB77; }
+#pde-painel .mini-mapa-item.atual {
+  color: white;
+  background: linear-gradient(135deg,#FF6B6B 0%,#EE5A52 100%);
+  font-weight: 700;
+}
+#pde-painel .mini-mapa-item.atual .num-mini { background: #FFD93D; color: #2D1B5C; }
+
+/* Botões secundários */
+#pde-painel .btn-secundario {
+  background: white; color: #FF6B6B;
+  border: 2px solid #FF6B6B; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #FF6B6B; color: white; }
+
+/* ============== ATIVIDADE 1: RECONHECIMENTO ============== */
+#pde-painel .reco-area {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px; flex: 1;
+}
+#pde-painel .letra-grande-wrap { position: relative; }
+#pde-painel .letra-grande {
+  background: linear-gradient(135deg,#4D96FF 0%,#2D6FE0 100%);
+  color: white;
+  border: 6px solid #FFD93D;
+  border-radius: 24px;
+  width: 160px; height: 160px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 6.5rem;
+  line-height: 1;
+  box-shadow: 0 6px 18px rgba(77,150,255,0.35);
+  animation: aparecerLetra 0.4s ease-out;
+}
+@keyframes aparecerLetra {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+#pde-painel .letra-grande.duo { font-size: 4rem; letter-spacing: 16px; padding: 0 24px; }
+#pde-painel .btn-ouvir {
+  position: absolute;
+  bottom: -8px; right: -8px;
+  background: linear-gradient(135deg,#FF6B6B 0%,#EE5A52 100%);
+  border: 3px solid white;
+  color: white;
+  width: 50px; height: 50px; border-radius: 50%;
+  cursor: pointer; font-size: 1.4rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.1s;
+}
+#pde-painel .btn-ouvir:hover { transform: scale(1.1); }
+#pde-painel .btn-ouvir:active { transform: scale(0.92); }
+
+#pde-painel .opcoes-letras {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 100%;
+  max-width: 480px;
+}
+@media (max-width: 480px) { #pde-painel .opcoes-letras { grid-template-columns: repeat(2, 1fr); } }
+
+#pde-painel .letra-opcao {
+  background: white;
+  border: 3px solid #FFD93D;
+  border-radius: 14px;
+  padding: 12px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: #2D1B5C;
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s;
+  box-shadow: 0 3px 0 #FFA500;
+}
+#pde-painel .letra-opcao:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #FFA500;
+}
+#pde-painel .letra-opcao:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #FFA500;
+}
+#pde-painel .letra-opcao:disabled { cursor: default; opacity: 0.95; }
+#pde-painel .letra-opcao.acerto {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  color: white;
+  border-color: #4DA85A;
+  box-shadow: 0 4px 0 #2E7D32;
+  animation: bounceAcerto 0.5s;
+}
+@keyframes bounceAcerto {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+#pde-painel .letra-opcao.erro {
+  background: #FFB4B4;
+  color: #C73E3E;
+  border-color: #C73E3E;
+  animation: shake 0.4s;
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+#pde-painel .letra-opcao.alt-correta-revelada {
+  background: #FFF59D;
+  color: #B45309;
+  border-color: #FFA500;
+  animation: brilharLetra 0.6s;
+}
+@keyframes brilharLetra {
+  0% { box-shadow: 0 0 0 0 #FFD93D; }
+  50% { box-shadow: 0 0 0 12px rgba(255,217,61,0.4); }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+/* ============== ATIVIDADE 2: ORDEM DO ALFABETO ============== */
+#pde-painel .ord-area { display: flex; flex-direction: column; gap: 14px; flex: 1; align-items: center; }
+#pde-painel .ord-sequencia {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center; align-items: center;
+  background: linear-gradient(180deg,#FFE5B4 0%,#FFD9B4 100%);
+  border: 4px dashed #FF6B6B;
+  border-radius: 16px;
+  padding: 14px;
+  width: 100%;
+  min-height: 90px;
+}
+#pde-painel .ord-letra-fixa {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: white;
+  background: linear-gradient(135deg,#4D96FF 0%,#2D6FE0 100%);
+  border: 3px solid #1E50A8;
+  border-radius: 12px;
+  width: 56px; height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 3px 0 #1E50A8;
+}
+#pde-painel .ord-slot {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  background: white;
+  border: 4px dashed #FFA500;
+  border-radius: 12px;
+  width: 56px; height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  color: #CBD5E1;
+  transition: all 0.15s;
+}
+#pde-painel .ord-slot.preenchido {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  border-style: solid;
+  border-color: #4DA85A;
+  color: white;
+  animation: bounceAcerto 0.5s;
+  box-shadow: 0 3px 0 #2E7D32;
+}
+#pde-painel .ord-slot.atual {
+  background: #FFF9E6;
+  border-color: #FF6B6B;
+  color: #FF6B6B;
+}
+#pde-painel .ord-arrastaveis {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  justify-content: center;
+  width: 100%;
+  background: linear-gradient(180deg,#A8E6CF 0%,#7FC8A9 100%);
+  border-radius: 16px;
+  padding: 14px;
+  border: 3px solid #5BA084;
+}
+#pde-painel .ord-arrastavel {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 2.2rem;
+  background: linear-gradient(135deg,#FF6B6B 0%,#EE5A52 100%);
+  color: white;
+  border: 4px solid white;
+  border-radius: 14px;
+  width: 70px; height: 70px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  transition: transform 0.12s;
+  box-shadow: 0 4px 0 #C73E3E, 0 6px 12px rgba(0,0,0,0.15);
+}
+#pde-painel .ord-arrastavel:hover { transform: translateY(-3px); }
+#pde-painel .ord-arrastavel.arrastando {
+  cursor: grabbing; opacity: 0.92;
+  transform: scale(1.15) rotate(5deg);
+  z-index: 100; position: fixed; pointer-events: none;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+#pde-painel .ord-arrastavel.usada { opacity: 0.25; pointer-events: none; }
+
+/* ============== ATIVIDADE 3: PAREAR ============== */
+#pde-painel .par-area {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 12px; flex: 1;
+}
+#pde-painel .par-grids-wrap {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%;
+}
+#pde-painel .par-coluna { display: flex; flex-direction: column; gap: 6px; }
+#pde-painel .par-coluna-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  text-align: center;
+  font-size: 1rem;
+  color: white;
+  padding: 6px;
+  border-radius: 10px;
+}
+#pde-painel .par-coluna:first-child .par-coluna-titulo { background: linear-gradient(135deg,#9B72CB 0%,#6B4FA0 100%); }
+#pde-painel .par-coluna:last-child .par-coluna-titulo { background: linear-gradient(135deg,#FFB4B4 0%,#FF8989 100%); color: #2D1B5C; }
+#pde-painel .par-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+#pde-painel .par-card {
+  background: white;
+  border: 3px solid #FFD93D;
+  border-radius: 14px;
+  padding: 14px 8px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  color: #2D1B5C;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+  user-select: none;
+  box-shadow: 0 3px 0 #FFA500;
+}
+#pde-painel .par-card:hover { transform: translateY(-2px); }
+#pde-painel .par-card.par-selecionado {
+  background: linear-gradient(135deg,#FFD93D 0%,#FFAB00 100%);
+  border-color: #FF6B00;
+  color: white;
+  transform: scale(1.08);
+  box-shadow: 0 3px 0 #C56000;
+}
+#pde-painel .par-card.par-correto {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  border-color: #4DA85A;
+  color: white;
+  cursor: default;
+  pointer-events: none;
+  animation: bounceAcerto 0.5s;
+  box-shadow: 0 3px 0 #2E7D32;
+}
+#pde-painel .par-card.par-erro {
+  background: #FFB4B4;
+  color: #C73E3E;
+  border-color: #C73E3E;
+  animation: shake 0.4s;
+}
+
+/* ============== ATIVIDADE 4: LETRA INICIAL ============== */
+#pde-painel .pal-area { display: flex; flex-direction: column; align-items: center; gap: 14px; flex: 1; }
+#pde-painel .pal-display {
+  background: linear-gradient(135deg,#FFD93D 0%,#FFAB00 100%);
+  border: 4px solid #FF6B00;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(255,107,0,0.15);
+}
+#pde-painel .pal-emoji {
+  font-size: 4.5rem; line-height: 1;
+  animation: aparecerLetra 0.5s ease-out;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+}
+#pde-painel .pal-nome {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.9rem;
+  color: white;
+  letter-spacing: 4px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+#pde-painel .pal-nome .inicio-oculto {
+  display: inline-block;
+  background: white;
+  color: #FF6B6B;
+  padding: 0 8px;
+  border-radius: 8px;
+  margin-right: 4px;
+}
+#pde-painel .pergunta-grande {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #FF6B6B;
+  text-align: center;
+}
+
+/* ============== ATIVIDADE 5: VOGAL ============== */
+#pde-painel .voc-area { display: flex; flex-direction: column; align-items: center; gap: 14px; flex: 1; }
+#pde-painel .voc-letra-atual {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 4.5rem;
+  background: linear-gradient(135deg,#9B72CB 0%,#6B4FA0 100%);
+  color: white;
+  border: 5px solid #FFD93D;
+  border-radius: 20px;
+  width: 130px; height: 130px;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+  box-shadow: 0 4px 12px rgba(155,114,203,0.3);
+  animation: aparecerLetra 0.4s ease-out;
+}
+#pde-painel .voc-zonas {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%;
+}
+#pde-painel .voc-zona {
+  border-radius: 18px;
+  padding: 18px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 4px solid;
+  font-family: 'Fredoka',sans-serif;
+}
+#pde-painel .voc-zona:hover { transform: translateY(-3px); }
+#pde-painel .voc-zona .titulo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 4px;
+}
+#pde-painel .voc-zona.vogal {
+  background: linear-gradient(135deg,#FFD93D 0%,#FFAB00 100%);
+  border-color: #FF6B00;
+  color: white;
+  box-shadow: 0 4px 0 #C56000;
+}
+#pde-painel .voc-zona.consoante {
+  background: linear-gradient(135deg,#4D96FF 0%,#2D6FE0 100%);
+  border-color: #1E50A8;
+  color: white;
+  box-shadow: 0 4px 0 #1E50A8;
+}
+#pde-painel .voc-zona .desc { font-size: 0.85rem; font-weight: 600; opacity: 0.95; margin-top: 4px; }
+#pde-painel .voc-zona .exemplos {
+  font-weight: 700; font-size: 1rem; margin-top: 6px;
+  letter-spacing: 4px;
+}
+
+/* ============== ATIVIDADE 6: FORMAR ============== */
+#pde-painel .form-area { display: flex; flex-direction: column; align-items: center; gap: 14px; flex: 1; }
+#pde-painel .form-emoji {
+  font-size: 5rem; line-height: 1;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+}
+#pde-painel .palavra-display {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  justify-content: center;
+  background: linear-gradient(180deg,#A8E6CF 0%,#7FC8A9 100%);
+  border-radius: 16px;
+  padding: 16px;
+  border: 4px solid #5BA084;
+  width: 100%;
+}
+#pde-painel .palavra-letra-slot {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 2.4rem;
+  background: white;
+  border: 4px dashed #FF6B6B;
+  border-radius: 14px;
+  width: 64px; height: 76px;
+  display: flex; align-items: center; justify-content: center;
+  color: #CBD5E1;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+#pde-painel .palavra-letra-slot.preenchida {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  border-style: solid; border-color: #4DA85A; color: white;
+  animation: bounceAcerto 0.5s;
+  box-shadow: 0 3px 0 #2E7D32;
+}
+#pde-painel .palavra-letras-disponiveis {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center;
+  background: linear-gradient(180deg,#FFE5B4 0%,#FFD9B4 100%);
+  border-radius: 16px;
+  padding: 14px;
+  border: 3px solid #FFA500;
+  width: 100%;
+}
+#pde-painel .palavra-letra-disp {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  background: linear-gradient(135deg,#9B72CB 0%,#6B4FA0 100%);
+  color: white;
+  border: 3px solid white;
+  border-radius: 12px;
+  width: 56px; height: 64px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 4px 0 #4A2C7E, 0 6px 10px rgba(0,0,0,0.15);
+}
+#pde-painel .palavra-letra-disp:hover { transform: translateY(-3px); box-shadow: 0 7px 0 #4A2C7E; }
+#pde-painel .palavra-letra-disp.usada { opacity: 0.25; pointer-events: none; }
+
+#pde-painel .btn-form-acoes { display: flex; gap: 10px; justify-content: center; width: 100%; }
+#pde-painel .btn-form-acoes button {
+  flex: 1; max-width: 200px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.05rem;
+  transition: transform 0.08s;
+}
+#pde-painel .btn-form-acoes button:active { transform: translateY(2px); }
+#pde-painel .btn-form-acoes .limpar {
+  background: #FFB4B4; color: #C73E3E; border: 3px solid #C73E3E;
+}
+#pde-painel .btn-form-acoes .conferir {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  color: white; border: 3px solid #2E7D32;
+  box-shadow: 0 4px 0 #2E7D32;
+}
+
+/* Feedback */
+#pde-painel .feedback {
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-align: center; min-height: 50px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  animation: aparecerFeedback 0.3s ease-out;
+}
+@keyframes aparecerFeedback {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+#pde-painel .feedback.acerto {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  color: white; border: 3px solid #2E7D32;
+}
+#pde-painel .feedback.erro {
+  background: linear-gradient(135deg,#FFB4B4 0%,#FF8989 100%);
+  color: #6B1414; border: 3px solid #C73E3E;
+}
+
+/* Estrelinha pop nos acertos */
+#pde-painel .estrela-pop {
+  position: fixed;
+  font-size: 3rem;
+  pointer-events: none;
+  z-index: 99999;
+  animation: estrelaPopGo 1s ease-out forwards;
+}
+@keyframes estrelaPopGo {
+  0% { transform: scale(0) translateY(0); opacity: 1; }
+  50% { transform: scale(1.4) translateY(-30px); opacity: 1; }
+  100% { transform: scale(0.5) translateY(-80px); opacity: 0; }
+}
+
+/* ============== MODAIS ============== */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(45,27,92,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 16px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 90vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #FFD93D;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal {
+  width: 100px; height: 100px; margin: 0 auto 8px;
+}
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #FF6B6B;
+  margin: 0 0 6px; font-size: 1.6rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #2D1B5C; font-size: 1rem; line-height: 1.45; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 10px; margin-top: 16px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 12px 16px; border-radius: 14px; border: none; cursor: pointer; font-size: 1rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%);
+  color: white; border: 3px solid #2E7D32;
+  box-shadow: 0 4px 0 #2E7D32;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .estrelas-conquistadas { font-size: 3rem; letter-spacing: 10px; margin: 12px 0; }
+#pde-painel .estrelas-conquistadas .ativa {
+  color: #FFD93D; display: inline-block; transform: scale(0);
+  text-shadow: 0 0 12px rgba(255,217,61,0.7);
+  animation: estrelaPopFinal 0.6s ease-out forwards;
+}
+#pde-painel .estrelas-conquistadas .ativa:nth-child(1) { animation-delay: 0.2s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(2) { animation-delay: 0.5s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(3) { animation-delay: 0.8s; }
+#pde-painel .estrelas-conquistadas .vazia { color: #E2E8F0; }
+@keyframes estrelaPopFinal {
+  0% { transform: scale(0) rotate(-180deg); }
+  60% { transform: scale(1.4) rotate(15deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+/* Modal Ajuda */
+#pde-painel .modal-ajuda { text-align: left; max-width: 540px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda ul { padding-left: 18px; line-height: 1.55; font-size: 0.95rem; color: #2D1B5C; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 6px; }
+
+/* Modal Acessibilidade */
+#pde-painel .a11y-grupo { background: #FFF9E6; border: 3px solid #FFD93D; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #FF6B6B; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #FF6B6B; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#FF6B6B 0%,#EE5A52 100%); color: white; border-color: #C73E3E; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #FF6B6B; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#6BCB77 0%,#4DA85A 100%); color: white; border-color: #2E7D32; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #2E7D32; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+/* Confetes (mais coloridos) */
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+/* Animações da transição automática entre fases */
+@keyframes transicaoFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes transicaoFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes transicaoCardIn {
+  0% { transform: scale(0.7) translateY(20px); opacity: 0; }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+#pde-painel .hidden { display: none !important; }
+
+/* Selos BNCC (compacto) */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 12px 14px; margin: 14px 0 6px; text-align: left; border: 3px solid #FFD93D; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #FF6B6B; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #FFD93D; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 38px; height: 38px; background: linear-gradient(135deg,#37B1DA,#1E324A); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.matematica { background: linear-gradient(135deg,#0891B2,#0E7490); }
+#pde-painel .selos-bncc .selo-icone.portugues { background: linear-gradient(135deg,#9333EA,#581C87); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #2D1B5C; font-size: 0.88rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.78rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #1E324A; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #E2E8F0; padding: 1px 6px; border-radius: 4px; font-size: 0.74rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FFA500; font-size: 0.72rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #FF6B6B; }
+
+/* Responsivo */
+@media (max-width: 600px) {
+  #pde-painel .header h1 { font-size: 1.05rem; }
+  #pde-painel .letra-grande { width: 150px; height: 150px; font-size: 5rem; border-width: 6px; }
+  #pde-painel .letra-opcao { font-size: 1.9rem; padding: 14px 8px; }
+  #pde-painel .pal-emoji { font-size: 4rem; }
+  #pde-painel .pal-nome { font-size: 1.6rem; letter-spacing: 3px; }
+  #pde-painel .ord-letra-fixa, #pde-painel .ord-slot { width: 44px; height: 44px; font-size: 1.4rem; }
+  #pde-painel .ord-arrastavel { width: 56px; height: 56px; font-size: 1.6rem; }
+  #pde-painel .palavra-letra-slot { width: 50px; height: 60px; font-size: 1.8rem; }
+  #pde-painel .palavra-letra-disp { width: 44px; height: 50px; font-size: 1.4rem; }
+  #pde-painel .voc-letra-atual { width: 120px; height: 120px; font-size: 4.5rem; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 70px; height: 70px; }
+}
+
+/* ========================================================================
+   PATCH RESPONSIVO UNIVERSAL - NEWPC PORTAL DO EDUCADOR
+   Aplicado em: Resta Um, Fração Mágica, Formas Geométricas, Alfabeto v3
+   Foco: celular 320-414px (escolas públicas)
+   ======================================================================== */
+
+/* 1. CONTAINER NUNCA ESTOURA */
+#pde-painel {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  padding: 8px clamp(6px, 2vw, 16px) 16px !important;
+}
+
+/* 2. GARANTIR QUE NENHUM ELEMENTO INTERNO ESTOURA HORIZONTALMENTE */
+#pde-painel > * {
+  max-width: 100%;
+}
+#pde-painel img,
+#pde-painel svg,
+#pde-painel canvas,
+#pde-painel video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 3. HEADER: ações com flex-wrap e tamanho proporcional */
+#pde-painel .header {
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 10px !important;
+}
+#pde-painel .header h1 {
+  min-width: 0;
+  flex: 1 1 auto;
+  word-wrap: break-word;
+}
+#pde-painel .header .acoes {
+  flex-wrap: wrap;
+  gap: 4px;
+}
+#pde-painel .btn-header {
+  font-size: 0.78rem !important;
+  padding: 5px 9px !important;
+}
+
+/* 4. BOAS-VINDAS: empilha mascote sobre balão em mobile */
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas {
+    flex-direction: column;
+    text-align: center;
+    gap: 6px !important;
+  }
+  #pde-painel .boas-vindas .mascote-wrap {
+    width: 90px !important;
+    height: 90px !important;
+    margin: 0 auto;
+  }
+  #pde-painel .boas-vindas .balao::before {
+    /* setinha apontando pra cima em vez de pro lado */
+    left: 50% !important;
+    top: -10px !important;
+    transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+/* 5. TREINO-GRID: empilha em <=720px e JOGO VAI PRIMEIRO */
+@media (max-width: 720px) {
+  #pde-painel .treino-grid,
+  #pde-painel .area-jogo {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  /* Jogo primeiro, painel depois (aluno vê pergunta sem rolar) */
+  #pde-painel .area-treino,
+  #pde-painel .area-tabuleiro {
+    order: -1;
+  }
+  #pde-painel .painel-info {
+    order: 2;
+    padding: 10px !important;
+  }
+  /* Mini-mapa colapsável em mobile (só vê título) */
+  #pde-painel .mini-mapa {
+    margin-top: 4px !important;
+  }
+  #pde-painel .mini-mapa-item {
+    padding: 3px 6px !important;
+    font-size: 0.74rem !important;
+  }
+}
+
+/* 6. MAPA DE AVENTURA: grid fluido (não fixo em 6 colunas) */
+#pde-painel .mapa-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr)) !important;
+  gap: 6px !important;
+}
+@media (max-width: 480px) {
+  #pde-painel .mapa-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  #pde-painel .mapa-etapa {
+    padding: 6px 4px !important;
+  }
+  #pde-painel .mapa-etapa .circulo {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 0.92rem !important;
+  }
+  #pde-painel .mapa-etapa .emoji-lugar {
+    font-size: 1.4rem !important;
+  }
+  #pde-painel .mapa-etapa .nome-lugar {
+    font-size: 0.7rem !important;
+  }
+}
+
+/* 7. SVGs E FIGURAS: sempre fluidas */
+#pde-painel .pizza-svg,
+#pde-painel .forma-mostra svg,
+#pde-painel .forma-mini svg {
+  width: 100% !important;
+  height: auto !important;
+  max-width: min(200px, 70vw);
+  display: block;
+  margin: 0 auto;
+}
+#pde-painel .forma-mostra {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* 8. OPÇÕES E GRIDS: sempre 100% width antes do max-width */
+#pde-painel .opcoes-grid,
+#pde-painel .formas-grid,
+#pde-painel .pares-grid {
+  width: 100% !important;
+}
+
+/* 9. BOTÕES DE OPÇÃO: touch target adequado */
+#pde-painel .opcao-btn {
+  min-height: 56px !important;
+  padding: 12px 8px !important;
+  font-size: clamp(0.92rem, 3.5vw, 1.1rem) !important;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* 10. INPUTS: largura adequada */
+#pde-painel .input-num {
+  max-width: 100%;
+}
+#pde-painel .input-nome {
+  font-size: 1rem !important;
+  padding: 10px 12px !important;
+}
+
+/* 11. PAINEL DE INFO COMPACTO EM MOBILE */
+@media (max-width: 720px) {
+  #pde-painel .placar-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 4px !important;
+  }
+  #pde-painel .placar-item {
+    padding: 6px 4px !important;
+  }
+  #pde-painel .placar-item .label {
+    font-size: 0.62rem !important;
+  }
+  #pde-painel .placar-item .valor {
+    font-size: 1.15rem !important;
+  }
+  #pde-painel .placar-item.desfazer .valor {
+    font-size: 1rem !important;
+  }
+  #pde-painel .mascote-painel {
+    padding: 6px !important;
+  }
+  #pde-painel .mascote-painel .mascote-mini {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  #pde-painel .mascote-painel .balao {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* 12. TABULEIRO RESTA UM: casas escalam com viewport */
+#pde-painel .tabuleiro {
+  gap: clamp(3px, 0.8vw, 6px) !important;
+}
+#pde-painel .casa {
+  width: clamp(28px, min(8vw, 8vh), 54px) !important;
+  height: clamp(28px, min(8vw, 8vh), 54px) !important;
+}
+#pde-painel .tabuleiro-fundo {
+  padding: clamp(8px, 2vw, 18px) !important;
+}
+
+/* 13. CACA DE FORMAS: grid mais flexível */
+#pde-painel .formas-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(70px, calc(50% - 4px)), 1fr)) !important;
+  gap: 6px !important;
+}
+@media (min-width: 481px) {
+  #pde-painel .formas-grid {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)) !important;
+  }
+}
+
+/* 14. PERGUNTA E TEXTO: tamanho fluido */
+#pde-painel .pergunta-grande {
+  font-size: clamp(0.95rem, 4vw, 1.2rem) !important;
+  line-height: 1.3;
+  word-wrap: break-word;
+}
+
+/* 15. MODAIS: padding adaptativo + max-height segura */
+#pde-painel .modal-overlay {
+  padding: 8px !important;
+}
+#pde-painel .modal-conteudo {
+  padding: 16px !important;
+  max-height: 92vh !important;
+}
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo {
+    padding: 14px !important;
+    border-width: 3px !important;
+  }
+  #pde-painel .modal-conteudo h2 {
+    font-size: 1.25rem !important;
+  }
+  #pde-painel .modal-conteudo .mascote-modal {
+    width: 70px !important;
+    height: 70px !important;
+  }
+  #pde-painel .modal-conteudo .acoes,
+  #pde-painel .modal-conteudo .acoes.duo {
+    grid-template-columns: 1fr !important;
+  }
+  #pde-painel .estrelas-conquistadas,
+  #pde-painel .estrelas-grandes {
+    font-size: 2.4rem !important;
+    letter-spacing: 6px !important;
+  }
+}
+
+/* 16. SELOS BNCC: imprime bem em qualquer tela */
+#pde-painel .selos-bncc { padding: 10px 12px !important; }
+#pde-painel .selos-bncc .selo-row { gap: 8px !important; padding: 6px 0 !important; }
+#pde-painel .selos-bncc .selo-icone { width: 32px !important; height: 32px !important; font-size: 0.85rem !important; }
+#pde-painel .selos-bncc .selo-titulo { font-size: 0.82rem !important; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem !important; }
+
+/* 17. STATUS-BAR DO RESTA UM: empilha em mobile estreito */
+@media (max-width: 380px) {
+  #pde-painel .status-bar {
+    flex-direction: column;
+    gap: 2px;
+    text-align: center;
+    padding: 6px 8px !important;
+    font-size: 0.84rem !important;
+  }
+}
+
+/* 18. AJUSTES PARA TELA MUITO ESTREITA (320-380px - Galaxy A02s) */
+@media (max-width: 380px) {
+  #pde-painel {
+    padding: 6px 4px 12px !important;
+  }
+  #pde-painel .header h1 {
+    font-size: 0.92rem !important;
+  }
+  #pde-painel .btn-header {
+    font-size: 0.72rem !important;
+    padding: 4px 7px !important;
+  }
+  #pde-painel .lobby-card,
+  #pde-painel .area-treino,
+  #pde-painel .painel-info {
+    padding: 10px !important;
+    border-width: 2px !important;
+    border-radius: 12px !important;
+  }
+  #pde-painel .pergunta-grande {
+    font-size: 0.92rem !important;
+  }
+  #pde-painel .opcao-btn {
+    font-size: 0.92rem !important;
+    min-height: 50px !important;
+    padding: 10px 6px !important;
+  }
+  #pde-painel .btn-comecar-aventura {
+    font-size: 1rem !important;
+    padding: 11px 14px !important;
+  }
+}
+
+/* 19. FRACAO MAGICA: comparar lado a lado em mobile vira coluna */
+@media (max-width: 480px) {
+  #pde-painel .comparar-wrap {
+    flex-direction: column;
+    gap: 8px !important;
+  }
+  #pde-painel .soma-wrap {
+    flex-wrap: wrap;
+    gap: 6px !important;
+  }
+  #pde-painel .fracao-display {
+    font-size: 1.8rem !important;
+  }
+  #pde-painel .fracao-display.media {
+    font-size: 1.5rem !important;
+  }
+  #pde-painel .input-num {
+    width: 60px !important;
+    font-size: 1.4rem !important;
+  }
+}
+
+/* 20. ALFABETO V3: ajustes específicos para letras grandes */
+#pde-painel .letra-grande,
+#pde-painel .letra-display {
+  font-size: clamp(2.5rem, 12vw, 5rem) !important;
+}
+
+/* FIM DO PATCH RESPONSIVO UNIVERSAL */
+
+
+/* ============================================ */
+/* PATCH UNIFICADO v2                            */
+/* 1. Acessibilidade: escala de texto FUNCIONAL  */
+/* 2. Desktop-wide: aproveita tela grande        */
+/* ============================================ */
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 12px clamp(12px, 2vw, 24px) 24px; }
+  #pde-painel .lobby-card { padding: 18px; }
+  #pde-painel .area-treino { padding: 16px; }
+  #pde-painel .painel-info { padding: 16px; }
+  #pde-painel .treino-grid { grid-template-columns: 280px minmax(0, 1fr); gap: 18px; }
+  #pde-painel .opcoes-grid {
+    max-width: 900px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  #pde-painel .fases-grid {
+    max-width: 1100px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  #pde-painel .fase-card { min-height: 170px; padding: 14px 8px; }
+  #pde-painel .fase-card .svg-fase { width: 110px; height: 110px; }
+  #pde-painel .fase-card .nome-fase { font-size: 0.92rem; }
+  #pde-painel .cores-grid {
+    max-width: 800px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .instrumentos-grid {
+    max-width: 720px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  #pde-painel .instrumento-btn { min-height: 110px; }
+  #pde-painel .instrumento-btn .icone-instr { font-size: 2.6rem; }
+  #pde-painel .instrumento-btn .nome-instr { font-size: 0.85rem; }
+  #pde-painel .mapa-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #pde-painel .mapa-etapa { padding: 12px 8px; }
+  #pde-painel .mapa-etapa .emoji-lugar { font-size: 2.2rem; }
+  #pde-painel .mapa-etapa .nome-lugar { font-size: 0.85rem; }
+  #pde-painel .pergunta-grande { font-size: 1.35rem; padding: 0 8px; margin-bottom: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .modal-conteudo h2 { font-size: 1.65rem; }
+  #pde-painel .modal-conteudo p { font-size: 1.05rem; }
+  #pde-painel .opcao-btn { min-height: 64px; font-size: 1.05rem; padding: 14px 12px; }
+  #pde-painel .area-mistura { max-width: 420px; }
+  #pde-painel .pista-musica { height: 280px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  #pde-painel .compositor-grid { grid-template-columns: 90px 1fr; max-width: 900px; margin: 0 auto; }
+  #pde-painel .passo-cel { min-height: 38px; }
+  #pde-painel .seq-progresso { padding: 14px; max-width: 720px; margin: 8px auto; }
+  #pde-painel .seq-progresso .seq-passo { width: 44px; height: 44px; font-size: 1.6rem; }
+  #pde-painel .estrelinhas-prog { padding: 12px; }
+  #pde-painel .header h1 { font-size: 1.45rem; }
+  #pde-painel .btn-header { font-size: 0.92rem; padding: 7px 14px; }
+  #pde-painel .input-nome { font-size: 1.1rem; padding: 14px 18px; }
+  #pde-painel .btn-comecar-aventura { font-size: 1.2rem; padding: 14px 24px; }
+  #pde-painel .quiz-pergunta { padding: 18px; }
+  #pde-painel .quiz-pergunta .qsvg { width: 160px; height: 160px; }
+  #pde-painel .quiz-pergunta .qtext { font-size: 1.25rem; }
+  #pde-painel .info-fase { padding: 14px 18px; max-width: 900px; margin-left: auto; margin-right: auto; }
+  #pde-painel .alvo-info { max-width: 480px; padding: 12px 18px; font-size: 1.05rem; }
+  #pde-painel .pote-cor { width: 100px; height: 100px; }
+  #pde-painel .balde { width: 130px; height: 130px; }
+  #pde-painel .escolha-dupla { max-width: 480px; gap: 14px; }
+  #pde-painel .opcao-dupla { font-size: 1.2rem; min-height: 90px; padding: 22px 12px; }
+  #pde-painel .cor-mostra { width: 200px; height: 200px; }
+  #pde-painel .svg-ilustracao { width: 280px; height: 280px; }
+  #pde-painel .mapa-jogo-wrap { max-width: 900px; margin: 0 auto; }
+}
+@media (min-width: 1440px) {
+  #pde-painel { max-width: 1400px; }
+  #pde-painel .opcoes-grid { max-width: 1000px; }
+  #pde-painel .fases-grid { max-width: 1240px; }
+}
+/* === FIM PATCH UNIFICADO v2 === */
+
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1><span class="emoji-titulo">🦉</span> Aprendendo o Alfabeto · com a Sábia</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="resetarProgresso()" title="Recomeçar">↻</button>
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ Acessibilidade</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓ Ajuda</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <!-- ===================== LOBBY ===================== -->
+  <div id="lobby" class="lobby-card">
+
+    <!-- Boas-vindas com mascote Sábia -->
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Olá! Eu sou a Sábia! 🦉</strong>
+        <span id="balao-saudacao">Vamos aprender o alfabeto juntos?</span>
+      </div>
+    </div>
+
+    <input type="text" id="nome-aluno" class="input-nome" placeholder="✏️ Qual é o seu nome?" maxlength="30" autocomplete="off">
+
+    <div class="config-rapida">
+      <div class="config-card">
+        <div class="titulo">🔤 Letras</div>
+        <div class="chips-letras" id="chips-letras">
+          <button class="chip ativo" data-tipo="maiuscula" onclick="selTipo('maiuscula')">A B C</button>
+          <button class="chip" data-tipo="minuscula" onclick="selTipo('minuscula')">a b c</button>
+          <button class="chip" data-tipo="ambas" onclick="selTipo('ambas')">A a</button>
+        </div>
+      </div>
+      <div class="config-card">
+        <div class="titulo">🔊 Som</div>
+        <div class="voz-toggle ativo" id="tg-voz" onclick="toggleVoz()">
+          <div class="switch"></div>
+          <div class="label-voz">Sábia fala em voz alta</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAPA DE AVENTURA -->
+    <div class="mapa-aventura">
+      <div class="mapa-grid" id="mapa-grid"></div>
+    </div>
+
+    <button class="btn-comecar-aventura" id="btn-comecar" onclick="comecarEtapaAtual()">🚀 Começar a Aventura!</button>
+  </div>
+
+  <!-- ===================== TELA DE TREINO ===================== -->
+  <div id="treino" class="treino-grid hidden">
+    <div class="painel-info">
+      <!-- Mascote no painel -->
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Vamos lá!</div>
+      </div>
+
+      <div class="etapa-titulo-grande" id="etapa-titulo">
+        <span class="emoji-lugar" id="etapa-emoji">🌳</span>
+        <span id="etapa-nome">—</span>
+      </div>
+
+      <div class="estrelinhas-prog" id="estrelinhas-prog"></div>
+
+      <div class="mini-mapa">
+        <div class="mini-mapa-titulo">🗺️ Sua jornada</div>
+        <div id="mini-mapa-itens"></div>
+      </div>
+    </div>
+
+    <div class="area-treino">
+      <div id="arena"></div>
+      <div id="feedback" class="feedback hidden"></div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAIS ===================== -->
+  <div class="modal-overlay" id="modal-etapa-fim">
+    <div class="modal-conteudo">
+      <svg class="mascote-modal" viewBox="0 0 100 100" id="svg-mascote-modal"></svg>
+      <h2 id="etapa-fim-titulo">Atividade concluída!</h2>
+      <p id="etapa-fim-msg">Muito bem!</p>
+      <div class="estrelas-conquistadas" id="etapa-fim-estrelas">
+        <span class="ativa">★</span><span class="ativa">★</span><span class="ativa">★</span>
+      </div>
+      <p id="etapa-fim-detalhes" style="font-style:italic; color:#94A3B8;"></p>
+      <div class="acoes" id="etapa-fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-trilha-completa">
+    <div class="modal-conteudo">
+      <svg class="mascote-modal" viewBox="0 0 100 100" id="svg-mascote-trofeu"></svg>
+      <h2>🏆 Aventura Completa!</h2>
+      <p>Parabéns! Você completou todas as 6 aventuras do alfabeto!</p>
+      <div class="estrelas-conquistadas">
+        <span class="ativa">★</span><span class="ativa">★</span><span class="ativa">★</span>
+      </div>
+      <p style="font-weight:700; color:#FF6B6B; font-size:1.1rem; font-family:'Fredoka',sans-serif;">🎓 Você é um mestre das letras!</p>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="voltarLobby()">Voltar ao mapa</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🦉 Como Brincar</h2>
+      <ul>
+        <li><b>🎯 Objetivo:</b> aprender o alfabeto em 6 aventuras divertidas com a Sábia.</li>
+        <li><b>🌳 Floresta das Letras:</b> aparece uma letra grande, encontre a igual entre as opções.</li>
+        <li><b>🏞️ Rio do Alfabeto:</b> arraste as letras que faltam pra completar a sequência ABC.</li>
+        <li><b>🎪 Festival dos Pares:</b> encontre cada letra grande com sua letra pequena.</li>
+        <li><b>🏰 Castelo das Palavras:</b> veja a figura e escolha a letra que começa o nome dela.</li>
+        <li><b>⭐ Cidade das Vogais:</b> classifique cada letra como vogal ou consoante.</li>
+        <li><b>🎨 Oficina de Palavras:</b> organize as letras embaralhadas para formar a palavra.</li>
+        <li><b>🔊 Voz da Sábia:</b> ative a voz para ouvir as letras (apoia quem está aprendendo a ler).</li>
+        <li><b>♿ Acessibilidade:</b> botão no topo para ajustar tamanho de texto e cores.</li>
+      </ul>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-ajuda')">Vamos brincar!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.88rem;">Configurações são salvas e valem para todos os jogos do Portal.</p>
+
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa, sala grande ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações padrão</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script>
+/* ===========================================================
+   MASCOTE SÁBIA — SVG inline em 3 expressões
+   =========================================================== */
+function svgMascote(expressao = 'normal') {
+  // Cores: corpo marrom-claro #B07B4E, peito creme #F4E4BC, olhos brancos+pretos
+  // Bico amarelo, asa marrom escuro
+  const olhoSimples = (cx, cy) => `
+    <ellipse cx="${cx}" cy="${cy}" rx="13" ry="13" fill="white" stroke="#5C3A1E" stroke-width="2"/>
+    <circle cx="${cx + 2}" cy="${cy + 2}" r="6" fill="#1E324A"/>
+    <circle cx="${cx + 4}" cy="${cy}" r="2" fill="white"/>
+  `;
+  const olhoFeliz = (cx, cy) => `
+    <path d="M ${cx-10} ${cy} Q ${cx} ${cy-12}, ${cx+10} ${cy}" fill="none" stroke="#5C3A1E" stroke-width="3" stroke-linecap="round"/>
+  `;
+  const olhoSurpresa = (cx, cy) => `
+    <ellipse cx="${cx}" cy="${cy}" rx="14" ry="15" fill="white" stroke="#5C3A1E" stroke-width="2"/>
+    <circle cx="${cx}" cy="${cy + 2}" r="7" fill="#1E324A"/>
+    <circle cx="${cx + 3}" cy="${cy - 1}" r="2.5" fill="white"/>
+  `;
+
+  let olhos, boca;
+  if (expressao === 'feliz') {
+    olhos = olhoFeliz(35, 42) + olhoFeliz(65, 42);
+    boca = `<path d="M 42 60 Q 50 68, 58 60" fill="none" stroke="#D17A22" stroke-width="2" stroke-linecap="round"/>`;
+  } else if (expressao === 'pensando') {
+    olhos = olhoSimples(35, 42) + olhoSimples(65, 42);
+    boca = `<circle cx="50" cy="62" r="2.5" fill="#5C3A1E"/>`;
+  } else {
+    // normal/curioso
+    olhos = olhoSurpresa(35, 42) + olhoSurpresa(65, 42);
+    boca = ``;
+  }
+
+  return `
+    <!-- Galho -->
+    <line x1="20" y1="92" x2="80" y2="92" stroke="#6B4226" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pés -->
+    <line x1="42" y1="88" x2="42" y2="92" stroke="#D17A22" stroke-width="3" stroke-linecap="round"/>
+    <line x1="58" y1="88" x2="58" y2="92" stroke="#D17A22" stroke-width="3" stroke-linecap="round"/>
+    <!-- Corpo (oval marrom claro) -->
+    <ellipse cx="50" cy="62" rx="32" ry="28" fill="#B07B4E"/>
+    <!-- Peito creme -->
+    <ellipse cx="50" cy="68" rx="20" ry="18" fill="#F4E4BC"/>
+    <!-- Asas -->
+    <ellipse cx="20" cy="62" rx="8" ry="14" fill="#8B5A2B" transform="rotate(-15 20 62)"/>
+    <ellipse cx="80" cy="62" rx="8" ry="14" fill="#8B5A2B" transform="rotate(15 80 62)"/>
+    <!-- Cabeça -->
+    <ellipse cx="50" cy="38" rx="32" ry="28" fill="#B07B4E"/>
+    <!-- Tufos da cabeça (orelhas/penas) -->
+    <path d="M 22 22 L 26 14 L 32 22 Z" fill="#8B5A2B"/>
+    <path d="M 78 22 L 74 14 L 68 22 Z" fill="#8B5A2B"/>
+    <!-- Discos faciais (caracteristica da coruja) -->
+    <ellipse cx="35" cy="42" rx="16" ry="18" fill="#F4E4BC"/>
+    <ellipse cx="65" cy="42" rx="16" ry="18" fill="#F4E4BC"/>
+    <!-- Olhos -->
+    ${olhos}
+    <!-- Bico -->
+    <path d="M 50 50 L 46 56 L 54 56 Z" fill="#FFB300" stroke="#D17A22" stroke-width="1"/>
+    ${boca}
+    <!-- Chapéu de formando (toque acadêmico) -->
+    <rect x="36" y="14" width="28" height="3" fill="#1E324A" rx="1"/>
+    <rect x="46" y="9" width="8" height="6" fill="#1E324A"/>
+    <line x1="60" y1="14" x2="64" y2="22" stroke="#FFD93D" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="64" cy="23" r="2" fill="#FFD93D"/>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* ===========================================================
+   ETAPAS DA TRILHA (com tema lúdico)
+   =========================================================== */
+const ETAPAS = [
+  { id: 1, tipo: 'reconhecer', titulo: 'Floresta das Letras', emoji: '🌳', total: 8,
+    instrucao: 'Achou a letra igual? Ótimo!',
+    falaInicio: 'Vamos brincar de achar letras!',
+    falaSucesso: 'Você é demais!' },
+  { id: 2, tipo: 'ordem', titulo: 'Rio do Alfabeto', emoji: '🏞️', total: 4,
+    instrucao: 'Coloque as letras na ordem certa!',
+    falaInicio: 'Vamos arrumar o alfabeto!',
+    falaSucesso: 'Que organização!' },
+  { id: 3, tipo: 'parear', titulo: 'Festival dos Pares', emoji: '🎪', total: 1,
+    instrucao: 'Encontre os pares de letras!',
+    falaInicio: 'Vamos achar os pares!',
+    falaSucesso: 'Todos os pares feitos!' },
+  { id: 4, tipo: 'inicial', titulo: 'Castelo das Palavras', emoji: '🏰', total: 8,
+    instrucao: 'Qual letra começa cada palavra?',
+    falaInicio: 'Vamos descobrir o começo das palavras!',
+    falaSucesso: 'Você descobriu!' },
+  { id: 5, tipo: 'vogal', titulo: 'Cidade das Vogais', emoji: '⭐', total: 10,
+    instrucao: 'Vogal ou consoante?',
+    falaInicio: 'Vamos separar vogais e consoantes!',
+    falaSucesso: 'Acertou!' },
+  { id: 6, tipo: 'formar', titulo: 'Oficina de Palavras', emoji: '🎨', total: 6,
+    instrucao: 'Monte a palavra com as letras!',
+    falaInicio: 'Vamos formar palavras!',
+    falaSucesso: 'Que palavra linda!' }
+];
+
+const VOGAIS = ['A','E','I','O','U'];
+const ALFABETO = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+const PALAVRAS_INICIAL = [
+  { p: 'ABACAXI', emoji: '🍍' }, { p: 'BOLA', emoji: '⚽' },
+  { p: 'CASA', emoji: '🏠' },    { p: 'DADO', emoji: '🎲' },
+  { p: 'ELEFANTE', emoji: '🐘' },{ p: 'FOGO', emoji: '🔥' },
+  { p: 'GATO', emoji: '🐱' },    { p: 'HIPOPOTAMO', emoji: '🦛' },
+  { p: 'IGREJA', emoji: '⛪' },   { p: 'JANELA', emoji: '🪟' },
+  { p: 'LIVRO', emoji: '📚' },   { p: 'MACA', emoji: '🍎' },
+  { p: 'NUVEM', emoji: '☁️' },    { p: 'OVO', emoji: '🥚' },
+  { p: 'PEIXE', emoji: '🐟' },   { p: 'QUEIJO', emoji: '🧀' },
+  { p: 'RATO', emoji: '🐀' },    { p: 'SOL', emoji: '☀️' },
+  { p: 'TIGRE', emoji: '🐅' },   { p: 'UVA', emoji: '🍇' },
+  { p: 'VACA', emoji: '🐮' },    { p: 'XICARA', emoji: '☕' },
+  { p: 'ZEBRA', emoji: '🦓' }
+];
+
+const PALAVRAS_FORMAR = [
+  { p: 'BOLA', emoji: '⚽' },    { p: 'GATO', emoji: '🐱' },
+  { p: 'CASA', emoji: '🏠' },    { p: 'PATO', emoji: '🦆' },
+  { p: 'RATO', emoji: '🐀' },    { p: 'SAPO', emoji: '🐸' },
+  { p: 'PEIXE', emoji: '🐟' },   { p: 'TIGRE', emoji: '🐅' },
+  { p: 'UVA', emoji: '🍇' },     { p: 'PAO', emoji: '🍞' },
+  { p: 'SOL', emoji: '☀️' },     { p: 'LUA', emoji: '🌙' },
+  { p: 'OVO', emoji: '🥚' },     { p: 'VACA', emoji: '🐮' }
+];
+
+const NOMES_LETRAS = {
+  'A':'A', 'B':'Bê', 'C':'Cê', 'D':'Dê', 'E':'É', 'F':'Éfe',
+  'G':'Gê', 'H':'Agá', 'I':'I', 'J':'Jota', 'K':'Cá', 'L':'Éle',
+  'M':'Eme', 'N':'Ene', 'O':'Ó', 'P':'Pê', 'Q':'Quê', 'R':'Erre',
+  'S':'Esse', 'T':'Tê', 'U':'U', 'V':'Vê', 'W':'Dáblio', 'X':'Xis',
+  'Y':'Ípsilon', 'Z':'Zê'
+};
+const PALAVRAS_REFERENCIA = {
+  'A':'Abacaxi','B':'Bola','C':'Casa','D':'Dado','E':'Elefante','F':'Fogo',
+  'G':'Gato','H':'Hipopótamo','I':'Igreja','J':'Janela','K':'Kiwi','L':'Livro',
+  'M':'Maçã','N':'Nuvem','O':'Ovo','P':'Peixe','Q':'Queijo','R':'Rato',
+  'S':'Sol','T':'Tigre','U':'Uva','V':'Vaca','W':'Wifi','X':'Xícara','Y':'Iogurte','Z':'Zebra'
+};
+
+const ELOGIOS = ['Você é demais!', 'Que esperto!', 'Mandou bem!', 'Excelente!', 'Você é incrível!', 'Acertou!', 'Brilhou!'];
+const INCENTIVOS = ['Quase! Tenta outra vez!', 'Olha a letra com calma!', 'Vamos de novo!', 'Você consegue!', 'Tente mais uma vez!'];
+
+/* ===========================================================
+   ESTADO
+   =========================================================== */
+const STATE = {
+  nomeAluno: '',
+  tipoLetra: 'maiuscula',
+  vozLigada: true,
+  etapaAtual: 1,
+  estrelasPorEtapa: {},
+  jogo: {
+    etapa: null,
+    progresso: 0,
+    acertos: 0,
+    erros: 0,
+    bloqueado: false,
+    ativo: false,
+    parSelecionado: null,
+    paresFeitos: 0,
+    paresTotal: 0,
+    palavraAlvo: '',
+    letrasMontadas: [],
+    letrasDisponiveis: [],
+    ordemSlots: [],
+    ordemArrastaveis: []
+  }
+};
+
+/* ===========================================================
+   PERSISTÊNCIA
+   =========================================================== */
+function salvar() {
+  try {
+    localStorage.setItem('pde_alfabeto_dados', JSON.stringify({
+      nomeAluno: STATE.nomeAluno,
+      tipoLetra: STATE.tipoLetra,
+      vozLigada: STATE.vozLigada,
+      etapaAtual: STATE.etapaAtual,
+      estrelasPorEtapa: STATE.estrelasPorEtapa
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_alfabeto_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    STATE.nomeAluno = d.nomeAluno || '';
+    STATE.tipoLetra = d.tipoLetra || 'maiuscula';
+    if (typeof d.vozLigada === 'boolean') STATE.vozLigada = d.vozLigada;
+    STATE.etapaAtual = d.etapaAtual || 1;
+    STATE.estrelasPorEtapa = d.estrelasPorEtapa || {};
+    if (STATE.nomeAluno) document.getElementById('nome-aluno').value = STATE.nomeAluno;
+  } catch (e) {}
+}
+
+/* ===========================================================
+   LOBBY
+   =========================================================== */
+function selTipo(t) {
+  STATE.tipoLetra = t;
+  document.querySelectorAll('#chips-letras .chip').forEach(c => c.classList.toggle('ativo', c.dataset.tipo === t));
+  salvar();
+}
+function toggleVoz() {
+  STATE.vozLigada = !STATE.vozLigada;
+  document.getElementById('tg-voz').classList.toggle('ativo', STATE.vozLigada);
+  salvar();
+}
+
+function renderLobby() {
+  // Saudação dinâmica baseada no progresso
+  const balaoSaud = document.getElementById('balao-saudacao');
+  const feitas = Object.keys(STATE.estrelasPorEtapa).length;
+  if (balaoSaud) {
+    if (feitas === 0) balaoSaud.textContent = 'Vamos aprender o alfabeto juntos?';
+    else if (feitas === ETAPAS.length) balaoSaud.textContent = 'Você completou todas as aventuras! 🏆';
+    else balaoSaud.textContent = `Você já fez ${feitas} de 6 aventuras. Continue!`;
+  }
+
+  // Mapa de etapas
+  const cont = document.getElementById('mapa-grid');
+  cont.innerHTML = '';
+  ETAPAS.forEach((e, idx) => {
+    const card = document.createElement('div');
+    const feita = !!STATE.estrelasPorEtapa[e.id];
+    const atual = e.id === STATE.etapaAtual && !feita;
+    const anterior = idx === 0 ? true : !!STATE.estrelasPorEtapa[ETAPAS[idx-1].id];
+    const bloqueada = !feita && !atual && !anterior;
+
+    card.className = 'mapa-etapa' + (feita ? ' feita' : '') + (atual ? ' atual' : '') + (bloqueada ? ' bloqueada' : '');
+
+    let estrelasMini = '';
+    const estrelasObtidas = STATE.estrelasPorEtapa[e.id] || 0;
+    for (let i = 0; i < 3; i++) estrelasMini += i < estrelasObtidas ? '<span class="ativa">★</span>' : '<span class="vazia">★</span>';
+
+    card.innerHTML = `
+      <div class="circulo">${e.id}</div>
+      <span class="emoji-lugar">${e.emoji}</span>
+      <span class="nome-lugar">${e.titulo}</span>
+      <div class="estrelas-lugar">${estrelasMini}</div>
+    `;
+    if (!bloqueada) {
+      card.onclick = () => { STATE.etapaAtual = e.id; comecarEtapaAtual(); };
+    }
+    cont.appendChild(card);
+  });
+
+  // Botão começar
+  const btn = document.getElementById('btn-comecar');
+  if (feitas === ETAPAS.length) {
+    btn.textContent = '🏆 Aventura completa! Recomeçar';
+    btn.onclick = () => {
+      if (confirm('Recomeçar a aventura? Seu progresso será apagado.')) {
+        STATE.estrelasPorEtapa = {};
+        STATE.etapaAtual = 1;
+        salvar();
+        renderLobby();
+      }
+    };
+  } else {
+    const proxima = ETAPAS.find(e => !STATE.estrelasPorEtapa[e.id]);
+    if (proxima) {
+      STATE.etapaAtual = proxima.id;
+      btn.textContent = `🚀 ${proxima.emoji} ${proxima.titulo}`;
+      btn.onclick = comecarEtapaAtual;
+    }
+  }
+
+  document.getElementById('tg-voz').classList.toggle('ativo', STATE.vozLigada);
+
+  // Renderiza mascote no lobby (expressão neutra/curiosa)
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+
+function resetarProgresso() {
+  if (!confirm('Recomeçar a aventura? Seu progresso será apagado.')) return;
+  STATE.estrelasPorEtapa = {};
+  STATE.etapaAtual = 1;
+  salvar();
+  renderLobby();
+}
+
+/* ===========================================================
+   UTILS
+   =========================================================== */
+function letraDisplay(c) {
+  if (STATE.tipoLetra === 'minuscula') return c.toLowerCase();
+  if (STATE.tipoLetra === 'ambas') return c.toUpperCase() + c.toLowerCase();
+  return c.toUpperCase();
+}
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function elogioAleatorio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivoAleatorio() { return INCENTIVOS[Math.floor(Math.random() * INCENTIVOS.length)]; }
+
+/* ===========================================================
+   VOZ (Web Speech API)
+   =========================================================== */
+function falar(texto) {
+  if (!STATE.vozLigada) return;
+  if (!('speechSynthesis' in window)) return;
+  try {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(texto);
+    u.lang = 'pt-BR';
+    u.rate = 0.9;
+    u.pitch = 1.15;
+    window.speechSynthesis.speak(u);
+  } catch (e) {}
+}
+function falarLetra(c) {
+  const upper = c.toUpperCase();
+  const nome = NOMES_LETRAS[upper] || upper;
+  const palavra = PALAVRAS_REFERENCIA[upper];
+  if (palavra) falar(`${nome}, de ${palavra}`);
+  else falar(nome);
+}
+
+/* ===========================================================
+   COMEÇAR ETAPA
+   =========================================================== */
+function comecarEtapaAtual() {
+  STATE.nomeAluno = document.getElementById('nome-aluno').value.trim();
+  salvar();
+
+  const etapa = ETAPAS.find(e => e.id === STATE.etapaAtual);
+  if (!etapa) return;
+
+  STATE.jogo.etapa = etapa;
+  STATE.jogo.progresso = 0;
+  STATE.jogo.acertos = 0;
+  STATE.jogo.erros = 0;
+  STATE.jogo.ativo = true;
+  STATE.jogo.bloqueado = false;
+
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('treino').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+
+  document.getElementById('etapa-emoji').textContent = etapa.emoji;
+  document.getElementById('etapa-nome').textContent = etapa.titulo;
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Sábia:</b> ${etapa.instrucao}`;
+
+  renderMascote('svg-mascote-painel', 'feliz');
+  atualizarUI();
+  renderMiniMapa();
+  iniciarExercicio();
+
+  if (STATE.vozLigada) setTimeout(() => falar(etapa.falaInicio), 200);
+}
+
+function renderMiniMapa() {
+  const cont = document.getElementById('mini-mapa-itens');
+  cont.innerHTML = '';
+  ETAPAS.forEach(e => {
+    const div = document.createElement('div');
+    const feita = !!STATE.estrelasPorEtapa[e.id];
+    const atual = e.id === STATE.etapaAtual;
+    div.className = 'mini-mapa-item' + (feita ? ' feita' : '') + (atual ? ' atual' : '');
+    div.innerHTML = `<div class="num-mini">${e.id}</div><span>${e.emoji} ${e.titulo}</span>`;
+    cont.appendChild(div);
+  });
+}
+
+function atualizarUI() {
+  // Estrelinhas de progresso
+  const cont = document.getElementById('estrelinhas-prog');
+  cont.innerHTML = '';
+  for (let i = 0; i < STATE.jogo.etapa.total; i++) {
+    const e = document.createElement('span');
+    e.className = 'estrelinha' + (i < STATE.jogo.progresso ? ' ativa' : '');
+    e.textContent = '★';
+    cont.appendChild(e);
+  }
+}
+
+function limparFeedback() {
+  const fb = document.getElementById('feedback');
+  fb.classList.add('hidden');
+  fb.className = 'feedback hidden';
+}
+function mostrarFeedback(tipo, texto) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback ' + tipo;
+  fb.innerHTML = texto;
+  fb.classList.remove('hidden');
+}
+
+function celebrarAcerto(elemento) {
+  // Versão suave: não cria estrela voando a cada acerto.
+  // O feedback visual já vem do botão verde + som + mascote feliz.
+  // Mantemos como no-op pra preservar chamadas existentes.
+}
+
+/* ===========================================================
+   DISPATCH DE EXERCÍCIOS
+   =========================================================== */
+function iniciarExercicio() {
+  STATE.jogo.bloqueado = false;
+  limparFeedback();
+  const arena = document.getElementById('arena');
+  arena.innerHTML = '';
+  const tipo = STATE.jogo.etapa.tipo;
+  if (tipo === 'reconhecer') exReconhecer();
+  else if (tipo === 'ordem') exOrdem();
+  else if (tipo === 'parear') exParear();
+  else if (tipo === 'inicial') exInicial();
+  else if (tipo === 'vogal') exVogal();
+  else if (tipo === 'formar') exFormar();
+}
+
+/* ============================================================
+   ATIVIDADE 1: RECONHECER LETRA
+   ============================================================ */
+function exReconhecer() {
+  const arena = document.getElementById('arena');
+  const alvo = ALFABETO[Math.floor(Math.random() * ALFABETO.length)];
+  const opcoes = new Set([alvo]);
+  while (opcoes.size < 4) {
+    opcoes.add(ALFABETO[Math.floor(Math.random() * ALFABETO.length)]);
+  }
+  const opcoesArr = shuffle([...opcoes]);
+
+  arena.innerHTML = `
+    <div class="reco-area">
+      <div class="letra-grande-wrap">
+        <div class="letra-grande" id="letra-alvo">${letraDisplay(alvo)}</div>
+        <button class="btn-ouvir" onclick="falarLetra('${alvo}')" title="Ouvir">🔊</button>
+      </div>
+      <div class="pergunta-grande" style="color:#FF6B6B; font-family:'Fredoka',sans-serif; font-weight:700; font-size:1.15rem;">Cadê a letra ${letraDisplay(alvo)}? 🔍</div>
+      <div class="opcoes-letras" id="opcoes-letras"></div>
+    </div>
+  `;
+
+  const cont = document.getElementById('opcoes-letras');
+  opcoesArr.forEach(letra => {
+    const btn = document.createElement('button');
+    btn.className = 'letra-opcao';
+    btn.textContent = letraDisplay(letra);
+    btn.onclick = () => responderReconhecer(letra, alvo, btn);
+    cont.appendChild(btn);
+  });
+
+  if (STATE.vozLigada) falarLetra(alvo);
+}
+
+function responderReconhecer(escolhida, alvo, botao) {
+  if (STATE.jogo.bloqueado) return;
+  STATE.jogo.bloqueado = true;
+  const correto = escolhida === alvo;
+  document.querySelectorAll('.letra-opcao').forEach(b => b.disabled = true);
+  if (correto) {
+    botao.classList.add('acerto');
+    STATE.jogo.acertos++;
+    tocarSom('acerto');
+    celebrarAcerto(botao);
+    mostrarFeedback('acerto', `🎉 ${elogioAleatorio()} Esta é a letra ${letraDisplay(alvo)}!`);
+    renderMascote('svg-mascote-painel', 'feliz');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Sábia:</b> ${STATE.jogo.etapa.falaSucesso} 🎊`;
+    if (STATE.vozLigada) falar(STATE.jogo.etapa.falaSucesso);
+  } else {
+    botao.classList.add('erro');
+    document.querySelectorAll('.letra-opcao').forEach(b => {
+      if (b.textContent === letraDisplay(alvo)) b.classList.add('alt-correta-revelada');
+    });
+    STATE.jogo.erros++;
+    tocarSom('erro');
+    mostrarFeedback('erro', `🤗 ${incentivoAleatorio()} A letra era ${letraDisplay(alvo)}.`);
+    renderMascote('svg-mascote-painel', 'pensando');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Sábia:</b> Não foi dessa vez. Veja a letra ${letraDisplay(alvo)}!`;
+    if (STATE.vozLigada) falarLetra(alvo);
+  }
+  STATE.jogo.progresso++;
+  atualizarUI();
+  setTimeout(() => {
+    if (STATE.jogo.progresso >= STATE.jogo.etapa.total) finalizarEtapa();
+    else iniciarExercicio();
+  }, 1700);
+}
+
+/* ============================================================
+   ATIVIDADE 2: ORDEM DO ALFABETO
+   ============================================================ */
+function exOrdem() {
+  const arena = document.getElementById('arena');
+  const inicio = Math.floor(Math.random() * (ALFABETO.length - 7));
+  const trecho = ALFABETO.slice(inicio, inicio + 7);
+  const ocultos = [1, 3, 5];
+
+  arena.innerHTML = `
+    <div class="ord-area">
+      <div class="pergunta-grande" style="color:#FF6B6B; font-family:'Fredoka',sans-serif; font-weight:700; font-size:1.15rem;">🌊 Arraste as letras pro lugar certo!</div>
+      <div class="ord-sequencia" id="ord-sequencia"></div>
+      <div class="ord-arrastaveis" id="ord-arrastaveis"></div>
+    </div>
+  `;
+
+  STATE.jogo.ordemSlots = [];
+  const seq = document.getElementById('ord-sequencia');
+  trecho.forEach((c, i) => {
+    if (ocultos.includes(i)) {
+      const slot = document.createElement('div');
+      slot.className = 'ord-slot';
+      slot.dataset.alvo = c;
+      seq.appendChild(slot);
+      STATE.jogo.ordemSlots.push({ el: slot, alvo: c });
+    } else {
+      const fixa = document.createElement('div');
+      fixa.className = 'ord-letra-fixa';
+      fixa.textContent = letraDisplay(c);
+      seq.appendChild(fixa);
+    }
+  });
+
+  const arrast = document.getElementById('ord-arrastaveis');
+  const letras = shuffle(ocultos.map(i => trecho[i]));
+  letras.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'ord-arrastavel';
+    el.textContent = letraDisplay(c);
+    el.dataset.letra = c;
+    instalarDragLetra(el);
+    arrast.appendChild(el);
+  });
+}
+
+function instalarDragLetra(el) {
+  let dragState = null;
+  function onDown(e) {
+    if (el.classList.contains('usada')) return;
+    e.preventDefault();
+    const evt = e.touches ? e.touches[0] : e;
+    const rect = el.getBoundingClientRect();
+    dragState = { offsetX: evt.clientX - rect.left, offsetY: evt.clientY - rect.top };
+    el.classList.add('arrastando');
+    el.style.left = (evt.clientX - dragState.offsetX) + 'px';
+    el.style.top = (evt.clientY - dragState.offsetY) + 'px';
+    document.body.style.overflow = 'hidden';
+  }
+  function onMove(e) {
+    if (!dragState) return;
+    e.preventDefault();
+    const evt = e.touches ? e.touches[0] : e;
+    el.style.left = (evt.clientX - dragState.offsetX) + 'px';
+    el.style.top = (evt.clientY - dragState.offsetY) + 'px';
+    document.querySelectorAll('.ord-slot').forEach(s => s.classList.remove('atual'));
+    const elBelow = elementoAbaixoExcluindo(evt.clientX, evt.clientY, el);
+    if (elBelow && elBelow.classList && elBelow.classList.contains('ord-slot') && !elBelow.classList.contains('preenchido')) {
+      elBelow.classList.add('atual');
+    }
+  }
+  function onUp(e) {
+    if (!dragState) return;
+    const evt = e.changedTouches ? e.changedTouches[0] : e;
+    el.classList.remove('arrastando');
+    el.style.left = ''; el.style.top = '';
+    document.body.style.overflow = '';
+    document.querySelectorAll('.ord-slot').forEach(s => s.classList.remove('atual'));
+    const elBelow = elementoAbaixoExcluindo(evt.clientX, evt.clientY, el);
+    if (elBelow && elBelow.classList.contains('ord-slot') && !elBelow.classList.contains('preenchido')) {
+      const letraDoEl = el.dataset.letra;
+      const alvo = elBelow.dataset.alvo;
+      if (letraDoEl === alvo) {
+        elBelow.textContent = letraDisplay(letraDoEl);
+        elBelow.classList.add('preenchido');
+        el.classList.add('usada');
+        STATE.jogo.acertos++;
+        tocarSom('acerto');
+        celebrarAcerto(elBelow);
+        const todosFeitos = STATE.jogo.ordemSlots.every(s => s.el.classList.contains('preenchido'));
+        if (todosFeitos) {
+          STATE.jogo.progresso++;
+          atualizarUI();
+          mostrarFeedback('acerto', `🎉 ${elogioAleatorio()}`);
+          renderMascote('svg-mascote-painel', 'feliz');
+          if (STATE.vozLigada) falar('Sequência completa!');
+          setTimeout(() => {
+            if (STATE.jogo.progresso >= STATE.jogo.etapa.total) finalizarEtapa();
+            else iniciarExercicio();
+          }, 1500);
+        }
+      } else {
+        STATE.jogo.erros++;
+        tocarSom('erro');
+        elBelow.style.animation = 'shake 0.4s';
+        setTimeout(() => { elBelow.style.animation = ''; }, 400);
+        if (STATE.vozLigada) falar(incentivoAleatorio());
+      }
+    }
+    dragState = null;
+  }
+  el.addEventListener('mousedown', onDown);
+  el.addEventListener('touchstart', onDown, { passive: false });
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('touchmove', onMove, { passive: false });
+  document.addEventListener('mouseup', onUp);
+  document.addEventListener('touchend', onUp);
+}
+
+function elementoAbaixoExcluindo(x, y, excluir) {
+  const orig = excluir.style.display;
+  excluir.style.display = 'none';
+  const el = document.elementFromPoint(x, y);
+  excluir.style.display = orig;
+  return el;
+}
+
+/* ============================================================
+   ATIVIDADE 3: PAREAR
+   ============================================================ */
+function exParear() {
+  const letras = shuffle(ALFABETO).slice(0, 6);
+  const arena = document.getElementById('arena');
+  const mais = shuffle(letras);
+  const mins = shuffle(letras);
+
+  arena.innerHTML = `
+    <div class="par-area">
+      <div class="pergunta-grande" style="color:#FF6B6B; font-family:'Fredoka',sans-serif; font-weight:700; font-size:1.15rem;">🎪 Encontre os pares!</div>
+      <div class="par-grids-wrap">
+        <div class="par-coluna">
+          <div class="par-coluna-titulo">MAIÚSCULAS</div>
+          <div class="par-grid" id="par-grid-mais"></div>
+        </div>
+        <div class="par-coluna">
+          <div class="par-coluna-titulo">minúsculas</div>
+          <div class="par-grid" id="par-grid-mins"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  STATE.jogo.parSelecionado = null;
+  STATE.jogo.paresFeitos = 0;
+  STATE.jogo.paresTotal = letras.length;
+
+  const gMais = document.getElementById('par-grid-mais');
+  mais.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'par-card';
+    card.dataset.letra = c;
+    card.dataset.tipo = 'maiuscula';
+    card.textContent = c.toUpperCase();
+    card.onclick = () => clicarPar(card);
+    gMais.appendChild(card);
+  });
+  const gMins = document.getElementById('par-grid-mins');
+  mins.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'par-card';
+    card.dataset.letra = c;
+    card.dataset.tipo = 'minuscula';
+    card.textContent = c.toLowerCase();
+    card.onclick = () => clicarPar(card);
+    gMins.appendChild(card);
+  });
+}
+
+function clicarPar(card) {
+  if (card.classList.contains('par-correto')) return;
+  if (STATE.jogo.parSelecionado === card) {
+    card.classList.remove('par-selecionado');
+    STATE.jogo.parSelecionado = null;
+    return;
+  }
+  if (!STATE.jogo.parSelecionado) {
+    card.classList.add('par-selecionado');
+    STATE.jogo.parSelecionado = card;
+    if (STATE.vozLigada) falarLetra(card.dataset.letra);
+    return;
+  }
+  const a = STATE.jogo.parSelecionado;
+  const b = card;
+  if (a.dataset.tipo === b.dataset.tipo) {
+    a.classList.remove('par-selecionado');
+    b.classList.add('par-selecionado');
+    STATE.jogo.parSelecionado = b;
+    if (STATE.vozLigada) falarLetra(b.dataset.letra);
+    return;
+  }
+  if (a.dataset.letra === b.dataset.letra) {
+    a.classList.remove('par-selecionado');
+    a.classList.add('par-correto');
+    b.classList.add('par-correto');
+    STATE.jogo.parSelecionado = null;
+    STATE.jogo.acertos++;
+    STATE.jogo.paresFeitos++;
+    tocarSom('acerto');
+    celebrarAcerto(b);
+    if (STATE.vozLigada) falar(`Par feito!`);
+    if (STATE.jogo.paresFeitos >= STATE.jogo.paresTotal) {
+      STATE.jogo.progresso++;
+      atualizarUI();
+      mostrarFeedback('acerto', `🎉 ${STATE.jogo.etapa.falaSucesso}`);
+      renderMascote('svg-mascote-painel', 'feliz');
+      setTimeout(() => finalizarEtapa(), 1500);
+    }
+  } else {
+    a.classList.remove('par-selecionado');
+    b.classList.add('par-erro');
+    setTimeout(() => b.classList.remove('par-erro'), 400);
+    STATE.jogo.parSelecionado = null;
+    STATE.jogo.erros++;
+    tocarSom('erro');
+    if (STATE.vozLigada) falar(incentivoAleatorio());
+  }
+}
+
+/* ============================================================
+   ATIVIDADE 4: LETRA INICIAL
+   ============================================================ */
+function exInicial() {
+  const arena = document.getElementById('arena');
+  const palObj = PALAVRAS_INICIAL[Math.floor(Math.random() * PALAVRAS_INICIAL.length)];
+  const palavra = palObj.p;
+  const inicial = palavra[0];
+
+  const alts = new Set([inicial]);
+  while (alts.size < 4) {
+    alts.add(ALFABETO[Math.floor(Math.random() * ALFABETO.length)]);
+  }
+  const altsArr = shuffle([...alts]);
+
+  arena.innerHTML = `
+    <div class="pal-area">
+      <div class="pal-display">
+        <div class="pal-emoji">${palObj.emoji}</div>
+        <div class="pal-nome"><span class="inicio-oculto">?</span>${palavra.slice(1)}</div>
+      </div>
+      <div class="pergunta-grande">Qual letra começa <b>${palavra}</b>? 🔍</div>
+      <div class="opcoes-letras" id="opcoes-iniciais"></div>
+    </div>
+  `;
+
+  const cont = document.getElementById('opcoes-iniciais');
+  altsArr.forEach(letra => {
+    const btn = document.createElement('button');
+    btn.className = 'letra-opcao';
+    btn.textContent = letraDisplay(letra);
+    btn.onclick = () => responderInicial(letra, inicial, palavra, btn);
+    cont.appendChild(btn);
+  });
+
+  if (STATE.vozLigada) falar(`A figura mostra ${palavra}. Qual letra começa essa palavra?`);
+}
+
+function responderInicial(escolhida, alvo, palavra, botao) {
+  if (STATE.jogo.bloqueado) return;
+  STATE.jogo.bloqueado = true;
+  const correto = escolhida === alvo;
+  document.querySelectorAll('#opcoes-iniciais .letra-opcao').forEach(b => {
+    b.disabled = true;
+    if (!correto && b.textContent === letraDisplay(alvo)) b.classList.add('alt-correta-revelada');
+  });
+  if (correto) {
+    botao.classList.add('acerto');
+    STATE.jogo.acertos++;
+    tocarSom('acerto');
+    celebrarAcerto(botao);
+    mostrarFeedback('acerto', `🎉 ${elogioAleatorio()} ${palavra} começa com ${letraDisplay(alvo)}!`);
+    renderMascote('svg-mascote-painel', 'feliz');
+    if (STATE.vozLigada) falar(`Muito bem! ${palavra} começa com ${alvo}!`);
+  } else {
+    botao.classList.add('erro');
+    STATE.jogo.erros++;
+    tocarSom('erro');
+    mostrarFeedback('erro', `🤗 Era a letra ${letraDisplay(alvo)}! ${palavra} começa com ${letraDisplay(alvo)}.`);
+    renderMascote('svg-mascote-painel', 'pensando');
+    if (STATE.vozLigada) falar(`Era a letra ${alvo}.`);
+  }
+  STATE.jogo.progresso++;
+  atualizarUI();
+  setTimeout(() => {
+    if (STATE.jogo.progresso >= STATE.jogo.etapa.total) finalizarEtapa();
+    else iniciarExercicio();
+  }, 1700);
+}
+
+/* ============================================================
+   ATIVIDADE 5: VOGAIS
+   ============================================================ */
+function exVogal() {
+  const arena = document.getElementById('arena');
+  const letra = ALFABETO[Math.floor(Math.random() * ALFABETO.length)];
+  const ehVogal = VOGAIS.includes(letra);
+
+  arena.innerHTML = `
+    <div class="voc-area">
+      <div class="voc-letra-atual">${letraDisplay(letra)}</div>
+      <div class="pergunta-grande">É <b>vogal</b> ou <b>consoante</b>? 🤔</div>
+      <div class="voc-zonas">
+        <div class="voc-zona vogal" onclick="responderVogal(true, ${ehVogal}, '${letra}')">
+          <div class="titulo">⭐ Vogal</div>
+          <div class="exemplos">A E I O U</div>
+        </div>
+        <div class="voc-zona consoante" onclick="responderVogal(false, ${ehVogal}, '${letra}')">
+          <div class="titulo">🔵 Consoante</div>
+          <div class="desc">As outras letras</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  if (STATE.vozLigada) falarLetra(letra);
+}
+
+function responderVogal(escolheuVogal, ehVogal, letra) {
+  if (STATE.jogo.bloqueado) return;
+  STATE.jogo.bloqueado = true;
+  const correto = escolheuVogal === ehVogal;
+  if (correto) {
+    STATE.jogo.acertos++;
+    tocarSom('acerto');
+    mostrarFeedback('acerto', `🎉 ${elogioAleatorio()} ${letraDisplay(letra)} é ${ehVogal ? 'uma vogal' : 'uma consoante'}!`);
+    renderMascote('svg-mascote-painel', 'feliz');
+    if (STATE.vozLigada) falar(`Acertou!`);
+  } else {
+    STATE.jogo.erros++;
+    tocarSom('erro');
+    mostrarFeedback('erro', `🤗 ${letraDisplay(letra)} é ${ehVogal ? 'uma vogal' : 'uma consoante'}.`);
+    renderMascote('svg-mascote-painel', 'pensando');
+    if (STATE.vozLigada) falar(`${letra} é ${ehVogal ? 'uma vogal' : 'uma consoante'}.`);
+  }
+  STATE.jogo.progresso++;
+  atualizarUI();
+  setTimeout(() => {
+    if (STATE.jogo.progresso >= STATE.jogo.etapa.total) finalizarEtapa();
+    else iniciarExercicio();
+  }, 1500);
+}
+
+/* ============================================================
+   ATIVIDADE 6: FORMAR PALAVRAS
+   ============================================================ */
+function exFormar() {
+  const arena = document.getElementById('arena');
+  const palObj = PALAVRAS_FORMAR[Math.floor(Math.random() * PALAVRAS_FORMAR.length)];
+  STATE.jogo.palavraAlvo = palObj.p;
+  STATE.jogo.letrasMontadas = new Array(palObj.p.length).fill(null);
+  STATE.jogo.letrasDisponiveis = shuffle(palObj.p.split(''));
+
+  arena.innerHTML = `
+    <div class="form-area">
+      <div class="form-emoji">${palObj.emoji}</div>
+      <div class="pergunta-grande">Forme a palavra <b>${palObj.p}</b>! ✨</div>
+      <div class="palavra-display" id="palavra-display"></div>
+      <div class="palavra-letras-disponiveis" id="palavra-letras-disp"></div>
+      <div class="btn-form-acoes">
+        <button class="limpar" onclick="limparFormar()">↺ Limpar</button>
+        <button class="conferir" onclick="conferirFormar()">✓ Conferir</button>
+      </div>
+    </div>
+  `;
+
+  renderFormar();
+  if (STATE.vozLigada) falar(`Forme a palavra ${palObj.p}!`);
+}
+
+function renderFormar() {
+  const disp = document.getElementById('palavra-display');
+  disp.innerHTML = '';
+  STATE.jogo.letrasMontadas.forEach((c, idx) => {
+    const slot = document.createElement('div');
+    slot.className = 'palavra-letra-slot' + (c !== null ? ' preenchida' : '');
+    slot.textContent = c !== null ? letraDisplay(c) : '_';
+    slot.onclick = () => {
+      if (STATE.jogo.letrasMontadas[idx] !== null) {
+        STATE.jogo.letrasMontadas[idx] = null;
+        renderFormar();
+      }
+    };
+    disp.appendChild(slot);
+  });
+
+  const dispCont = document.getElementById('palavra-letras-disp');
+  dispCont.innerHTML = '';
+  STATE.jogo.letrasDisponiveis.forEach((c, idx) => {
+    const usada = letraUsadaNoMontado(idx);
+    const el = document.createElement('div');
+    el.className = 'palavra-letra-disp' + (usada ? ' usada' : '');
+    el.textContent = letraDisplay(c);
+    el.onclick = () => {
+      if (usada) return;
+      const idxVazio = STATE.jogo.letrasMontadas.findIndex(x => x === null);
+      if (idxVazio === -1) return;
+      STATE.jogo.letrasMontadas[idxVazio] = c;
+      renderFormar();
+    };
+    dispCont.appendChild(el);
+  });
+}
+
+function letraUsadaNoMontado(idxDisp) {
+  const c = STATE.jogo.letrasDisponiveis[idxDisp];
+  let aparicaoNum = 0;
+  for (let i = 0; i <= idxDisp; i++) {
+    if (STATE.jogo.letrasDisponiveis[i] === c) aparicaoNum++;
+  }
+  const usadasMontadas = STATE.jogo.letrasMontadas.filter(x => x === c).length;
+  return aparicaoNum <= usadasMontadas;
+}
+
+function limparFormar() {
+  STATE.jogo.letrasMontadas = new Array(STATE.jogo.palavraAlvo.length).fill(null);
+  renderFormar();
+}
+
+function conferirFormar() {
+  if (STATE.jogo.bloqueado) return;
+  if (STATE.jogo.letrasMontadas.includes(null)) {
+    mostrarFeedback('erro', '🤗 Complete a palavra primeiro!');
+    return;
+  }
+  STATE.jogo.bloqueado = true;
+  const formada = STATE.jogo.letrasMontadas.join('');
+  const correto = formada === STATE.jogo.palavraAlvo;
+  if (correto) {
+    STATE.jogo.acertos++;
+    tocarSom('acerto');
+    mostrarFeedback('acerto', `🎉 ${elogioAleatorio()} Você formou ${STATE.jogo.palavraAlvo}!`);
+    renderMascote('svg-mascote-painel', 'feliz');
+    if (STATE.vozLigada) falar(`Que palavra linda! ${STATE.jogo.palavraAlvo}!`);
+  } else {
+    STATE.jogo.erros++;
+    tocarSom('erro');
+    mostrarFeedback('erro', `🤗 Era ${STATE.jogo.palavraAlvo}, você formou ${formada}.`);
+    renderMascote('svg-mascote-painel', 'pensando');
+    if (STATE.vozLigada) falar(`A palavra era ${STATE.jogo.palavraAlvo}.`);
+  }
+  STATE.jogo.progresso++;
+  atualizarUI();
+  setTimeout(() => {
+    if (STATE.jogo.progresso >= STATE.jogo.etapa.total) finalizarEtapa();
+    else iniciarExercicio();
+  }, 1900);
+}
+
+/* ============================================================
+   FINALIZAR ETAPA (com transição automática)
+   ============================================================ */
+function finalizarEtapa() {
+  STATE.jogo.ativo = false;
+  const etapa = STATE.jogo.etapa;
+  const total = STATE.jogo.acertos + STATE.jogo.erros;
+  const aprov = total > 0 ? STATE.jogo.acertos / total : 0;
+
+  let estrelas;
+  if (aprov >= 0.95) estrelas = 3;
+  else if (aprov >= 0.75) estrelas = 2;
+  else estrelas = 1;
+  if (STATE.jogo.erros > STATE.jogo.acertos) estrelas = 1;
+
+  const anterior = STATE.estrelasPorEtapa[etapa.id] || 0;
+  STATE.estrelasPorEtapa[etapa.id] = Math.max(anterior, estrelas);
+
+  if (STATE.etapaAtual === etapa.id && STATE.etapaAtual < ETAPAS.length) {
+    STATE.etapaAtual++;
+  }
+  salvar();
+
+  const todasFeitas = ETAPAS.every(e => STATE.estrelasPorEtapa[e.id]);
+  const proxima = ETAPAS.find(e => e.id > etapa.id);
+
+  // CASO 1: Trilha 100% completa → modal de troféu (final, único modal grande)
+  if (todasFeitas) {
+    renderMascote('svg-mascote-trofeu', 'feliz');
+    document.getElementById('svg-mascote-trofeu').parentElement.classList.add('celebrando');
+    document.getElementById('modal-trilha-completa').classList.add('aberto');
+    criarConfetes();
+    if (STATE.vozLigada) falar('Aventura completa! Você é demais!');
+    return;
+  }
+
+  // CASO 2: Desempenho ruim (1 estrela) → modal compacto oferecendo repetir
+  if (estrelas === 1) {
+    renderMascote('svg-mascote-modal', 'pensando');
+    document.getElementById('etapa-fim-titulo').textContent = '💪 Vamos tentar de novo?';
+    document.getElementById('etapa-fim-msg').textContent = 'Praticar mais um pouquinho ajuda a aprender!';
+    let estrelasHtml = '';
+    for (let i = 0; i < 3; i++) {
+      estrelasHtml += i < estrelas ? '<span class="ativa">★</span>' : '<span class="vazia">★</span>';
+    }
+    document.getElementById('etapa-fim-estrelas').innerHTML = estrelasHtml;
+    document.getElementById('etapa-fim-detalhes').textContent = `${STATE.jogo.acertos} acerto${STATE.jogo.acertos !== 1 ? 's' : ''} · ${STATE.jogo.erros} erro${STATE.jogo.erros !== 1 ? 's' : ''}`;
+
+    const acoes = document.getElementById('etapa-fim-acoes');
+    acoes.innerHTML = '';
+    acoes.style.gridTemplateColumns = '1fr 1fr';
+
+    const btnRepetir = document.createElement('button');
+    btnRepetir.className = 'btn-confirmar';
+    btnRepetir.textContent = '↻ Repetir';
+    btnRepetir.onclick = () => { fecharModal('modal-etapa-fim'); comecarEtapaAtual(); };
+    acoes.appendChild(btnRepetir);
+
+    const btnAvancar = document.createElement('button');
+    btnAvancar.className = 'btn-cancelar';
+    btnAvancar.textContent = proxima ? '➡ Próxima' : '🏠 Voltar';
+    btnAvancar.onclick = () => {
+      fecharModal('modal-etapa-fim');
+      if (proxima) {
+        STATE.etapaAtual = proxima.id;
+        comecarEtapaAtual();
+      } else {
+        voltarLobby();
+      }
+    };
+    acoes.appendChild(btnAvancar);
+
+    document.getElementById('modal-etapa-fim').classList.add('aberto');
+    return;
+  }
+
+  // CASO 3 (PADRÃO): Bom desempenho → transição AUTOMÁTICA com banner curto
+  // Mostra overlay celebrativo de 2s e parte pra próxima fase
+  if (proxima) {
+    mostrarTransicaoAutomatica(estrelas, etapa, proxima);
+  } else {
+    voltarLobby();
+  }
+}
+
+/* ============================================================
+   TRANSIÇÃO AUTOMÁTICA ENTRE FASES
+   Banner curto, sem botão. Aparece, celebra, e parte sozinho.
+   ============================================================ */
+function mostrarTransicaoAutomatica(estrelas, etapaAtual, proxima) {
+  // Cria overlay temporário
+  const overlay = document.createElement('div');
+  overlay.id = 'transicao-overlay';
+  overlay.style.cssText = `
+    position: fixed; inset: 0;
+    background: rgba(45,27,92,0.85);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999999;
+    backdrop-filter: blur(4px);
+    animation: transicaoFadeIn 0.3s ease-out;
+  `;
+
+  const card = document.createElement('div');
+  card.style.cssText = `
+    background: white;
+    border-radius: 20px;
+    padding: 24px 28px;
+    max-width: 420px;
+    text-align: center;
+    border: 4px solid #FFD93D;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    animation: transicaoCardIn 0.4s ease-out;
+  `;
+
+  let estrelasHtml = '';
+  for (let i = 0; i < 3; i++) {
+    estrelasHtml += i < estrelas
+      ? '<span style="color:#FFD93D; text-shadow:0 0 10px rgba(255,217,61,0.6);">★</span>'
+      : '<span style="color:#E2E8F0;">★</span>';
+  }
+
+  card.innerHTML = `
+    <div style="font-size:3rem; line-height:1; margin-bottom:6px;">🎉</div>
+    <h2 style="font-family:'Fredoka',sans-serif; font-weight:700; color:#FF6B6B; font-size:1.4rem; margin:0 0 4px;">
+      ${estrelas === 3 ? 'Demais!' : 'Muito bom!'}
+    </h2>
+    <p style="font-family:'Fredoka',sans-serif; font-weight:500; color:#2D1B5C; font-size:0.95rem; margin:0 0 8px;">
+      Você passou da <b>${etapaAtual.titulo}</b>!
+    </p>
+    <div style="font-size:2rem; letter-spacing:8px; margin:8px 0;">${estrelasHtml}</div>
+    <div style="background:#FFF9E6; border:2px dashed #FFA500; border-radius:12px; padding:10px; margin-top:10px;">
+      <div style="font-family:'Fredoka',sans-serif; font-weight:600; color:#475569; font-size:0.82rem;">Próxima aventura:</div>
+      <div style="font-family:'Fredoka',sans-serif; font-weight:700; color:#FF6B6B; font-size:1.05rem;">
+        ${proxima.emoji} ${proxima.titulo}
+      </div>
+    </div>
+  `;
+
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+
+  // Som comemorativo
+  tocarSom('acerto');
+  if (STATE.vozLigada) {
+    setTimeout(() => falar(`${etapaAtual.falaSucesso} Vamos pra ${proxima.titulo}!`), 100);
+  }
+
+  // Após 2.5s: tira overlay e começa próxima fase
+  setTimeout(() => {
+    overlay.style.animation = 'transicaoFadeOut 0.3s ease-out forwards';
+    setTimeout(() => {
+      overlay.remove();
+      STATE.etapaAtual = proxima.id;
+      comecarEtapaAtual();
+    }, 300);
+  }, 2500);
+}
+
+function voltarLobby() {
+  if (STATE.jogo.ativo && (STATE.jogo.acertos + STATE.jogo.erros) > 0) {
+    if (!confirm('Voltar ao mapa? Seu progresso da aventura atual será perdido.')) return;
+  }
+  STATE.jogo.ativo = false;
+  document.getElementById('treino').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-etapa-fim');
+  fecharModal('modal-trilha-completa');
+  renderLobby();
+}
+
+/* ===========================================================
+   MODAIS
+   =========================================================== */
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+
+/* ===========================================================
+   SOM
+   =========================================================== */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'acerto') {
+      // Arpejo "yay!" subindo
+      const notas = [523, 659, 784, 1047];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t0 = c.currentTime + i * 0.07;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.18);
+        o.start(t0); o.stop(t0 + 0.2);
+      });
+    } else {
+      // Som de "boop" amigável (não punitivo)
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 320; o.type = 'sine';
+      g.gain.setValueAtTime(0.1, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.3);
+      o.frequency.exponentialRampToValueAtTime(180, c.currentTime + 0.3);
+      o.start(); o.stop(c.currentTime + 0.32);
+    }
+  } catch (e) {}
+}
+
+/* ===========================================================
+   CONFETES (mais coloridos e divertidos)
+   =========================================================== */
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#FF6B6B','#FFD93D','#6BCB77','#4D96FF','#9B72CB','#FFB4B4'];
+  const formatos = ['50%', '4px'];
+  for (let i = 0; i < 50; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = formatos[Math.floor(Math.random() * formatos.length)];
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* ===========================================================
+   ACESSIBILIDADE (compartilhada)
+   =========================================================== */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    // Escala SEMPRE inicia em 'normal' (não persistir entre sessões; vários alunos compartilham dispositivo)
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* ===========================================================
+   AUTO-RESIZE WEBNODE
+   =========================================================== */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+const ro = new ResizeObserver(() => reportarAltura());
+ro.observe(document.getElementById('pde-painel'));
+
+/* ===========================================================
+   SELOS BNCC
+   =========================================================== */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'portugues',
+      icone: 'LP',
+      titulo: 'BNCC Língua Portuguesa · Alfabetização',
+      itens: [
+        { cod: 'EF01LP02', desc: 'Escrever, espontaneamente ou por ditado, palavras e frases.' },
+        { cod: 'EF01LP03', desc: 'Observar escritas convencionais comparando-as às próprias produções.' },
+        { cod: 'EF01LP04', desc: 'Distinguir as letras do alfabeto de outros sinais gráficos.' },
+        { cod: 'EF01LP05', desc: 'Reconhecer o sistema de escrita alfabética como representação dos sons da fala.' },
+        { cod: 'EF01LP10', desc: 'Nomear as letras do alfabeto e recitá-lo na ordem das letras.' },
+        { cod: 'EF02LP06', desc: 'Perceber o princípio acrofônico que opera nos nomes das letras do alfabeto.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Cultura Digital',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem.' },
+        { cod: 'EF15CO02', desc: 'Reconhecer recursos de interface gráfica como ícones, janelas, menus e controles.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px; line-height:1.4;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações, narração de voz</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos pré-alfabetizados, baixa visão, daltonismo, TEA e sensibilidade sensorial</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-etapa-fim', 'modal-trilha-completa'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+/* ===========================================================
+   INICIALIZAÇÃO
+   =========================================================== */
+carregar();
+carregarA11y();
+renderLobby();
+
+document.getElementById('nome-aluno').addEventListener('input', (e) => {
+  STATE.nomeAluno = e.target.value;
+  salvar();
+});
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+</script>
+
+</body>
+</html>

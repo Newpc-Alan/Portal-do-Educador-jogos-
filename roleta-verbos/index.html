@@ -1,0 +1,2532 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Roleta dos Verbos · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #1E324A);
+  padding: 6px clamp(6px, 1.5vw, 12px) 10px;
+  width: 100%; max-width: 100%; overflow-x: hidden; margin: 0 auto;
+  user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+  --pde-cor-texto: #1E324A;
+  background: linear-gradient(180deg, #FEF3C7 0%, #EA580C 50%, #064E3B 100%);
+  border-radius: 12px;
+}
+
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-jogo,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .nivel-card,
+#pde-painel.alto-contraste .modo-card,
+#pde-painel.alto-contraste .qtd-card,
+#pde-painel.alto-contraste .tempo-card { background: #000 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .nivel-card.selecionado,
+#pde-painel.alto-contraste .modo-card.selecionado,
+#pde-painel.alto-contraste .qtd-card.selecionado,
+#pde-painel.alto-contraste .tempo-card.selecionado { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .opcao-resposta { background: #1F2937 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#EA580C 0%,#9A3412 100%);
+  border-radius: 10px;
+  padding: 6px 10px;
+  color: white;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 6px rgba(154,52,18,0.25);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 14px;
+  padding: 10px;
+  border: 2px solid #EA580C;
+  box-shadow: 0 3px 8px rgba(234,88,12,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDBA74 100%);
+  border-radius: 10px;
+  padding: 7px 10px;
+  margin-bottom: 8px;
+  border: 2px solid #EA580C;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 72px; height: 72px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 10px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #1E324A;
+  font-size: 0.85rem;
+  line-height: 1.25;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: ''; position: absolute;
+  left: -8px; top: 18px;
+  width: 0; height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #EA580C;
+  font-size: 0.95rem;
+  margin-bottom: 1px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 5px; padding: 8px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 78px; height: 78px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+#pde-painel .secao-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #EA580C;
+  font-size: 0.92rem;
+  margin: 8px 0 5px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* MODO */
+#pde-painel .modo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  margin-bottom: 6px;
+}
+@media (min-width: 700px) { #pde-painel .modo-grid { grid-template-columns: repeat(4, 1fr); } }
+#pde-painel .modo-card {
+  background: white; border: 2px solid #EA580C; border-radius: 10px;
+  padding: 7px; cursor: pointer; text-align: center;
+  font-family: 'Fredoka',sans-serif; color: #1E324A; font-size: 0.78rem;
+  transition: all 0.15s; box-shadow: 0 2px 0 #9A3412;
+}
+#pde-painel .modo-card:hover { transform: translateY(-2px); }
+#pde-painel .modo-card.selecionado {
+  background: linear-gradient(135deg,#EA580C 0%,#9A3412 100%);
+  color: white; border-color: #7C2D12; transform: translateY(2px);
+}
+#pde-painel .modo-card .modo-emoji { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .modo-card .modo-titulo { font-weight: 700; font-size: 0.85rem; }
+#pde-painel .modo-card .modo-desc { font-size: 0.7rem; opacity: 0.85; margin-top: 1px; line-height: 1.2; }
+
+/* NÍVEL */
+#pde-painel .nivel-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 5px; margin-bottom: 6px;
+}
+@media (min-width: 700px) { #pde-painel .nivel-grid { grid-template-columns: repeat(4, 1fr); } }
+#pde-painel .nivel-card {
+  background: white; border: 2px solid #16A34A; border-radius: 10px;
+  padding: 7px; cursor: pointer; text-align: center;
+  font-family: 'Fredoka',sans-serif; color: #14532D; font-size: 0.78rem;
+  transition: all 0.15s; box-shadow: 0 2px 0 #14532D;
+}
+#pde-painel .nivel-card:hover { transform: translateY(-2px); }
+#pde-painel .nivel-card.selecionado {
+  background: linear-gradient(135deg,#16A34A 0%,#14532D 100%);
+  color: white; border-color: #052E16; transform: translateY(2px);
+}
+#pde-painel .nivel-card .nivel-emoji { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .nivel-card .nivel-titulo { font-weight: 700; font-size: 0.85rem; }
+#pde-painel .nivel-card .nivel-desc { font-size: 0.7rem; opacity: 0.85; margin-top: 1px; line-height: 1.2; }
+
+/* QTD */
+#pde-painel .qtd-area, #pde-painel .jogadores-area, #pde-painel .tempo-area {
+  display: none; margin-bottom: 6px;
+}
+#pde-painel .qtd-area.ativo, #pde-painel .jogadores-area.ativo, #pde-painel .tempo-area.ativo {
+  display: block;
+}
+#pde-painel .qtd-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px;
+}
+#pde-painel .qtd-card {
+  background: white; border: 2px solid #FBBF24; border-radius: 10px;
+  padding: 8px 5px; cursor: pointer; text-align: center;
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #92400E;
+  font-size: 0.92rem; transition: all 0.15s; box-shadow: 0 2px 0 #92400E;
+}
+#pde-painel .qtd-card:hover { transform: translateY(-2px); }
+#pde-painel .qtd-card.selecionado {
+  background: linear-gradient(135deg,#F59E0B 0%,#92400E 100%);
+  color: white; border-color: #451A03; transform: translateY(2px);
+}
+#pde-painel .qtd-card .qtd-emoji { display: block; font-size: 1.3rem; line-height: 1; }
+#pde-painel .qtd-card .qtd-num { display: block; font-size: 1rem; margin-top: 2px; }
+
+#pde-painel .jogadores-grid {
+  display: grid; grid-template-columns: 70px 1fr; gap: 5px 8px; align-items: center;
+}
+#pde-painel .jogadores-grid .pino-mini {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 3px solid #1E324A;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  font-size: 1.05rem; color: white; justify-self: center;
+}
+#pde-painel .jogadores-grid input {
+  font-family: 'Fredoka',sans-serif; font-size: 0.92rem;
+  padding: 5px 8px; border: 2px solid #EA580C; border-radius: 6px;
+  background: white; color: #1E324A; font-weight: 600; width: 100%;
+}
+#pde-painel .jogadores-grid input:focus { outline: none; border-color: #9A3412; }
+
+/* TEMPO */
+#pde-painel .tempo-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px;
+}
+#pde-painel .tempo-card {
+  background: white; border: 2px solid #14B8A6; border-radius: 10px;
+  padding: 6px 4px; cursor: pointer; text-align: center;
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #0F766E;
+  font-size: 0.82rem; transition: all 0.15s; box-shadow: 0 2px 0 #0F766E;
+}
+#pde-painel .tempo-card:hover { transform: translateY(-2px); }
+#pde-painel .tempo-card.selecionado {
+  background: linear-gradient(135deg,#14B8A6 0%,#0F766E 100%);
+  color: white; border-color: #134E4A; transform: translateY(2px);
+}
+
+#pde-painel .info-pool {
+  margin-top: 4px;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.75rem;
+  color: #475569;
+  text-align: center;
+}
+#pde-painel .info-pool b { color: #EA580C; }
+
+#pde-painel .btn-comecar {
+  width: 100%;
+  background: linear-gradient(135deg,#EA580C 0%,#9A3412 100%);
+  color: white; border: 2px solid white; border-radius: 10px;
+  padding: 9px 16px; font-family: 'Fredoka',sans-serif;
+  font-weight: 700; font-size: 1rem; cursor: pointer;
+  box-shadow: 0 3px 0 #7C2D12, 0 4px 10px rgba(154,52,18,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #7C2D12; margin-top: 6px;
+}
+#pde-painel .btn-comecar:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #7C2D12, 0 2px 6px rgba(154,52,18,0.25);
+}
+#pde-painel .btn-comecar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* JOGO */
+#pde-painel .jogo-grid {
+  display: grid; gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #pde-painel .jogo-grid { grid-template-columns: 1fr !important; gap: 8px; }
+  #pde-painel .area-jogo { order: 1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+#pde-painel .area-jogo {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 3px solid #EA580C;
+  box-shadow: 0 2px 6px rgba(234,88,12,0.12);
+  display: flex; flex-direction: column; gap: 8px;
+  min-width: 0;
+}
+#pde-painel .painel-info {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 10px;
+  border: 3px solid #EA580C;
+  box-shadow: 0 2px 6px rgba(234,88,12,0.12);
+  min-width: 0;
+}
+
+#pde-painel .cab-jogo {
+  background: linear-gradient(135deg, #EA580C 0%, #9A3412 100%);
+  border-radius: 10px;
+  padding: 6px 12px; color: white; border: 2px solid white;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; flex-wrap: wrap;
+}
+#pde-painel .cab-jogo .vez-jogador {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Fredoka',sans-serif; font-size: 0.92rem; font-weight: 700;
+}
+#pde-painel .cab-jogo .pino-vez {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2.5px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  font-size: 0.95rem; color: white; flex-shrink: 0;
+}
+#pde-painel .cab-jogo .info-rodada-cab {
+  font-family: 'Fredoka',sans-serif; font-size: 0.78rem;
+  background: rgba(0,0,0,0.2); padding: 2px 10px; border-radius: 999px;
+}
+#pde-painel .cab-jogo .cronometro {
+  font-family: 'Baloo 2',sans-serif; font-size: 1.05rem; font-weight: 800;
+  background: rgba(0,0,0,0.3); padding: 4px 12px; border-radius: 999px;
+  border: 2px solid white;
+}
+#pde-painel .cab-jogo .cronometro.urgente {
+  background: #DC2626; animation: pulsa 0.7s ease-in-out infinite;
+}
+@keyframes pulsa { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+
+/* VERBO DESTACADO */
+#pde-painel .verbo-destaque {
+  background: linear-gradient(135deg, #FED7AA 0%, #FB923C 100%);
+  border: 3px solid #EA580C;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+}
+#pde-painel .verbo-destaque .verbo-rotulo {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.8rem; color: #7C2D12; font-weight: 600;
+}
+#pde-painel .verbo-destaque .verbo-palavra {
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
+  color: #7C2D12; line-height: 1;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+}
+#pde-painel .verbo-destaque .verbo-meta {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.72rem; color: #9A3412;
+  margin-top: 3px; font-weight: 600;
+}
+
+/* ROLETAS */
+#pde-painel .roletas-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+@media (max-width: 480px) {
+  #pde-painel .roletas-area { grid-template-columns: 1fr 1fr; gap: 4px; }
+}
+#pde-painel .roleta-bloco {
+  background: linear-gradient(135deg, #ECFDF5 0%, #A7F3D0 100%);
+  border: 3px solid #16A34A;
+  border-radius: 12px;
+  padding: 8px;
+  text-align: center;
+  position: relative;
+}
+#pde-painel .roleta-bloco.tempo {
+  background: linear-gradient(135deg, #DBEAFE 0%, #93C5FD 100%);
+  border-color: #2563EB;
+}
+#pde-painel .roleta-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: #14532D;
+  margin-bottom: 4px;
+}
+#pde-painel .roleta-bloco.tempo .roleta-titulo { color: #1E3A8A; }
+#pde-painel .roleta-svg {
+  width: 100%; max-width: 200px;
+  aspect-ratio: 1 / 1;
+  display: block; margin: 0 auto;
+}
+#pde-painel .roleta-resultado {
+  margin-top: 6px;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #14532D;
+  background: white;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 2px solid #16A34A;
+  min-height: 28px;
+}
+#pde-painel .roleta-bloco.tempo .roleta-resultado {
+  color: #1E3A8A; border-color: #2563EB;
+}
+#pde-painel .roleta-resultado.aguardando { color: #94A3B8; }
+
+/* Animação de giro */
+#pde-painel .girando { animation: girar 3.2s cubic-bezier(0.17, 0.67, 0.21, 0.99); }
+@keyframes girar {
+  0%   { transform: rotate(0); }
+  100% { transform: rotate(var(--rot-final, 1440deg)); }
+}
+
+/* BOTÃO GIRAR */
+#pde-painel .btn-girar {
+  background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+  color: #7C2D12; border: 3px solid #92400E;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700; font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #92400E, 0 6px 12px rgba(146,64,14,0.25);
+  margin: 0 auto;
+  display: block;
+  transition: transform 0.08s;
+}
+#pde-painel .btn-girar:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #92400E;
+}
+#pde-painel .btn-girar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* PERGUNTA */
+#pde-painel .pergunta-area {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FBBF24 100%);
+  border: 3px dashed #92400E;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+}
+#pde-painel .pergunta-area .pergunta-rotulo {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.8rem; color: #7C2D12; font-weight: 600;
+  margin-bottom: 3px;
+}
+#pde-painel .pergunta-area .pergunta-frase {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.95rem; color: #7C2D12; font-weight: 700;
+  line-height: 1.3;
+}
+#pde-painel .pergunta-area .pergunta-frase b {
+  background: white;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 800;
+}
+
+/* OPÇÕES */
+#pde-painel .opcoes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+@media (max-width: 380px) { #pde-painel .opcoes-grid { grid-template-columns: 1fr; } }
+
+#pde-painel .opcao-resposta {
+  background: white;
+  border: 2.5px solid #EA580C;
+  border-radius: 10px;
+  padding: 10px 8px;
+  cursor: pointer;
+  font-family: 'Baloo 2',sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #7C2D12;
+  text-align: center;
+  transition: all 0.15s;
+  box-shadow: 0 3px 0 #9A3412;
+  word-wrap: break-word;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#pde-painel .opcao-resposta:hover {
+  transform: translateY(-2px);
+  background: #FED7AA;
+}
+#pde-painel .opcao-resposta:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #9A3412;
+}
+#pde-painel .opcao-resposta.correta {
+  background: linear-gradient(135deg, #BBF7D0 0%, #16A34A 100%);
+  color: white;
+  border-color: #14532D;
+  box-shadow: 0 3px 0 #14532D;
+  animation: brilhar 0.5s ease-out;
+}
+@keyframes brilhar {
+  0%, 100% { box-shadow: 0 3px 0 #14532D; }
+  50% { box-shadow: 0 3px 0 #14532D, 0 0 20px #16A34A; }
+}
+#pde-painel .opcao-resposta.errada {
+  background: linear-gradient(135deg, #FECACA 0%, #DC2626 100%);
+  color: white;
+  border-color: #7F1D1D;
+  box-shadow: 0 3px 0 #7F1D1D;
+  animation: tremer 0.4s ease-in-out;
+}
+@keyframes tremer {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+#pde-painel .opcao-resposta.revela-correta {
+  background: linear-gradient(135deg, #BBF7D0 0%, #16A34A 100%);
+  color: white;
+  border-color: #14532D;
+}
+#pde-painel .opcao-resposta:disabled {
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+/* FEEDBACK */
+#pde-painel .feedback-rodada {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FBBF24 100%);
+  border: 3px solid #92400E;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  animation: aparecer 0.4s ease-out;
+}
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+#pde-painel .feedback-rodada h3 {
+  font-family: 'Fredoka',sans-serif;
+  color: #7C2D12; margin: 0 0 6px;
+  font-size: 1.1rem;
+}
+#pde-painel .feedback-rodada .resposta-certa {
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  font-size: 1rem; color: #14532D;
+  background: white; padding: 6px 12px; border-radius: 8px;
+  margin: 6px 0; border: 2px dashed #16A34A;
+}
+#pde-painel .feedback-rodada .pts-info {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  color: #7C2D12; font-size: 0.95rem;
+}
+
+#pde-painel .btn-proxima {
+  width: 100%;
+  background: linear-gradient(135deg, #EA580C 0%, #9A3412 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700; font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #7C2D12;
+  margin-top: 8px;
+}
+#pde-painel .btn-proxima:active { transform: translateY(2px); box-shadow: 0 1px 0 #7C2D12; }
+
+/* PAINEL INFO LATERAL */
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg,#FEF3C7 0%,#FDBA74 100%);
+  border-radius: 10px; padding: 6px 8px;
+  margin-bottom: 6px; border: 2px solid #EA580C;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 42px; height: 42px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1; font-family: 'Fredoka',sans-serif; font-weight: 600;
+  font-size: 0.78rem; color: #1E324A; line-height: 1.2;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #EA580C; font-weight: 700; }
+
+#pde-painel .placar-jogadores {
+  background: white; border-radius: 10px; padding: 6px;
+  margin-bottom: 6px; border: 2px solid #EA580C;
+}
+#pde-painel .placar-jogadores h5 {
+  font-family: 'Fredoka',sans-serif; margin: 0 0 4px;
+  color: #EA580C; font-size: 0.85rem; text-align: center;
+}
+#pde-painel .jog-linha {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px; background: #FEF3C7; border-radius: 6px;
+  margin-bottom: 3px;
+  font-family: 'Fredoka',sans-serif; font-size: 0.82rem;
+}
+#pde-painel .jog-linha:last-child { margin-bottom: 0; }
+#pde-painel .jog-linha.vez-dele {
+  background: linear-gradient(135deg, #EA580C 0%, #9A3412 100%);
+  color: white; outline: 2px solid #7C2D12;
+}
+#pde-painel .jog-linha.vez-dele .pts { background: white; color: #EA580C; }
+#pde-painel .jog-linha .pino-jog {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  font-size: 0.72rem; color: white; flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+#pde-painel .jog-linha .nome {
+  flex: 1; font-weight: 700; color: #1E324A;
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#pde-painel .jog-linha.vez-dele .nome { color: white; }
+#pde-painel .jog-linha .pts {
+  font-family: 'Baloo 2',sans-serif; font-weight: 800;
+  background: #EA580C; color: white;
+  padding: 1px 8px; border-radius: 999px; font-size: 0.72rem;
+}
+
+#pde-painel .info-rodada {
+  background: linear-gradient(135deg,#FEF3C7 0%,#FDBA74 100%);
+  border-radius: 10px; padding: 6px 8px;
+  margin-bottom: 6px; border: 2px solid #EA580C;
+}
+#pde-painel .info-rodada .linha {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'Fredoka',sans-serif; font-size: 0.78rem;
+  color: #EA580C; padding: 2px 0;
+}
+#pde-painel .info-rodada .linha .label { font-weight: 600; }
+#pde-painel .info-rodada .linha .valor { font-weight: 700; color: #1E324A; }
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(154,52,18,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #EA580C;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal { width: 100px; height: 100px; margin: 0 auto 8px; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #EA580C;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #1E324A; font-size: 0.95rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#EA580C 0%,#9A3412 100%);
+  color: white; border: 3px solid #7C2D12;
+  box-shadow: 0 4px 0 #7C2D12;
+}
+#pde-painel .btn-confirmar.dourado {
+  background: linear-gradient(135deg,#FBBF24 0%,#92400E 100%);
+  color: white; border: 3px solid #451A03;
+  box-shadow: 0 4px 0 #451A03;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .vencedor-coroa { font-size: 4rem; animation: bounceCoroa 0.8s ease-out; }
+@keyframes bounceCoroa {
+  0% { transform: scale(0) rotate(-30deg); }
+  60% { transform: scale(1.3) rotate(10deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+#pde-painel .ranking-final {
+  background: #FEF3C7; border-radius: 10px; padding: 10px; margin: 10px 0; text-align: left;
+}
+#pde-painel .ranking-final h4 { font-family: 'Fredoka',sans-serif; text-align: center; color: #EA580C; margin: 0 0 6px; }
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #EA580C;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #1E324A; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+
+#pde-painel .a11y-grupo { background: #FEF3C7; border: 3px solid #EA580C; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #EA580C; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #EA580C; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#EA580C 0%,#9A3412 100%); color: white; border-color: #7C2D12; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #EA580C; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#EA580C 0%,#9A3412 100%); color: white; border-color: #7C2D12; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #7C2D12; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #EA580C;
+  border: 2px solid #EA580C; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #EA580C; color: white; }
+
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #FBBF24; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #EA580C; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#EA580C,#9A3412); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.portugues { background: linear-gradient(135deg,#EA580C,#7C2D12); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #EA580C; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #EA580C; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #FEF3C7; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FBBF24; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #EA580C; }
+
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 8px clamp(10px, 1.5vw, 18px) 14px; }
+  #pde-painel .lobby-card { padding: 14px; }
+  #pde-painel .area-jogo { padding: 12px 16px; }
+  #pde-painel .painel-info { padding: 10px 12px; }
+  #pde-painel .jogo-grid { grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .opcao-resposta { font-size: 1.05rem; padding: 12px 10px; }
+}
+@media (min-width: 1440px) { #pde-painel { max-width: 1400px; } }
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>🎰 Roleta dos Verbos</h1>
+    <div class="acoes">
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Olá! Sou o Conjuguinha! 🎶🐱</strong>
+        <span>Vou reger as conjugações! Gire as duas roletas, sorteie pronome e tempo, e conjuge o verbo. Vamos lá, maestro?</span>
+      </div>
+    </div>
+
+    <div class="secao-titulo">🎮 Modo de jogo</div>
+    <div class="modo-grid" id="modo-grid"></div>
+
+    <div class="qtd-area" id="qtd-area">
+      <div class="secao-titulo">👥 Quantos jogadores?</div>
+      <div class="qtd-grid" id="qtd-grid"></div>
+    </div>
+
+    <div class="jogadores-area" id="jogadores-area">
+      <div class="secao-titulo">✏️ Nomes</div>
+      <div class="jogadores-grid" id="jogadores-grid"></div>
+    </div>
+
+    <div class="tempo-area" id="tempo-area">
+      <div class="secao-titulo">⏱️ Tempo total (modo contra o relógio)</div>
+      <div class="tempo-grid" id="tempo-grid"></div>
+    </div>
+
+    <div class="secao-titulo">📊 Nível de dificuldade</div>
+    <div class="nivel-grid" id="nivel-grid"></div>
+    <div class="info-pool" id="info-pool">—</div>
+
+    <button class="btn-comecar" id="btn-comecar" onclick="comecarJogo()" disabled>🎰 Começar!</button>
+  </div>
+
+  <div id="jogo" class="jogo-grid hidden">
+    <div class="area-jogo">
+      <div class="cab-jogo">
+        <div class="vez-jogador">
+          <div class="pino-vez" id="pino-vez">1</div>
+          <span id="nome-vez">—</span>
+        </div>
+        <div id="info-rodada-cab" class="info-rodada-cab">Rodada 1</div>
+        <div class="cronometro hidden" id="cronometro">--:--</div>
+      </div>
+
+      <div class="verbo-destaque">
+        <div class="verbo-rotulo">🎯 Verbo da rodada</div>
+        <div class="verbo-palavra" id="verbo-palavra">—</div>
+        <div class="verbo-meta" id="verbo-meta">—</div>
+      </div>
+
+      <div class="roletas-area">
+        <div class="roleta-bloco">
+          <div class="roleta-titulo">🎯 PRONOME</div>
+          <svg class="roleta-svg" id="svg-roleta-pronome" viewBox="0 0 200 200"></svg>
+          <div class="roleta-resultado aguardando" id="resultado-pronome">aguardando...</div>
+        </div>
+        <div class="roleta-bloco tempo">
+          <div class="roleta-titulo">⏰ TEMPO VERBAL</div>
+          <svg class="roleta-svg" id="svg-roleta-tempo" viewBox="0 0 200 200"></svg>
+          <div class="roleta-resultado aguardando" id="resultado-tempo">aguardando...</div>
+        </div>
+      </div>
+
+      <button class="btn-girar" id="btn-girar" onclick="girarRoletas()">🎰 GIRAR ROLETAS</button>
+
+      <div id="pergunta-area" class="hidden">
+        <div class="pergunta-area">
+          <div class="pergunta-rotulo">Conjugue o verbo:</div>
+          <div class="pergunta-frase" id="pergunta-frase">—</div>
+        </div>
+        <div style="height:8px"></div>
+        <div class="opcoes-grid" id="opcoes-grid"></div>
+      </div>
+
+      <div id="feedback-area"></div>
+    </div>
+
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Vamos lá!</div>
+      </div>
+      <div class="placar-jogadores" id="placar-jogadores">
+        <h5>🏆 Placar</h5>
+        <div id="placar-linhas"></div>
+      </div>
+      <div class="info-rodada">
+        <div class="linha"><span class="label">🎰 Rodada</span><span class="valor" id="rodada-info-side">1</span></div>
+        <div class="linha"><span class="label">✅ Acertos</span><span class="valor" id="acertos-info">0</span></div>
+        <div class="linha"><span class="label">📊 Nível</span><span class="valor" id="nivel-info">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-fim">
+    <div class="modal-conteudo">
+      <div class="vencedor-coroa">👑</div>
+      <h2 id="fim-titulo">🎉 Fim!</h2>
+      <p id="fim-msg">—</p>
+      <div class="ranking-final" id="ranking-final"></div>
+      <div class="acoes" id="fim-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🎰 Como brincar com o Conjuguinha</h2>
+      <h3>🎯 Objetivo</h3>
+      <p>Conjugar o verbo da rodada combinando o pronome e o tempo verbal sorteados pelas duas roletas. Múltipla escolha de 4 opções com distratoras pedagógicas.</p>
+
+      <h3>🎮 4 modos disponíveis</h3>
+      <ul>
+        <li>👤 <b>Individual:</b> sem pressão de tempo</li>
+        <li>👨‍🏫 <b>Professor (lousa):</b> turma colabora</li>
+        <li>⏱️ <b>Contra o relógio:</b> máximo de conjugações no tempo</li>
+        <li>🏆 <b>Competitivo:</b> 2-4 jogadores se revezam</li>
+      </ul>
+
+      <h3>📊 4 níveis progressivos</h3>
+      <ul>
+        <li>🌱 <b>Fácil</b> - 1ª conjugação regular + 3 tempos do indicativo</li>
+        <li>🌿 <b>Médio</b> - 1ª, 2ª e 3ª conjugação regular + 5 tempos do indicativo</li>
+        <li>🌳 <b>Difícil</b> - + irregulares comuns + mais-que-perfeito + subjuntivo presente</li>
+        <li>🏆 <b>Expert</b> - + irregulares complexos + subjuntivo completo + imperativo</li>
+      </ul>
+
+      <h3>🎰 Como funciona</h3>
+      <ol>
+        <li>Cada rodada apresenta um verbo (ex: <b>cantar</b>)</li>
+        <li>Clique em <b>Girar Roletas</b>: sorteia pronome (eu/tu/ele...) e tempo (presente, perfeito...)</li>
+        <li>Aparecem 4 opções de conjugação</li>
+        <li>Escolha a correta. Distratoras incluem formas com tempo errado, pronome errado ou flexão inventada.</li>
+      </ol>
+
+      <h3>🌟 Pontuação</h3>
+      <ul>
+        <li>🌱 Fácil = <b>2 pts</b> · 🌿 Médio = <b>4 pts</b></li>
+        <li>🌳 Difícil = <b>6 pts</b> · 🏆 Expert = <b>8 pts</b></li>
+      </ul>
+
+      <h3>📖 BNCC</h3>
+      <ul>
+        <li>Português (EF06LP06, EF07LP06, EF08LP07) · Flexão verbal e modos</li>
+        <li>Computação (EF15CO01, EF06CO04) · Padrões e classificação</li>
+      </ul>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar dourado" onclick="fecharModal('modal-ajuda')">Bora conjugar!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes, giro das roletas e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar dourado" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script id="script-jogo">
+/* ====================================================================
+ * BANCO DE VERBOS · Roleta dos Verbos
+ *
+ * 40 verbos: 24 regulares + 16 irregulares
+ * Tabelas de conjugação completas: indicativo + subjuntivo + imperativo
+ *
+ * PRONOMES (6): eu, tu, ele, nós, vós, eles
+ * TEMPOS (10):
+ *   IND: pres, pp (perf), imp (impf), mqp (mais-q-perf), fut (presente), fp (pretérito)
+ *   SUBJ: pres, imp (impf), fut
+ *   IMP: afirm
+ *
+ * Estrutura por verbo:
+ *   {
+ *     verbo: 'cantar',
+ *     conj: 1 | 2 | 3,
+ *     regular: true | false,
+ *     nivel: 'facil' | 'medio' | 'dificil' | 'expert',
+ *     tabela: {
+ *       ind_pres: ['canto','cantas','canta','cantamos','cantais','cantam'],
+ *       ind_pp:   [...],
+ *       ind_imp:  [...],
+ *       ind_mqp:  [...],
+ *       ind_fut:  [...],
+ *       ind_fp:   [...],
+ *       sub_pres: [...],
+ *       sub_imp:  [...],
+ *       sub_fut:  [...],
+ *       imp_afirm: [null, 'canta', 'cante', 'cantemos', 'cantai', 'cantem']
+ *     }
+ *   }
+ * ==================================================================== */
+
+const PRONOMES = ['eu', 'tu', 'ele/ela', 'nós', 'vós', 'eles/elas'];
+const PRONOMES_CURTO = ['eu', 'tu', 'ele', 'nós', 'vós', 'eles'];
+
+const TEMPOS_LABEL = {
+  ind_pres: 'Presente',
+  ind_pp:   'Pretérito Perfeito',
+  ind_imp:  'Pretérito Imperfeito',
+  ind_mqp:  'Pretérito Mais-que-Perfeito',
+  ind_fut:  'Futuro do Presente',
+  ind_fp:   'Futuro do Pretérito',
+  sub_pres: 'Presente do Subjuntivo',
+  sub_imp:  'Pretérito Imperfeito do Subjuntivo',
+  sub_fut:  'Futuro do Subjuntivo',
+  imp_afirm:'Imperativo Afirmativo'
+};
+
+const TEMPOS_MODO = {
+  ind_pres: 'Indicativo', ind_pp: 'Indicativo', ind_imp: 'Indicativo',
+  ind_mqp: 'Indicativo', ind_fut: 'Indicativo', ind_fp: 'Indicativo',
+  sub_pres: 'Subjuntivo', sub_imp: 'Subjuntivo', sub_fut: 'Subjuntivo',
+  imp_afirm: 'Imperativo'
+};
+
+/* Tempos disponíveis por nível */
+const TEMPOS_POR_NIVEL = {
+  facil:   ['ind_pres', 'ind_pp', 'ind_fut'],
+  medio:   ['ind_pres', 'ind_pp', 'ind_imp', 'ind_fut', 'ind_fp'],
+  dificil: ['ind_pres', 'ind_pp', 'ind_imp', 'ind_mqp', 'ind_fut', 'ind_fp', 'sub_pres'],
+  expert:  ['ind_pres', 'ind_pp', 'ind_imp', 'ind_mqp', 'ind_fut', 'ind_fp', 'sub_pres', 'sub_imp', 'sub_fut', 'imp_afirm']
+};
+
+/* =================================================================
+ * MOTOR DE CONJUGAÇÃO PARA VERBOS REGULARES
+ * Aplica desinências padrão à raiz do verbo conforme a conjugação
+ * ================================================================= */
+function conjugarRegular(verbo, conj) {
+  const raiz = verbo.slice(0, -2); // remove -ar/-er/-ir
+  // 1ª conjugação (-ar)
+  const desin1 = {
+    ind_pres: ['o','as','a','amos','ais','am'],
+    ind_pp:   ['ei','aste','ou','amos','astes','aram'],
+    ind_imp:  ['ava','avas','ava','ávamos','áveis','avam'],
+    ind_mqp:  ['ara','aras','ara','áramos','áreis','aram'],
+    ind_fut:  ['arei','arás','ará','aremos','areis','arão'],
+    ind_fp:   ['aria','arias','aria','aríamos','aríeis','ariam'],
+    sub_pres: ['e','es','e','emos','eis','em'],
+    sub_imp:  ['asse','asses','asse','ássemos','ásseis','assem'],
+    sub_fut:  ['ar','ares','ar','armos','ardes','arem'],
+    imp_afirm:[null, 'a', 'e', 'emos', 'ai', 'em']
+  };
+  // 2ª conjugação (-er)
+  const desin2 = {
+    ind_pres: ['o','es','e','emos','eis','em'],
+    ind_pp:   ['i','este','eu','emos','estes','eram'],
+    ind_imp:  ['ia','ias','ia','íamos','íeis','iam'],
+    ind_mqp:  ['era','eras','era','êramos','êreis','eram'],
+    ind_fut:  ['erei','erás','erá','eremos','ereis','erão'],
+    ind_fp:   ['eria','erias','eria','eríamos','eríeis','eriam'],
+    sub_pres: ['a','as','a','amos','ais','am'],
+    sub_imp:  ['esse','esses','esse','êssemos','êsseis','essem'],
+    sub_fut:  ['er','eres','er','ermos','erdes','erem'],
+    imp_afirm:[null, 'e', 'a', 'amos', 'ei', 'am']
+  };
+  // 3ª conjugação (-ir)
+  const desin3 = {
+    ind_pres: ['o','es','e','imos','is','em'],
+    ind_pp:   ['i','iste','iu','imos','istes','iram'],
+    ind_imp:  ['ia','ias','ia','íamos','íeis','iam'],
+    ind_mqp:  ['ira','iras','ira','íramos','íreis','iram'],
+    ind_fut:  ['irei','irás','irá','iremos','ireis','irão'],
+    ind_fp:   ['iria','irias','iria','iríamos','iríeis','iriam'],
+    sub_pres: ['a','as','a','amos','ais','am'],
+    sub_imp:  ['isse','isses','isse','íssemos','ísseis','issem'],
+    sub_fut:  ['ir','ires','ir','irmos','irdes','irem'],
+    imp_afirm:[null, 'e', 'a', 'amos', 'i', 'am']
+  };
+  const desin = conj === 1 ? desin1 : (conj === 2 ? desin2 : desin3);
+  const tabela = {};
+  Object.keys(desin).forEach(tempo => {
+    tabela[tempo] = desin[tempo].map(d => d === null ? null : raiz + d);
+  });
+  return tabela;
+}
+
+/* =================================================================
+ * BANCO DE VERBOS
+ * ================================================================= */
+const VERBOS = [];
+
+/* ============ REGULARES 1ª CONJUGAÇÃO (-ar) · NÍVEL FÁCIL ============ */
+['cantar','amar','falar','jogar','estudar','trabalhar','brincar','andar','pular','pintar'].forEach(v => {
+  VERBOS.push({ verbo: v, conj: 1, regular: true, nivel: 'facil', tabela: conjugarRegular(v, 1) });
+});
+
+/* ============ REGULARES 2ª e 3ª CONJUGAÇÃO · NÍVEL MÉDIO ============ */
+['comer','beber','vender','aprender','viver','correr'].forEach(v => {
+  VERBOS.push({ verbo: v, conj: 2, regular: true, nivel: 'medio', tabela: conjugarRegular(v, 2) });
+});
+['partir','abrir','dividir','assistir','decidir','permitir'].forEach(v => {
+  VERBOS.push({ verbo: v, conj: 3, regular: true, nivel: 'medio', tabela: conjugarRegular(v, 3) });
+});
+/* Mais 2 regulares pra completar Médio */
+['caminhar','viajar'].forEach(v => {
+  VERBOS.push({ verbo: v, conj: 1, regular: true, nivel: 'medio', tabela: conjugarRegular(v, 1) });
+});
+
+/* ============ IRREGULARES COMUNS · NÍVEL DIFÍCIL ============ */
+/* Tabelas manuais cuidadosamente revisadas */
+
+VERBOS.push({ verbo: 'ser', conj: 2, regular: false, nivel: 'dificil', tabela: {
+  ind_pres: ['sou','és','é','somos','sois','são'],
+  ind_pp:   ['fui','foste','foi','fomos','fostes','foram'],
+  ind_imp:  ['era','eras','era','éramos','éreis','eram'],
+  ind_mqp:  ['fora','foras','fora','fôramos','fôreis','foram'],
+  ind_fut:  ['serei','serás','será','seremos','sereis','serão'],
+  ind_fp:   ['seria','serias','seria','seríamos','seríeis','seriam'],
+  sub_pres: ['seja','sejas','seja','sejamos','sejais','sejam'],
+  sub_imp:  ['fosse','fosses','fosse','fôssemos','fôsseis','fossem'],
+  sub_fut:  ['for','fores','for','formos','fordes','forem'],
+  imp_afirm:[null, 'sê', 'seja', 'sejamos', 'sede', 'sejam']
+}});
+
+VERBOS.push({ verbo: 'ter', conj: 2, regular: false, nivel: 'dificil', tabela: {
+  ind_pres: ['tenho','tens','tem','temos','tendes','têm'],
+  ind_pp:   ['tive','tiveste','teve','tivemos','tivestes','tiveram'],
+  ind_imp:  ['tinha','tinhas','tinha','tínhamos','tínheis','tinham'],
+  ind_mqp:  ['tivera','tiveras','tivera','tivéramos','tivéreis','tiveram'],
+  ind_fut:  ['terei','terás','terá','teremos','tereis','terão'],
+  ind_fp:   ['teria','terias','teria','teríamos','teríeis','teriam'],
+  sub_pres: ['tenha','tenhas','tenha','tenhamos','tenhais','tenham'],
+  sub_imp:  ['tivesse','tivesses','tivesse','tivéssemos','tivésseis','tivessem'],
+  sub_fut:  ['tiver','tiveres','tiver','tivermos','tiverdes','tiverem'],
+  imp_afirm:[null, 'tem', 'tenha', 'tenhamos', 'tende', 'tenham']
+}});
+
+VERBOS.push({ verbo: 'ir', conj: 3, regular: false, nivel: 'dificil', tabela: {
+  ind_pres: ['vou','vais','vai','vamos','ides','vão'],
+  ind_pp:   ['fui','foste','foi','fomos','fostes','foram'],
+  ind_imp:  ['ia','ias','ia','íamos','íeis','iam'],
+  ind_mqp:  ['fora','foras','fora','fôramos','fôreis','foram'],
+  ind_fut:  ['irei','irás','irá','iremos','ireis','irão'],
+  ind_fp:   ['iria','irias','iria','iríamos','iríeis','iriam'],
+  sub_pres: ['vá','vás','vá','vamos','vades','vão'],
+  sub_imp:  ['fosse','fosses','fosse','fôssemos','fôsseis','fossem'],
+  sub_fut:  ['for','fores','for','formos','fordes','forem'],
+  imp_afirm:[null, 'vai', 'vá', 'vamos', 'ide', 'vão']
+}});
+
+VERBOS.push({ verbo: 'estar', conj: 1, regular: false, nivel: 'dificil', tabela: {
+  ind_pres: ['estou','estás','está','estamos','estais','estão'],
+  ind_pp:   ['estive','estiveste','esteve','estivemos','estivestes','estiveram'],
+  ind_imp:  ['estava','estavas','estava','estávamos','estáveis','estavam'],
+  ind_mqp:  ['estivera','estiveras','estivera','estivéramos','estivéreis','estiveram'],
+  ind_fut:  ['estarei','estarás','estará','estaremos','estareis','estarão'],
+  ind_fp:   ['estaria','estarias','estaria','estaríamos','estaríeis','estariam'],
+  sub_pres: ['esteja','estejas','esteja','estejamos','estejais','estejam'],
+  sub_imp:  ['estivesse','estivesses','estivesse','estivéssemos','estivésseis','estivessem'],
+  sub_fut:  ['estiver','estiveres','estiver','estivermos','estiverdes','estiverem'],
+  imp_afirm:[null, 'está', 'esteja', 'estejamos', 'estai', 'estejam']
+}});
+
+VERBOS.push({ verbo: 'fazer', conj: 2, regular: false, nivel: 'dificil', tabela: {
+  ind_pres: ['faço','fazes','faz','fazemos','fazeis','fazem'],
+  ind_pp:   ['fiz','fizeste','fez','fizemos','fizestes','fizeram'],
+  ind_imp:  ['fazia','fazias','fazia','fazíamos','fazíeis','faziam'],
+  ind_mqp:  ['fizera','fizeras','fizera','fizéramos','fizéreis','fizeram'],
+  ind_fut:  ['farei','farás','fará','faremos','fareis','farão'],
+  ind_fp:   ['faria','farias','faria','faríamos','faríeis','fariam'],
+  sub_pres: ['faça','faças','faça','façamos','façais','façam'],
+  sub_imp:  ['fizesse','fizesses','fizesse','fizéssemos','fizésseis','fizessem'],
+  sub_fut:  ['fizer','fizeres','fizer','fizermos','fizerdes','fizerem'],
+  imp_afirm:[null, 'faz', 'faça', 'façamos', 'fazei', 'façam']
+}});
+
+VERBOS.push({ verbo: 'dar', conj: 1, regular: false, nivel: 'dificil', tabela: {
+  ind_pres: ['dou','dás','dá','damos','dais','dão'],
+  ind_pp:   ['dei','deste','deu','demos','destes','deram'],
+  ind_imp:  ['dava','davas','dava','dávamos','dáveis','davam'],
+  ind_mqp:  ['dera','deras','dera','déramos','déreis','deram'],
+  ind_fut:  ['darei','darás','dará','daremos','dareis','darão'],
+  ind_fp:   ['daria','darias','daria','daríamos','daríeis','dariam'],
+  sub_pres: ['dê','dês','dê','demos','deis','deem'],
+  sub_imp:  ['desse','desses','desse','déssemos','désseis','dessem'],
+  sub_fut:  ['der','deres','der','dermos','derdes','derem'],
+  imp_afirm:[null, 'dá', 'dê', 'demos', 'dai', 'deem']
+}});
+
+VERBOS.push({ verbo: 'saber', conj: 2, regular: false, nivel: 'dificil', tabela: {
+  ind_pres: ['sei','sabes','sabe','sabemos','sabeis','sabem'],
+  ind_pp:   ['soube','soubeste','soube','soubemos','soubestes','souberam'],
+  ind_imp:  ['sabia','sabias','sabia','sabíamos','sabíeis','sabiam'],
+  ind_mqp:  ['soubera','souberas','soubera','soubéramos','soubéreis','souberam'],
+  ind_fut:  ['saberei','saberás','saberá','saberemos','sabereis','saberão'],
+  ind_fp:   ['saberia','saberias','saberia','saberíamos','saberíeis','saberiam'],
+  sub_pres: ['saiba','saibas','saiba','saibamos','saibais','saibam'],
+  sub_imp:  ['soubesse','soubesses','soubesse','soubéssemos','soubésseis','soubessem'],
+  sub_fut:  ['souber','souberes','souber','soubermos','souberdes','souberem'],
+  imp_afirm:[null, 'sabe', 'saiba', 'saibamos', 'sabei', 'saibam']
+}});
+
+VERBOS.push({ verbo: 'querer', conj: 2, regular: false, nivel: 'dificil', tabela: {
+  ind_pres: ['quero','queres','quer','queremos','quereis','querem'],
+  ind_pp:   ['quis','quiseste','quis','quisemos','quisestes','quiseram'],
+  ind_imp:  ['queria','querias','queria','queríamos','queríeis','queriam'],
+  ind_mqp:  ['quisera','quiseras','quisera','quiséramos','quiséreis','quiseram'],
+  ind_fut:  ['quererei','quererás','quererá','quereremos','querereis','quererão'],
+  ind_fp:   ['quereria','quererias','quereria','quereríamos','quereríeis','quereriam'],
+  sub_pres: ['queira','queiras','queira','queiramos','queirais','queiram'],
+  sub_imp:  ['quisesse','quisesses','quisesse','quiséssemos','quisésseis','quisessem'],
+  sub_fut:  ['quiser','quiseres','quiser','quisermos','quiserdes','quiserem'],
+  imp_afirm:[null, 'quer', 'queira', 'queiramos', 'querei', 'queiram']
+}});
+
+VERBOS.push({ verbo: 'sair', conj: 3, regular: false, nivel: 'dificil', tabela: {
+  ind_pres: ['saio','sais','sai','saímos','saís','saem'],
+  ind_pp:   ['saí','saíste','saiu','saímos','saístes','saíram'],
+  ind_imp:  ['saía','saías','saía','saíamos','saíeis','saíam'],
+  ind_mqp:  ['saíra','saíras','saíra','saíramos','saíreis','saíram'],
+  ind_fut:  ['sairei','sairás','sairá','sairemos','saireis','sairão'],
+  ind_fp:   ['sairia','sairias','sairia','sairíamos','sairíeis','sairiam'],
+  sub_pres: ['saia','saias','saia','saiamos','saiais','saiam'],
+  sub_imp:  ['saísse','saísses','saísse','saíssemos','saísseis','saíssem'],
+  sub_fut:  ['sair','saíres','sair','sairmos','sairdes','saírem'],
+  imp_afirm:[null, 'sai', 'saia', 'saiamos', 'saí', 'saiam']
+}});
+
+/* ============ IRREGULARES COMPLEXOS · NÍVEL EXPERT ============ */
+
+VERBOS.push({ verbo: 'pôr', conj: 2, regular: false, nivel: 'expert', tabela: {
+  ind_pres: ['ponho','pões','põe','pomos','pondes','põem'],
+  ind_pp:   ['pus','puseste','pôs','pusemos','pusestes','puseram'],
+  ind_imp:  ['punha','punhas','punha','púnhamos','púnheis','punham'],
+  ind_mqp:  ['pusera','puseras','pusera','puséramos','puséreis','puseram'],
+  ind_fut:  ['porei','porás','porá','poremos','poreis','porão'],
+  ind_fp:   ['poria','porias','poria','poríamos','poríeis','poriam'],
+  sub_pres: ['ponha','ponhas','ponha','ponhamos','ponhais','ponham'],
+  sub_imp:  ['pusesse','pusesses','pusesse','puséssemos','pusésseis','pusessem'],
+  sub_fut:  ['puser','puseres','puser','pusermos','puserdes','puserem'],
+  imp_afirm:[null, 'põe', 'ponha', 'ponhamos', 'ponde', 'ponham']
+}});
+
+VERBOS.push({ verbo: 'vir', conj: 3, regular: false, nivel: 'expert', tabela: {
+  ind_pres: ['venho','vens','vem','vimos','vindes','vêm'],
+  ind_pp:   ['vim','vieste','veio','viemos','viestes','vieram'],
+  ind_imp:  ['vinha','vinhas','vinha','vínhamos','vínheis','vinham'],
+  ind_mqp:  ['viera','vieras','viera','viéramos','viéreis','vieram'],
+  ind_fut:  ['virei','virás','virá','viremos','vireis','virão'],
+  ind_fp:   ['viria','virias','viria','viríamos','viríeis','viriam'],
+  sub_pres: ['venha','venhas','venha','venhamos','venhais','venham'],
+  sub_imp:  ['viesse','viesses','viesse','viéssemos','viésseis','viessem'],
+  sub_fut:  ['vier','vieres','vier','viermos','vierdes','vierem'],
+  imp_afirm:[null, 'vem', 'venha', 'venhamos', 'vinde', 'venham']
+}});
+
+VERBOS.push({ verbo: 'ver', conj: 2, regular: false, nivel: 'expert', tabela: {
+  ind_pres: ['vejo','vês','vê','vemos','vedes','veem'],
+  ind_pp:   ['vi','viste','viu','vimos','vistes','viram'],
+  ind_imp:  ['via','vias','via','víamos','víeis','viam'],
+  ind_mqp:  ['vira','viras','vira','víramos','víreis','viram'],
+  ind_fut:  ['verei','verás','verá','veremos','vereis','verão'],
+  ind_fp:   ['veria','verias','veria','veríamos','veríeis','veriam'],
+  sub_pres: ['veja','vejas','veja','vejamos','vejais','vejam'],
+  sub_imp:  ['visse','visses','visse','víssemos','vísseis','vissem'],
+  sub_fut:  ['vir','vires','vir','virmos','virdes','virem'],
+  imp_afirm:[null, 'vê', 'veja', 'vejamos', 'vede', 'vejam']
+}});
+
+VERBOS.push({ verbo: 'dizer', conj: 2, regular: false, nivel: 'expert', tabela: {
+  ind_pres: ['digo','dizes','diz','dizemos','dizeis','dizem'],
+  ind_pp:   ['disse','disseste','disse','dissemos','dissestes','disseram'],
+  ind_imp:  ['dizia','dizias','dizia','dizíamos','dizíeis','diziam'],
+  ind_mqp:  ['dissera','disseras','dissera','disséramos','disséreis','disseram'],
+  ind_fut:  ['direi','dirás','dirá','diremos','direis','dirão'],
+  ind_fp:   ['diria','dirias','diria','diríamos','diríeis','diriam'],
+  sub_pres: ['diga','digas','diga','digamos','digais','digam'],
+  sub_imp:  ['dissesse','dissesses','dissesse','disséssemos','dissésseis','dissessem'],
+  sub_fut:  ['disser','disseres','disser','dissermos','disserdes','disserem'],
+  imp_afirm:[null, 'diz', 'diga', 'digamos', 'dizei', 'digam']
+}});
+
+VERBOS.push({ verbo: 'trazer', conj: 2, regular: false, nivel: 'expert', tabela: {
+  ind_pres: ['trago','trazes','traz','trazemos','trazeis','trazem'],
+  ind_pp:   ['trouxe','trouxeste','trouxe','trouxemos','trouxestes','trouxeram'],
+  ind_imp:  ['trazia','trazias','trazia','trazíamos','trazíeis','traziam'],
+  ind_mqp:  ['trouxera','trouxeras','trouxera','trouxéramos','trouxéreis','trouxeram'],
+  ind_fut:  ['trarei','trarás','trará','traremos','trareis','trarão'],
+  ind_fp:   ['traria','trarias','traria','traríamos','traríeis','trariam'],
+  sub_pres: ['traga','tragas','traga','tragamos','tragais','tragam'],
+  sub_imp:  ['trouxesse','trouxesses','trouxesse','trouxéssemos','trouxésseis','trouxessem'],
+  sub_fut:  ['trouxer','trouxeres','trouxer','trouxermos','trouxerdes','trouxerem'],
+  imp_afirm:[null, 'traz', 'traga', 'tragamos', 'trazei', 'tragam']
+}});
+
+VERBOS.push({ verbo: 'poder', conj: 2, regular: false, nivel: 'expert', tabela: {
+  ind_pres: ['posso','podes','pode','podemos','podeis','podem'],
+  ind_pp:   ['pude','pudeste','pôde','pudemos','pudestes','puderam'],
+  ind_imp:  ['podia','podias','podia','podíamos','podíeis','podiam'],
+  ind_mqp:  ['pudera','puderas','pudera','pudéramos','pudéreis','puderam'],
+  ind_fut:  ['poderei','poderás','poderá','poderemos','podereis','poderão'],
+  ind_fp:   ['poderia','poderias','poderia','poderíamos','poderíeis','poderiam'],
+  sub_pres: ['possa','possas','possa','possamos','possais','possam'],
+  sub_imp:  ['pudesse','pudesses','pudesse','pudéssemos','pudésseis','pudessem'],
+  sub_fut:  ['puder','puderes','puder','pudermos','puderdes','puderem'],
+  imp_afirm:[null, 'pode', 'possa', 'possamos', 'podei', 'possam']
+}});
+
+VERBOS.push({ verbo: 'haver', conj: 2, regular: false, nivel: 'expert', tabela: {
+  ind_pres: ['hei','hás','há','havemos','haveis','hão'],
+  ind_pp:   ['houve','houveste','houve','houvemos','houvestes','houveram'],
+  ind_imp:  ['havia','havias','havia','havíamos','havíeis','haviam'],
+  ind_mqp:  ['houvera','houveras','houvera','houvéramos','houvéreis','houveram'],
+  ind_fut:  ['haverei','haverás','haverá','haveremos','havereis','haverão'],
+  ind_fp:   ['haveria','haverias','haveria','haveríamos','haveríeis','haveriam'],
+  sub_pres: ['haja','hajas','haja','hajamos','hajais','hajam'],
+  sub_imp:  ['houvesse','houvesses','houvesse','houvéssemos','houvésseis','houvessem'],
+  sub_fut:  ['houver','houveres','houver','houvermos','houverdes','houverem'],
+  imp_afirm:[null, 'há', 'haja', 'hajamos', 'havei', 'hajam']
+}});
+
+VERBOS.push({ verbo: 'caber', conj: 2, regular: false, nivel: 'expert', tabela: {
+  ind_pres: ['caibo','cabes','cabe','cabemos','cabeis','cabem'],
+  ind_pp:   ['coube','coubeste','coube','coubemos','coubestes','couberam'],
+  ind_imp:  ['cabia','cabias','cabia','cabíamos','cabíeis','cabiam'],
+  ind_mqp:  ['coubera','couberas','coubera','coubéramos','coubéreis','couberam'],
+  ind_fut:  ['caberei','caberás','caberá','caberemos','cabereis','caberão'],
+  ind_fp:   ['caberia','caberias','caberia','caberíamos','caberíeis','caberiam'],
+  sub_pres: ['caiba','caibas','caiba','caibamos','caibais','caibam'],
+  sub_imp:  ['coubesse','coubesses','coubesse','coubéssemos','coubésseis','coubessem'],
+  sub_fut:  ['couber','couberes','couber','coubermos','couberdes','couberem'],
+  imp_afirm:[null, 'cabe', 'caiba', 'caibamos', 'cabei', 'caibam']
+}});
+/* ============================================================
+ * ROLETA DOS VERBOS · Portal do Educador NEWPC
+ * Mascote: Conjuguinha (gato maestro com batuta laranja)
+ * ============================================================ */
+
+function svgMascote(expressao = 'normal') {
+  let olhos, boca;
+  if (expressao === 'feliz') {
+    olhos = `
+      <path d="M 36 40 Q 41 35, 46 40" fill="none" stroke="#1F2937" stroke-width="2" stroke-linecap="round"/>
+      <path d="M 54 40 Q 59 35, 64 40" fill="none" stroke="#1F2937" stroke-width="2" stroke-linecap="round"/>
+    `;
+    boca = `<path d="M 42 54 Q 50 60 58 54" fill="none" stroke="#1F2937" stroke-width="2" stroke-linecap="round"/>`;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <circle cx="41" cy="42" r="4.5" fill="white" stroke="#1F2937" stroke-width="1.2"/>
+      <circle cx="59" cy="42" r="4.5" fill="white" stroke="#1F2937" stroke-width="1.2"/>
+      <circle cx="42" cy="42" r="2" fill="#1F2937"/>
+      <circle cx="60" cy="42" r="2" fill="#1F2937"/>
+    `;
+    boca = `<path d="M 45 53 Q 50 55 55 53" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round"/>`;
+  } else if (expressao === 'surpresa') {
+    olhos = `
+      <ellipse cx="41" cy="42" rx="5" ry="6" fill="white" stroke="#1F2937" stroke-width="1.4"/>
+      <ellipse cx="59" cy="42" rx="5" ry="6" fill="white" stroke="#1F2937" stroke-width="1.4"/>
+      <circle cx="41" cy="43" r="2.2" fill="#1F2937"/>
+      <circle cx="59" cy="43" r="2.2" fill="#1F2937"/>
+    `;
+    boca = `<ellipse cx="50" cy="54" rx="3" ry="4" fill="#1F2937"/>`;
+  } else {
+    olhos = `
+      <ellipse cx="41" cy="42" rx="3.5" ry="5" fill="#1F2937"/>
+      <ellipse cx="59" cy="42" rx="3.5" ry="5" fill="#1F2937"/>
+      <ellipse cx="42" cy="40" rx="1" ry="1.5" fill="white"/>
+      <ellipse cx="60" cy="40" rx="1" ry="1.5" fill="white"/>
+    `;
+    boca = `<path d="M 45 52 Q 50 56 55 52" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round"/>`;
+  }
+
+  return `
+    <!-- Sombra -->
+    <ellipse cx="50" cy="93" rx="28" ry="2.5" fill="rgba(0,0,0,0.2)"/>
+    <!-- Corpo gato laranja -->
+    <ellipse cx="50" cy="60" rx="28" ry="28" fill="#EA580C" stroke="#9A3412" stroke-width="2"/>
+    <!-- Barriga clara -->
+    <ellipse cx="50" cy="65" rx="16" ry="18" fill="#FED7AA"/>
+    <!-- Listras -->
+    <path d="M 28 55 Q 35 53 42 55" fill="none" stroke="#9A3412" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M 58 55 Q 65 53 72 55" fill="none" stroke="#9A3412" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M 30 70 Q 38 68 45 70" fill="none" stroke="#9A3412" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M 55 70 Q 62 68 70 70" fill="none" stroke="#9A3412" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Cabeça -->
+    <ellipse cx="50" cy="38" rx="24" ry="22" fill="#EA580C" stroke="#9A3412" stroke-width="1.8"/>
+    <!-- Orelhas pontudas -->
+    <path d="M 30 22 L 34 8 L 42 18 Z" fill="#EA580C" stroke="#9A3412" stroke-width="1.5"/>
+    <path d="M 70 22 L 66 8 L 58 18 Z" fill="#EA580C" stroke="#9A3412" stroke-width="1.5"/>
+    <path d="M 32 20 L 35 12 L 40 18 Z" fill="#FB7185"/>
+    <path d="M 68 20 L 65 12 L 60 18 Z" fill="#FB7185"/>
+    <!-- Olhos -->
+    ${olhos}
+    <!-- Nariz -->
+    <path d="M 48 48 L 52 48 L 50 51 Z" fill="#1F2937"/>
+    <!-- Bigodes -->
+    <line x1="30" y1="50" x2="42" y2="50" stroke="#1F2937" stroke-width="0.8"/>
+    <line x1="30" y1="53" x2="42" y2="52" stroke="#1F2937" stroke-width="0.8"/>
+    <line x1="58" y1="50" x2="70" y2="50" stroke="#1F2937" stroke-width="0.8"/>
+    <line x1="58" y1="52" x2="70" y2="53" stroke="#1F2937" stroke-width="0.8"/>
+    <!-- Boca -->
+    ${boca}
+    <!-- Bochechas -->
+    <ellipse cx="30" cy="48" rx="3" ry="2" fill="#FB7185" opacity="0.45"/>
+    <ellipse cx="70" cy="48" rx="3" ry="2" fill="#FB7185" opacity="0.45"/>
+    <!-- Pata esquerda segurando batuta -->
+    <ellipse cx="22" cy="68" rx="6" ry="8" fill="#EA580C" stroke="#9A3412" stroke-width="1.5"/>
+    <!-- Pata direita -->
+    <ellipse cx="78" cy="68" rx="6" ry="8" fill="#EA580C" stroke="#9A3412" stroke-width="1.5"/>
+    <!-- BATUTA segurada pela pata esquerda -->
+    <rect x="6" y="55" width="22" height="3" fill="#7C2D12" stroke="#451A03" stroke-width="0.8" rx="1" transform="rotate(-30 17 56)"/>
+    <!-- Cabo branco da batuta -->
+    <rect x="22" y="55" width="6" height="3" fill="white" stroke="#9A3412" stroke-width="0.8" rx="0.5" transform="rotate(-30 25 56)"/>
+    <!-- Ponta dourada da batuta -->
+    <circle cx="6" cy="50" r="2.5" fill="#FBBF24" stroke="#92400E" stroke-width="0.8"/>
+    <!-- Gravata-borboleta -->
+    <path d="M 42 78 L 50 75 L 50 82 L 42 84 Z" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
+    <path d="M 58 78 L 50 75 L 50 82 L 58 84 Z" fill="#FBBF24" stroke="#92400E" stroke-width="1"/>
+    <circle cx="50" cy="80" r="2" fill="#92400E"/>
+    <!-- Cauda -->
+    <path d="M 78 78 Q 85 75 88 65" fill="none" stroke="#EA580C" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 78 78 Q 85 75 88 65" fill="none" stroke="#9A3412" stroke-width="1.5" stroke-linecap="round"/>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* CONFIGURAÇÕES */
+const MODOS = {
+  individual:  { emoji: '👤', titulo: 'Individual', desc: 'Sem pressão de tempo' },
+  professor:   { emoji: '👨‍🏫', titulo: 'Professor', desc: 'Lousa, turma colabora' },
+  relogio:     { emoji: '⏱️', titulo: 'Contra o relógio', desc: 'Máximo no tempo' },
+  competitivo: { emoji: '🏆', titulo: 'Competitivo', desc: '2-4 jogadores' }
+};
+
+const NIVEIS = {
+  facil:    { emoji: '🌱', titulo: 'Fácil',   desc: 'Verbos -ar regulares · indicativo básico', pontos: 2 },
+  medio:    { emoji: '🌿', titulo: 'Médio',   desc: 'Todas conjugações regulares · 5 tempos', pontos: 4 },
+  dificil:  { emoji: '🌳', titulo: 'Difícil', desc: '+ irregulares comuns · subjuntivo presente', pontos: 6 },
+  expert:   { emoji: '🏆', titulo: 'Expert',  desc: '+ irregulares complexos · subjuntivo completo + imperativo', pontos: 8 }
+};
+
+const TEMPOS = {
+  1: '1 min', 3: '3 min', 5: '5 min', 7: '7 min', 10: '10 min'
+};
+
+const CORES_PINOS = [
+  { fundo: '#DC2626', nome: 'Vermelho' },
+  { fundo: '#2563EB', nome: 'Azul' },
+  { fundo: '#16A34A', nome: 'Verde' },
+  { fundo: '#9333EA', nome: 'Roxo' }
+];
+
+const RODADAS_PADRAO = 5;
+const ELOGIOS = ['Conjugou direito!', 'Maestria total!', 'Letra A!', 'Concordância impecável!', 'Verbalmente afiado!'];
+const INCENTIVOS = ['Quase! Tenta a próxima.', 'Tempo verbal é dança: pega o ritmo.', 'Foco no pronome!', 'Boa tentativa!'];
+
+const STATE = {
+  modo: null,
+  qtdJogadores: 2,
+  nomes: ['Jogador 1','Jogador 2','Jogador 3','Jogador 4'],
+  nivel: null,
+  tempoMin: 5,
+  partida: {
+    ativa: false,
+    rodada: 1,
+    rodadaMax: RODADAS_PADRAO,
+    jogadores: [],
+    vezAtual: 0,
+    verboAtual: null,
+    pronomeIdx: null,    // 0-5
+    tempoSorteado: null, // string ex 'ind_pres'
+    combinacoesUsadas: [],
+    opcoes: [],
+    respostaCorreta: null,
+    fase: null,          // 'aguardando_giro' | 'mostrando_opcoes' | 'feedback'
+    respondeu: false,
+    girando: false,
+    tempoSeg: 0,
+    timerInterval: null
+  }
+};
+
+function salvar() {
+  try {
+    localStorage.setItem('pde_roleta_dados', JSON.stringify({
+      modo: STATE.modo, qtdJogadores: STATE.qtdJogadores, nomes: STATE.nomes,
+      nivel: STATE.nivel, tempoMin: STATE.tempoMin
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_roleta_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.modo) STATE.modo = d.modo;
+    if (d.qtdJogadores) STATE.qtdJogadores = d.qtdJogadores;
+    if (Array.isArray(d.nomes)) STATE.nomes = d.nomes;
+    if (d.nivel) STATE.nivel = d.nivel;
+    if (d.tempoMin) STATE.tempoMin = d.tempoMin;
+  } catch (e) {}
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function elogio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivo() { return INCENTIVOS[Math.floor(Math.random() * INCENTIVOS.length)]; }
+
+/* POOL FILTRADO */
+function poolVerbos() {
+  if (!STATE.nivel) return [];
+  // Nível inclui todos os anteriores
+  const ordem = ['facil','medio','dificil','expert'];
+  const idxMax = ordem.indexOf(STATE.nivel);
+  return VERBOS.filter(v => ordem.indexOf(v.nivel) <= idxMax);
+}
+
+function totalCombinacoes() {
+  if (!STATE.nivel) return 0;
+  const pool = poolVerbos();
+  const tempos = TEMPOS_POR_NIVEL[STATE.nivel];
+  let total = 0;
+  pool.forEach(v => {
+    tempos.forEach(t => {
+      v.tabela[t].forEach((forma, idx) => {
+        if (forma !== null) total++;
+      });
+    });
+  });
+  return total;
+}
+
+/* RENDER DE ROLETA SVG */
+function renderRoletaPronome() {
+  const cores = ['#A7F3D0','#86EFAC','#BBF7D0','#86EFAC','#A7F3D0','#BBF7D0'];
+  const labels = PRONOMES_CURTO;
+  let svg = '<g transform="translate(100 100)" id="g-roleta-pronome">';
+  for (let i = 0; i < 6; i++) {
+    const a1 = (i * 60 - 90) * Math.PI / 180;
+    const a2 = ((i + 1) * 60 - 90) * Math.PI / 180;
+    const x1 = 80 * Math.cos(a1), y1 = 80 * Math.sin(a1);
+    const x2 = 80 * Math.cos(a2), y2 = 80 * Math.sin(a2);
+    svg += `<path d="M 0 0 L ${x1.toFixed(2)} ${y1.toFixed(2)} A 80 80 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z" fill="${cores[i]}" stroke="#16A34A" stroke-width="1.5"/>`;
+    const aMed = ((i + 0.5) * 60 - 90) * Math.PI / 180;
+    const tx = 55 * Math.cos(aMed), ty = 55 * Math.sin(aMed);
+    svg += `<text x="${tx.toFixed(2)}" y="${ty.toFixed(2)}" font-family="Baloo 2, sans-serif" font-weight="800" font-size="13" fill="#14532D" text-anchor="middle" dominant-baseline="central">${labels[i]}</text>`;
+  }
+  svg += '</g>';
+  // Ponteiro fixo (não roda)
+  svg += '<polygon points="100,10 92,28 108,28" fill="#DC2626" stroke="#7F1D1D" stroke-width="1.5"/>';
+  // Centro
+  svg += '<circle cx="100" cy="100" r="10" fill="#FBBF24" stroke="#92400E" stroke-width="2"/>';
+  document.getElementById('svg-roleta-pronome').innerHTML = svg;
+}
+
+function renderRoletaTempo() {
+  const tempos = TEMPOS_POR_NIVEL[STATE.nivel] || ['ind_pres','ind_pp','ind_fut'];
+  const cores = ['#BFDBFE','#93C5FD','#BFDBFE','#93C5FD','#BFDBFE','#93C5FD','#BFDBFE','#93C5FD','#BFDBFE','#93C5FD'];
+  const n = tempos.length;
+  const angPorSetor = 360 / n;
+  let svg = '<g transform="translate(100 100)" id="g-roleta-tempo">';
+
+  const labelsCurtos = {
+    ind_pres: 'PRES',
+    ind_pp:   'P. PERF',
+    ind_imp:  'P. IMP',
+    ind_mqp:  'MQP',
+    ind_fut:  'FUTURO',
+    ind_fp:   'F. PRET',
+    sub_pres: 'SUB. PRES',
+    sub_imp:  'SUB. IMP',
+    sub_fut:  'SUB. FUT',
+    imp_afirm:'IMPER.'
+  };
+
+  for (let i = 0; i < n; i++) {
+    const a1 = (i * angPorSetor - 90) * Math.PI / 180;
+    const a2 = ((i + 1) * angPorSetor - 90) * Math.PI / 180;
+    const x1 = 80 * Math.cos(a1), y1 = 80 * Math.sin(a1);
+    const x2 = 80 * Math.cos(a2), y2 = 80 * Math.sin(a2);
+    const largo = angPorSetor > 180 ? 1 : 0;
+    svg += `<path d="M 0 0 L ${x1.toFixed(2)} ${y1.toFixed(2)} A 80 80 0 ${largo} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z" fill="${cores[i]}" stroke="#2563EB" stroke-width="1.5"/>`;
+    const aMed = ((i + 0.5) * angPorSetor - 90) * Math.PI / 180;
+    const tx = 52 * Math.cos(aMed), ty = 52 * Math.sin(aMed);
+    const fontSize = n > 6 ? 9 : 10;
+    svg += `<text x="${tx.toFixed(2)}" y="${ty.toFixed(2)}" font-family="Baloo 2, sans-serif" font-weight="800" font-size="${fontSize}" fill="#1E3A8A" text-anchor="middle" dominant-baseline="central">${labelsCurtos[tempos[i]]}</text>`;
+  }
+  svg += '</g>';
+  svg += '<polygon points="100,10 92,28 108,28" fill="#DC2626" stroke="#7F1D1D" stroke-width="1.5"/>';
+  svg += '<circle cx="100" cy="100" r="10" fill="#FBBF24" stroke="#92400E" stroke-width="2"/>';
+  document.getElementById('svg-roleta-tempo').innerHTML = svg;
+}
+
+/* LOBBY */
+function renderLobby() {
+  const modoCont = document.getElementById('modo-grid');
+  modoCont.innerHTML = '';
+  Object.entries(MODOS).forEach(([key, m]) => {
+    const card = document.createElement('div');
+    card.className = 'modo-card' + (STATE.modo === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="modo-emoji">${m.emoji}</span>
+      <div class="modo-titulo">${m.titulo}</div>
+      <div class="modo-desc">${m.desc}</div>
+    `;
+    card.onclick = () => { STATE.modo = key; salvar(); renderLobby(); };
+    modoCont.appendChild(card);
+  });
+
+  const qtdArea = document.getElementById('qtd-area');
+  const jogArea = document.getElementById('jogadores-area');
+  if (STATE.modo === 'competitivo') {
+    qtdArea.classList.add('ativo');
+    jogArea.classList.add('ativo');
+    const grid = document.getElementById('qtd-grid');
+    grid.innerHTML = '';
+    [2,3,4].forEach(n => {
+      const c = document.createElement('div');
+      c.className = 'qtd-card' + (STATE.qtdJogadores === n ? ' selecionado' : '');
+      c.innerHTML = `<span class="qtd-emoji">👥</span><span class="qtd-num">${n}</span>`;
+      c.onclick = () => { STATE.qtdJogadores = n; salvar(); renderLobby(); };
+      grid.appendChild(c);
+    });
+    const jgrid = document.getElementById('jogadores-grid');
+    jgrid.innerHTML = '';
+    for (let i = 0; i < STATE.qtdJogadores; i++) {
+      const pino = document.createElement('div');
+      pino.className = 'pino-mini';
+      pino.style.background = CORES_PINOS[i].fundo;
+      pino.textContent = (i+1);
+      const inp = document.createElement('input');
+      inp.type = 'text'; inp.maxLength = 20;
+      inp.value = STATE.nomes[i] || `Jogador ${i+1}`;
+      inp.oninput = (e) => { STATE.nomes[i] = e.target.value; salvar(); };
+      jgrid.appendChild(pino);
+      jgrid.appendChild(inp);
+    }
+  } else {
+    qtdArea.classList.remove('ativo');
+    jogArea.classList.remove('ativo');
+  }
+
+  const tempoArea = document.getElementById('tempo-area');
+  if (STATE.modo === 'relogio') {
+    tempoArea.classList.add('ativo');
+    const grid = document.getElementById('tempo-grid');
+    grid.innerHTML = '';
+    Object.entries(TEMPOS).forEach(([min, label]) => {
+      const minN = parseInt(min);
+      const c = document.createElement('div');
+      c.className = 'tempo-card' + (STATE.tempoMin === minN ? ' selecionado' : '');
+      c.textContent = label;
+      c.onclick = () => { STATE.tempoMin = minN; salvar(); renderLobby(); };
+      grid.appendChild(c);
+    });
+  } else {
+    tempoArea.classList.remove('ativo');
+  }
+
+  const nivCont = document.getElementById('nivel-grid');
+  nivCont.innerHTML = '';
+  Object.entries(NIVEIS).forEach(([key, n]) => {
+    const card = document.createElement('div');
+    card.className = 'nivel-card' + (STATE.nivel === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="nivel-emoji">${n.emoji}</span>
+      <div class="nivel-titulo">${n.titulo}</div>
+      <div class="nivel-desc">${n.desc}</div>
+    `;
+    card.onclick = () => { STATE.nivel = key; salvar(); renderLobby(); };
+    nivCont.appendChild(card);
+  });
+
+  const elPool = document.getElementById('info-pool');
+  if (!STATE.nivel) {
+    elPool.innerHTML = '👉 Escolha um nível pra continuar';
+  } else {
+    const pool = poolVerbos();
+    const totalC = totalCombinacoes();
+    elPool.innerHTML = `🎰 <b>${pool.length} verbos</b> · <b>${totalC}</b> combinações possíveis`;
+  }
+
+  const btn = document.getElementById('btn-comecar');
+  const podeComecar = STATE.modo && STATE.nivel;
+  btn.disabled = !podeComecar;
+  if (!STATE.modo)        btn.textContent = '🎰 Escolha um modo';
+  else if (!STATE.nivel)  btn.textContent = '🎰 Escolha um nível';
+  else                    btn.textContent = `🎰 Começar (${MODOS[STATE.modo].titulo} · ${NIVEIS[STATE.nivel].titulo})`;
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+/* INICIAR PARTIDA */
+function comecarJogo() {
+  if (!STATE.modo || !STATE.nivel) return;
+
+  STATE.partida.jogadores = [];
+  if (STATE.modo === 'individual' || STATE.modo === 'relogio') {
+    STATE.partida.jogadores.push({ idx: 0, nome: 'Você', pontos: 0, acertos: 0 });
+  } else if (STATE.modo === 'professor') {
+    STATE.partida.jogadores.push({ idx: 0, nome: 'Turma', pontos: 0, acertos: 0 });
+  } else {
+    for (let i = 0; i < STATE.qtdJogadores; i++) {
+      STATE.partida.jogadores.push({
+        idx: i, nome: STATE.nomes[i] || `Jogador ${i+1}`,
+        pontos: 0, acertos: 0
+      });
+    }
+  }
+
+  STATE.partida.rodada = 1;
+  STATE.partida.rodadaMax = STATE.modo === 'relogio' ? 999 : RODADAS_PADRAO;
+  STATE.partida.vezAtual = 0;
+  STATE.partida.combinacoesUsadas = [];
+  STATE.partida.ativa = true;
+
+  if (STATE.modo === 'relogio') {
+    STATE.partida.tempoSeg = STATE.tempoMin * 60;
+    iniciarCronometro();
+    document.getElementById('cronometro').classList.remove('hidden');
+  } else {
+    document.getElementById('cronometro').classList.add('hidden');
+  }
+
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('jogo').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+
+  prepararRodada();
+}
+
+function jogadorAtual() {
+  return STATE.partida.jogadores[STATE.partida.vezAtual];
+}
+
+function iniciarCronometro() {
+  if (STATE.partida.timerInterval) clearInterval(STATE.partida.timerInterval);
+  atualizarCronometro();
+  STATE.partida.timerInterval = setInterval(() => {
+    STATE.partida.tempoSeg--;
+    atualizarCronometro();
+    if (STATE.partida.tempoSeg <= 0) {
+      clearInterval(STATE.partida.timerInterval);
+      encerrarPartida();
+    }
+  }, 1000);
+}
+
+function atualizarCronometro() {
+  const el = document.getElementById('cronometro');
+  if (!el) return;
+  const min = Math.floor(STATE.partida.tempoSeg / 60);
+  const seg = STATE.partida.tempoSeg % 60;
+  el.textContent = `${min}:${seg.toString().padStart(2,'0')}`;
+  if (STATE.partida.tempoSeg <= 30) el.classList.add('urgente');
+  else el.classList.remove('urgente');
+}
+
+/* PREPARAR RODADA · sorteia verbo, monta roletas */
+function prepararRodada() {
+  const pool = poolVerbos();
+  // Sorteia verbo aleatório (não precisa ser único na partida; varia)
+  STATE.partida.verboAtual = pool[Math.floor(Math.random() * pool.length)];
+  STATE.partida.pronomeIdx = null;
+  STATE.partida.tempoSorteado = null;
+  STATE.partida.opcoes = [];
+  STATE.partida.respostaCorreta = null;
+  STATE.partida.fase = 'aguardando_giro';
+  STATE.partida.respondeu = false;
+  STATE.partida.girando = false;
+
+  atualizarCabecalho();
+  atualizarInfoLateral();
+  document.getElementById('feedback-area').innerHTML = '';
+  document.getElementById('pergunta-area').classList.add('hidden');
+  document.getElementById('btn-girar').classList.remove('hidden');
+  document.getElementById('btn-girar').disabled = false;
+
+  // Atualizar verbo destacado
+  const v = STATE.partida.verboAtual;
+  document.getElementById('verbo-palavra').textContent = v.verbo;
+  const tipo = v.regular ? 'regular' : 'IRREGULAR';
+  const conj = v.conj === 1 ? '1ª conjugação' : (v.conj === 2 ? '2ª conjugação' : '3ª conjugação');
+  document.getElementById('verbo-meta').textContent = `${conj} · ${tipo}`;
+
+  // Resetar roletas
+  renderRoletaPronome();
+  renderRoletaTempo();
+  document.getElementById('resultado-pronome').textContent = 'aguardando...';
+  document.getElementById('resultado-pronome').classList.add('aguardando');
+  document.getElementById('resultado-tempo').textContent = 'aguardando...';
+  document.getElementById('resultado-tempo').classList.add('aguardando');
+
+  renderPlacar();
+  renderMascote('svg-mascote-painel', 'pensando');
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Conjuguinha:</b> Verbo <b>${v.verbo}</b>! Gire as roletas, maestro.`;
+}
+
+function atualizarCabecalho() {
+  const j = jogadorAtual();
+  if (!j) return;
+  document.getElementById('pino-vez').textContent = j.idx + 1;
+  document.getElementById('pino-vez').style.background = CORES_PINOS[j.idx].fundo;
+  document.getElementById('nome-vez').textContent = `Vez de ${j.nome}`;
+  const txt = STATE.modo === 'relogio' ? `Rodada ${STATE.partida.rodada}` : `Rodada ${STATE.partida.rodada}/${STATE.partida.rodadaMax}`;
+  document.getElementById('info-rodada-cab').textContent = txt;
+}
+
+function atualizarInfoLateral() {
+  const j = jogadorAtual();
+  if (!j) return;
+  const txt = STATE.modo === 'relogio' ? `${STATE.partida.rodada}` : `${STATE.partida.rodada}/${STATE.partida.rodadaMax}`;
+  document.getElementById('rodada-info-side').textContent = txt;
+  document.getElementById('acertos-info').textContent = j.acertos;
+  document.getElementById('nivel-info').textContent = NIVEIS[STATE.nivel].titulo;
+}
+
+/* GIRAR ROLETAS · sorteia pronome+tempo único (não repete combinação) */
+function girarRoletas() {
+  if (STATE.partida.girando || STATE.partida.fase !== 'aguardando_giro') return;
+  STATE.partida.girando = true;
+  document.getElementById('btn-girar').disabled = true;
+
+  // Sortear combinação ainda não usada
+  const v = STATE.partida.verboAtual;
+  const temposDisp = TEMPOS_POR_NIVEL[STATE.nivel];
+
+  // Listar combinações possíveis NÃO usadas (verbo + pronome + tempo)
+  const combinacoesPossiveis = [];
+  temposDisp.forEach(t => {
+    for (let p = 0; p < 6; p++) {
+      if (v.tabela[t][p] === null) continue; // pula imperativo eu
+      const chave = `${v.verbo}|${t}|${p}`;
+      if (!STATE.partida.combinacoesUsadas.includes(chave)) {
+        combinacoesPossiveis.push({ tempo: t, pronome: p, chave });
+      }
+    }
+  });
+
+  // Se esgotou pra esse verbo, sortear novo verbo
+  if (combinacoesPossiveis.length === 0) {
+    const pool = poolVerbos().filter(vv => vv.verbo !== v.verbo);
+    if (pool.length > 0) {
+      STATE.partida.verboAtual = pool[Math.floor(Math.random() * pool.length)];
+      document.getElementById('verbo-palavra').textContent = STATE.partida.verboAtual.verbo;
+      const tipo = STATE.partida.verboAtual.regular ? 'regular' : 'IRREGULAR';
+      const conj = STATE.partida.verboAtual.conj === 1 ? '1ª conjugação' : (STATE.partida.verboAtual.conj === 2 ? '2ª conjugação' : '3ª conjugação');
+      document.getElementById('verbo-meta').textContent = `${conj} · ${tipo}`;
+    }
+    // Recursivo
+    STATE.partida.girando = false;
+    girarRoletas();
+    return;
+  }
+
+  const escolhida = combinacoesPossiveis[Math.floor(Math.random() * combinacoesPossiveis.length)];
+  STATE.partida.pronomeIdx = escolhida.pronome;
+  STATE.partida.tempoSorteado = escolhida.tempo;
+  STATE.partida.combinacoesUsadas.push(escolhida.chave);
+
+  tocarSom('giro');
+
+  // ANIMAÇÃO DAS ROLETAS
+  const semAnim = document.getElementById('pde-painel').classList.contains('sem-animacoes');
+
+  // PRONOME · 6 setores · 60° cada · setor 0 está em cima (-90° a -30°)
+  // Pra ponteiro (que está no topo, apontando pra baixo) aponte pro setor X,
+  // a roleta gira de modo que o CENTRO do setor X fique em 0° (topo)
+  // Centro do setor i = i*60 + 30
+  // Pra rotacionar e trazer pro topo (-90 ou 270): rotaçãoFinal = 360 - (i*60+30) + nVoltas*360
+  const giroExtraP = 5 + Math.floor(Math.random() * 3); // 5-7 voltas completas
+  const rotPronome = giroExtraP * 360 + (360 - (escolhida.pronome * 60 + 30));
+
+  // TEMPO · n setores variável
+  const temposN = TEMPOS_POR_NIVEL[STATE.nivel].length;
+  const angSetor = 360 / temposN;
+  const tempoIdx = TEMPOS_POR_NIVEL[STATE.nivel].indexOf(escolhida.tempo);
+  const giroExtraT = 5 + Math.floor(Math.random() * 3);
+  const rotTempo = giroExtraT * 360 + (360 - (tempoIdx * angSetor + angSetor/2));
+
+  if (semAnim) {
+    // Sem animação: aplica direto
+    document.getElementById('g-roleta-pronome').setAttribute('transform', `translate(100 100) rotate(${rotPronome % 360})`);
+    document.getElementById('g-roleta-tempo').setAttribute('transform', `translate(100 100) rotate(${rotTempo % 360})`);
+    finalizarGiro();
+  } else {
+    // CSS animation com variável final
+    const gP = document.getElementById('g-roleta-pronome');
+    const gT = document.getElementById('g-roleta-tempo');
+    gP.style.transformOrigin = '100px 100px';
+    gT.style.transformOrigin = '100px 100px';
+    gP.style.transition = 'transform 3.2s cubic-bezier(0.17, 0.67, 0.21, 0.99)';
+    gT.style.transition = 'transform 3.2s cubic-bezier(0.17, 0.67, 0.21, 0.99)';
+    // Próximo tick
+    setTimeout(() => {
+      gP.setAttribute('transform', `translate(100 100) rotate(${rotPronome})`);
+      gT.setAttribute('transform', `translate(100 100) rotate(${rotTempo})`);
+    }, 30);
+    setTimeout(() => {
+      finalizarGiro();
+    }, 3250);
+  }
+}
+
+function finalizarGiro() {
+  STATE.partida.girando = false;
+  document.getElementById('btn-girar').classList.add('hidden');
+
+  // Mostrar resultados
+  const v = STATE.partida.verboAtual;
+  const p = STATE.partida.pronomeIdx;
+  const t = STATE.partida.tempoSorteado;
+
+  document.getElementById('resultado-pronome').textContent = PRONOMES[p];
+  document.getElementById('resultado-pronome').classList.remove('aguardando');
+  document.getElementById('resultado-tempo').textContent = TEMPOS_LABEL[t];
+  document.getElementById('resultado-tempo').classList.remove('aguardando');
+
+  tocarSom('clique');
+
+  // Montar pergunta + opções
+  const respostaCorreta = v.tabela[t][p];
+  STATE.partida.respostaCorreta = respostaCorreta;
+  STATE.partida.opcoes = gerarOpcoes(v, t, p, respostaCorreta);
+
+  // Mostrar pergunta
+  const pronomeMostrar = (t === 'imp_afirm') ? '' : PRONOMES[p] + ' ';
+  const tempoMostrar = TEMPOS_LABEL[t];
+  document.getElementById('pergunta-frase').innerHTML = `${pronomeMostrar ? '"' + pronomeMostrar.trim() + ' ___"' : '"___"'} · <b>${v.verbo}</b> no <b>${tempoMostrar}</b>`;
+
+  // Renderizar opções
+  const cont = document.getElementById('opcoes-grid');
+  cont.innerHTML = '';
+  STATE.partida.opcoes.forEach((op, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'opcao-resposta';
+    btn.textContent = op;
+    btn.onclick = () => responder(idx, btn);
+    cont.appendChild(btn);
+  });
+
+  document.getElementById('pergunta-area').classList.remove('hidden');
+  STATE.partida.fase = 'mostrando_opcoes';
+  renderMascote('svg-mascote-painel', 'surpresa');
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Conjuguinha:</b> Pronto! Qual é a forma correta?`;
+}
+
+/* GERAR OPÇÕES · distratoras pedagogicamente úteis */
+function gerarOpcoes(verbo, tempoSorteado, pronomeSorteado, respostaCorreta) {
+  const distratoras = new Set();
+  distratoras.add(respostaCorreta); // pra evitar duplicata
+
+  // DISTRATORA 1: mesmo verbo+tempo, OUTRO pronome
+  for (let i = 0; i < 6; i++) {
+    if (i !== pronomeSorteado && verbo.tabela[tempoSorteado][i] !== null) {
+      const cand = verbo.tabela[tempoSorteado][i];
+      if (!distratoras.has(cand)) {
+        distratoras.add(cand);
+        break;
+      }
+    }
+  }
+
+  // DISTRATORA 2: mesmo verbo+pronome, OUTRO tempo
+  const outrosTempos = TEMPOS_POR_NIVEL[STATE.nivel].filter(t => t !== tempoSorteado);
+  for (const t of shuffle(outrosTempos)) {
+    const cand = verbo.tabela[t][pronomeSorteado];
+    if (cand !== null && !distratoras.has(cand)) {
+      distratoras.add(cand);
+      break;
+    }
+  }
+
+  // DISTRATORA 3: forma inventada plausível (flexão errada)
+  // Estratégia: pega a raiz do verbo (ou outra forma) e aplica desinência errada
+  const inventada = inventarFormaErrada(verbo, tempoSorteado, pronomeSorteado, respostaCorreta, distratoras);
+  if (inventada && !distratoras.has(inventada)) {
+    distratoras.add(inventada);
+  }
+
+  // Se ainda não temos 4 opções, completar com outras formas do verbo
+  const todasFormas = [];
+  TEMPOS_POR_NIVEL[STATE.nivel].forEach(t => {
+    verbo.tabela[t].forEach(f => { if (f !== null) todasFormas.push(f); });
+  });
+  for (const f of shuffle(todasFormas)) {
+    if (distratoras.size >= 4) break;
+    if (!distratoras.has(f)) distratoras.add(f);
+  }
+
+  // Garantir exatamente 4
+  const arr = Array.from(distratoras).slice(0, 4);
+  // Se por algum acaso temos menos de 4, completar com variações
+  while (arr.length < 4) {
+    arr.push(respostaCorreta + 's');
+  }
+
+  return shuffle(arr);
+}
+
+/* INVENTAR FORMA ERRADA · gera plausível mas inexistente */
+function inventarFormaErrada(verbo, tempo, pronome, correta, jaUsadas) {
+  // Estratégia 1: para verbos irregulares, aplicar a desinência regular como se fosse regular
+  // Ex: 'fazer' no presente eu = 'faço' (correto). Errado regular: 'fazo'
+  if (!verbo.regular) {
+    const raiz = verbo.verbo.slice(0, -2);
+    const desinReg = {
+      1: { // -ar
+        ind_pres: ['o','as','a','amos','ais','am'],
+        ind_pp:   ['ei','aste','ou','amos','astes','aram'],
+        ind_imp:  ['ava','avas','ava','ávamos','áveis','avam']
+      },
+      2: { // -er
+        ind_pres: ['o','es','e','emos','eis','em'],
+        ind_pp:   ['i','este','eu','emos','estes','eram'],
+        ind_imp:  ['ia','ias','ia','íamos','íeis','iam']
+      },
+      3: { // -ir
+        ind_pres: ['o','es','e','imos','is','em'],
+        ind_pp:   ['i','iste','iu','imos','istes','iram'],
+        ind_imp:  ['ia','ias','ia','íamos','íeis','iam']
+      }
+    };
+    if (desinReg[verbo.conj] && desinReg[verbo.conj][tempo]) {
+      const tentativa = raiz + desinReg[verbo.conj][tempo][pronome];
+      if (tentativa !== correta && !jaUsadas.has(tentativa)) {
+        return tentativa;
+      }
+    }
+  }
+
+  // Estratégia 2: trocar a vogal temática
+  // Ex: 'cantei' → 'cantai', 'comeu' → 'comou'
+  if (correta && correta.length > 2) {
+    const variacoes = [];
+    // Trocar penúltima vogal (heurística simples)
+    const ult = correta.slice(-1);
+    const semUlt = correta.slice(0, -1);
+    if (semUlt.endsWith('e')) variacoes.push(semUlt.slice(0, -1) + 'i' + ult);
+    if (semUlt.endsWith('a')) variacoes.push(semUlt.slice(0, -1) + 'e' + ult);
+    if (semUlt.endsWith('o')) variacoes.push(semUlt.slice(0, -1) + 'u' + ult);
+
+    // Trocar última letra
+    if (ult === 'i') variacoes.push(semUlt + 'u');
+    if (ult === 'u') variacoes.push(semUlt + 'i');
+    if (ult === 'a') variacoes.push(semUlt + 'o');
+    if (ult === 'o') variacoes.push(semUlt + 'a');
+
+    for (const v of variacoes) {
+      if (v !== correta && !jaUsadas.has(v) && v.length === correta.length) {
+        return v;
+      }
+    }
+  }
+
+  return null;
+}
+
+/* RESPONDER */
+function responder(idxOpcao, btnEl) {
+  if (STATE.partida.respondeu) return;
+  STATE.partida.respondeu = true;
+
+  const escolhida = STATE.partida.opcoes[idxOpcao];
+  const correta = escolhida === STATE.partida.respostaCorreta;
+
+  // Desabilitar todos os botões
+  document.querySelectorAll('.opcao-resposta').forEach(b => b.disabled = true);
+
+  // Feedback visual
+  if (correta) {
+    btnEl.classList.add('correta');
+  } else {
+    btnEl.classList.add('errada');
+    // Mostrar qual era a correta
+    const todasOps = document.querySelectorAll('.opcao-resposta');
+    STATE.partida.opcoes.forEach((op, idx) => {
+      if (op === STATE.partida.respostaCorreta) {
+        todasOps[idx].classList.add('revela-correta');
+      }
+    });
+  }
+
+  const j = jogadorAtual();
+  let pontos = 0;
+  if (correta) {
+    pontos = NIVEIS[STATE.nivel].pontos;
+    j.pontos += pontos;
+    j.acertos++;
+    tocarSom('acerto');
+    renderMascote('svg-mascote-painel', 'feliz');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Conjuguinha:</b> ${elogio()}`;
+  } else {
+    tocarSom('erro');
+    renderMascote('svg-mascote-painel', 'surpresa');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Conjuguinha:</b> ${incentivo()}`;
+  }
+
+  setTimeout(() => mostrarFeedbackRodada(correta, pontos), 900);
+  renderPlacar();
+  atualizarInfoLateral();
+}
+
+function mostrarFeedbackRodada(correta, pontos) {
+  STATE.partida.fase = 'feedback';
+  const cont = document.getElementById('feedback-area');
+  const j = jogadorAtual();
+  const v = STATE.partida.verboAtual;
+  const p = STATE.partida.pronomeIdx;
+  const t = STATE.partida.tempoSorteado;
+
+  const ehUltimaRodada = STATE.modo !== 'relogio' && STATE.partida.rodada >= STATE.partida.rodadaMax &&
+    (STATE.modo !== 'competitivo' || STATE.partida.vezAtual === STATE.partida.jogadores.length - 1);
+
+  const pronomeMostrar = (t === 'imp_afirm') ? '' : PRONOMES[p] + ' ';
+  cont.innerHTML = `
+    <div class="feedback-rodada">
+      <h3>${correta ? '✅ Mandou bem!' : '❌ Não foi dessa vez!'}</h3>
+      ${!correta ? `
+        <div class="resposta-certa">${pronomeMostrar}${STATE.partida.respostaCorreta}</div>
+      ` : ''}
+      <div class="pts-info">
+        ${correta ? `+${pontos} pontos · ${j.nome}: ${j.pontos} pts` : `Forma correta acima · ${j.nome}: ${j.pontos} pts`}
+      </div>
+      <button class="btn-proxima" onclick="proximaRodada()">
+        ${ehUltimaRodada ? '🏁 Ver resultado final' : '➡️ Próxima rodada'}
+      </button>
+    </div>
+  `;
+}
+
+function proximaRodada() {
+  if (STATE.modo === 'competitivo') {
+    STATE.partida.vezAtual = (STATE.partida.vezAtual + 1) % STATE.partida.jogadores.length;
+    if (STATE.partida.vezAtual === 0) STATE.partida.rodada++;
+  } else {
+    STATE.partida.rodada++;
+  }
+
+  if (STATE.modo !== 'relogio' && STATE.partida.rodada > STATE.partida.rodadaMax) {
+    encerrarPartida();
+    return;
+  }
+  prepararRodada();
+}
+
+function encerrarPartida() {
+  STATE.partida.ativa = false;
+  if (STATE.partida.timerInterval) {
+    clearInterval(STATE.partida.timerInterval);
+    STATE.partida.timerInterval = null;
+  }
+
+  const ordenados = STATE.partida.jogadores.slice().sort((a,b) => b.pontos - a.pontos);
+  const venc = ordenados[0];
+
+  let titulo = '';
+  let msg = '';
+  if (STATE.modo === 'competitivo') {
+    titulo = `🏆 ${venc.nome} venceu!`;
+    msg = `Com <b>${venc.pontos} pontos</b> e <b>${venc.acertos}</b> conjugações corretas!`;
+  } else if (STATE.modo === 'relogio') {
+    titulo = `⏱️ Tempo esgotado!`;
+    msg = `${venc.nome === 'Você' ? 'Você' : venc.nome} acertou <b>${venc.acertos}</b> conjugações em ${STATE.tempoMin} min, totalizando <b>${venc.pontos} pontos</b>.`;
+  } else {
+    titulo = `🎉 Fim do jogo!`;
+    msg = `${venc.nome === 'Turma' ? 'A turma' : 'Você'} fez <b>${venc.pontos} pontos</b> com <b>${venc.acertos}</b> acertos em ${STATE.partida.rodadaMax} rodadas.`;
+  }
+
+  document.getElementById('fim-titulo').textContent = titulo;
+  document.getElementById('fim-msg').innerHTML = msg;
+
+  let html = '<h4>📊 Ranking final</h4>';
+  ordenados.forEach((j, pos) => {
+    const med = pos === 0 ? '🥇' : pos === 1 ? '🥈' : pos === 2 ? '🥉' : `${pos+1}º`;
+    html += `
+      <div class="jog-linha">
+        <div class="pino-jog" style="background:${CORES_PINOS[j.idx].fundo}">${j.idx+1}</div>
+        <div class="nome">${med} ${j.nome}</div>
+        <div class="pts">${j.pontos} pts</div>
+      </div>
+      <div style="font-size:0.72rem; color:#475569; padding:0 6px 4px; font-family:'Fredoka',sans-serif;">
+        ✅ ${j.acertos} conjugações corretas
+      </div>
+    `;
+  });
+  document.getElementById('ranking-final').innerHTML = html;
+
+  const acoes = document.getElementById('fim-acoes');
+  acoes.innerHTML = '';
+  const btn1 = document.createElement('button');
+  btn1.className = 'btn-confirmar dourado';
+  btn1.textContent = '↻ Jogar de novo';
+  btn1.onclick = () => { fecharModal('modal-fim'); comecarJogo(); };
+  acoes.appendChild(btn1);
+  const btn2 = document.createElement('button');
+  btn2.className = 'btn-cancelar';
+  btn2.textContent = '🏠 Menu';
+  btn2.onclick = () => { fecharModal('modal-fim'); voltarLobby(); };
+  acoes.appendChild(btn2);
+
+  document.getElementById('modal-fim').classList.add('aberto');
+  if (venc.acertos >= 3 && venc.pontos >= 12) criarConfetes();
+}
+
+function renderPlacar() {
+  const cont = document.getElementById('placar-linhas');
+  cont.innerHTML = '';
+  const ordenados = STATE.partida.jogadores.slice().sort((a,b) => b.pontos - a.pontos);
+  ordenados.forEach(j => {
+    const linha = document.createElement('div');
+    linha.className = 'jog-linha' + (j.idx === jogadorAtual().idx ? ' vez-dele' : '');
+    linha.innerHTML = `
+      <div class="pino-jog" style="background:${CORES_PINOS[j.idx].fundo}">${j.idx+1}</div>
+      <div class="nome">${j.nome}</div>
+      <div class="pts">${j.pontos}</div>
+    `;
+    cont.appendChild(linha);
+  });
+}
+
+function voltarLobby() {
+  if (STATE.partida.ativa && STATE.partida.rodada > 1) {
+    if (!confirm('Voltar ao menu? A partida atual será perdida.')) return;
+  }
+  STATE.partida.ativa = false;
+  if (STATE.partida.timerInterval) {
+    clearInterval(STATE.partida.timerInterval);
+    STATE.partida.timerInterval = null;
+  }
+  document.getElementById('jogo').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  fecharModal('modal-fim');
+  renderLobby();
+}
+
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+/* SOM */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'acerto') {
+      const notas = [523, 659, 784, 1047];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t0 = c.currentTime + i * 0.07;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.18);
+        o.start(t0); o.stop(t0 + 0.2);
+      });
+    } else if (tipo === 'erro') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 320; o.type = 'sine';
+      g.gain.setValueAtTime(0.08, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.25);
+      o.frequency.exponentialRampToValueAtTime(180, c.currentTime + 0.25);
+      o.start(); o.stop(c.currentTime + 0.27);
+    } else if (tipo === 'clique') {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 600; o.type = 'sine';
+      g.gain.setValueAtTime(0.06, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.08);
+      o.start(); o.stop(c.currentTime + 0.1);
+    } else if (tipo === 'giro') {
+      // Som de giro: notas descendentes rápidas
+      const notas = [800, 700, 600, 500, 400];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'square';
+        const t0 = c.currentTime + i * 0.05;
+        g.gain.setValueAtTime(0.04, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.06);
+        o.start(t0); o.stop(t0 + 0.07);
+      });
+    }
+  } catch (e) {}
+}
+
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#EA580C','#9A3412','#FBBF24','#16A34A','#2563EB','#FB923C','#7C2D12'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* A11Y */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* WEBNODE EMBED */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => reportarAltura());
+  ro.observe(document.getElementById('pde-painel'));
+}
+
+/* SELOS BNCC */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'portugues',
+      icone: 'LP',
+      titulo: 'BNCC Língua Portuguesa',
+      itens: [
+        { cod: 'EF06LP06', desc: 'Empregar formas verbais conforme situação comunicativa.' },
+        { cod: 'EF07LP06', desc: 'Empregar formas verbais (modo, tempo, pessoa) adequadas ao texto.' },
+        { cod: 'EF08LP07', desc: 'Diferenciar usos do subjuntivo e do indicativo.' },
+        { cod: 'EF09LP06', desc: 'Analisar mecanismos morfossintáticos em textos.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Pensamento Computacional',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais como apoio à aprendizagem.' },
+        { cod: 'EF06CO04', desc: 'Reconhecer padrões e aplicar pensamento computacional (decomposição, abstração).' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-fim'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+/* INIT */
+carregar();
+carregarA11y();
+renderLobby();
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+
+/* Expor pro smoke test */
+window.STATE = STATE;
+window.VERBOS = VERBOS;
+window.PRONOMES = PRONOMES;
+window.TEMPOS_LABEL = TEMPOS_LABEL;
+window.TEMPOS_POR_NIVEL = TEMPOS_POR_NIVEL;
+window.MODOS = MODOS;
+window.NIVEIS = NIVEIS;
+window.poolVerbos = poolVerbos;
+window.totalCombinacoes = totalCombinacoes;
+window.comecarJogo = comecarJogo;
+window.voltarLobby = voltarLobby;
+window.prepararRodada = prepararRodada;
+window.girarRoletas = girarRoletas;
+window.finalizarGiro = finalizarGiro;
+window.responder = responder;
+window.gerarOpcoes = gerarOpcoes;
+window.proximaRodada = proximaRodada;
+window.encerrarPartida = encerrarPartida;
+window.jogadorAtual = jogadorAtual;
+window.abrirAjuda = abrirAjuda;
+window.abrirAcessibilidade = abrirAcessibilidade;
+window.defA11y = defA11y;
+window.ESTADO_A11Y = ESTADO_A11Y;
+window.fecharModal = fecharModal;
+window.renderLobby = renderLobby;
+window.montarSelosBNCC = montarSelosBNCC;
+window.conjugarRegular = conjugarRegular;
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1790 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Caça-Palavras Temático · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Fredoka','Nunito','Segoe UI',Roboto,sans-serif;
+  color: var(--pde-cor-texto, #1E324A);
+  padding: 8px clamp(6px, 2vw, 16px) 16px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  --pde-cor-texto: #1E324A;
+  background: linear-gradient(180deg, #DBEAFE 0%, #BFDBFE 50%, #93C5FD 100%);
+  border-radius: 16px;
+}
+
+/* === FIX A11Y === */
+#pde-painel.txt-grande   { zoom: 1.18; }
+#pde-painel.txt-enorme   { zoom: 1.42; }
+#pde-painel.txt-gigante  { zoom: 1.72; }
+@supports not (zoom: 1) {
+  #pde-painel.txt-grande   { transform: scale(1.18); transform-origin: top left; }
+  #pde-painel.txt-enorme   { transform: scale(1.42); transform-origin: top left; }
+  #pde-painel.txt-gigante  { transform: scale(1.72); transform-origin: top left; }
+}
+
+#pde-painel.alto-contraste { background: #000; padding: 24px 12px 36px; --pde-cor-texto: #FFF; border-radius: 0; }
+#pde-painel.alto-contraste .header { background: #000 !important; color: #FBBF24 !important; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .header h1 { color: #FBBF24; }
+#pde-painel.alto-contraste .btn-header { background: #000; border: 2px solid #FBBF24; color: #FBBF24; }
+#pde-painel.alto-contraste .lobby-card,
+#pde-painel.alto-contraste .area-treino,
+#pde-painel.alto-contraste .painel-info { background: #000; border: 3px solid #FBBF24; color: #FFF; box-shadow: none; }
+#pde-painel.alto-contraste .tema-card,
+#pde-painel.alto-contraste .nivel-card,
+#pde-painel.alto-contraste .ano-card { background: #000 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .tema-card.selecionado,
+#pde-painel.alto-contraste .nivel-card.selecionado,
+#pde-painel.alto-contraset .ano-card.selecionado { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .grid-celula { background: #000 !important; color: #FBBF24 !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .grid-celula.selecionando { background: #FBBF24 !important; color: #000 !important; }
+#pde-painel.alto-contraste .grid-celula.encontrada { background: #16A34A !important; color: #FFF !important; }
+#pde-painel.alto-contraste .palavra-item { background: #1A1A1A !important; color: #FFF !important; border-color: #FBBF24 !important; }
+#pde-painel.alto-contraste .palavra-item.encontrada { background: #16A34A !important; color: #FFF !important; }
+#pde-painel.alto-contraste .modal-conteudo { background: #000; color: #FFF; border: 3px solid #FBBF24; }
+#pde-painel.alto-contraste .modal-conteudo h2 { color: #FBBF24; }
+
+#pde-painel.daltonico .grid-celula.encontrada { background: linear-gradient(135deg,#3B82F6,#1E40AF) !important; color: white !important; border-color: #1E3A8A !important; }
+#pde-painel.daltonico .palavra-item.encontrada { background: #DBEAFE !important; color: #1E3A8A !important; border-color: #1E40AF !important; text-decoration: line-through; }
+
+#pde-painel.sem-animacoes *, #pde-painel.sem-animacoes *::before, #pde-painel.sem-animacoes *::after {
+  animation: none !important; transition: none !important;
+}
+#pde-painel.sem-animacoes .confetti-container { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #pde-painel *, #pde-painel *::before, #pde-painel *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #pde-painel .confetti-container { display: none !important; }
+}
+
+/* HEADER */
+#pde-painel .header {
+  background: linear-gradient(135deg,#37B1DA 0%,#1E324A 100%);
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: white;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 2px 8px rgba(30,50,74,0.25);
+  flex-wrap: wrap;
+}
+#pde-painel .header h1 {
+  font-family: 'Fredoka','Baloo 2',sans-serif;
+  font-size: clamp(0.95rem, 2.2vw, 1.3rem);
+  font-weight: 700; margin: 0; flex: 1; line-height: 1.1;
+  min-width: 0; word-wrap: break-word;
+}
+#pde-painel .header .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
+#pde-painel .btn-header {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 10px; border-radius: 999px;
+  cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.78rem;
+  transition: all 0.15s;
+}
+#pde-painel .btn-header:hover { background: rgba(255,255,255,0.25); }
+#pde-painel .btn-header.danger { background: rgba(220,38,38,0.55); border-color: rgba(220,38,38,0.7); }
+
+/* LOBBY */
+#pde-painel .lobby-card {
+  background: white;
+  border-radius: 18px;
+  padding: 14px;
+  border: 3px solid #37B1DA;
+  box-shadow: 0 4px 12px rgba(55,177,218,0.15);
+}
+
+#pde-painel .boas-vindas {
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FBBF24 100%);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 2px solid #92400E;
+}
+#pde-painel .boas-vindas .mascote-wrap { flex-shrink: 0; width: 80px; height: 80px; }
+#pde-painel .boas-vindas .balao {
+  flex: 1;
+  background: white;
+  padding: 9px 12px;
+  border-radius: 12px;
+  position: relative;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #1E324A;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+#pde-painel .boas-vindas .balao::before {
+  content: '';
+  position: absolute;
+  left: -10px; top: 24px;
+  width: 0; height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 12px solid white;
+}
+#pde-painel .boas-vindas .balao strong {
+  display: block;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 1.05rem;
+  margin-bottom: 2px;
+}
+@media (max-width: 480px) {
+  #pde-painel .boas-vindas { flex-direction: column; text-align: center; gap: 6px; }
+  #pde-painel .boas-vindas .mascote-wrap { width: 90px; height: 90px; margin: 0 auto; }
+  #pde-painel .boas-vindas .balao::before {
+    left: 50%; top: -10px; transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+#pde-painel .mascote-wrap svg { width: 100%; height: 100%; display: block; }
+@keyframes flutuar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+#pde-painel .mascote-wrap { animation: flutuar 4s ease-in-out infinite; }
+
+/* SELETOR DE ANO */
+#pde-painel .secao-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #1E324A;
+  font-size: 1.05rem;
+  margin: 14px 0 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+#pde-painel .ano-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+#pde-painel .ano-card {
+  background: white;
+  border: 3px solid #37B1DA;
+  border-radius: 14px;
+  padding: 10px 6px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #1E324A;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+  box-shadow: 0 3px 0 #1E324A;
+}
+#pde-painel .ano-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #1E324A;
+}
+#pde-painel .ano-card.selecionado {
+  background: linear-gradient(135deg,#37B1DA 0%,#1E324A 100%);
+  color: white;
+  border-color: #1E324A;
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #1E324A;
+}
+#pde-painel .ano-card .emoji-ano { display: block; font-size: 1.5rem; line-height: 1; margin-bottom: 4px; }
+#pde-painel .ano-card .nome-ano { font-size: 0.82rem; }
+#pde-painel .ano-card .anos-ano { display: block; font-size: 0.7rem; opacity: 0.8; margin-top: 2px; font-weight: 500; }
+
+/* SELETOR DE TEMA */
+#pde-painel .tema-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr));
+  gap: 6px;
+  margin-bottom: 10px;
+}
+@media (max-width: 480px) {
+  #pde-painel .tema-grid { grid-template-columns: repeat(2, 1fr); }
+}
+#pde-painel .tema-card {
+  background: white;
+  border: 2px solid #BFDBFE;
+  border-radius: 12px;
+  padding: 8px 4px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  color: #1E324A;
+  font-size: 0.8rem;
+  transition: all 0.15s;
+}
+#pde-painel .tema-card:hover {
+  border-color: #37B1DA;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+#pde-painel .tema-card.selecionado {
+  background: linear-gradient(135deg,#FEF3C7 0%,#FBBF24 100%);
+  border-color: #92400E;
+  color: #92400E;
+  font-weight: 700;
+  box-shadow: 0 0 0 3px rgba(251,191,36,0.3);
+}
+#pde-painel .tema-card .emoji-tema {
+  display: block;
+  font-size: 1.7rem;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+/* SELETOR DE NÍVEL */
+#pde-painel .nivel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+#pde-painel .nivel-card {
+  background: white;
+  border: 3px solid #BFDBFE;
+  border-radius: 14px;
+  padding: 8px 4px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #1E324A;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+}
+#pde-painel .nivel-card:hover { border-color: #37B1DA; transform: translateY(-2px); }
+#pde-painel .nivel-card.selecionado {
+  background: linear-gradient(135deg,#37B1DA 0%,#1E324A 100%);
+  color: white;
+  border-color: #1E324A;
+}
+#pde-painel .nivel-card.selecionado.nivel-facil { background: linear-gradient(135deg,#86EFAC 0%,#15803D 100%); border-color: #14532D; }
+#pde-painel .nivel-card.selecionado.nivel-medio { background: linear-gradient(135deg,#FBBF24 0%,#92400E 100%); border-color: #451A03; }
+#pde-painel .nivel-card.selecionado.nivel-dificil { background: linear-gradient(135deg,#F87171 0%,#7F1D1D 100%); border-color: #450A0A; }
+#pde-painel .nivel-card .emoji-nivel { display: block; font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+#pde-painel .nivel-card .nome-nivel { font-size: 0.82rem; display: block; }
+#pde-painel .nivel-card .desc-nivel { font-size: 0.65rem; opacity: 0.85; display: block; margin-top: 2px; font-weight: 500; }
+
+/* BOTÃO COMEÇAR */
+#pde-painel .btn-comecar-aventura {
+  width: 100%;
+  background: linear-gradient(135deg,#37B1DA 0%,#1E324A 100%);
+  color: white;
+  border: 3px solid white;
+  border-radius: 14px;
+  padding: 12px 20px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #1E324A, 0 6px 12px rgba(30,50,74,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: 2px solid #1E324A;
+  margin-top: 10px;
+}
+#pde-painel .btn-comecar-aventura:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #1E324A, 0 3px 6px rgba(30,50,74,0.25);
+}
+#pde-painel .btn-comecar-aventura:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* TELA DE JOGO */
+#pde-painel .jogo-grid {
+  display: grid; gap: 12px;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #pde-painel .jogo-grid { grid-template-columns: 1fr !important; gap: 10px; }
+  #pde-painel .area-grade { order: 1; }
+  #pde-painel .painel-info { order: 2; }
+}
+
+#pde-painel .area-grade {
+  background: white;
+  border-radius: 16px;
+  padding: 10px;
+  border: 3px solid #37B1DA;
+  box-shadow: 0 2px 8px rgba(55,177,218,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+#pde-painel .painel-info {
+  background: white;
+  border-radius: 16px;
+  padding: 12px;
+  border: 3px solid #1E324A;
+  box-shadow: 0 2px 8px rgba(30,50,74,0.12);
+  min-width: 0;
+}
+
+#pde-painel .info-jogo {
+  display: flex; flex-direction: column; gap: 8px;
+  background: linear-gradient(135deg,#DBEAFE 0%,#BFDBFE 100%);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #1E324A;
+}
+#pde-painel .info-jogo .linha {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'Fredoka',sans-serif;
+  font-size: 0.85rem;
+  color: #1E324A;
+}
+#pde-painel .info-jogo .linha .label { font-weight: 600; }
+#pde-painel .info-jogo .linha .valor { font-weight: 700; color: #1E40AF; }
+#pde-painel .info-jogo .cronometro {
+  text-align: center;
+  font-family: 'Baloo 2','Fredoka',sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: #1E324A;
+  background: white;
+  border-radius: 8px;
+  padding: 4px;
+  border: 2px solid #FBBF24;
+  letter-spacing: 1px;
+}
+
+#pde-painel .titulo-tema {
+  text-align: center;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #1E324A;
+  font-size: 1.1rem;
+  margin: 0 0 6px;
+  padding: 8px;
+  background: linear-gradient(135deg, var(--tema-cor-1, #FEF3C7) 0%, var(--tema-cor-2, #FBBF24) 100%);
+  border-radius: 12px;
+  border: 2px solid #92400E;
+}
+#pde-painel .titulo-tema .emoji-titulo { font-size: 1.4rem; margin-right: 6px; }
+
+/* GRID DO CAÇA-PALAVRAS */
+#pde-painel .grade-container {
+  background: linear-gradient(135deg, #1E324A 0%, #37B1DA 100%);
+  border-radius: 14px;
+  padding: 8px;
+  border: 3px solid #1E324A;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: auto;
+  touch-action: none;
+}
+#pde-painel .grade {
+  display: grid;
+  gap: 2px;
+  background: #1E324A;
+  border-radius: 8px;
+  padding: 4px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#pde-painel .grid-celula {
+  width: var(--cel-size, 32px);
+  height: var(--cel-size, 32px);
+  background: #FFFBEB;
+  color: #1E324A;
+  font-family: 'Baloo 2','Nunito',sans-serif;
+  font-weight: 700;
+  font-size: var(--cel-font, 1rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid #FEF3C7;
+  border-radius: 6px;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+  text-transform: uppercase;
+}
+#pde-painel .grid-celula.selecionando {
+  background: #FBBF24;
+  color: #1E324A;
+  border-color: #92400E;
+  transform: scale(1.05);
+}
+#pde-painel .grid-celula.encontrada {
+  background: linear-gradient(135deg,#86EFAC 0%,#22C55E 100%);
+  color: white;
+  border-color: #15803D;
+}
+#pde-painel .grid-celula.primeira-marcada {
+  background: #FB923C;
+  color: white;
+  border-color: #9A3412;
+  animation: pulsoMarcado 0.8s ease-in-out infinite;
+}
+@keyframes pulsoMarcado {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.1); box-shadow: 0 0 0 4px rgba(251,146,60,0.4); }
+}
+
+/* LISTA DE PALAVRAS */
+#pde-painel .palavras-area {
+  background: linear-gradient(135deg,#FEF3C7 0%,#FDE68A 100%);
+  border-radius: 12px;
+  padding: 10px;
+  border: 2px solid #92400E;
+  margin-top: 8px;
+}
+#pde-painel .palavras-titulo {
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 700;
+  color: #92400E;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  text-align: center;
+}
+#pde-painel .palavras-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+#pde-painel .palavra-item {
+  background: white;
+  border: 2px solid #92400E;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: 'Baloo 2','Fredoka',sans-serif;
+  font-weight: 700;
+  color: #1E324A;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s;
+}
+#pde-painel .palavra-item.encontrada {
+  background: linear-gradient(135deg,#86EFAC 0%,#22C55E 100%);
+  color: white;
+  border-color: #15803D;
+  text-decoration: line-through;
+  text-decoration-color: white;
+  text-decoration-thickness: 2px;
+}
+
+/* MASCOTE DURANTE JOGO */
+#pde-painel .mascote-painel {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg,#FEF3C7 0%,#FBBF24 100%);
+  border-radius: 12px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 2px solid #92400E;
+}
+#pde-painel .mascote-painel .mascote-mini { width: 44px; height: 44px; flex-shrink: 0; }
+#pde-painel .mascote-painel .balao {
+  flex: 1;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #1E324A;
+  line-height: 1.25;
+  min-width: 0;
+  word-wrap: break-word;
+}
+#pde-painel .mascote-painel .balao b { color: #92400E; font-weight: 700; }
+
+/* FEEDBACK */
+#pde-painel .feedback {
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-family: 'Fredoka',sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px;
+  animation: aparecerFeedback 0.3s ease-out;
+  margin-top: 6px;
+}
+@keyframes aparecerFeedback { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+#pde-painel .feedback.acerto {
+  background: linear-gradient(135deg,#86EFAC 0%,#22C55E 100%);
+  color: white;
+  border: 2px solid #15803D;
+}
+#pde-painel .feedback.erro {
+  background: linear-gradient(135deg,#FCA5A5 0%,#F87171 100%);
+  color: white;
+  border: 2px solid #991B1B;
+}
+#pde-painel .feedback.dica {
+  background: linear-gradient(135deg,#DBEAFE 0%,#93C5FD 100%);
+  color: #1E40AF;
+  border: 2px solid #1E40AF;
+}
+
+/* MODAIS */
+#pde-painel .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(30,50,74,0.7);
+  display: none; align-items: center; justify-content: center;
+  padding: 8px; z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+#pde-painel .modal-overlay.aberto { display: flex; }
+#pde-painel .modal-conteudo {
+  background: white; border-radius: 24px;
+  max-width: 540px; width: 100%; padding: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  max-height: 92vh; overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+  text-align: center;
+  border: 5px solid #37B1DA;
+}
+@keyframes modalIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#pde-painel .modal-conteudo .mascote-modal { width: 100px; height: 100px; margin: 0 auto 8px; }
+#pde-painel .modal-conteudo h2 {
+  font-family: 'Fredoka',sans-serif; font-weight: 700; color: #1E324A;
+  margin: 0 0 6px; font-size: 1.4rem;
+}
+#pde-painel .modal-conteudo p {
+  color: #1E324A; font-size: 0.95rem; line-height: 1.4; margin: 4px 0;
+  font-family: 'Fredoka',sans-serif; font-weight: 500;
+}
+#pde-painel .modal-conteudo .acoes {
+  display: grid; gap: 8px; margin-top: 14px; grid-template-columns: 1fr 1fr;
+}
+#pde-painel .modal-conteudo .acoes.solo { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  #pde-painel .modal-conteudo .acoes { grid-template-columns: 1fr; }
+}
+#pde-painel .modal-conteudo button {
+  font-family: 'Fredoka',sans-serif; font-weight: 700;
+  padding: 11px 14px; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem;
+  transition: transform 0.08s;
+}
+#pde-painel .modal-conteudo button:active { transform: translateY(2px); }
+#pde-painel .btn-confirmar {
+  background: linear-gradient(135deg,#86EFAC 0%,#22C55E 100%);
+  color: white; border: 3px solid #15803D;
+  box-shadow: 0 4px 0 #15803D;
+}
+#pde-painel .btn-cancelar {
+  background: white; color: #94A3B8; border: 3px solid #CBD5E1;
+}
+
+#pde-painel .estrelas-conquistadas { font-size: 2.6rem; letter-spacing: 8px; margin: 10px 0; }
+#pde-painel .estrelas-conquistadas .ativa {
+  color: #FBBF24; display: inline-block; transform: scale(0);
+  text-shadow: 0 0 12px rgba(251,191,36,0.7);
+  animation: estrelaPopFinal 0.6s ease-out forwards;
+}
+#pde-painel .estrelas-conquistadas .ativa:nth-child(1) { animation-delay: 0.2s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(2) { animation-delay: 0.5s; }
+#pde-painel .estrelas-conquistadas .ativa:nth-child(3) { animation-delay: 0.8s; }
+#pde-painel .estrelas-conquistadas .vazia { color: #E2E8F0; }
+@keyframes estrelaPopFinal {
+  0% { transform: scale(0) rotate(-180deg); }
+  60% { transform: scale(1.4) rotate(15deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+#pde-painel .modal-ajuda { text-align: left; max-width: 580px; }
+#pde-painel .modal-ajuda h2 { text-align: center; }
+#pde-painel .modal-ajuda h3 {
+  font-family: 'Fredoka',sans-serif;
+  font-size: 1rem; font-weight: 700; color: #1E324A;
+  margin: 12px 0 4px;
+}
+#pde-painel .modal-ajuda ul, #pde-painel .modal-ajuda ol { padding-left: 18px; line-height: 1.5; font-size: 0.9rem; color: #1E324A; font-family: 'Fredoka',sans-serif; font-weight: 500; }
+#pde-painel .modal-ajuda li { margin-bottom: 5px; }
+
+/* A11Y MODAL */
+#pde-painel .a11y-grupo { background: #DBEAFE; border: 3px solid #37B1DA; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: left; }
+#pde-painel .a11y-grupo h3 { font-family: 'Fredoka',sans-serif; font-size: 1rem; font-weight: 700; color: #1E324A; margin: 0 0 4px; }
+#pde-painel .a11y-grupo .desc { font-size: 0.82rem; color: #475569; margin: 0 0 8px; line-height: 1.35; }
+#pde-painel .a11y-tam-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+#pde-painel .a11y-tam-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 4px; text-align: center; font-family: 'Fredoka',sans-serif; font-weight: 700; cursor: pointer; transition: all 0.15s; color: #475569; }
+#pde-painel .a11y-tam-btn:hover { border-color: #37B1DA; }
+#pde-painel .a11y-tam-btn.ativo { background: linear-gradient(135deg,#37B1DA 0%,#1E324A 100%); color: white; border-color: #1E324A; }
+#pde-painel .a11y-tam-btn .a { display: block; font-weight: 700; line-height: 1; }
+#pde-painel .a11y-tam-btn[data-tam="normal"]   .a { font-size: 1.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="grande"]   .a { font-size: 1.6rem; }
+#pde-painel .a11y-tam-btn[data-tam="enorme"]   .a { font-size: 2.2rem; }
+#pde-painel .a11y-tam-btn[data-tam="gigante"]  .a { font-size: 2.8rem; }
+#pde-painel .a11y-tam-btn .l { display: block; font-size: 0.7rem; opacity: 0.85; margin-top: 2px; }
+
+#pde-painel .toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 2px solid #E2E8F0; border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; user-select: none; transition: all 0.15s;
+}
+#pde-painel .toggle-row:hover { border-color: #37B1DA; }
+#pde-painel .toggle-row.ativo { background: linear-gradient(135deg,#86EFAC 0%,#22C55E 100%); color: white; border-color: #15803D; }
+#pde-painel .toggle-row .switch { width: 38px; height: 22px; background: #CBD5E1; border-radius: 999px; position: relative; flex-shrink: 0; }
+#pde-painel .toggle-row .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; }
+#pde-painel .toggle-row.ativo .switch { background: #15803D; }
+#pde-painel .toggle-row.ativo .switch::after { left: 18px; }
+#pde-painel .toggle-row .texto { flex: 1; font-weight: 600; font-size: 0.92rem; font-family: 'Fredoka',sans-serif; }
+#pde-painel .toggle-row .texto small { display: block; font-weight: 500; opacity: 0.78; font-size: 0.78rem; margin-top: 1px; }
+
+#pde-painel .btn-secundario {
+  background: white; color: #37B1DA;
+  border: 2px solid #37B1DA; border-radius: 12px;
+  padding: 8px 14px; font-family: 'Fredoka',sans-serif; font-weight: 600; font-size: 0.92rem;
+  cursor: pointer; transition: all 0.15s;
+}
+#pde-painel .btn-secundario:hover { background: #37B1DA; color: white; }
+
+/* CONFETES */
+#pde-painel .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 999998; overflow: hidden; }
+#pde-painel .confetti { position: absolute; width: 12px; height: 16px; top: -20px; animation: cair 2.6s ease-in forwards; }
+@keyframes cair { to { transform: translateY(110vh) rotate(720deg); } }
+
+#pde-painel .hidden { display: none !important; }
+
+/* SELOS BNCC */
+#pde-painel .selos-bncc { background: #FFF9E6; border-radius: 14px; padding: 10px 12px; margin: 14px 0 6px; text-align: left; border: 3px solid #FBBF24; }
+#pde-painel .selos-bncc h3 { font-family: 'Fredoka',sans-serif; font-weight: 700; color: #1E324A; font-size: 0.95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+#pde-painel .selos-bncc .selo-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #FBBF24; }
+#pde-painel .selos-bncc .selo-row:last-child { border-bottom: none; }
+#pde-painel .selos-bncc .selo-icone { flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg,#37B1DA,#1E324A); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: white; font-weight: 800; font-family: 'Baloo 2',sans-serif; }
+#pde-painel .selos-bncc .selo-icone.portugues { background: linear-gradient(135deg,#37B1DA,#1E324A); }
+#pde-painel .selos-bncc .selo-icone.computacao { background: linear-gradient(135deg,#1E324A,#0F172A); }
+#pde-painel .selos-bncc .selo-icone.acessibilidade { background: linear-gradient(135deg,#16A34A,#14532D); }
+#pde-painel .selos-bncc .selo-icone.lbi { background: linear-gradient(135deg,#F59E0B,#92400E); }
+#pde-painel .selos-bncc .selo-info { flex: 1; min-width: 0; }
+#pde-painel .selos-bncc .selo-titulo { font-weight: 700; color: #1E324A; font-size: 0.82rem; margin-bottom: 3px; font-family: 'Fredoka',sans-serif; }
+#pde-painel .selos-bncc .selo-codigos { font-size: 0.72rem; color: #475569; line-height: 1.5; }
+#pde-painel .selos-bncc .selo-codigos b { color: #1E324A; font-family: 'Baloo 2',sans-serif; display: inline-block; background: #E2E8F0; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; }
+#pde-painel .selos-bncc .selo-codigos .item-bncc { display: block; margin-bottom: 3px; }
+#pde-painel .selos-bncc-rodape { margin-top: 10px; padding-top: 10px; border-top: 2px dashed #FBBF24; font-size: 0.7rem; color: #475569; text-align: center; line-height: 1.5; }
+#pde-painel .selos-bncc-rodape strong { color: #1E324A; }
+
+@media (max-width: 380px) {
+  #pde-painel { padding: 6px 4px 12px; }
+  #pde-painel .header h1 { font-size: 0.9rem; }
+  #pde-painel .btn-header { font-size: 0.7rem; padding: 4px 7px; }
+  #pde-painel .lobby-card,
+  #pde-painel .area-grade,
+  #pde-painel .painel-info { padding: 10px; border-width: 2px; }
+}
+
+/* DESKTOP-WIDE */
+@media (min-width: 1024px) {
+  #pde-painel { max-width: 1280px; padding: 12px clamp(12px, 2vw, 24px) 24px; }
+  #pde-painel .lobby-card { padding: 18px; }
+  #pde-painel .area-grade { padding: 16px; }
+  #pde-painel .painel-info { padding: 16px; }
+  #pde-painel .jogo-grid { grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; }
+  #pde-painel .modal-conteudo { max-width: 640px; padding: 24px; }
+  #pde-painel .modal-conteudo h2 { font-size: 1.65rem; }
+  #pde-painel .modal-conteudo p { font-size: 1.05rem; }
+  #pde-painel .header h1 { font-size: 1.45rem; }
+  #pde-painel .btn-header { font-size: 0.92rem; padding: 7px 14px; }
+  #pde-painel .btn-comecar-aventura { font-size: 1.2rem; padding: 14px 24px; }
+  #pde-painel .titulo-tema { font-size: 1.4rem; padding: 12px; }
+  #pde-painel .titulo-tema .emoji-titulo { font-size: 1.7rem; }
+  #pde-painel .palavras-lista { gap: 8px; }
+  #pde-painel .palavra-item { font-size: 1rem; padding: 8px 14px; }
+  #pde-painel .info-jogo .cronometro { font-size: 1.7rem; padding: 6px; }
+  #pde-painel .ano-card { padding: 14px 8px; font-size: 0.95rem; }
+  #pde-painel .ano-card .emoji-ano { font-size: 2rem; }
+  #pde-painel .tema-card { padding: 12px 6px; font-size: 0.9rem; }
+  #pde-painel .tema-card .emoji-tema { font-size: 2rem; }
+  #pde-painel .nivel-card { padding: 12px 6px; }
+  #pde-painel .nivel-card .emoji-nivel { font-size: 1.7rem; }
+  #pde-painel .nivel-card .nome-nivel { font-size: 0.95rem; }
+}
+@media (min-width: 1440px) {
+  #pde-painel { max-width: 1400px; }
+}
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <div class="header">
+    <h1>🔍 Caça-Palavras Temático</h1>
+    <div class="acoes">
+      <button id="btn-novo-jogo" class="btn-header hidden" onclick="confirmarNovoJogo()">↻ Novo</button>
+      <button class="btn-header" onclick="abrirAcessibilidade()">♿ A11Y</button>
+      <button class="btn-header" onclick="abrirAjuda()">❓</button>
+      <button id="btn-voltar" class="btn-header danger hidden" onclick="voltarLobby()">← Voltar</button>
+    </div>
+  </div>
+
+  <div id="lobby" class="lobby-card">
+    <div class="boas-vindas">
+      <div class="mascote-wrap">
+        <svg viewBox="0 0 100 100" id="svg-mascote-lobby"></svg>
+      </div>
+      <div class="balao">
+        <strong>Olá! Eu sou a Sábia! 🦉</strong>
+        <span>Vamos achar palavrinhas escondidas? Escolha o ano, o tema e a dificuldade!</span>
+      </div>
+    </div>
+
+    <div class="secao-titulo">📚 Para qual ano?</div>
+    <div class="ano-grid" id="ano-grid"></div>
+
+    <div class="secao-titulo">🎨 Escolha o tema:</div>
+    <div class="tema-grid" id="tema-grid"></div>
+
+    <div class="secao-titulo">⚡ Nível de desafio:</div>
+    <div class="nivel-grid" id="nivel-grid"></div>
+
+    <button class="btn-comecar-aventura" id="btn-comecar" onclick="comecarJogo()" disabled>🚀 Começar a Caça!</button>
+  </div>
+
+  <div id="jogo" class="jogo-grid hidden">
+    <div class="area-grade">
+      <div class="titulo-tema" id="titulo-tema">
+        <span class="emoji-titulo" id="titulo-emoji">🔍</span>
+        <span id="titulo-nome">Tema</span>
+      </div>
+      <div class="grade-container">
+        <div class="grade" id="grade"></div>
+      </div>
+      <div class="palavras-area">
+        <div class="palavras-titulo">📝 Palavras para encontrar:</div>
+        <div class="palavras-lista" id="palavras-lista"></div>
+      </div>
+      <div id="feedback" class="feedback hidden"></div>
+    </div>
+
+    <div class="painel-info">
+      <div class="mascote-painel">
+        <svg class="mascote-mini" viewBox="0 0 100 100" id="svg-mascote-painel"></svg>
+        <div class="balao" id="balao-fala-painel">Vamos lá!</div>
+      </div>
+      <div class="info-jogo">
+        <div class="linha"><span class="label">⏱️ Tempo</span><span class="valor" id="tempo-info">0:00</span></div>
+        <div class="cronometro" id="cronometro">0:00</div>
+        <div class="linha"><span class="label">🎯 Encontradas</span><span class="valor" id="encontradas-info">0/0</span></div>
+        <div class="linha"><span class="label">⚡ Nível</span><span class="valor" id="nivel-info">—</span></div>
+      </div>
+      <button class="btn-secundario" style="width:100%;" onclick="darDica()">💡 Dica</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-vitoria">
+    <div class="modal-conteudo">
+      <svg class="mascote-modal" viewBox="0 0 100 100" id="svg-mascote-vitoria"></svg>
+      <h2 id="vitoria-titulo">🎉 Você encontrou todas!</h2>
+      <p id="vitoria-msg">Parabéns!</p>
+      <div class="estrelas-conquistadas" id="vitoria-estrelas"></div>
+      <p id="vitoria-detalhes" style="font-style:italic; color:#94A3B8;"></p>
+      <div class="acoes" id="vitoria-acoes"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ajuda">
+    <div class="modal-conteudo modal-ajuda">
+      <h2>🦉 Como Brincar com a Sábia</h2>
+      <h3>🎯 Objetivo</h3>
+      <p>Encontrar todas as palavras escondidas na grade de letras.</p>
+
+      <h3>🖱️ Como selecionar uma palavra</h3>
+      <p><b>No computador:</b> clique na primeira letra, arraste até a última e solte.</p>
+      <p><b>No celular ou lousa:</b> toque na primeira letra, depois toque na última. Pronto!</p>
+
+      <h3>🎨 Como funciona</h3>
+      <ul>
+        <li><b>Escolha o ano</b> do seu aluno (1º, 2º-3º ou 4º-5º)</li>
+        <li><b>Escolha o tema</b> (animais, frutas, escola...)</li>
+        <li><b>Escolha o nível</b> (Fácil, Médio ou Difícil)</li>
+        <li><b>Encontre as palavras</b> na lista ao lado</li>
+        <li><b>Use a dica</b> se ficar travado!</li>
+      </ul>
+
+      <h3>⚡ Os níveis</h3>
+      <ul>
+        <li><b>😊 Fácil:</b> grade 8x8, palavras só na horizontal e vertical</li>
+        <li><b>🤔 Médio:</b> grade 10x10, com palavras em diagonal também</li>
+        <li><b>🔥 Difícil:</b> grade 12x12, mais palavras e todas as direções</li>
+      </ul>
+
+      <h3>📚 BNCC</h3>
+      <p>EF02LP04 (família silábica), EF03LP05 (vocabulário), EF15CO01 (cultura digital).</p>
+
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-ajuda')">Bora caçar!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-a11y">
+    <div class="modal-conteudo">
+      <h2>♿ Acessibilidade</h2>
+      <p style="color:#475569; font-size:0.85rem;">Configurações compartilhadas com outros jogos.</p>
+      <div class="a11y-grupo">
+        <h3>🔠 Tamanho do texto</h3>
+        <p class="desc">Aumente para lousa ou alunos com baixa visão.</p>
+        <div class="a11y-tam-grid">
+          <button class="a11y-tam-btn ativo" data-tam="normal" onclick="defA11y('escala','normal')"><span class="a">A</span><span class="l">Normal</span></button>
+          <button class="a11y-tam-btn" data-tam="grande" onclick="defA11y('escala','grande')"><span class="a">A</span><span class="l">Grande</span></button>
+          <button class="a11y-tam-btn" data-tam="enorme" onclick="defA11y('escala','enorme')"><span class="a">A</span><span class="l">Enorme</span></button>
+          <button class="a11y-tam-btn" data-tam="gigante" onclick="defA11y('escala','gigante')"><span class="a">A</span><span class="l">Lousa</span></button>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🌓 Visual</h3>
+        <p class="desc">Cores e contraste para baixa visão e daltonismo.</p>
+        <div class="toggle-row" id="tg-contraste" onclick="defA11y('contraste', !ESTADO_A11Y.contraste)">
+          <div class="switch"></div>
+          <div class="texto">Alto contraste<small>Preto e amarelo · WCAG AAA</small></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="toggle-row" id="tg-daltonico" onclick="defA11y('daltonico', !ESTADO_A11Y.daltonico)">
+          <div class="switch"></div>
+          <div class="texto">Modo daltônico<small>Substitui verde/vermelho por azul/laranja</small></div>
+        </div>
+      </div>
+      <div class="a11y-grupo">
+        <h3>🎬 Animações</h3>
+        <p class="desc">Reduzir efeitos para alunos com TEA, epilepsia ou desconforto sensorial.</p>
+        <div class="toggle-row" id="tg-animacoes" onclick="defA11y('semAnimacoes', !ESTADO_A11Y.semAnimacoes)">
+          <div class="switch"></div>
+          <div class="texto">Reduzir animações<small>Desliga confetes e transições</small></div>
+        </div>
+      </div>
+      <button class="btn-secundario" onclick="resetarA11y()" style="width:100%; margin-top:6px;">↻ Restaurar configurações</button>
+      <div class="acoes solo">
+        <button class="btn-confirmar" onclick="fecharModal('modal-a11y')">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script id="script-jogo">
+/* MASCOTE SÁBIA - corujinha (reuso do Aprendendo Alfabeto) */
+function svgMascote(expressao = 'normal') {
+  let olhos;
+  if (expressao === 'feliz') {
+    olhos = `
+      <ellipse cx="38" cy="42" rx="9" ry="9" fill="white" stroke="#451A03" stroke-width="1.5"/>
+      <ellipse cx="62" cy="42" rx="9" ry="9" fill="white" stroke="#451A03" stroke-width="1.5"/>
+      <path d="M 32 42 Q 38 36, 44 42" fill="none" stroke="#451A03" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 56 42 Q 62 36, 68 42" fill="none" stroke="#451A03" stroke-width="2.5" stroke-linecap="round"/>
+    `;
+  } else if (expressao === 'pensando') {
+    olhos = `
+      <ellipse cx="38" cy="42" rx="9" ry="9" fill="white" stroke="#451A03" stroke-width="1.5"/>
+      <ellipse cx="62" cy="42" rx="9" ry="9" fill="white" stroke="#451A03" stroke-width="1.5"/>
+      <circle cx="38" cy="44" r="3" fill="#451A03"/>
+      <circle cx="62" cy="44" r="3" fill="#451A03"/>
+    `;
+  } else {
+    olhos = `
+      <ellipse cx="38" cy="42" rx="9" ry="9" fill="white" stroke="#451A03" stroke-width="1.5"/>
+      <ellipse cx="62" cy="42" rx="9" ry="9" fill="white" stroke="#451A03" stroke-width="1.5"/>
+      <circle cx="38" cy="42" r="4" fill="#451A03"/>
+      <circle cx="62" cy="42" r="4" fill="#451A03"/>
+      <circle cx="39.5" cy="40.5" r="1.2" fill="white"/>
+      <circle cx="63.5" cy="40.5" r="1.2" fill="white"/>
+    `;
+  }
+
+  return `
+    <!-- Sombra -->
+    <ellipse cx="50" cy="93" rx="28" ry="2.5" fill="rgba(0,0,0,0.18)"/>
+    <!-- Galho -->
+    <rect x="20" y="86" width="60" height="5" fill="#78350F" stroke="#451A03" stroke-width="0.8" rx="2"/>
+    <!-- Patinhas -->
+    <path d="M 42 86 L 40 90 M 42 86 L 42 90 M 42 86 L 44 90" stroke="#F59E0B" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M 58 86 L 56 90 M 58 86 L 58 90 M 58 86 L 60 90" stroke="#F59E0B" stroke-width="1.8" stroke-linecap="round"/>
+    <!-- Corpo (oval) -->
+    <ellipse cx="50" cy="60" rx="28" ry="32" fill="#78350F" stroke="#451A03" stroke-width="1.5"/>
+    <!-- Barriga clarinha -->
+    <ellipse cx="50" cy="65" rx="18" ry="22" fill="#FCD34D" stroke="#92400E" stroke-width="0.8"/>
+    <!-- Padrão de penas na barriga -->
+    <path d="M 40 56 Q 44 60, 40 64 M 50 56 Q 54 60, 50 64 M 60 56 Q 64 60, 60 64" fill="none" stroke="#92400E" stroke-width="0.8"/>
+    <path d="M 36 70 Q 40 74, 36 78 M 46 70 Q 50 74, 46 78 M 56 70 Q 60 74, 56 78" fill="none" stroke="#92400E" stroke-width="0.8"/>
+    <!-- Asa esquerda -->
+    <path d="M 22 56 Q 18 70, 26 78 Q 30 72, 30 60 Z" fill="#92400E" stroke="#451A03" stroke-width="1.2"/>
+    <!-- Asa direita -->
+    <path d="M 78 56 Q 82 70, 74 78 Q 70 72, 70 60 Z" fill="#92400E" stroke="#451A03" stroke-width="1.2"/>
+    <!-- Cabeça (mais larga, formato típico) -->
+    <ellipse cx="50" cy="38" rx="26" ry="22" fill="#78350F" stroke="#451A03" stroke-width="1.5"/>
+    <!-- Tufos da coruja (orelhinhas) -->
+    <path d="M 28 26 L 25 18 L 33 22 Z" fill="#78350F" stroke="#451A03" stroke-width="1"/>
+    <path d="M 72 26 L 75 18 L 67 22 Z" fill="#78350F" stroke="#451A03" stroke-width="1"/>
+    <!-- Disco facial -->
+    <ellipse cx="50" cy="44" rx="22" ry="16" fill="#FED7AA" stroke="#92400E" stroke-width="0.8"/>
+    <!-- Olhos -->
+    ${olhos}
+    <!-- Bico -->
+    <path d="M 47 50 L 50 56 L 53 50 Z" fill="#F59E0B" stroke="#92400E" stroke-width="1"/>
+    <!-- Diploma de sábia (livro pequeno na asa) -->
+    <rect x="26" y="68" width="8" height="6" fill="#DBEAFE" stroke="#1E40AF" stroke-width="0.8" rx="0.5"/>
+    <line x1="30" y1="68" x2="30" y2="74" stroke="#1E40AF" stroke-width="0.5"/>
+    <!-- Óculos pequenos -->
+    <circle cx="38" cy="42" r="10" fill="none" stroke="#451A03" stroke-width="0.8"/>
+    <circle cx="62" cy="42" r="10" fill="none" stroke="#451A03" stroke-width="0.8"/>
+    <line x1="48" y1="42" x2="52" y2="42" stroke="#451A03" stroke-width="0.8"/>
+  `;
+}
+
+function renderMascote(svgId, expressao = 'normal') {
+  const el = document.getElementById(svgId);
+  if (el) el.innerHTML = svgMascote(expressao);
+}
+
+/* BANCO DE TEMAS POR FAIXA ETÁRIA */
+const TEMAS = {
+  '1ano': {
+    label: '1º ano',
+    emoji: '🌱',
+    anos: '6-7 anos',
+    temas: [
+      { id: 'cores',     emoji: '🎨', nome: 'Cores',      palavras: ['AZUL', 'ROSA', 'VERDE', 'PRETO', 'BRANCO', 'ROXO', 'AMARELO', 'MARROM', 'CINZA', 'LARANJA'] },
+      { id: 'familia',   emoji: '👨‍👩‍👧', nome: 'Família', palavras: ['MAMAE', 'PAPAI', 'VOVO', 'VOVA', 'TIO', 'TIA', 'IRMAO', 'IRMA', 'PRIMO', 'BEBE'] },
+      { id: 'corpo1',    emoji: '👤', nome: 'Corpo',      palavras: ['MAO', 'PE', 'OLHO', 'BOCA', 'NARIZ', 'BRACO', 'PERNA', 'CABELO', 'DEDO', 'ORELHA'] },
+      { id: 'animais1',  emoji: '🐶', nome: 'Bichinhos',  palavras: ['GATO', 'CAO', 'PATO', 'GALO', 'BOI', 'PORCO', 'OVELHA', 'PEIXE', 'PASSARO', 'COELHO'] },
+      { id: 'frutas1',   emoji: '🍎', nome: 'Frutas',     palavras: ['UVA', 'PERA', 'MACA', 'BANANA', 'MANGA', 'LIMAO', 'GOIABA', 'MAMAO', 'KIWI', 'MELAO'] },
+      { id: 'numeros',   emoji: '🔢', nome: 'Números',    palavras: ['UM', 'DOIS', 'TRES', 'QUATRO', 'CINCO', 'SEIS', 'SETE', 'OITO', 'NOVE', 'DEZ'] },
+      { id: 'brinquedos',emoji: '🧸', nome: 'Brinquedos', palavras: ['BOLA', 'BONECA', 'CARRINHO', 'PIPA', 'PETECA', 'BLOCOS', 'URSO', 'PIAO', 'BALAO', 'CORDA'] },
+      { id: 'casa',      emoji: '🏠', nome: 'Casa',       palavras: ['SALA', 'COZINHA', 'PORTA', 'JANELA', 'CAMA', 'MESA', 'SOFA', 'TELHADO', 'BANHEIRO', 'QUARTO'] }
+    ]
+  },
+  '23ano': {
+    label: '2º-3º ano',
+    emoji: '📚',
+    anos: '7-9 anos',
+    temas: [
+      { id: 'animais2',  emoji: '🦁', nome: 'Animais',     palavras: ['LEAO', 'TIGRE', 'ELEFANTE', 'GIRAFA', 'MACACO', 'ZEBRA', 'JACARE', 'COBRA', 'TUCANO', 'ARARA', 'TAMANDUA', 'ONCA'] },
+      { id: 'frutas2',   emoji: '🍓', nome: 'Frutas',      palavras: ['MORANGO', 'ABACAXI', 'MELANCIA', 'JABUTICABA', 'CAJU', 'PITANGA', 'GRAVIOLA', 'ACEROLA', 'CARAMBOLA', 'COCO', 'ABACATE', 'PESSEGO'] },
+      { id: 'profissoes',emoji: '👨‍🍳', nome: 'Profissões',  palavras: ['MEDICO', 'PROFESSOR', 'COZINHEIRO', 'POLICIAL', 'BOMBEIRO', 'PADEIRO', 'PEDREIRO', 'ARTISTA', 'PADRE', 'CANTOR', 'PILOTO', 'DENTISTA'] },
+      { id: 'transporte',emoji: '🚗', nome: 'Transportes', palavras: ['CARRO', 'MOTO', 'ONIBUS', 'CAMINHAO', 'AVIAO', 'TREM', 'NAVIO', 'BICICLETA', 'METRO', 'BARCO', 'HELICOPTERO', 'FOGUETE'] },
+      { id: 'escola',    emoji: '🏫', nome: 'Escola',      palavras: ['LIVRO', 'CADERNO', 'LAPIS', 'BORRACHA', 'MOCHILA', 'PROFESSORA', 'QUADRO', 'CARTEIRA', 'TESOURA', 'COLA', 'GIZ', 'REGUA'] },
+      { id: 'esportes',  emoji: '⚽', nome: 'Esportes',    palavras: ['FUTEBOL', 'VOLEI', 'BASQUETE', 'NATACAO', 'JUDO', 'TENIS', 'BOXE', 'CICLISMO', 'XADREZ', 'SURFE', 'CORRIDA', 'GINASTICA'] },
+      { id: 'comidas',   emoji: '🍔', nome: 'Comidas',     palavras: ['ARROZ', 'FEIJAO', 'PIZZA', 'PAO', 'BOLO', 'BIFE', 'MACARRAO', 'SALADA', 'SOPA', 'QUEIJO', 'IOGURTE', 'BISCOITO'] },
+      { id: 'natureza',  emoji: '🌳', nome: 'Natureza',    palavras: ['ARVORE', 'FLOR', 'RIO', 'MAR', 'MONTANHA', 'NUVEM', 'CHUVA', 'VENTO', 'SOL', 'LUA', 'ESTRELA', 'FLORESTA'] },
+      { id: 'roupas',    emoji: '👕', nome: 'Roupas',      palavras: ['CAMISA', 'CALCA', 'SAIA', 'VESTIDO', 'MEIA', 'SAPATO', 'BLUSA', 'SHORT', 'CASACO', 'TENIS', 'BERMUDA', 'PIJAMA'] },
+      { id: 'cores2',    emoji: '🌈', nome: 'Cores',       palavras: ['VERMELHO', 'AMARELO', 'LARANJA', 'VERDE', 'AZUL', 'ROXO', 'ROSA', 'MARROM', 'CINZA', 'BRANCO', 'PRETO', 'DOURADO'] }
+    ]
+  },
+  '45ano': {
+    label: '4º-5º ano',
+    emoji: '🎓',
+    anos: '9-11 anos',
+    temas: [
+      { id: 'estados',   emoji: '🗺️', nome: 'Estados',     palavras: ['BAHIA', 'PARANA', 'MINAS', 'CEARA', 'GOIAS', 'SERGIPE', 'ALAGOAS', 'ACRE', 'AMAZONAS', 'PIAUI', 'RORAIMA', 'PARAIBA'] },
+      { id: 'planetas',  emoji: '🪐', nome: 'Astronomia',  palavras: ['MERCURIO', 'VENUS', 'TERRA', 'MARTE', 'JUPITER', 'SATURNO', 'URANO', 'NETUNO', 'LUA', 'SOL', 'COMETA', 'METEORO'] },
+      { id: 'biomas',    emoji: '🌳', nome: 'Biomas',      palavras: ['AMAZONIA', 'CERRADO', 'PANTANAL', 'CAATINGA', 'PAMPAS', 'MATA', 'FLORESTA', 'SAVANA', 'DESERTO', 'TUNDRA', 'TAIGA', 'MANGUE'] },
+      { id: 'corpo2',    emoji: '🫀', nome: 'Corpo Humano',palavras: ['CORACAO', 'PULMOES', 'CEREBRO', 'ESTOMAGO', 'INTESTINO', 'FIGADO', 'RIM', 'OSSOS', 'MUSCULO', 'PELE', 'SANGUE', 'NEURONIO'] },
+      { id: 'historia',  emoji: '📜', nome: 'História',    palavras: ['INDIO', 'PORTUGUES', 'ESCRAVO', 'COLONIA', 'IMPERIO', 'REPUBLICA', 'CABRAL', 'TIRADENTES', 'ANITA', 'ZUMBI', 'NEGRO', 'BANDEIRA'] },
+      { id: 'ciencia',   emoji: '🔬', nome: 'Ciência',     palavras: ['ATOMO', 'CELULA', 'ENERGIA', 'GRAVIDADE', 'MAGNETO', 'LUZ', 'SOM', 'CALOR', 'AGUA', 'OXIGENIO', 'CARBONO', 'ATRITO'] },
+      { id: 'matematica',emoji: '➕', nome: 'Matemática',  palavras: ['SOMA', 'SUBTRACAO', 'DIVISAO', 'FRACAO', 'NUMERO', 'METRO', 'GRAMA', 'LITRO', 'TRIANGULO', 'CIRCULO', 'GRAFICO', 'TABELA'] },
+      { id: 'literatura',emoji: '📖', nome: 'Literatura',  palavras: ['LIVRO', 'POEMA', 'CONTO', 'FABULA', 'CRONICA', 'ROMANCE', 'PERSONAGEM', 'AUTOR', 'CAPITULO', 'TITULO', 'VERSO', 'RIMA'] },
+      { id: 'arte',      emoji: '🎭', nome: 'Arte',        palavras: ['PINTURA', 'MUSICA', 'DANCA', 'TEATRO', 'CINEMA', 'ESCULTURA', 'POESIA', 'CULTURA', 'ARTISTA', 'GALERIA', 'CARNAVAL', 'FOLCLORE'] },
+      { id: 'tecnologia',emoji: '💻', nome: 'Tecnologia',  palavras: ['COMPUTADOR', 'INTERNET', 'CELULAR', 'TABLET', 'TECLADO', 'MOUSE', 'PROGRAMA', 'ROBOTICA', 'CODIGO', 'EMAIL', 'VIDEO', 'JOGO'] },
+      { id: 'ambiente',  emoji: '♻️', nome: 'Meio Ambiente',palavras: ['RECICLAR', 'POLUICAO', 'PLANETA', 'NATUREZA', 'AGUA', 'ENERGIA', 'LIXO', 'ARVORE', 'OCEANO', 'VIDRO', 'PAPEL', 'PLASTICO'] },
+      { id: 'cidadania', emoji: '🤝', nome: 'Cidadania',   palavras: ['RESPEITO', 'AMIZADE', 'JUSTICA', 'PAZ', 'IGUALDADE', 'DIREITO', 'DEVER', 'LIBERDADE', 'UNIAO', 'DIALOGO', 'EMPATIA', 'INCLUSAO'] }
+    ]
+  }
+};
+
+const NIVEIS = {
+  facil: {
+    nome: 'Fácil',
+    emoji: '😊',
+    desc: '8x8 · 5 palavras',
+    cols: 8, rows: 8,
+    nPalavras: 5,
+    direcoes: ['horizontal', 'vertical']
+  },
+  medio: {
+    nome: 'Médio',
+    emoji: '🤔',
+    desc: '10x10 · 7 palavras',
+    cols: 10, rows: 10,
+    nPalavras: 7,
+    direcoes: ['horizontal', 'vertical', 'diagonal']
+  },
+  dificil: {
+    nome: 'Difícil',
+    emoji: '🔥',
+    desc: '12x12 · 10 palavras',
+    cols: 12, rows: 12,
+    nPalavras: 10,
+    direcoes: ['horizontal', 'vertical', 'diagonal']
+  }
+};
+
+const ELOGIOS = ['Mandou bem!', 'Você é demais!', 'Olho de águia!', 'Acertou em cheio!', 'Show de bola!', 'Que sabidão(a)!'];
+const INCENTIVOS = ['Quase! Continua!', 'Procure com calma!', 'Você consegue!', 'Olhe de novo!'];
+
+const STATE = {
+  ano: null,
+  tema: null,
+  nivel: null,
+  jogo: {
+    ativo: false,
+    grade: [], // matriz de letras
+    palavras: [], // [{texto, posicoes:[{r,c}], encontrada:bool}]
+    cols: 0, rows: 0,
+    inicio: 0,
+    timer: null,
+    encontradas: 0,
+    selecao: { tipo: null, inicio: null, fim: null, celulas: [] }
+  }
+};
+
+function salvar() {
+  try {
+    localStorage.setItem('pde_caca_dados', JSON.stringify({
+      ano: STATE.ano,
+      tema: STATE.tema?.id,
+      nivel: STATE.nivel
+    }));
+  } catch (e) {}
+}
+function carregar() {
+  try {
+    const raw = localStorage.getItem('pde_caca_dados');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    STATE.ano = d.ano || null;
+    STATE.nivel = d.nivel || null;
+    if (STATE.ano && d.tema) {
+      const grupo = TEMAS[STATE.ano];
+      if (grupo) STATE.tema = grupo.temas.find(t => t.id === d.tema) || null;
+    }
+  } catch (e) {}
+}
+
+function renderLobby() {
+  // Anos
+  const anoCont = document.getElementById('ano-grid');
+  anoCont.innerHTML = '';
+  Object.entries(TEMAS).forEach(([key, grupo]) => {
+    const card = document.createElement('div');
+    card.className = 'ano-card' + (STATE.ano === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="emoji-ano">${grupo.emoji}</span>
+      <span class="nome-ano">${grupo.label}</span>
+      <span class="anos-ano">${grupo.anos}</span>
+    `;
+    card.onclick = () => {
+      STATE.ano = key;
+      STATE.tema = null;
+      salvar();
+      renderLobby();
+    };
+    anoCont.appendChild(card);
+  });
+
+  // Temas (só se tem ano selecionado)
+  const temaCont = document.getElementById('tema-grid');
+  temaCont.innerHTML = '';
+  if (STATE.ano) {
+    const grupo = TEMAS[STATE.ano];
+    grupo.temas.forEach(tema => {
+      const card = document.createElement('div');
+      card.className = 'tema-card' + (STATE.tema?.id === tema.id ? ' selecionado' : '');
+      card.innerHTML = `
+        <span class="emoji-tema">${tema.emoji}</span>
+        <span>${tema.nome}</span>
+      `;
+      card.onclick = () => {
+        STATE.tema = tema;
+        salvar();
+        renderLobby();
+      };
+      temaCont.appendChild(card);
+    });
+  } else {
+    temaCont.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#94A3B8; font-family:Fredoka,sans-serif; padding:8px;">👆 Escolha um ano primeiro</div>';
+  }
+
+  // Níveis
+  const nivelCont = document.getElementById('nivel-grid');
+  nivelCont.innerHTML = '';
+  Object.entries(NIVEIS).forEach(([key, nivel]) => {
+    const card = document.createElement('div');
+    card.className = 'nivel-card nivel-' + key + (STATE.nivel === key ? ' selecionado' : '');
+    card.innerHTML = `
+      <span class="emoji-nivel">${nivel.emoji}</span>
+      <span class="nome-nivel">${nivel.nome}</span>
+      <span class="desc-nivel">${nivel.desc}</span>
+    `;
+    card.onclick = () => {
+      STATE.nivel = key;
+      salvar();
+      renderLobby();
+    };
+    nivelCont.appendChild(card);
+  });
+
+  // Botão começar
+  const btn = document.getElementById('btn-comecar');
+  if (STATE.ano && STATE.tema && STATE.nivel) {
+    btn.disabled = false;
+    btn.textContent = `🚀 Caçar palavras de ${STATE.tema.nome}!`;
+  } else {
+    btn.disabled = true;
+    btn.textContent = '🚀 Escolha ano, tema e nível';
+  }
+
+  renderMascote('svg-mascote-lobby', 'normal');
+}
+
+/* GERAÇÃO DA GRADE */
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function elogio() { return ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]; }
+function incentivo() { return INCENTIVOS[Math.floor(Math.random() * INCENTIVOS.length)]; }
+
+const DIRECOES = {
+  horizontal: { dr: 0, dc: 1 },
+  horizontal_inv: { dr: 0, dc: -1 },
+  vertical: { dr: 1, dc: 0 },
+  vertical_inv: { dr: -1, dc: 0 },
+  diagonal: { dr: 1, dc: 1 },
+  diagonal_inv: { dr: -1, dc: -1 },
+  diagonal2: { dr: 1, dc: -1 },
+  diagonal2_inv: { dr: -1, dc: 1 }
+};
+
+function podeColocar(grade, palavra, r, c, dr, dc, rows, cols) {
+  for (let i = 0; i < palavra.length; i++) {
+    const nr = r + dr * i, nc = c + dc * i;
+    if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) return false;
+    const atual = grade[nr][nc];
+    if (atual !== '' && atual !== palavra[i]) return false;
+  }
+  return true;
+}
+
+function colocarPalavra(grade, palavra, r, c, dr, dc) {
+  const posicoes = [];
+  for (let i = 0; i < palavra.length; i++) {
+    const nr = r + dr * i, nc = c + dc * i;
+    grade[nr][nc] = palavra[i];
+    posicoes.push({ r: nr, c: nc });
+  }
+  return posicoes;
+}
+
+function gerarGrade(palavrasDesejadas, rows, cols, direcoesPermitidas) {
+  // Para cada palavra, tenta posicionar em até 100 tentativas
+  const grade = Array.from({ length: rows }, () => Array(cols).fill(''));
+  const palavrasColocadas = [];
+
+  // Direções disponíveis baseadas no nível
+  const dirs = [];
+  if (direcoesPermitidas.includes('horizontal')) {
+    dirs.push(DIRECOES.horizontal);
+  }
+  if (direcoesPermitidas.includes('vertical')) {
+    dirs.push(DIRECOES.vertical);
+  }
+  if (direcoesPermitidas.includes('diagonal')) {
+    dirs.push(DIRECOES.diagonal);
+    dirs.push(DIRECOES.diagonal2);
+  }
+
+  // Ordenar palavras por tamanho (maiores primeiro - mais difícil de encaixar)
+  const palavrasOrdenadas = palavrasDesejadas.slice().sort((a, b) => b.length - a.length);
+
+  for (const palavra of palavrasOrdenadas) {
+    // Pular palavras maiores que a grade
+    if (palavra.length > Math.max(rows, cols)) continue;
+
+    let colocada = false;
+    let tentativas = 0;
+    while (!colocada && tentativas < 200) {
+      tentativas++;
+      const dir = dirs[Math.floor(Math.random() * dirs.length)];
+      const r = Math.floor(Math.random() * rows);
+      const c = Math.floor(Math.random() * cols);
+      if (podeColocar(grade, palavra, r, c, dir.dr, dir.dc, rows, cols)) {
+        const posicoes = colocarPalavra(grade, palavra, r, c, dir.dr, dir.dc);
+        palavrasColocadas.push({ texto: palavra, posicoes, encontrada: false });
+        colocada = true;
+      }
+    }
+  }
+
+  // Preencher vazios com letras aleatórias
+  const ALFA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (grade[r][c] === '') grade[r][c] = ALFA[Math.floor(Math.random() * ALFA.length)];
+    }
+  }
+
+  return { grade, palavras: palavrasColocadas };
+}
+
+/* INÍCIO DO JOGO */
+function comecarJogo() {
+  if (!STATE.ano || !STATE.tema || !STATE.nivel) return;
+  const nivel = NIVEIS[STATE.nivel];
+
+  // Selecionar palavras do tema, respeitando o n
+  const palavrasTema = STATE.tema.palavras.slice();
+  const palavrasEscolhidas = shuffle(palavrasTema).slice(0, nivel.nPalavras);
+
+  // Gerar grade
+  const { grade, palavras } = gerarGrade(palavrasEscolhidas, nivel.rows, nivel.cols, nivel.direcoes);
+
+  STATE.jogo.grade = grade;
+  STATE.jogo.palavras = palavras;
+  STATE.jogo.cols = nivel.cols;
+  STATE.jogo.rows = nivel.rows;
+  STATE.jogo.encontradas = 0;
+  STATE.jogo.selecao = { tipo: null, inicio: null, fim: null, celulas: [] };
+  STATE.jogo.ativo = true;
+  STATE.jogo.inicio = Date.now();
+
+  // UI
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('jogo').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.remove('hidden');
+  document.getElementById('btn-novo-jogo').classList.remove('hidden');
+  document.getElementById('titulo-emoji').textContent = STATE.tema.emoji;
+  document.getElementById('titulo-nome').textContent = STATE.tema.nome + ' · ' + nivel.nome;
+  document.getElementById('nivel-info').textContent = nivel.emoji + ' ' + nivel.nome;
+  document.getElementById('encontradas-info').textContent = '0/' + palavras.length;
+  document.getElementById('balao-fala-painel').innerHTML = `<b>Sábia:</b> Encontre as ${palavras.length} palavras!`;
+
+  renderMascote('svg-mascote-painel', 'normal');
+  renderGrade();
+  renderListaPalavras();
+  iniciarCronometro();
+}
+
+function renderGrade() {
+  const grade = document.getElementById('grade');
+  grade.style.gridTemplateColumns = `repeat(${STATE.jogo.cols}, 1fr)`;
+
+  // Calcular tamanho da célula baseado no nível
+  let celSize, celFont;
+  if (STATE.jogo.cols <= 8) { celSize = 'clamp(28px, 6.5vw, 44px)'; celFont = 'clamp(0.9rem, 2.6vw, 1.3rem)'; }
+  else if (STATE.jogo.cols <= 10) { celSize = 'clamp(24px, 5.5vw, 38px)'; celFont = 'clamp(0.8rem, 2.2vw, 1.15rem)'; }
+  else { celSize = 'clamp(20px, 4.5vw, 32px)'; celFont = 'clamp(0.72rem, 1.9vw, 1rem)'; }
+  grade.style.setProperty('--cel-size', celSize);
+  grade.style.setProperty('--cel-font', celFont);
+
+  grade.innerHTML = '';
+  for (let r = 0; r < STATE.jogo.rows; r++) {
+    for (let c = 0; c < STATE.jogo.cols; c++) {
+      const cel = document.createElement('div');
+      cel.className = 'grid-celula';
+      cel.dataset.r = r;
+      cel.dataset.c = c;
+      cel.textContent = STATE.jogo.grade[r][c];
+      // Eventos
+      cel.addEventListener('mousedown', e => { e.preventDefault(); iniciarSelecao(r, c, 'mouse'); });
+      cel.addEventListener('mouseenter', e => { if (STATE.jogo.selecao.tipo === 'arrasto') atualizarArrasto(r, c); });
+      cel.addEventListener('mouseup', e => { if (STATE.jogo.selecao.tipo === 'arrasto') finalizarArrasto(); });
+      cel.addEventListener('touchstart', e => { e.preventDefault(); iniciarSelecao(r, c, 'touch'); }, { passive: false });
+      cel.addEventListener('touchmove', e => {
+        e.preventDefault();
+        const t = e.touches[0];
+        const el = document.elementFromPoint(t.clientX, t.clientY);
+        if (el && el.classList.contains('grid-celula')) {
+          const tr = +el.dataset.r, tc = +el.dataset.c;
+          if (STATE.jogo.selecao.tipo === 'arrasto') atualizarArrasto(tr, tc);
+        }
+      }, { passive: false });
+      cel.addEventListener('touchend', e => { e.preventDefault(); if (STATE.jogo.selecao.tipo === 'arrasto') finalizarArrasto(); }, { passive: false });
+      cel.addEventListener('click', e => clicarCelula(r, c));
+      grade.appendChild(cel);
+    }
+  }
+
+  // Cancela seleção ao soltar fora da grade
+  document.addEventListener('mouseup', () => {
+    if (STATE.jogo.selecao.tipo === 'arrasto') finalizarArrasto();
+  });
+}
+
+function renderListaPalavras() {
+  const cont = document.getElementById('palavras-lista');
+  cont.innerHTML = '';
+  STATE.jogo.palavras.forEach(p => {
+    const item = document.createElement('div');
+    item.className = 'palavra-item' + (p.encontrada ? ' encontrada' : '');
+    item.dataset.palavra = p.texto;
+    item.textContent = p.texto;
+    cont.appendChild(item);
+  });
+}
+
+/* SELEÇÃO POR ARRASTAR */
+let arrastoIniciouHa = 0;
+function iniciarSelecao(r, c, origem) {
+  if (!STATE.jogo.ativo) return;
+
+  // Se já tem uma "primeira marcada" por clique, segundo clique decide
+  if (STATE.jogo.selecao.tipo === 'clique-primeiro') {
+    return; // será tratado em clicarCelula
+  }
+
+  STATE.jogo.selecao = { tipo: 'arrasto', inicio: { r, c }, fim: { r, c }, celulas: [{ r, c }] };
+  arrastoIniciouHa = Date.now();
+  pintarSelecao();
+}
+
+function atualizarArrasto(r, c) {
+  if (STATE.jogo.selecao.tipo !== 'arrasto') return;
+  STATE.jogo.selecao.fim = { r, c };
+  STATE.jogo.selecao.celulas = celulasEntre(STATE.jogo.selecao.inicio, { r, c });
+  pintarSelecao();
+}
+
+function finalizarArrasto() {
+  if (STATE.jogo.selecao.tipo !== 'arrasto') return;
+  const tempoArrasto = Date.now() - arrastoIniciouHa;
+  const arrastouAlgo = STATE.jogo.selecao.celulas.length > 1;
+
+  if (arrastouAlgo) {
+    // Tentou selecionar uma palavra
+    verificarSelecao();
+    limparSelecao();
+  } else if (tempoArrasto < 300) {
+    // Foi um clique simples - registrar como primeira marcada
+    const pos = STATE.jogo.selecao.inicio;
+    STATE.jogo.selecao = { tipo: 'clique-primeiro', inicio: pos, fim: null, celulas: [pos] };
+    marcarPrimeiraCelula();
+  } else {
+    limparSelecao();
+  }
+}
+
+function clicarCelula(r, c) {
+  // Apenas tratamos clique se o estado é 'clique-primeiro' (já temos primeira letra marcada)
+  if (STATE.jogo.selecao.tipo !== 'clique-primeiro') return;
+
+  const inicio = STATE.jogo.selecao.inicio;
+  if (inicio.r === r && inicio.c === c) {
+    // Clicou na mesma letra - desmarca
+    limparSelecao();
+    return;
+  }
+
+  STATE.jogo.selecao.fim = { r, c };
+  STATE.jogo.selecao.celulas = celulasEntre(inicio, { r, c });
+  pintarSelecao();
+  setTimeout(() => {
+    verificarSelecao();
+    limparSelecao();
+  }, 200);
+}
+
+function celulasEntre(inicio, fim) {
+  // Calcula células em linha reta entre dois pontos (horizontal, vertical ou diagonal)
+  const dr = fim.r - inicio.r;
+  const dc = fim.c - inicio.c;
+  const ar = Math.abs(dr), ac = Math.abs(dc);
+  // Só aceita reta perfeita (horizontal, vertical ou 45°)
+  if (dr !== 0 && dc !== 0 && ar !== ac) {
+    return [inicio]; // não é linha válida
+  }
+  const passos = Math.max(ar, ac);
+  const sr = passos === 0 ? 0 : dr / passos;
+  const sc = passos === 0 ? 0 : dc / passos;
+  const cels = [];
+  for (let i = 0; i <= passos; i++) {
+    cels.push({ r: inicio.r + sr * i, c: inicio.c + sc * i });
+  }
+  return cels;
+}
+
+function pintarSelecao() {
+  // Limpa marcas anteriores (exceto encontradas)
+  document.querySelectorAll('.grid-celula.selecionando').forEach(el => el.classList.remove('selecionando'));
+  document.querySelectorAll('.grid-celula.primeira-marcada').forEach(el => el.classList.remove('primeira-marcada'));
+  STATE.jogo.selecao.celulas.forEach(cel => {
+    const el = document.querySelector(`.grid-celula[data-r="${cel.r}"][data-c="${cel.c}"]`);
+    if (el) el.classList.add('selecionando');
+  });
+}
+
+function marcarPrimeiraCelula() {
+  document.querySelectorAll('.grid-celula.selecionando').forEach(el => el.classList.remove('selecionando'));
+  document.querySelectorAll('.grid-celula.primeira-marcada').forEach(el => el.classList.remove('primeira-marcada'));
+  const pos = STATE.jogo.selecao.inicio;
+  const el = document.querySelector(`.grid-celula[data-r="${pos.r}"][data-c="${pos.c}"]`);
+  if (el) el.classList.add('primeira-marcada');
+  mostrarFeedback('dica', '👆 Toque na última letra da palavra');
+}
+
+function limparSelecao() {
+  STATE.jogo.selecao = { tipo: null, inicio: null, fim: null, celulas: [] };
+  document.querySelectorAll('.grid-celula.selecionando').forEach(el => el.classList.remove('selecionando'));
+  document.querySelectorAll('.grid-celula.primeira-marcada').forEach(el => el.classList.remove('primeira-marcada'));
+}
+
+function verificarSelecao() {
+  const cels = STATE.jogo.selecao.celulas;
+  if (cels.length < 2) return;
+  const palavraSelecionada = cels.map(c => STATE.jogo.grade[c.r][c.c]).join('');
+  const palavraInversa = palavraSelecionada.split('').reverse().join('');
+
+  // Procurar match nas palavras não encontradas
+  const match = STATE.jogo.palavras.find(p =>
+    !p.encontrada && (p.texto === palavraSelecionada || p.texto === palavraInversa)
+  );
+
+  if (match) {
+    match.encontrada = true;
+    STATE.jogo.encontradas++;
+    // Marcar as células
+    match.posicoes.forEach(pos => {
+      const el = document.querySelector(`.grid-celula[data-r="${pos.r}"][data-c="${pos.c}"]`);
+      if (el) el.classList.add('encontrada');
+    });
+    // Marcar palavra na lista
+    const item = document.querySelector(`.palavra-item[data-palavra="${match.texto}"]`);
+    if (item) item.classList.add('encontrada');
+    document.getElementById('encontradas-info').textContent = STATE.jogo.encontradas + '/' + STATE.jogo.palavras.length;
+    mostrarFeedback('acerto', `🎉 ${elogio()} Encontrou <b>${match.texto}</b>!`);
+    renderMascote('svg-mascote-painel', 'feliz');
+    document.getElementById('balao-fala-painel').innerHTML = `<b>Sábia:</b> Achou ${match.texto}!`;
+    tocarSom('acerto');
+    // Verificar vitória
+    if (STATE.jogo.encontradas === STATE.jogo.palavras.length) {
+      setTimeout(finalizarJogo, 1200);
+    }
+  } else {
+    mostrarFeedback('erro', `🤔 ${incentivo()}`);
+    renderMascote('svg-mascote-painel', 'pensando');
+    tocarSom('erro');
+  }
+}
+
+function darDica() {
+  if (!STATE.jogo.ativo) return;
+  const naoEncontrada = STATE.jogo.palavras.find(p => !p.encontrada);
+  if (!naoEncontrada) {
+    mostrarFeedback('dica', '🎉 Você já encontrou todas!');
+    return;
+  }
+  // Pisca a primeira letra da palavra
+  const primPos = naoEncontrada.posicoes[0];
+  const el = document.querySelector(`.grid-celula[data-r="${primPos.r}"][data-c="${primPos.c}"]`);
+  if (el) {
+    el.classList.add('primeira-marcada');
+    setTimeout(() => el.classList.remove('primeira-marcada'), 2400);
+  }
+  mostrarFeedback('dica', `💡 A palavra <b>${naoEncontrada.texto}</b> começa naquela letra piscando!`);
+}
+
+/* CRONÔMETRO */
+function iniciarCronometro() {
+  if (STATE.jogo.timer) clearInterval(STATE.jogo.timer);
+  STATE.jogo.timer = setInterval(() => {
+    if (!STATE.jogo.ativo) {
+      clearInterval(STATE.jogo.timer);
+      return;
+    }
+    const seg = Math.floor((Date.now() - STATE.jogo.inicio) / 1000);
+    const m = Math.floor(seg / 60);
+    const s = seg % 60;
+    const txt = `${m}:${String(s).padStart(2, '0')}`;
+    document.getElementById('cronometro').textContent = txt;
+    document.getElementById('tempo-info').textContent = txt;
+  }, 1000);
+}
+
+/* FEEDBACK */
+function limparFeedback() {
+  const fb = document.getElementById('feedback');
+  fb.classList.add('hidden');
+  fb.className = 'feedback hidden';
+}
+function mostrarFeedback(tipo, texto) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback ' + tipo;
+  fb.innerHTML = texto;
+  fb.classList.remove('hidden');
+  // Auto-clear após 2.5s
+  clearTimeout(window._fbTimer);
+  window._fbTimer = setTimeout(limparFeedback, 2500);
+}
+
+/* FIM DE JOGO */
+function finalizarJogo() {
+  STATE.jogo.ativo = false;
+  if (STATE.jogo.timer) clearInterval(STATE.jogo.timer);
+
+  const segundos = Math.floor((Date.now() - STATE.jogo.inicio) / 1000);
+  const m = Math.floor(segundos / 60);
+  const s = segundos % 60;
+  const tempoTxt = `${m}:${String(s).padStart(2, '0')}`;
+
+  // Calcular estrelas baseado em tempo (heurística simples por nível)
+  const nivel = NIVEIS[STATE.nivel];
+  const limite3 = nivel.cols * nivel.cols * 1.5; // segundos pra 3 estrelas
+  const limite2 = nivel.cols * nivel.cols * 3;
+  let estrelas;
+  if (segundos <= limite3) estrelas = 3;
+  else if (segundos <= limite2) estrelas = 2;
+  else estrelas = 1;
+
+  document.getElementById('vitoria-titulo').textContent = '🎉 Você encontrou todas!';
+  document.getElementById('vitoria-msg').innerHTML = `Tema: <b>${STATE.tema.nome}</b> · Nível: <b>${nivel.nome}</b>`;
+  document.getElementById('vitoria-detalhes').textContent = `${STATE.jogo.palavras.length} palavras em ${tempoTxt}`;
+
+  let estrelasHtml = '';
+  for (let i = 0; i < 3; i++) {
+    estrelasHtml += i < estrelas ? '<span class="ativa">★</span>' : '<span class="vazia">★</span>';
+  }
+  document.getElementById('vitoria-estrelas').innerHTML = estrelasHtml;
+
+  const acoes = document.getElementById('vitoria-acoes');
+  acoes.innerHTML = '';
+  const btnNovo = document.createElement('button');
+  btnNovo.className = 'btn-confirmar';
+  btnNovo.textContent = '↻ Jogar de novo';
+  btnNovo.onclick = () => { fecharModal('modal-vitoria'); comecarJogo(); };
+  acoes.appendChild(btnNovo);
+  const btnLobby = document.createElement('button');
+  btnLobby.className = 'btn-cancelar';
+  btnLobby.textContent = '🏠 Mudar tema';
+  btnLobby.onclick = () => { fecharModal('modal-vitoria'); voltarLobby(); };
+  acoes.appendChild(btnLobby);
+
+  renderMascote('svg-mascote-vitoria', 'feliz');
+  document.getElementById('modal-vitoria').classList.add('aberto');
+  criarConfetes();
+}
+
+function confirmarNovoJogo() {
+  if (!STATE.jogo.ativo) { comecarJogo(); return; }
+  if (confirm('Começar uma partida nova com o mesmo tema?')) comecarJogo();
+}
+
+function voltarLobby() {
+  if (STATE.jogo.ativo && STATE.jogo.encontradas > 0) {
+    if (!confirm('Voltar ao menu? Sua partida atual será perdida.')) return;
+  }
+  STATE.jogo.ativo = false;
+  if (STATE.jogo.timer) clearInterval(STATE.jogo.timer);
+  document.getElementById('jogo').classList.add('hidden');
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('btn-voltar').classList.add('hidden');
+  document.getElementById('btn-novo-jogo').classList.add('hidden');
+  fecharModal('modal-vitoria');
+  renderLobby();
+}
+
+function abrirAjuda() { document.getElementById('modal-ajuda').classList.add('aberto'); }
+function abrirAcessibilidade() { renderizarA11y(); document.getElementById('modal-a11y').classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+
+/* SOM */
+let audioCtx = null;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const c = audioCtx;
+    if (tipo === 'acerto') {
+      const notas = [523, 659, 784, 1047];
+      notas.forEach((f, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = f; o.type = 'sine';
+        const t0 = c.currentTime + i * 0.07;
+        g.gain.setValueAtTime(0.13, t0);
+        g.gain.exponentialRampToValueAtTime(0.01, t0 + 0.18);
+        o.start(t0); o.stop(t0 + 0.2);
+      });
+    } else {
+      const o = c.createOscillator(), g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.frequency.value = 320; o.type = 'sine';
+      g.gain.setValueAtTime(0.08, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + 0.25);
+      o.frequency.exponentialRampToValueAtTime(180, c.currentTime + 0.25);
+      o.start(); o.stop(c.currentTime + 0.27);
+    }
+  } catch (e) {}
+}
+
+function criarConfetes() {
+  if (document.getElementById('pde-painel').classList.contains('sem-animacoes')) return;
+  const cont = document.getElementById('confetti-container');
+  cont.innerHTML = '';
+  const cores = ['#37B1DA','#FBBF24','#FB923C','#1E324A','#22C55E','#8B5CF6'];
+  for (let i = 0; i < 50; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDelay = Math.random() * 0.8 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    cont.appendChild(c);
+  }
+  setTimeout(() => cont.innerHTML = '', 3200);
+}
+
+/* A11Y UNIFICADO */
+const ESTADO_A11Y = { escala: 'normal', contraste: false, daltonico: false, semAnimacoes: false };
+function defA11y(chave, valor) { ESTADO_A11Y[chave] = valor; aplicarA11y(); salvarA11y(); renderizarA11y(); }
+function aplicarA11y() {
+  const p = document.getElementById('pde-painel');
+  p.classList.remove('txt-grande','txt-enorme','txt-gigante');
+  if (ESTADO_A11Y.escala === 'grande')   p.classList.add('txt-grande');
+  if (ESTADO_A11Y.escala === 'enorme')   p.classList.add('txt-enorme');
+  if (ESTADO_A11Y.escala === 'gigante')  p.classList.add('txt-gigante');
+  p.classList.toggle('alto-contraste', !!ESTADO_A11Y.contraste);
+  p.classList.toggle('daltonico', !!ESTADO_A11Y.daltonico);
+  p.classList.toggle('sem-animacoes', !!ESTADO_A11Y.semAnimacoes);
+}
+function renderizarA11y() {
+  document.querySelectorAll('.a11y-tam-btn').forEach(b => b.classList.toggle('ativo', b.dataset.tam === ESTADO_A11Y.escala));
+  document.getElementById('tg-contraste')?.classList.toggle('ativo', !!ESTADO_A11Y.contraste);
+  document.getElementById('tg-daltonico')?.classList.toggle('ativo', !!ESTADO_A11Y.daltonico);
+  document.getElementById('tg-animacoes')?.classList.toggle('ativo', !!ESTADO_A11Y.semAnimacoes);
+}
+function salvarA11y() {
+  try {
+    localStorage.setItem('pde_a11y_escala', ESTADO_A11Y.escala);
+    localStorage.setItem('pde_a11y_contraste', ESTADO_A11Y.contraste ? '1' : '0');
+    localStorage.setItem('pde_a11y_daltonico', ESTADO_A11Y.daltonico ? '1' : '0');
+    localStorage.setItem('pde_a11y_animacoes', ESTADO_A11Y.semAnimacoes ? '1' : '0');
+  } catch (e) {}
+}
+function carregarA11y() {
+  try {
+    ESTADO_A11Y.escala = 'normal';
+    ESTADO_A11Y.contraste     = localStorage.getItem('pde_a11y_contraste') === '1';
+    ESTADO_A11Y.daltonico     = localStorage.getItem('pde_a11y_daltonico') === '1';
+    ESTADO_A11Y.semAnimacoes  = localStorage.getItem('pde_a11y_animacoes') === '1';
+  } catch (e) {}
+  aplicarA11y();
+}
+function resetarA11y() {
+  ESTADO_A11Y.escala = 'normal'; ESTADO_A11Y.contraste = false; ESTADO_A11Y.daltonico = false; ESTADO_A11Y.semAnimacoes = false;
+  aplicarA11y(); salvarA11y(); renderizarA11y();
+}
+
+/* WEBNODE EMBED */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => reportarAltura());
+  ro.observe(document.getElementById('pde-painel'));
+}
+
+/* SELOS BNCC */
+window.SELOS_BNCC_DADOS = {
+  bncc: [
+    {
+      tipo: 'portugues',
+      icone: 'POR',
+      titulo: 'BNCC Língua Portuguesa · Análise Linguística',
+      itens: [
+        { cod: 'EF02LP04', desc: 'Ler e escrever palavras com correspondências regulares diretas entre letras e fonemas (f, v, t, d, p, b) e correspondências regulares contextuais (c e q; e e o, em posição átona em final de palavra).' },
+        { cod: 'EF02LP07', desc: 'Escrever palavras, frases, textos curtos nas formas imprensa e cursiva.' },
+        { cod: 'EF03LP01', desc: 'Ler e escrever palavras com correspondências regulares contextuais entre grafemas e fonemas (c/qu; g/gu; r/rr; s/ss; o e não u, e e não i em sílaba átona em final de palavra), e com marcas de nasalidade.' },
+        { cod: 'EF03LP05', desc: 'Identificar o número de sílabas de palavras, classificando-as em monossílabas, dissílabas, trissílabas e polissílabas.' },
+        { cod: 'EF04LP01', desc: 'Grafar palavras utilizando regras de correspondência fonema-grafema regulares diretas e contextuais.' },
+        { cod: 'EF05LP01', desc: 'Grafar palavras utilizando regras de correspondência fonema-grafema regulares, contextuais e morfológicas e palavras de uso frequente com correspondências irregulares.' }
+      ]
+    },
+    {
+      tipo: 'computacao',
+      icone: '💻',
+      titulo: 'BNCC Computação · Cultura Digital',
+      itens: [
+        { cod: 'EF15CO01', desc: 'Utilizar dispositivos digitais e aplicativos como apoio à aprendizagem.' }
+      ]
+    }
+  ]
+};
+
+function montarSelosBNCC() {
+  const dados = window.SELOS_BNCC_DADOS;
+  if (!dados) return '';
+  let html = '<div class="selos-bncc"><h3>🎓 Conformidade BNCC e Acessibilidade</h3>';
+  html += '<div style="font-size:0.78rem; color:#475569; margin-bottom:8px;">Esta atividade desenvolveu as seguintes habilidades:</div>';
+  dados.bncc.forEach(grupo => {
+    html += `<div class="selo-row"><div class="selo-icone ${grupo.tipo}">${grupo.icone}</div><div class="selo-info"><div class="selo-titulo">${grupo.titulo}</div><div class="selo-codigos">`;
+    grupo.itens.forEach(it => {
+      html += `<span class="item-bncc"><b>${it.cod}</b> ${it.desc}</span>`;
+    });
+    html += `</div></div></div>`;
+  });
+  html += `<div class="selo-row"><div class="selo-icone acessibilidade">♿</div><div class="selo-info"><div class="selo-titulo">Acessibilidade Digital</div><div class="selo-codigos"><span class="item-bncc"><b>WCAG 2.1 AAA</b> Alto contraste, escala até 172%, modo daltônico, redução de animações</span></div></div></div>`;
+  html += `<div class="selo-row"><div class="selo-icone lbi">⚖️</div><div class="selo-info"><div class="selo-titulo">Lei Brasileira de Inclusão</div><div class="selo-codigos"><span class="item-bncc"><b>Lei 13.146/2015</b> Recursos para alunos com baixa visão, daltonismo, TEA e sensibilidade sensorial</span></div></div></div>`;
+  html += `<div class="selos-bncc-rodape"><strong>Portal do Educador · NEWPC Tecnologia</strong> · Material em conformidade com a BNCC e diretrizes de acessibilidade digital.</div>`;
+  html += '</div>';
+  return html;
+}
+
+function inserirSelosNoModal(idModal) {
+  const modal = document.getElementById(idModal);
+  if (!modal) return;
+  modal.querySelectorAll('.selos-bncc').forEach(e => e.remove());
+  const conteudo = modal.querySelector('.modal-conteudo');
+  if (!conteudo) return;
+  const acoes = conteudo.querySelector('.acoes');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = montarSelosBNCC();
+  const novoBloco = tmp.firstChild;
+  if (acoes) conteudo.insertBefore(novoBloco, acoes);
+  else conteudo.appendChild(novoBloco);
+}
+
+(function observadorSelos() {
+  const MODAIS = ['modal-vitoria'];
+  function observar() {
+    MODAIS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new MutationObserver(() => {
+        if (el.classList.contains('aberto')) inserirSelosNoModal(id);
+      });
+      obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observar);
+  else observar();
+})();
+
+/* INIT */
+carregar();
+carregarA11y();
+renderLobby();
+
+// Modais fecham ao clicar fora
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('aberto'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.aberto').forEach(m => m.classList.remove('aberto'));
+});
+
+</script>
+</body>
+</html>
