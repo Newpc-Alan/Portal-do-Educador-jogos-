@@ -1,0 +1,1375 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Vitrine de Jogos · Portal do Educador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* ===========================================================
+   PADRÃO PORTAL DO EDUCADOR — embed Webnode
+   Tudo prefixado por #pde-painel para zero conflito global
+   =========================================================== */
+html, body { background: transparent !important; height: auto !important; margin: 0; padding: 0; }
+#pde-painel *, #pde-painel *::before, #pde-painel *::after { box-sizing: border-box; }
+
+#pde-painel {
+  font-family: 'Nunito', 'Segoe UI', 'Roboto', sans-serif;
+  color: #1E324A;
+  padding: 18px clamp(10px, 2vw, 24px) 32px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ============== Cores institucionais NEWPC ============== */
+#pde-painel .pde-azul { color: #1E324A; }
+#pde-painel .pde-cyan { color: #37B1DA; }
+#pde-painel .pde-lime { color: #B6D752; }
+
+/* ============== Cabeçalho da vitrine ============== */
+#pde-painel .vitrine-header {
+  background: linear-gradient(135deg, #1E324A 0%, #2C4A6B 100%);
+  border-radius: 18px;
+  padding: 18px 22px;
+  color: white;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 4px 18px rgba(30,50,74,0.18);
+}
+#pde-painel .vitrine-header h1 {
+  font-family: 'Baloo 2', 'Nunito', sans-serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.1;
+}
+#pde-painel .vitrine-header .sub {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+#pde-painel .vitrine-header .stats {
+  margin-left: auto;
+  background: rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+#pde-painel .vitrine-header .stats strong { color: #B6D752; }
+
+/* ============== Barra de filtros ============== */
+#pde-painel .vitrine-toolbar {
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+#pde-painel .vitrine-busca {
+  flex: 1 1 220px;
+  position: relative;
+}
+#pde-painel .vitrine-busca input {
+  width: 100%;
+  padding: 9px 12px 9px 36px;
+  border: 2px solid #E2E8F0;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+#pde-painel .vitrine-busca input:focus {
+  outline: none;
+  border-color: #37B1DA;
+}
+#pde-painel .vitrine-busca .icone {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  fill: #94A3B8;
+}
+
+/* Chips de filtro (disciplinas) */
+#pde-painel .filtros-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+#pde-painel .chip-filtro {
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: #F1F5F9;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: #475569;
+  transition: all 0.15s;
+  user-select: none;
+}
+#pde-painel .chip-filtro:hover { background: #E2E8F0; }
+#pde-painel .chip-filtro.ativo {
+  background: linear-gradient(135deg, #1E324A, #2C4A6B);
+  color: white;
+  border-color: #37B1DA;
+  box-shadow: 0 2px 6px rgba(30,50,74,0.25);
+}
+#pde-painel .chip-filtro .contador {
+  display: inline-block;
+  background: rgba(255,255,255,0.25);
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-left: 5px;
+}
+#pde-painel .chip-filtro:not(.ativo) .contador {
+  background: #CBD5E1;
+  color: #475569;
+}
+
+/* Toggle só BNCC */
+#pde-painel .toggle-bncc {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: #FEF3C7;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #92400E;
+  user-select: none;
+  transition: all 0.15s;
+}
+#pde-painel .toggle-bncc.ativo {
+  background: linear-gradient(135deg, #B6D752, #6B9B0F);
+  color: white;
+  border-color: #6B9B0F;
+}
+
+/* ============== Grade de cards ============== */
+#pde-painel .vitrine-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+#pde-painel .jogo-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(30,50,74,0.10);
+  border: 2px solid transparent;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+#pde-painel .jogo-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(30,50,74,0.18);
+  border-color: #37B1DA;
+}
+
+/* Thumbnail SVG */
+#pde-painel .jogo-thumb {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #F1F5F9;
+}
+#pde-painel .jogo-thumb svg { width: 100%; height: 100%; display: block; }
+
+/* Badges no canto da thumb */
+#pde-painel .badge-bncc {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: linear-gradient(135deg, #B6D752, #6B9B0F);
+  color: white;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+}
+#pde-painel .badge-novo {
+  position: absolute;
+  top: 8px; left: 8px;
+  background: linear-gradient(135deg, #DC2626, #991B1B);
+  color: white;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+  animation: pulseNovo 1.6s infinite;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+}
+@keyframes pulseNovo {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+/* Badge EM PRODUÇÃO · canto inferior central da thumb */
+#pde-painel .badge-em-producao {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #475569, #1E293B);
+  color: #FBBF24;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 999px;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1.5px solid #FBBF24;
+  white-space: nowrap;
+}
+#pde-painel .badge-em-producao::before {
+  content: "🛠️";
+  font-size: 0.85rem;
+}
+
+/* Cards em produção · cursor proibido + leve dessaturação */
+#pde-painel .jogo-card.em-producao {
+  cursor: not-allowed !important;
+  position: relative;
+}
+#pde-painel .jogo-card.em-producao .jogo-thumb {
+  filter: saturate(0.7);
+}
+#pde-painel .jogo-card.em-producao:hover {
+  transform: none !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+}
+#pde-painel .jogo-card.em-producao .jogo-thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(15,23,42,0.18);
+  pointer-events: none;
+  z-index: 2;
+}
+
+
+/* Faixa NEWPC inferior na thumb (identidade) */
+#pde-painel .jogo-thumb-faixa {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #1E324A 0%, #37B1DA 50%, #B6D752 100%);
+}
+
+/* Conteúdo do card */
+#pde-painel .jogo-conteudo {
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+#pde-painel .jogo-titulo {
+  font-family: 'Baloo 2', 'Nunito', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1E324A;
+  line-height: 1.15;
+  margin: 0;
+}
+#pde-painel .jogo-desc {
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.35;
+  flex: 1;
+}
+#pde-painel .jogo-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+#pde-painel .jogo-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #F1F5F9;
+  color: #475569;
+  font-family: inherit;
+}
+#pde-painel .jogo-tag.disciplina {
+  color: white;
+}
+
+/* Estado vazio */
+#pde-painel .vitrine-vazia {
+  grid-column: 1 / -1;
+  padding: 40px 20px;
+  text-align: center;
+  background: white;
+  border-radius: 14px;
+  color: #64748B;
+}
+#pde-painel .vitrine-vazia .icone { font-size: 2.5rem; margin-bottom: 8px; }
+
+/* Responsivo */
+@media (max-width: 600px) {
+  #pde-painel { padding: 12px 8px 24px; }
+  #pde-painel .vitrine-header { flex-direction: column; align-items: flex-start; }
+  #pde-painel .vitrine-header .stats { margin-left: 0; }
+  #pde-painel .vitrine-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  #pde-painel .jogo-titulo { font-size: 0.92rem; }
+  #pde-painel .jogo-desc { font-size: 0.76rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="pde-painel">
+
+  <!-- Cabeçalho -->
+  <div class="vitrine-header">
+    <div>
+      <h1>🎮 Vitrine de Jogos Educacionais</h1>
+      <div class="sub">Atividades práticas para aplicar em sala de aula · Portal do Educador</div>
+    </div>
+    <div class="stats">
+      <span><strong id="stat-total">0</strong> jogos</span>
+      <span><strong id="stat-bncc">0</strong> alinhados à BNCC</span>
+    </div>
+  </div>
+
+  <!-- Toolbar: busca + filtros -->
+  <div class="vitrine-toolbar">
+    <div class="vitrine-busca">
+      <svg class="icone" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input type="text" id="busca" placeholder="Buscar jogo (forca, fração, tabuada...)" oninput="filtrar()">
+    </div>
+    <div class="filtros-chips" id="filtros-disciplinas"></div>
+    <div class="toggle-bncc" id="toggle-bncc" onclick="alternarBncc()">
+      <span>📚</span><span>Só BNCC</span>
+    </div>
+  </div>
+
+  <!-- Grade -->
+  <div class="vitrine-grid" id="vitrine-grid"></div>
+
+</div>
+
+<script>
+/* ===========================================================
+   ARRAY DE JOGOS — substituir/expandir conforme lista do Alan
+   =========================================================== */
+const JOGOS = [
+  {
+    id: "batalha-portugues",
+    titulo: "Batalha de Português",
+    descricao: "Disputa entre times com 200+ questões de Português alinhadas à BNCC.",
+    disciplina: "portugues",
+    bncc: true,
+    anos: "1º ao 9º",
+    novo: true,
+    url: "http://jogos.portaldoeducador.com.br/batalha-portugues/",
+    cor: ["#4C1D95", "#A78BFA"],
+    icone: "abc"
+  },
+  {
+    id: "batalha-matematica",
+    titulo: "Batalha da Matemática",
+    descricao: "Competição entre times com operações e desafios matemáticos da BNCC.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "1º ao 9º",
+    url: "http://jogos.portaldoeducador.com.br/batalha-matematica/",
+    cor: ["#1E40AF", "#3B82F6"],
+    icone: "operacoes"
+  },
+  {
+    id: "fracao-magica",
+    titulo: "Fração Mágica",
+    descricao: "Jogo gamificado para aprender frações com 5 fases progressivas.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "3º ao 6º",
+    url: "http://jogos.portaldoeducador.com.br/fracao-magica/",
+    cor: ["#7C3AED", "#A78BFA"],
+    icone: "fracao"
+  },
+  {
+    id: "jogo-forca",
+    titulo: "Jogo da Forca",
+    descricao: "Forca clássica adaptada para sala de aula, com palavras por ano BNCC.",
+    disciplina: "portugues",
+    bncc: true,
+    anos: "3º ao 9º",
+    url: "http://jogos.portaldoeducador.com.br/jogo-da-forca/",
+    cor: ["#0F766E", "#14B8A6"],
+    icone: "forca"
+  },
+  {
+    id: "tabuada",
+    titulo: "Tabuada Simplificada",
+    descricao: "Treino de tabuada com feedback imediato e modo desafio.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "3º ao 5º",
+    url: "http://jogos.portaldoeducador.com.br/tabuada/",
+    cor: ["#0369A1", "#0EA5E9"],
+    icone: "tabuada"
+  },
+  {
+    id: "sistema-solar",
+    titulo: "Sistema Solar Interativo",
+    descricao: "Exploração do sistema solar em 3D, com curiosidades sobre cada planeta.",
+    disciplina: "ciencias",
+    bncc: false,
+    anos: "Geral",
+    url: "http://jogos.portaldoeducador.com.br/sistema-solar/",
+    cor: ["#581C87", "#C026D3"],
+    icone: "planeta"
+  },
+  {
+    id: "explorando-habitats",
+    titulo: "Explorando Habitats",
+    descricao: "Apresentação interativa sobre habitats naturais e seus animais (florestas, oceanos, desertos, regiões polares).",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "2º e 3º",
+    novo: true,
+    url: "https://packexpress.my.canva.site/explorando-habitats",
+    cor: ["#15803D", "#84CC16"],
+    icone: "folha"
+  },
+  {
+    id: "alfabeto",
+    titulo: "Aprendendo o Alfabeto",
+    descricao: "Atividades interativas para alfabetização inicial com letras e sons.",
+    disciplina: "portugues",
+    bncc: true,
+    anos: "1º ao 2º",
+    url: "http://jogos.portaldoeducador.com.br/aprendendo-alfabeto/",
+    cor: ["#BE185D", "#EC4899"],
+    icone: "alfabeto"
+  },
+  {
+    id: "xadrez",
+    emProducao: true,
+    titulo: "Xadrez",
+    descricao: "Jogo de xadrez clássico para desenvolver raciocínio e estratégia.",
+    disciplina: "logica",
+    bncc: false,
+    anos: "Geral",
+    url: "#xadrez",
+    cor: ["#1F2937", "#4B5563"],
+    icone: "xadrez"
+  },
+  {
+    id: "damas",
+    emProducao: true,
+    titulo: "Damas",
+    descricao: "Jogo de damas tradicional com regras oficiais.",
+    disciplina: "logica",
+    bncc: false,
+    anos: "Geral",
+    url: "#damas",
+    cor: ["#92400E", "#D97706"],
+    icone: "damas"
+  },
+  {
+    id: "english-beginners",
+    emProducao: true,
+    titulo: "English Challenge for Beginners",
+    descricao: "Atividades de inglês para iniciantes com vocabulário básico.",
+    disciplina: "ingles",
+    bncc: false,
+    anos: "Geral",
+    url: "#english",
+    cor: ["#B91C1C", "#EF4444"],
+    icone: "ingles"
+  },
+  {
+    id: "mouse-teclado",
+    titulo: "Prática de Mouse e Teclado",
+    descricao: "Treino para alfabetização digital: usar mouse, teclado e cliques.",
+    disciplina: "tecnologia",
+    bncc: false,
+    anos: "Geral",
+    url: "http://jogos.portaldoeducador.com.br/mouse-e-teclado/",
+    cor: ["#374151", "#6B7280"],
+    icone: "computador"
+  },
+  {
+    id: "quem-eh-esse",
+    titulo: "Quem é Esse?",
+    descricao: "Jogo de adivinhação de personagens históricos e científicos.",
+    disciplina: "geral",
+    bncc: false,
+    anos: "Geral",
+    url: "http://jogos.portaldoeducador.com.br/adivinhe-o-animal/",
+    cor: ["#312E81", "#6366F1"],
+    icone: "interrogacao"
+  },
+  {
+    id: "aventura-logica",
+    titulo: "Aventura da Lógica",
+    descricao: "Quebra-cabeças de pensamento computacional alinhados à BNCC.",
+    disciplina: "logica",
+    bncc: true,
+    anos: "Geral",
+    url: "http://jogos.portaldoeducador.com.br/trilha-do-conhecimento/",
+    cor: ["#0F4C5C", "#5BA89C"],
+    icone: "puzzle"
+  },
+  {
+    id: "orgaos-corpo",
+    titulo: "Explorando Órgãos do Corpo Humano",
+    descricao: "Atividade interativa sobre os principais órgãos e suas funções.",
+    disciplina: "ciencias",
+    bncc: false,
+    anos: "Geral",
+    url: "http://jogos.portaldoeducador.com.br/corpo-humano/",
+    cor: ["#9F1239", "#F43F5E"],
+    icone: "coracao"
+  },
+  {
+    id: "meio-ambiente",
+    titulo: "Exploradores do Meio Ambiente",
+    descricao: "Reconhecimento de materiais recicláveis e sustentabilidade.",
+    disciplina: "ciencias",
+    bncc: false,
+    anos: "Geral",
+    url: "http://jogos.portaldoeducador.com.br/cadeia-alimentar/",
+    cor: ["#166534", "#22C55E"],
+    icone: "folha"
+  },
+  {
+    id: "resta-um",
+    titulo: "Resta Um",
+    descricao: "Quebra-cabeça clássico de raciocínio lógico.",
+    disciplina: "logica",
+    bncc: false,
+    anos: "Geral",
+    url: "http://jogos.portaldoeducador.com.br/resta-um/",
+    cor: ["#3F3F46", "#71717A"],
+    icone: "tabuleiro"
+  },
+  {
+    id: "konta",
+    emProducao: true,
+    titulo: "Konta · Plataforma Inteligente de Matemática",
+    descricao: "Treino adaptativo de matemática com diferentes níveis.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "Geral",
+    url: "#konta",
+    cor: ["#1E40AF", "#60A5FA"],
+    icone: "operacoes"
+  },
+  {
+    id: "sorteio-desafios",
+    titulo: "Sorteio e Desafios",
+    descricao: "Roleta para sortear alunos e propor desafios em sala.",
+    disciplina: "geral",
+    bncc: false,
+    anos: "Geral",
+    url: "http://jogos.portaldoeducador.com.br/sorteio/",
+    cor: ["#7C2D12", "#EA580C"],
+    icone: "dado"
+  },
+  {
+    id: "trilhas-conhecimento",
+    emProducao: true,
+    titulo: "Trilhas do Conhecimento",
+    descricao: "Percurso de aprendizado gamificado por temas.",
+    disciplina: "geral",
+    bncc: false,
+    anos: "Geral",
+    url: "#trilhas",
+    cor: ["#1E40AF", "#0EA5E9"],
+    icone: "mapa"
+  },
+  {
+    id: "laboratorio-interativo",
+    emProducao: true,
+    titulo: "Laboratório Interativo",
+    descricao: "Experiências virtuais de ciências com interações guiadas.",
+    disciplina: "ciencias",
+    bncc: false,
+    anos: "Geral",
+    url: "#laboratorio",
+    cor: ["#0E7490", "#06B6D4"],
+    icone: "tubo"
+  },
+  {
+    id: "experiencias-multissensoriais",
+    emProducao: true,
+    titulo: "Experiências Multissensoriais",
+    descricao: "Atividades sensoriais com sons, cores e interação tátil.",
+    disciplina: "geral",
+    bncc: false,
+    anos: "Geral",
+    url: "#multissensorial",
+    cor: ["#9333EA", "#D946EF"],
+    icone: "estrela"
+  },
+  {
+    id: "bolha-alfabeto",
+    titulo: "Bolha do Alfabeto",
+    descricao: "Identificação das letras do alfabeto em atividade visual e lúdica.",
+    disciplina: "portugues",
+    bncc: true,
+    anos: "1º e 2º",
+    url: "https://kidsplayeducacional.my.canva.site/-bolha-do-alfabeto",
+    cor: ["#7C3AED", "#A78BFA"],
+    icone: "alfabeto"
+  },
+  {
+    id: "abc-safari",
+    titulo: "ABC Safari",
+    descricao: "Aprenda as letras do alfabeto em uma aventura na selva.",
+    disciplina: "portugues",
+    bncc: true,
+    anos: "1º e 2º",
+    url: "https://packexpress.my.canva.site/abc-safari",
+    cor: ["#4C1D95", "#A78BFA"],
+    icone: "abc"
+  },
+  {
+    id: "conto-fadas",
+    titulo: "Conto de Fadas",
+    descricao: "Atividade de leitura e interpretação baseada em contos clássicos.",
+    disciplina: "portugues",
+    bncc: true,
+    anos: "2º ao 4º",
+    url: "https://kidsplayeducacional.my.canva.site/-conto-de-fadas",
+    cor: ["#BE185D", "#EC4899"],
+    icone: "coracao"
+  },
+  {
+    id: "aventuras-rainbow",
+    titulo: "Aventuras do Rainbow",
+    descricao: "Aventura interativa para desenvolvimento de leitura e vocabulário.",
+    disciplina: "portugues",
+    bncc: true,
+    anos: "1º ao 3º",
+    url: "https://packexpress.my.canva.site/aventuras-do-rainbow",
+    cor: ["#DB2777", "#F472B6"],
+    icone: "estrela"
+  },
+  {
+    id: "letras-numeros",
+    titulo: "Letras e Números",
+    descricao: "Atividade integrada que trabalha letras do alfabeto e numerais.",
+    disciplina: "portugues",
+    bncc: true,
+    anos: "1º ano",
+    url: "https://kidsplayeducacional.my.canva.site/letras-e-n-meros",
+    cor: ["#6D28D9", "#8B5CF6"],
+    icone: "abc"
+  },
+  {
+    id: "matematica-monstro",
+    titulo: "Matemática Monstro",
+    descricao: "Operações matemáticas em formato divertido com personagens monstros.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "2º ao 4º",
+    url: "https://kidsplayeducacional.my.canva.site/matem-tica-monstro",
+    cor: ["#1E40AF", "#3B82F6"],
+    icone: "operacoes"
+  },
+  {
+    id: "soma-especial",
+    titulo: "Soma Especial",
+    descricao: "Treinamento de adição com desafios progressivos.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "1º e 2º",
+    url: "https://kidsplayeducacional.my.canva.site/-soma-especial",
+    cor: ["#1D4ED8", "#60A5FA"],
+    icone: "operacoes"
+  },
+  {
+    id: "frutas-matematica",
+    titulo: "Frutas e Matemática",
+    descricao: "Adição e contagem usando frutas como elementos visuais.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "1º e 2º",
+    url: "https://kidsplayeducacional.my.canva.site/frutas-e-matem-tica",
+    cor: ["#0369A1", "#0EA5E9"],
+    icone: "operacoes"
+  },
+  {
+    id: "conte-objeto",
+    titulo: "Conte o Objeto",
+    descricao: "Contagem de objetos para desenvolver senso numérico.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "1º ano",
+    url: "https://kidsplayeducacional.my.canva.site/conte-o-objeto",
+    cor: ["#1E40AF", "#3B82F6"],
+    icone: "tabuada"
+  },
+  {
+    id: "contando-frutas",
+    titulo: "Contando Frutas",
+    descricao: "Atividade de contagem com frutas para os primeiros anos.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "1º ano",
+    url: "https://kidsplayeducacional.my.canva.site/contando-frutas",
+    cor: ["#0E7490", "#06B6D4"],
+    icone: "tabuada"
+  },
+  {
+    id: "complete-numeros",
+    titulo: "Complete os Números",
+    descricao: "Sequência numérica com lacunas para completar.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "1º e 2º",
+    url: "https://kidsplayeducacional.my.canva.site/complete-os-n-meros",
+    cor: ["#1E3A8A", "#3B82F6"],
+    icone: "tabuada"
+  },
+  {
+    id: "complete-sequencias",
+    titulo: "Complete as Sequências",
+    descricao: "Identifique o padrão e complete sequências lógico-matemáticas.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "2º ao 4º",
+    url: "https://kidsplayeducacional.my.canva.site/complete-as-sequ-ncias",
+    cor: ["#1E40AF", "#60A5FA"],
+    icone: "puzzle"
+  },
+  {
+    id: "operacoes-estelares",
+    titulo: "Operações Estelares",
+    descricao: "Operações matemáticas com tema espacial e galáxias.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "3º ao 5º",
+    url: "https://packexpress.my.canva.site/opera-es-estelares",
+    cor: ["#581C87", "#A855F7"],
+    icone: "operacoes"
+  },
+  {
+    id: "expresso-matematico",
+    titulo: "Expresso Matemático",
+    descricao: "Trem de operações matemáticas em velocidade crescente.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "3º ao 5º",
+    url: "https://packexpress.my.canva.site/expresso-matem-tico",
+    cor: ["#1E40AF", "#06B6D4"],
+    icone: "operacoes"
+  },
+  {
+    id: "mundo-formas",
+    titulo: "Mundo das Formas",
+    descricao: "Reconhecimento e classificação de formas geométricas.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "1º ao 3º",
+    url: "https://packexpress.my.canva.site/mundo-das-formas",
+    cor: ["#0E7490", "#22D3EE"],
+    icone: "puzzle"
+  },
+  {
+    id: "que-horas-sao",
+    titulo: "Que Horas São?",
+    descricao: "Leitura de horas em relógios analógicos e digitais.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "2º e 3º",
+    url: "https://packexpress.my.canva.site/que-horas-s-o",
+    cor: ["#1D4ED8", "#3B82F6"],
+    icone: "tabuada"
+  },
+  {
+    id: "galaxia-quebra-cabeca",
+    titulo: "Galáxia Quebra-Cabeça",
+    descricao: "Quebra-cabeça com tema galáctico para desenvolver raciocínio espacial.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "3º ao 5º",
+    url: "https://kidsplayeducacional.my.canva.site/-gal-xia-quebra-cabe-a",
+    cor: ["#4C1D95", "#7C3AED"],
+    icone: "puzzle"
+  },
+  {
+    id: "tique-taque-quebra-cabeca",
+    titulo: "Tique-Taque Quebra-Cabeça",
+    descricao: "Quebra-cabeça com noção de tempo e sequência cronológica.",
+    disciplina: "matematica",
+    bncc: true,
+    anos: "2º ao 4º",
+    url: "https://kidsplayeducacional.my.canva.site/tique-taque-quebra-cabe-a",
+    cor: ["#0369A1", "#38BDF8"],
+    icone: "puzzle"
+  },
+  {
+    id: "adivinhando-planetas",
+    titulo: "Adivinhando Planetas",
+    descricao: "Identificação de planetas do Sistema Solar e suas características.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "3º ao 5º",
+    url: "https://kidsplayeducacional.my.canva.site/adivinhando-planetas",
+    cor: ["#581C87", "#C026D3"],
+    icone: "planeta"
+  },
+  {
+    id: "contando-planetas",
+    titulo: "Contando Planetas",
+    descricao: "Contagem e ordem dos planetas no Sistema Solar.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "2º ao 4º",
+    url: "https://kidsplayeducacional.my.canva.site/-contando-planetas",
+    cor: ["#7C3AED", "#A78BFA"],
+    icone: "planeta"
+  },
+  {
+    id: "explorador-espaco",
+    titulo: "Explorador do Espaço",
+    descricao: "Aventura interativa pelo Sistema Solar e suas curiosidades.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "3º ao 5º",
+    url: "https://kidsplayeducacional.my.canva.site/explorador-do-espa-o",
+    cor: ["#1E1B4B", "#6366F1"],
+    icone: "planeta"
+  },
+  {
+    id: "reino-animal",
+    titulo: "Reino Animal Explorador",
+    descricao: "Conheça os principais grupos de animais e suas características.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "2º e 3º",
+    url: "https://kidsplayeducacional.my.canva.site/reino-animal-explorador",
+    cor: ["#15803D", "#84CC16"],
+    icone: "folha"
+  },
+  {
+    id: "sobre-oceano",
+    titulo: "Sobre o Oceano",
+    descricao: "Descobrindo o ecossistema marinho e seus seres vivos.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "2º ao 4º",
+    url: "https://kidsplayeducacional.my.canva.site/-sobre-o-oceano",
+    cor: ["#0E7490", "#06B6D4"],
+    icone: "folha"
+  },
+  {
+    id: "quem-come-o-que",
+    titulo: "Quem Come o Quê?",
+    descricao: "Cadeia alimentar: herbívoros, carnívoros e onívoros.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "2º ao 4º",
+    url: "https://kidsplayeducacional.my.canva.site/quem-come-o-qu",
+    cor: ["#166534", "#22C55E"],
+    icone: "folha"
+  },
+  {
+    id: "frutas-ou-vegetais",
+    titulo: "Frutas ou Vegetais?",
+    descricao: "Classificação de alimentos: distinguir frutas de vegetais.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "1º e 2º",
+    url: "https://kidsplayeducacional.my.canva.site/frutas-ou-vegetais",
+    cor: ["#0D9488", "#5EEAD4"],
+    icone: "folha"
+  },
+  {
+    id: "herois-saudaveis",
+    titulo: "Heróis Saudáveis",
+    descricao: "Aprenda sobre alimentação saudável e hábitos de vida.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "2º ao 4º",
+    url: "https://kidsplayeducacional.my.canva.site/-her-is-saud-veis",
+    cor: ["#DC2626", "#F87171"],
+    icone: "coracao"
+  },
+  {
+    id: "corpo-humano",
+    titulo: "Brincando com o Corpo Humano",
+    descricao: "Conheça o corpo humano, órgãos e sistemas de forma lúdica.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "3º ao 5º",
+    url: "https://packexpress.my.canva.site/brincando-com-o-corpo-humano",
+    cor: ["#BE185D", "#EC4899"],
+    icone: "coracao"
+  },
+  {
+    id: "dia-ou-noite",
+    titulo: "Dia ou Noite? Hora da Diversão",
+    descricao: "Diferenças entre dia e noite, ciclos da natureza.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "1º e 2º",
+    url: "https://kidsplayeducacional.my.canva.site/-dia-ou-noite-hora-da-divers-o",
+    cor: ["#1E1B4B", "#3B82F6"],
+    icone: "planeta"
+  },
+  {
+    id: "aventura-sustentavel",
+    titulo: "Aventura Sustentável",
+    descricao: "Sustentabilidade, preservação ambiental e consumo consciente.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "3º ao 5º",
+    url: "https://packexpress.my.canva.site/aventura-sustent-vel",
+    cor: ["#15803D", "#4ADE80"],
+    icone: "folha"
+  },
+  {
+    id: "reciclando-conhecimento",
+    titulo: "Reciclando Conhecimento",
+    descricao: "Reciclagem, coleta seletiva e cuidados com o meio ambiente.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "2º ao 5º",
+    url: "https://kidsplayeducacional.my.canva.site/reciclando-conhecimento",
+    cor: ["#16A34A", "#84CC16"],
+    icone: "folha"
+  },
+  {
+    id: "desafio-chefe-cozinha",
+    titulo: "Desafio Chefe de Cozinha",
+    descricao: "Receitas, ingredientes e alimentação equilibrada.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "2º ao 4º",
+    url: "https://kidsplayeducacional.my.canva.site/desafio-chefe-de-cozinha",
+    cor: ["#EA580C", "#FB923C"],
+    icone: "coracao"
+  },
+  {
+    id: "grupo-ou-solo",
+    titulo: "Grupo ou Solo?",
+    descricao: "Atividade colaborativa adaptável para grupos ou solo.",
+    disciplina: "logica",
+    bncc: true,
+    anos: "Geral",
+    url: "https://kidsplayeducacional.my.canva.site/grupo-ou-solo",
+    cor: ["#374151", "#9CA3AF"],
+    icone: "tabuleiro"
+  },
+  {
+    id: "identifique-sprinkles",
+    titulo: "Identifique os Sprinkles",
+    descricao: "Identificação de padrões e atenção visual aos detalhes.",
+    disciplina: "logica",
+    bncc: true,
+    anos: "1º ao 3º",
+    url: "https://kidsplayeducacional.my.canva.site/identifique-os-sprinkles",
+    cor: ["#9333EA", "#C084FC"],
+    icone: "interrogacao"
+  },
+  {
+    id: "gemas-escondidas",
+    titulo: "Gemas Escondidas",
+    descricao: "Encontre objetos escondidos para desenvolver percepção visual.",
+    disciplina: "logica",
+    bncc: true,
+    anos: "1º ao 3º",
+    url: "https://kidsplayeducacional.my.canva.site/gemas-escondidas",
+    cor: ["#7E22CE", "#A855F7"],
+    icone: "interrogacao"
+  },
+  {
+    id: "organizacao-divertida",
+    titulo: "Organização Divertida",
+    descricao: "Classifique e organize objetos por categorias e atributos.",
+    disciplina: "logica",
+    bncc: true,
+    anos: "1º ao 3º",
+    url: "https://packexpress.my.canva.site/organiza-o-divertida",
+    cor: ["#475569", "#94A3B8"],
+    icone: "puzzle"
+  },
+  {
+    id: "encontre-cenoura",
+    titulo: "Encontre a Cenoura",
+    descricao: "Jogo de observação e atenção visual.",
+    disciplina: "logica",
+    bncc: true,
+    anos: "1º e 2º",
+    url: "https://kidsplayeducacional.my.canva.site/encontre-a-cenoura",
+    cor: ["#EA580C", "#FB923C"],
+    icone: "interrogacao"
+  },
+  {
+    id: "encontre-fantasma",
+    titulo: "Encontre o Fantasma",
+    descricao: "Caça ao fantasma para treinar observação e memória.",
+    disciplina: "logica",
+    bncc: true,
+    anos: "1º ao 3º",
+    url: "https://kidsplayeducacional.my.canva.site/encontre-o-fantasma",
+    cor: ["#581C87", "#A855F7"],
+    icone: "interrogacao"
+  },
+  {
+    id: "tesouro-escondido",
+    titulo: "Tesouro Escondido",
+    descricao: "Caça ao tesouro para desenvolver raciocínio dedutivo.",
+    disciplina: "logica",
+    bncc: true,
+    anos: "2º ao 4º",
+    url: "https://kidsplayeducacional.my.canva.site/-tesouro-escondido",
+    cor: ["#92400E", "#F59E0B"],
+    icone: "mapa"
+  },
+  {
+    id: "esconder-procurar",
+    titulo: "Esconder e Procurar",
+    descricao: "Jogo clássico de esconde-esconde adaptado para atividade digital.",
+    disciplina: "logica",
+    bncc: true,
+    anos: "1º ao 3º",
+    url: "https://kidsplayeducacional.my.canva.site/esconder-e-procurar",
+    cor: ["#374151", "#6B7280"],
+    icone: "interrogacao"
+  },
+  {
+    id: "caminho-escola",
+    titulo: "Caminho da Escola",
+    descricao: "Trajetos e orientação espacial em situações do cotidiano.",
+    disciplina: "logica",
+    bncc: true,
+    anos: "1º e 2º",
+    url: "https://kidsplayeducacional.my.canva.site/caminho-da-escola",
+    cor: ["#0F766E", "#14B8A6"],
+    icone: "mapa"
+  },
+  {
+    id: "patrulha-questionario",
+    titulo: "Patrulha do Questionário",
+    descricao: "Quiz geral com perguntas variadas para diferentes disciplinas.",
+    disciplina: "logica",
+    bncc: true,
+    anos: "2º ao 5º",
+    url: "https://kidsplayeducacional.my.canva.site/patrulha-do-question-rio",
+    cor: ["#1E40AF", "#60A5FA"],
+    icone: "interrogacao"
+  },
+  {
+    id: "desafio-emojinario",
+    titulo: "Desafio Emojinário",
+    descricao: "Interpretação e associação visual usando emojis.",
+    disciplina: "logica",
+    bncc: true,
+    anos: "2º ao 4º",
+    url: "https://kidsplayeducacional.my.canva.site/desafio-emojin-rio",
+    cor: ["#F59E0B", "#FBBF24"],
+    icone: "interrogacao"
+  }
+];
+
+/* ===========================================================
+   CONFIGURAÇÃO DE DISCIPLINAS — labels, cores, ordem
+   =========================================================== */
+const DISCIPLINAS = {
+  matematica:  { label: "Matemática",  cor: "#1E40AF", emoji: "🔢" },
+  portugues:   { label: "Português",   cor: "#7C3AED", emoji: "📝" },
+  ciencias:    { label: "Ciências",    cor: "#0E7490", emoji: "🔬" },
+  logica:      { label: "Lógica",      cor: "#374151", emoji: "♟️" },
+  ingles:      { label: "Inglês",      cor: "#B91C1C", emoji: "🌎" },
+  tecnologia:  { label: "Tecnologia",  cor: "#475569", emoji: "💻" },
+  geral:       { label: "Geral",       cor: "#0F766E", emoji: "🎲" }
+};
+
+/* ===========================================================
+   GERADORES DE THUMBNAILS SVG (identidade NEWPC)
+   Cada ícone é um SVG geométrico simples sobre gradiente da cor
+   do jogo + faixa NEWPC inferior (azul-marinho/cyan/lime).
+   =========================================================== */
+function gerarThumbSVG(jogo) {
+  const [c1, c2] = jogo.cor;
+  const id = `g-${jogo.id}`;
+  return `
+    <svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${c1}"/>
+          <stop offset="100%" stop-color="${c2}"/>
+        </linearGradient>
+        <pattern id="${id}-dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1.4" fill="rgba(255,255,255,0.08)"/>
+        </pattern>
+      </defs>
+      <rect width="320" height="200" fill="url(#${id})"/>
+      <rect width="320" height="200" fill="url(#${id}-dots)"/>
+      <g transform="translate(160 100)" opacity="0.95">
+        ${gerarIcone(jogo.icone)}
+      </g>
+      <text x="160" y="178" text-anchor="middle" fill="rgba(255,255,255,0.55)"
+            font-family="'Baloo 2', 'Nunito', sans-serif" font-size="9" font-weight="800"
+            letter-spacing="3" text-transform="uppercase">PORTAL DO EDUCADOR</text>
+    </svg>
+  `;
+}
+
+function gerarIcone(tipo) {
+  // Cada ícone vem centrado em (0,0). Tamanho ~110x110.
+  const stroke = 'rgba(255,255,255,0.95)';
+  const fill = 'rgba(255,255,255,0.18)';
+  const sw = 4;
+  const I = {
+    abc: `
+      <text x="0" y="20" text-anchor="middle" fill="white" font-family="'Baloo 2',sans-serif"
+            font-weight="900" font-size="78" letter-spacing="-2">ABC</text>`,
+    operacoes: `
+      <text x="0" y="22" text-anchor="middle" fill="white" font-family="'Baloo 2',sans-serif"
+            font-weight="900" font-size="68">+ − × ÷</text>`,
+    fracao: `
+      <text x="0" y="-10" text-anchor="middle" fill="white" font-family="'Baloo 2',sans-serif"
+            font-weight="900" font-size="56">1</text>
+      <line x1="-32" y1="2" x2="32" y2="2" stroke="white" stroke-width="6" stroke-linecap="round"/>
+      <text x="0" y="48" text-anchor="middle" fill="white" font-family="'Baloo 2',sans-serif"
+            font-weight="900" font-size="56">2</text>`,
+    forca: `
+      <line x1="-46" y1="40" x2="46" y2="40" stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round"/>
+      <line x1="-30" y1="40" x2="-30" y2="-40" stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round"/>
+      <line x1="-30" y1="-40" x2="14" y2="-40" stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round"/>
+      <line x1="14" y1="-40" x2="14" y2="-22" stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round"/>
+      <circle cx="14" cy="-10" r="12" fill="none" stroke="${stroke}" stroke-width="${sw}"/>
+      <line x1="14" y1="2" x2="14" y2="22" stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round"/>`,
+    tabuada: `
+      <rect x="-50" y="-40" width="100" height="80" rx="8" fill="${fill}" stroke="${stroke}" stroke-width="3"/>
+      <text x="0" y="6" text-anchor="middle" fill="white" font-family="'Baloo 2',sans-serif"
+            font-weight="900" font-size="34">7 × 8</text>
+      <text x="0" y="32" text-anchor="middle" fill="white" font-family="'Baloo 2',sans-serif"
+            font-weight="900" font-size="22" opacity="0.85">= 56</text>`,
+    planeta: `
+      <circle cx="0" cy="0" r="22" fill="white" opacity="0.95"/>
+      <ellipse cx="0" cy="0" rx="46" ry="14" fill="none" stroke="${stroke}" stroke-width="3"
+               transform="rotate(-22)"/>
+      <circle cx="36" cy="-26" r="3.5" fill="white"/>
+      <circle cx="-40" cy="20" r="2.8" fill="white" opacity="0.7"/>`,
+    alfabeto: `
+      <text x="0" y="14" text-anchor="middle" fill="white" font-family="'Baloo 2',sans-serif"
+            font-weight="900" font-size="74" letter-spacing="-3">Aa</text>`,
+    xadrez: `
+      <rect x="-44" y="-44" width="22" height="22" fill="white" opacity="0.95"/>
+      <rect x="-22" y="-22" width="22" height="22" fill="white" opacity="0.95"/>
+      <rect x="0" y="-44" width="22" height="22" fill="white" opacity="0.95"/>
+      <rect x="22" y="-22" width="22" height="22" fill="white" opacity="0.95"/>
+      <rect x="-44" y="0" width="22" height="22" fill="white" opacity="0.95"/>
+      <rect x="-22" y="22" width="22" height="22" fill="white" opacity="0.95"/>
+      <rect x="0" y="0" width="22" height="22" fill="white" opacity="0.95"/>
+      <rect x="22" y="22" width="22" height="22" fill="white" opacity="0.95"/>`,
+    damas: `
+      <circle cx="-22" cy="-18" r="14" fill="white" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+      <circle cx="22" cy="-18" r="14" fill="rgba(0,0,0,0.5)" stroke="white" stroke-width="2"/>
+      <circle cx="0" cy="14" r="14" fill="white" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+      <circle cx="-30" cy="32" r="10" fill="rgba(0,0,0,0.5)" stroke="white" stroke-width="2"/>`,
+    ingles: `
+      <text x="0" y="14" text-anchor="middle" fill="white" font-family="'Baloo 2',sans-serif"
+            font-weight="900" font-size="50">Hello!</text>`,
+    computador: `
+      <rect x="-46" y="-30" width="92" height="58" rx="4" fill="${fill}" stroke="${stroke}" stroke-width="3"/>
+      <rect x="-40" y="-24" width="80" height="42" fill="rgba(255,255,255,0.08)"/>
+      <rect x="-12" y="32" width="24" height="6" fill="${stroke}"/>
+      <rect x="-22" y="38" width="44" height="4" rx="2" fill="${stroke}"/>`,
+    interrogacao: `
+      <text x="0" y="22" text-anchor="middle" fill="white" font-family="'Baloo 2',sans-serif"
+            font-weight="900" font-size="100">?</text>`,
+    puzzle: `
+      <path d="M -38 -38 L 0 -38 L 0 -22 Q 12 -22 12 -10 Q 12 2 0 2 L 0 18 L -38 18 Z" fill="${fill}" stroke="${stroke}" stroke-width="3"/>
+      <path d="M 2 -38 L 38 -38 L 38 0 L 22 0 Q 22 12 10 12 Q -2 12 -2 0 L 2 0 Z" fill="white" opacity="0.4" stroke="${stroke}" stroke-width="3"/>`,
+    coracao: `
+      <path d="M 0 30 C -36 8, -42 -18, -22 -32 C -10 -40, 0 -28, 0 -18 C 0 -28, 10 -40, 22 -32 C 42 -18, 36 8, 0 30 Z" fill="white" opacity="0.95"/>
+      <path d="M -10 -10 L -10 0 M -10 -5 L 10 -5 M 10 -10 L 10 0" stroke="${c1ToHexFallback()}" stroke-width="3" stroke-linecap="round" fill="none" opacity="0"/>`,
+    folha: `
+      <path d="M -36 28 Q -40 -10 -10 -32 Q 20 -42 38 -22 Q 40 8 12 30 Q -8 38 -36 28 Z" fill="white" opacity="0.95"/>
+      <path d="M -28 22 Q 0 0 32 -22" fill="none" stroke="${stroke}" stroke-width="3" stroke-linecap="round" opacity="0.5"/>`,
+    tabuleiro: `
+      <rect x="-44" y="-32" width="88" height="64" rx="6" fill="${fill}" stroke="${stroke}" stroke-width="3"/>
+      <circle cx="-22" cy="-10" r="6" fill="white"/>
+      <circle cx="0" cy="-10" r="6" fill="white"/>
+      <circle cx="22" cy="-10" r="6" fill="white"/>
+      <circle cx="-22" cy="14" r="6" fill="white"/>
+      <circle cx="22" cy="14" r="6" fill="white"/>`,
+    dado: `
+      <rect x="-32" y="-32" width="64" height="64" rx="10" fill="white" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+      <circle cx="-14" cy="-14" r="4.5" fill="${c1ToHexFallback()}"/>
+      <circle cx="14" cy="-14" r="4.5" fill="${c1ToHexFallback()}"/>
+      <circle cx="0" cy="0" r="4.5" fill="${c1ToHexFallback()}"/>
+      <circle cx="-14" cy="14" r="4.5" fill="${c1ToHexFallback()}"/>
+      <circle cx="14" cy="14" r="4.5" fill="${c1ToHexFallback()}"/>`,
+    mapa: `
+      <path d="M -42 -28 L -14 -34 L 14 -22 L 42 -32 L 42 28 L 14 34 L -14 22 L -42 32 Z" fill="${fill}" stroke="${stroke}" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M -28 -10 Q -10 4 8 -2 Q 20 -8 28 8" fill="none" stroke="${stroke}" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 4"/>
+      <circle cx="28" cy="8" r="5" fill="white"/>`,
+    tubo: `
+      <rect x="-12" y="-44" width="24" height="60" rx="2" fill="${fill}" stroke="${stroke}" stroke-width="3"/>
+      <path d="M -12 16 L -12 32 Q -12 44 0 44 Q 12 44 12 32 L 12 16 Z" fill="rgba(182,215,82,0.7)" stroke="${stroke}" stroke-width="3"/>
+      <circle cx="-2" cy="22" r="3" fill="white" opacity="0.8"/>
+      <circle cx="6" cy="34" r="2" fill="white" opacity="0.8"/>`,
+    estrela: `
+      <path d="M 0 -38 L 11 -12 L 38 -12 L 16 6 L 24 32 L 0 16 L -24 32 L -16 6 L -38 -12 L -11 -12 Z" fill="white" opacity="0.95"/>`
+  };
+  return I[tipo] || I.estrela;
+}
+
+function c1ToHexFallback() { return '#1E324A'; }
+
+/* ===========================================================
+   ESTADO + RENDERIZAÇÃO
+   =========================================================== */
+const ESTADO = {
+  disciplina: 'todas',
+  busca: '',
+  soBncc: false
+};
+
+function montarFiltrosDisciplinas() {
+  const cont = document.getElementById('filtros-disciplinas');
+  const contagens = { todas: JOGOS.length };
+  Object.keys(DISCIPLINAS).forEach(k => contagens[k] = JOGOS.filter(j => j.disciplina === k).length);
+
+  const ordem = ['todas', ...Object.keys(DISCIPLINAS).filter(k => contagens[k] > 0)];
+  cont.innerHTML = ordem.map(k => {
+    const label = k === 'todas' ? '🎯 Todos' : `${DISCIPLINAS[k].emoji} ${DISCIPLINAS[k].label}`;
+    return `<div class="chip-filtro ${k === ESTADO.disciplina ? 'ativo' : ''}"
+                  data-disc="${k}" onclick="selecionarDisciplina('${k}')">
+              ${label}<span class="contador">${contagens[k]}</span>
+            </div>`;
+  }).join('');
+}
+
+function selecionarDisciplina(disc) {
+  ESTADO.disciplina = disc;
+  document.querySelectorAll('.chip-filtro').forEach(el => {
+    el.classList.toggle('ativo', el.dataset.disc === disc);
+  });
+  filtrar();
+}
+
+function alternarBncc() {
+  ESTADO.soBncc = !ESTADO.soBncc;
+  document.getElementById('toggle-bncc').classList.toggle('ativo', ESTADO.soBncc);
+  filtrar();
+}
+
+function filtrar() {
+  ESTADO.busca = (document.getElementById('busca').value || '').toLowerCase().trim();
+  const filtrados = JOGOS.filter(j => {
+    if (ESTADO.disciplina !== 'todas' && j.disciplina !== ESTADO.disciplina) return false;
+    if (ESTADO.soBncc && !j.bncc) return false;
+    if (ESTADO.busca) {
+      const txt = `${j.titulo} ${j.descricao} ${j.disciplina} ${j.anos}`.toLowerCase();
+      if (!txt.includes(ESTADO.busca)) return false;
+    }
+    return true;
+  });
+  renderizar(filtrados);
+  reportarAltura();
+}
+
+function renderizar(lista) {
+  const grid = document.getElementById('vitrine-grid');
+  if (lista.length === 0) {
+    grid.innerHTML = `<div class="vitrine-vazia">
+      <div class="icone">🔍</div>
+      <div>Nenhum jogo encontrado com esses filtros.</div>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = lista.map(j => {
+    const disc = DISCIPLINAS[j.disciplina] || DISCIPLINAS.geral;
+    const ehEmProducao = !!j.emProducao;
+    const tag = ehEmProducao ? 'div' : 'a';
+    const classes = 'jogo-card' + (ehEmProducao ? ' em-producao' : '');
+    const atributos = ehEmProducao
+      ? `class="${classes}" data-id="${j.id}" title="Em produção · disponível em breve"`
+      : `class="${classes}" href="${j.url}" target="_blank" rel="noopener" data-id="${j.id}"`;
+    return `
+      <${tag} ${atributos}>
+        <div class="jogo-thumb">
+          ${gerarThumbSVG(j)}
+          ${j.bncc ? '<span class="badge-bncc">BNCC</span>' : ''}
+          ${j.novo && !ehEmProducao ? '<span class="badge-novo">NOVO</span>' : ''}
+          ${ehEmProducao ? '<span class="badge-em-producao">EM PRODUÇÃO</span>' : ''}
+          <div class="jogo-thumb-faixa"></div>
+        </div>
+        <div class="jogo-conteudo">
+          <h3 class="jogo-titulo">${j.titulo}</h3>
+          <p class="jogo-desc">${j.descricao}</p>
+          <div class="jogo-tags">
+            <span class="jogo-tag disciplina" style="background:${disc.cor}">${disc.emoji} ${disc.label}</span>
+            <span class="jogo-tag">📚 ${j.anos}</span>
+          </div>
+        </div>
+      </${tag}>
+    `;
+  }).join('');
+}
+
+function atualizarStats() {
+  document.getElementById('stat-total').textContent = JOGOS.length;
+  document.getElementById('stat-bncc').textContent = JOGOS.filter(j => j.bncc).length;
+}
+
+/* ===========================================================
+   AUTO-RESIZE PARA EMBED WEBNODE (postMessage)
+   =========================================================== */
+function reportarAltura() {
+  if (window.self === window.top) return;
+  const painel = document.getElementById('pde-painel');
+  if (!painel) return;
+  const altura = painel.getBoundingClientRect().bottom + 20;
+  window.parent.postMessage({ tipo: 'pde-altura', altura: Math.ceil(altura) }, '*');
+}
+
+const ro = new ResizeObserver(() => reportarAltura());
+ro.observe(document.getElementById('pde-painel'));
+
+/* ===========================================================
+   INICIALIZAÇÃO
+   =========================================================== */
+atualizarStats();
+montarFiltrosDisciplinas();
+filtrar();
+</script>
+
+</body>
+</html>
