@@ -389,6 +389,18 @@ html, body { background: transparent !important; height: auto !important; margin
    =========================================================== */
 const JOGOS = [
   {
+    id: "missao-dengue-zero-3d",
+    titulo: "Missão Dengue Zero 3D",
+    descricao: "Jogo 3D de combate ao Aedes aegypti: cace os focos, derrote o mosquito vilão e ganhe o selo de Agente Dengue Zero.",
+    disciplina: "ciencias",
+    bncc: true,
+    anos: "1º ao 9º",
+    novo: true,
+    url: "http://jogos.portaldoeducador.com.br/missao-dengue-zero-3d/",
+    cor: ["#0F2C4A", "#1A6B2A"],
+    icone: "mosquito"
+  },
+  {
     id: "batalha-portugues",
     titulo: "Batalha de Português",
     descricao: "Disputa entre times com 200+ questões de Português alinhadas à BNCC.",
@@ -1153,6 +1165,20 @@ function gerarIcone(tipo) {
   const fill = 'rgba(255,255,255,0.18)';
   const sw = 4;
   const I = {
+    mosquito: `
+      <ellipse cx="0" cy="6" rx="15" ry="22" fill="${fill}" stroke="${stroke}" stroke-width="3"/>
+      <circle cx="0" cy="-22" r="11" fill="${fill}" stroke="${stroke}" stroke-width="3"/>
+      <line x1="-5" y1="-30" x2="-12" y2="-42" stroke="${stroke}" stroke-width="3" stroke-linecap="round"/>
+      <line x1="5" y1="-30" x2="12" y2="-42" stroke="${stroke}" stroke-width="3" stroke-linecap="round"/>
+      <line x1="0" y1="28" x2="0" y2="46" stroke="${stroke}" stroke-width="3" stroke-linecap="round"/>
+      <path d="M -14 -4 Q -52 -30 -56 -2 Q -40 4 -14 6 Z" fill="rgba(255,255,255,0.30)" stroke="${stroke}" stroke-width="2.5"/>
+      <path d="M 14 -4 Q 52 -30 56 -2 Q 40 4 14 6 Z" fill="rgba(255,255,255,0.30)" stroke="${stroke}" stroke-width="2.5"/>
+      <line x1="-13" y1="14" x2="-40" y2="34" stroke="${stroke}" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="-13" y1="20" x2="-34" y2="46" stroke="${stroke}" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="13" y1="14" x2="40" y2="34" stroke="${stroke}" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="13" y1="20" x2="34" y2="46" stroke="${stroke}" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="-3" y1="14" x2="-3" y2="22" stroke="white" stroke-width="3"/>
+      <line x1="3" y1="14" x2="3" y2="22" stroke="white" stroke-width="3"/>`,
     abc: `
       <text x="0" y="20" text-anchor="middle" fill="white" font-family="'Baloo 2',sans-serif"
             font-weight="900" font-size="78" letter-spacing="-2">ABC</text>`,
