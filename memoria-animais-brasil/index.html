@@ -597,10 +597,14 @@ function ptVoices(){if(!("speechSynthesis"in window))return[];return speechSynth
 function currentVoice(){const vs=ptVoices();return vs.find(v=>v.name===st.voiceName)||vs[0]||null}
 if("speechSynthesis"in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>{if($("#modalBack").classList.contains("show")&&$("#voiceSel"))teacherPanel()}}
 let queue=[],pumpTimer=null,gen=0;
-function stopSpeech(){gen++;queue=[];clearTimeout(pumpTimer);if("speechSynthesis"in window)speechSynthesis.cancel();$$(".sayBtn").forEach(b=>b.classList.remove("talking"))}
+function stopSpeech(){gen++;queue=[];clearTimeout(pumpTimer);pumpTimer=null;if("speechSynthesis"in window)speechSynthesis.cancel();$$(".sayBtn").forEach(b=>b.classList.remove("talking"))}
 /* say([...]) fala em sequência, uma frase por vez, sem sobreposição. */
-function say(parts){if(!st.sound||!("speechSynthesis"in window))return;stopSpeech();queue=parts.map(p=>typeof p==="string"?{t:p}:p).filter(p=>p.t);pumpTimer=setTimeout(pump,80)}
-function pump(){const g=gen;if(!queue.length){$$(".sayBtn").forEach(b=>b.classList.remove("talking"));return}const p=queue.shift();try{const u=new SpeechSynthesisUtterance(String(p.t).replace(/<[^>]+>/g,""));u.lang="pt-BR";u.rate=p.rate||st.rate;u.pitch=1;const v=currentVoice();if(v){u.voice=v;u.lang=v.lang}u.onstart=()=>$$(".sayBtn").forEach(b=>b.classList.add("talking"));let done=false;const next=()=>{if(done||g!==gen)return;done=true;pumpTimer=setTimeout(pump,p.gap||160)};u.onend=next;u.onerror=next;speechSynthesis.speak(u);setTimeout(()=>{if(!done&&!speechSynthesis.speaking)next()},5000)}catch(e){pumpTimer=setTimeout(pump,50)}}
+function say(parts){if(!st.sound||!("speechSynthesis"in window))return;stopSpeech();queue=parts.map(p=>typeof p==="string"?{t:p}:p).filter(p=>p.t);pumpTimer=setTimeout(pump,120)}
+function pump(){const g=gen;pumpTimer=null;if(!queue.length){$$(".sayBtn").forEach(b=>b.classList.remove("talking"));speechFinished();return}const p=queue.shift();try{const ss=speechSynthesis;if(ss.paused)ss.resume();const u=new SpeechSynthesisUtterance(String(p.t).replace(/<[^>]+>/g,""));u.lang="pt-BR";u.rate=p.rate||st.rate;u.pitch=1;const v=currentVoice();if(v){u.voice=v;u.lang=v.lang}let started=false,done=false;u.onstart=()=>{started=true;$$(".sayBtn").forEach(b=>b.classList.add("talking"))};const next=()=>{if(done||g!==gen)return;done=true;pumpTimer=setTimeout(pump,p.gap||160)};u.onend=next;u.onerror=e=>{if(e&&(e.error==="interrupted"||e.error==="canceled"))return next();next()};
+  /* Chrome às vezes descarta a fala emitida logo após um cancel(): se não começou em 900 ms, tenta de novo uma vez */
+  const fire=()=>{try{ss.speak(u)}catch(err){next()}};fire();
+  setTimeout(()=>{if(!started&&!done&&g===gen&&!ss.speaking)fire()},900);
+  setTimeout(()=>{if(!done&&g===gen&&!ss.speaking)next()},7000)}catch(e){pumpTimer=setTimeout(pump,50)}}
 function speak(t){say([{t}])}
 function estimate(parts){if(!st.sound||!("speechSynthesis"in window))return 0;return parts.reduce((ms,p)=>ms+300+String(p.t).length*85/(p.rate||st.rate)+(p.gap||160),0)}
 
@@ -612,8 +616,11 @@ function teacher(items){$("#teacherBody").innerHTML=items.map(x=>`<div class="in
 let primaryFn=null,secondaryFn=null;
 function primary(l,f){$("#primaryAction").textContent=l;primaryFn=f;$("#primaryAction").classList.toggle("hidden",!f)}
 function secondary(l,f){$("#secondaryAction").textContent=l||"";secondaryFn=f;$("#secondaryAction").classList.toggle("hidden",!f)}
-function clearAuto(){if(st.auto){clearTimeout(st.auto);st.auto=null}}
-function queueAuto(fn,ms){clearAuto();st.auto=setTimeout(()=>{st.auto=null;fn()},ms)}
+function clearAuto(){if(st.auto){clearTimeout(st.auto);st.auto=null}afterSpeech=null;clearTimeout(afterSpeechTimer)}
+let afterSpeech=null,afterSpeechTimer=null;
+function speechActive(){return queue.length>0||("speechSynthesis"in window&&speechSynthesis.speaking)||pumpTimer!==null}
+function queueAuto(fn,ms){clearAuto();st.auto=setTimeout(()=>{st.auto=null;if(st.sound&&speechActive()){afterSpeech=fn;clearTimeout(afterSpeechTimer);afterSpeechTimer=setTimeout(()=>{if(afterSpeech===fn){afterSpeech=null;fn()}},8000)}else fn()},ms)}
+function speechFinished(){if(afterSpeech){const f=afterSpeech;afterSpeech=null;clearTimeout(afterSpeechTimer);setTimeout(f,450)}}
 function qTop(t,s,e="Missão"){return `<div class="questionTop"><button class="sayBtn" data-action="hear" title="Ouvir de novo">🔊</button><span class="eyebrow">${e}</span><div class="q">${t}</div>${s?`<span class="subq">${s}</span>`:""}</div>`}
 function stage(h){$("#stage").innerHTML=`<div class="childFlow">${h}</div>`}
 function updateRoute(){$("#routeStrip").innerHTML=ROUTE.map((m,i)=>`<div class="routeDot ${i<st.routeIndex?"done":i===st.routeIndex?"on":""}" title="${MODS[m].n}">${i+1}</div>`).join("")}
