@@ -118,6 +118,33 @@ main{flex:1;min-height:0;padding:8px}.view{height:100%}
 .album{grid-template-columns:repeat(9,1fr);gap:8px}.album .al{font-size:13px;padding:5px}
 .doneCard b,.nextCard b{font-size:26px}.nextCard p{font-size:17px}
 @media(max-width:760px){.passportHead{grid-template-columns:1fr}.passportHead .flagWrap{width:min(260px,70vw);margin:0 auto}.bubble{font-size:17px}.bigChoice{font-size:20px}.matchOpt{font-size:17px}.q{font-size:26px}.album{grid-template-columns:repeat(5,1fr)}.fichaEstado .flag{width:84px}}
+
+/* ===== v3.2: Modo Lousa (palco inteiro, sem colunas laterais, sem rolagem) ===== */
+.lousaTab{display:none}
+body.lousa header{height:58px;padding:5px 12px}body.lousa header img{width:40px;height:40px}body.lousa header h1{font-size:19px}body.lousa header small{display:none}
+body.lousa header .topbar{position:static;display:flex;flex:1;gap:6px;flex-wrap:nowrap;overflow:hidden;margin-left:10px}body.lousa header .topbar .pill{padding:5px 10px;white-space:nowrap}body.lousa header .topbar .pill small{font-size:8px}body.lousa header .topbar .pill b{font-size:13px}body.lousa header .topbar .pill[style]{display:none}
+body.lousa header .sp{display:none}body.lousa:not(.inwork) header .topbar{display:none}body.lousa:not(.inwork) header .sp{display:block}
+body.lousa .routeStrip{top:6px;padding:4px 6px}body.lousa .routeDot{width:26px;height:26px;font-size:11px}
+body.lousa .layout,body.lousa .work.guided .layout{padding:10px 10px 74px;grid-template-columns:minmax(0,1fr)}body.lousa .work.guided .layout{padding-top:44px}
+body.lousa .side{display:none}
+body.lousa .teacher{position:absolute;z-index:40;top:0;bottom:0;right:0;width:min(360px,80vw);border-radius:19px 0 0 19px;transform:translateX(102%);transition:transform .25s;box-shadow:-10px 0 30px #0008}body.lousa .teacher.open{transform:none}
+body.lousa .teacher .action,body.lousa .teacher .altAction{display:none}
+body.lousa .lousaTab{display:grid;place-items:center;position:absolute;z-index:41;right:0;top:50%;transform:translateY(-50%);width:34px;height:110px;border:1px solid #3A6D84;border-right:0;border-radius:14px 0 0 14px;background:#123D53;color:#fff;font-size:11px;font-weight:900;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);transform-origin:center}
+body.lousa .teacher.open~.lousaTab{right:min(360px,80vw)}
+body.lousa .dock{gap:6px;padding:6px;max-width:calc(100% - 20px)}body.lousa .dock button{min-width:96px;font-size:13px}body.lousa .dock .action,body.lousa .dock .altAction{width:auto;min-width:170px;margin:0;height:50px;font-size:15px}body.lousa .dock .action{background:linear-gradient(135deg,#22C55E,#15803D);border:0}
+body.lousa .stage{padding:12px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+body.lousa .childFlow{gap:10px;width:min(1080px,100%);max-height:100%}
+body.lousa .mascot{padding:6px 12px}body.lousa .mascot .rosto{font-size:40px}body.lousa .bubble{font-size:19px;padding:8px 12px}body.lousa .sayBtn{width:42px;height:42px;font-size:19px}
+body.lousa .bigCard{padding:12px 16px}body.lousa .questionTop{padding:10px 16px}body.lousa .q{font-size:clamp(26px,3vw,40px)}
+body.lousa .work.guided .flagWrap{height:clamp(140px,100vh - 436px,372px)}body.lousa .work.guided .mapBox svg{max-height:calc(100vh - 436px)}body.lousa .flagWrap{width:auto;max-width:min(560px,80vw);height:clamp(140px,100vh - 400px,372px);aspect-ratio:3/2;padding:8px;box-sizing:border-box}body.lousa .flagWrap .flag{height:100%;width:100%}
+body.lousa .stateName{font-size:28px;margin-top:6px}
+body.lousa .bigChoice{min-height:80px;font-size:23px}body.lousa .bigChoice .mini{width:84px}
+body.lousa .mapBox{padding:6px}body.lousa .mapBox svg{max-height:calc(100vh - 400px);min-height:220px}body.lousa .dock [data-action="hear"]{display:none}
+body.lousa .statePassport{grid-template-columns:repeat(3,1fr)}body.lousa .passportHead{grid-column:1/-1;grid-template-columns:120px 1fr;gap:12px}body.lousa .work .passportHead .flagWrap{height:auto;width:100%;max-width:none;padding:4px;aspect-ratio:auto}body.lousa .matchOpts{grid-template-columns:1fr;gap:6px}body.lousa .passportHead h3{font-size:26px}body.lousa .passportHead p{font-size:15px;margin-top:4px}body.lousa .statePassport{gap:6px;padding:10px 14px}body.lousa .matchRow{padding:8px 10px}body.lousa .matchRow>strong{font-size:18px;margin-bottom:6px}body.lousa .matchOpt{min-height:50px;font-size:19px}
+body.lousa .speakBox~.feedback .fichaEstado{display:none}body.lousa .revealGrid{grid-template-columns:repeat(3,1fr)}body.lousa .revealItem:nth-child(n+5){grid-column:1/-1}body.lousa .revealItem b{font-size:18px}body.lousa .speakBox:has(.revealGrid:not(.hidden)) .explainPrompt{display:none}body.lousa .work .speakBox:has(.revealGrid:not(.hidden)) .flagWrap{height:clamp(72px,100vh - 630px,150px)}body.lousa .work.guided .speakBox:has(.revealGrid:not(.hidden)) .flagWrap{height:clamp(60px,100vh - 666px,150px)}body.lousa .speakBox:has(.revealGrid:not(.hidden)) h3{font-size:22px;margin:4px 0}body.lousa .work .speakBox .flagWrap{height:clamp(140px,100vh - 460px,372px)}body.lousa .layout:has(.teacherChecklist) .lousaTab{background:#F5C84A;color:#3b2a00;border-color:#F5C84A}body.lousa .clue{padding:11px 14px;font-size:19px}body.lousa .speakBox{padding:10px 14px}body.lousa .speakBox h3{font-size:28px;margin-bottom:6px}body.lousa .revealGrid{margin-top:8px;gap:8px}body.lousa .revealItem{padding:8px 10px}body.lousa .explainPrompt{padding:10px 14px;font-size:17px}body.lousa .fichaEstado .flag{width:96px}
+body.lousa .stage{position:relative}body.lousa .feedback{position:absolute;left:14px;right:14px;top:10px;z-index:6;max-height:calc(100% - 20px);overflow:auto;padding:10px 14px;font-size:18px;box-shadow:0 14px 34px #0f2c4a55;animation:fbIn .25s ease-out}@keyframes fbIn{from{transform:translateY(-12px);opacity:0}to{transform:none;opacity:1}}body.lousa .feedback .fichaEstado .flag{width:80px}body.lousa .feedback .fichaEstado b{font-size:20px}body.lousa .feedback .fichaEstado small{font-size:15px}body.lousa .autoBar{margin-top:6px}
+body.lousa .album{grid-template-columns:repeat(9,1fr);gap:5px}
+@media(max-width:900px){body.lousa .layout,body.lousa .work.guided .layout{position:absolute;padding:10px 7px 74px}body.lousa .stage{min-height:0}}
 </style>
 </head>
 <body>
@@ -129,6 +156,7 @@ main{flex:1;min-height:0;padding:8px}.view{height:100%}
  <button class="hbtn label" data-action="level-cycle" id="levelTop">NÍVEL 1</button>
  <button class="hbtn icon" data-action="sound" id="soundBtn" title="Voz">🔊</button>
  <button class="hbtn icon" data-action="teacher" title="Painel do professor">⚙️</button>
+ <button class="hbtn icon" data-action="lousa" id="lousaBtn" title="Modo lousa: palco inteiro, sem colunas laterais">🖥</button>
  <button class="hbtn icon" data-action="full" title="Tela cheia">⛶</button>
 </header>
 <main>
@@ -147,7 +175,7 @@ main{flex:1;min-height:0;padding:8px}.view{height:100%}
 <section id="work" class="view work hidden">
  <div class="routeStrip" id="routeStrip"></div>
  <div class="topbar"><div class="pill"><small>MISSÃO</small><b id="moduleLabel">—</b></div><div class="pill"><small>NÍVEL</small><b id="levelLabel">1</b></div><div class="pill"><small>REGIÃO</small><b id="regionLabel">Brasil</b></div><div class="pill"><small>RODADAS</small><div class="dots" id="dots"></div></div><div class="pill" style="margin-left:auto"><small>ÁLBUM</small><b id="scoreLabel">0/27</b></div></div>
- <div class="layout"><aside class="side"><span class="tag" id="leftTag">OBJETIVO</span><h2 id="leftTitle"></h2><p id="leftText"></p><div class="info"><small>O QUE OBSERVAR</small><p id="observeText"></p></div></aside><div class="stage" id="stage"></div><aside class="teacher"><h3>Painel do professor</h3><div id="teacherBody"></div><button class="action" data-action="primary" id="primaryAction">Continuar</button><button class="altAction hidden" data-action="secondary" id="secondaryAction">Ação</button></aside></div>
+ <div class="layout"><aside class="side"><span class="tag" id="leftTag">OBJETIVO</span><h2 id="leftTitle"></h2><p id="leftText"></p><div class="info"><small>O QUE OBSERVAR</small><p id="observeText"></p></div></aside><div class="stage" id="stage"></div><aside class="teacher"><h3>Painel do professor</h3><div id="teacherBody"></div><button class="action" data-action="primary" id="primaryAction">Continuar</button><button class="altAction hidden" data-action="secondary" id="secondaryAction">Ação</button></aside><button class="lousaTab" data-action="teacher-drawer" title="Painel do professor">Professor</button></div>
  <div class="dock"><button data-action="hear">🔊 Ouvir</button><button data-action="hint">💡 Pista</button><button data-action="region-cycle">🗺️ Região</button><button data-action="skip">⏭️ Pular</button><button data-action="menu">⌂ Menu</button></div>
 </section>
 </main>
@@ -248,9 +276,9 @@ let _el=0,_qu=0;const elogio=()=>ELOGIOS[(_el++)%ELOGIOS.length];const quase=()=
 /* ---------- ESTADO ---------- */
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const st=Object.assign({level:1,sound:true,rate:.95,rounds:4,voiceName:"",autoFase:true,autoFaseMs:4500,home:"MS",region:"Brasil"},store.get("pde_expedicao3_cfg",{}),{
+const st=Object.assign({level:1,sound:true,rate:.95,rounds:4,voiceName:"",autoFase:true,autoFaseMs:4500,home:"MS",region:"Brasil",lousa:null},store.get("pde_expedicao3_cfg",{}),{
  module:"flags",guided:false,routeIndex:0,i:0,total:4,res:[],extra:0,busy:false,auto:null,cur:null,stats:{},hist:[],retomar:[],recent:[],album:[],speakChecks:new Set(),tipos:{}});
-function saveCfg(){store.set("pde_expedicao3_cfg",{level:st.level,sound:st.sound,rate:st.rate,rounds:st.rounds,voiceName:st.voiceName||"",autoFase:st.autoFase!==false,home:st.home,region:st.region})}
+function saveCfg(){store.set("pde_expedicao3_cfg",{level:st.level,sound:st.sound,rate:st.rate,rounds:st.rounds,voiceName:st.voiceName||"",autoFase:st.autoFase!==false,home:st.home,region:st.region,lousa:st.lousa})}
 const rand=a=>a[Math.floor(Math.random()*a.length)];function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 const esc=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const N=()=>NIVEIS[st.level];const E=uf=>ESTADOS[uf];const D=uf=>DATA.states.find(s=>s.uf===uf);
@@ -289,7 +317,7 @@ function highlightRegion(reg){UFS.forEach(uf=>{const p=shape[uf];if(!p)return;if
 const mark=(uf,k)=>{const p=shape[uf];if(p)p.classList.add(k)};
 
 /* ---------- UI BASE ---------- */
-function show(v){$("#home").classList.toggle("hidden",v!=="home");$("#work").classList.toggle("hidden",v!=="work");if(v==="home")stopSpeech()}
+function show(v){document.body.classList.toggle("inwork",v==="work");$("#home").classList.toggle("hidden",v!=="home");$("#work").classList.toggle("hidden",v!=="work");if(v==="home")stopSpeech()}
 function setMeta(){$("#moduleLabel").textContent=MODS[st.module].n;$("#levelLabel").textContent=`${st.level} · ${N().nome}`;$("#levelTop").textContent=`NÍVEL ${st.level}`;$("#regionLabel").textContent=REGIOES[st.region].nome;$("#scoreLabel").textContent=`${st.album.length}/27`;$("#dots").innerHTML=Array.from({length:st.total},(_,i)=>`<i class="${st.res[i]===true?"ok":st.res[i]===false?"bad":i===st.i?"on":""}"></i>`).join("")}
 function setLeft(a,b,c,d){$("#leftTag").textContent=a;$("#leftTitle").textContent=b;$("#leftText").textContent=c;$("#observeText").textContent=d}
 function teacher(items){$("#teacherBody").innerHTML=items.map(x=>`<div class="info"><small>${x[0]}</small><p>${x[1]}</p></div>`).join("")}
@@ -492,6 +520,8 @@ const ACTIONS={
  "region-cycle":()=>{const i=REGION_KEYS.indexOf(st.region);st.region=REGION_KEYS[(i+1)%REGION_KEYS.length];st.recent=[];saveCfg();setMeta();startModule(st.module)},
  "level-cycle":()=>{st.level=st.level%3+1;saveCfg();setMeta();if(!$("#work").classList.contains("hidden"))startModule(st.module)},
  sound:()=>{st.sound=!st.sound;$("#soundBtn").textContent=st.sound?"🔊":"🔇";$("#soundBtn").classList.toggle("off",!st.sound);saveCfg();if(!st.sound)stopSpeech();else speak("Voz ligada!");if($("#modalBack").classList.contains("show"))teacherPanel()},
+ lousa:()=>{setLousa(!document.body.classList.contains("lousa"),true)},
+ "teacher-drawer":()=>{$(".teacher").classList.toggle("open")},
  full:()=>document.fullscreenElement?document.exitFullscreen?.():document.documentElement.requestFullscreen?.().catch(()=>{}),
  teacher:()=>teacherPanel(),"modal-close":()=>$("#modalBack").classList.remove("show"),"modal-back":(b,e)=>{if(e.target===b)$("#modalBack").classList.remove("show")},
  "set-home":(b)=>{st.home=b.dataset.v;saveCfg();teacherPanel()},"set-region":(b)=>{st.region=b.dataset.v;st.recent=[];saveCfg();setMeta();teacherPanel()},
@@ -501,9 +531,28 @@ const ACTIONS={
  "copy-report":(b)=>{const t=report();(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{b.textContent="✅ Copiado!"},()=>{prompt("Copie o relatório:",t)})},
  "reset-session":()=>{st.stats={};st.hist=[];st.retomar=[];st.album=[];st.recent=[];setMeta();teacherPanel()}
 };
+
+/* ===== Modo Lousa ===== */
+function setLousa(on,salvar){
+ const b=document.body,tb=$("#work .topbar")||$("header .topbar"),hd=$("header"),dock=$(".dock"),tea=$(".teacher");
+ b.classList.toggle("lousa",on);
+ if(on){hd.insertBefore(tb,$("#levelTop"));dock.appendChild($("#primaryAction"));dock.appendChild($("#secondaryAction"));}
+ else{$("#work").insertBefore(tb,$("#work .layout"));tea.appendChild($("#primaryAction"));tea.appendChild($("#secondaryAction"));tea.classList.remove("open");}
+ $("#lousaBtn").classList.toggle("off",!on);
+ if(salvar){st.lousa=on;saveCfg()}
+}
+function autoLousa(){
+ const q=new URLSearchParams(location.search);
+ if(q.get("lousa")==="0")return false;
+ if(q.get("lousa")==="1")return true;
+ if(typeof st.lousa==="boolean")return st.lousa;
+ const coarse=matchMedia("(pointer:coarse)").matches,dpr=devicePixelRatio||1;
+ return (innerWidth*dpr>=3000)||(coarse&&innerWidth>=1600)||(window.top!==window.self&&innerWidth>=1100);
+}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-action]");if(!b)return;const f=ACTIONS[b.dataset.action];if(f){audio();f(b,e)}});
 document.addEventListener("input",e=>{const el=e.target.closest("[data-input]");if(!el)return;if(el.dataset.input==="voice"){st.voiceName=el.value;saveCfg();say([{t:"Florianópolis"},{t:"Santa Catarina"}])}});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#modalBack").classList.remove("show")});
+setLousa(autoLousa(),false);
 if(!/fs=0/.test(location.search))document.addEventListener("pointerdown",()=>{if(!document.fullscreenElement&&innerWidth>900)document.documentElement.requestFullscreen?.().catch(()=>{})},{once:true});
 $("#soundBtn").textContent=st.sound?"🔊":"🔇";$("#soundBtn").classList.toggle("off",!st.sound);
 show("home");setMeta();
