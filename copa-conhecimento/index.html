@@ -63,6 +63,27 @@ main{flex:1;min-height:0;padding:8px}.view{height:100%}
 @media(max-width:1100px){.gameLayout{grid-template-columns:215px minmax(0,1fr) 260px}.teamGrid{grid-template-columns:repeat(3,1fr)}.summaryGrid{grid-template-columns:1fr 1fr}}
 @media(max-width:820px){html,body{height:auto;overflow:auto}.app{height:auto;min-height:100dvh}.home{grid-template-rows:300px auto}.hero{min-height:300px}.heroCopy{left:16px;bottom:15px;width:82vw}.hero h2{font-size:30px}.badges{display:none}.setupGrid{grid-template-columns:1fr}.game{height:auto;min-height:100dvh}.gameLayout{position:relative;grid-template-columns:1fr;padding:70px 7px 72px}.side,.teacher{min-height:150px}.answers{grid-template-columns:1fr}.teamGrid{grid-template-columns:1fr 1fr}.phaseTrack{grid-template-columns:repeat(5,minmax(70px,1fr));overflow:auto}.questionCard{min-height:520px}.question{font-size:clamp(26px,6vw,34px)}.answer{font-size:18px;min-height:78px}.side p,.teacher p{font-size:14px}.info b,.info p{font-size:13px}.dock button{font-size:11px}}
 @media(max-width:560px){header{height:58px;padding:5px 7px}header img{width:40px;height:40px}header h1{font-size:18px}header small,.headBtn{display:none}.iconBtn{width:37px;height:37px}.home{grid-template-rows:235px auto}.hero{min-height:235px}.heroCopy{left:13px;right:13px;width:auto;bottom:12px}.kicker{font-size:7px}.hero h2{font-size:23px}.hero p{font-size:10px}.homeActions{grid-template-columns:1fr}.yearGrid{grid-template-columns:repeat(3,1fr)}.teamGrid{grid-template-columns:1fr 1fr}.scorePill .scoreMini span{display:none}.gameTop{left:6px;right:6px}.pill{padding:6px 8px}.scoreMini img{width:34px}.scoreMini strong{font-size:22px}.dock{width:calc(100% - 10px);bottom:5px}.dock button{min-width:0;flex:1}.resultActions{grid-template-columns:1fr}}
+
+/* ===== PDE-LOUSA-JOGO v1 · Modo Lousa: palco inteiro, sem colunas, sem rolagem ===== */
+.pdeLousaTab{display:none}
+body.lousa header{height:58px;padding:5px 12px}body.lousa header img{width:40px;height:40px}body.lousa header h1{font-size:19px}body.lousa header small{display:none}
+body.lousa header .gameTop{position:static;display:flex;flex:1;gap:6px;flex-wrap:nowrap;overflow:hidden;margin-left:10px;top:auto;left:auto;right:auto}body.lousa header .gameTop .pill{padding:5px 10px;white-space:nowrap;flex:none}body.lousa header .gameTop .pill small{font-size:8px}body.lousa header .gameTop .pill b{font-size:13px}body.lousa header .gameTop .pill[style*="margin-left"]{display:none}
+body.lousa header .sp{display:none}body.lousa:not(.inwork) header .gameTop{display:none}body.lousa:not(.inwork) header .sp{display:block}
+body.lousa .routeStrip{top:6px;padding:4px 6px}body.lousa .routeDot{width:26px;height:26px;font-size:11px}
+body.lousa .gameLayout,body.lousa .work.guided .gameLayout{padding:10px 10px 74px!important;grid-template-columns:minmax(0,1fr)!important;gap:0!important}body.lousa .work.guided .gameLayout{padding-top:44px!important}
+body.lousa .gameLayout>.side{display:none!important}
+body.lousa .gameLayout>.teacher{position:absolute;z-index:40;top:0;bottom:0;right:0;width:min(360px,80vw);border-radius:19px 0 0 19px;transform:translateX(102%);transition:transform .25s;box-shadow:-10px 0 30px #0008;overflow:auto}body.lousa .gameLayout>.teacher.open{transform:none}
+body.lousa .gameLayout>.teacher .action,body.lousa .gameLayout>.teacher .altAction{display:none}
+body.lousa .pdeLousaTab{display:grid;place-items:center;position:absolute;z-index:41;right:0;top:50%;width:34px;height:110px;border:1px solid #3A6D84;border-right:0;border-radius:14px 0 0 14px;background:#123D53;color:#fff;font-size:11px;font-weight:900;font-family:inherit;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);cursor:pointer}
+body.lousa .gameLayout>.teacher.open~.pdeLousaTab{right:min(360px,80vw)}
+body.lousa .gameLayout:has(.teacherChecklist,.checkBtn,.teacherQuestion) .pdeLousaTab{background:#F5C84A;color:#3b2a00;border-color:#F5C84A}
+body.lousa .dock{gap:6px;padding:6px;max-width:calc(100% - 20px);flex-wrap:nowrap}body.lousa .dock button{min-width:90px;font-size:13px}body.lousa .dock #primaryAction,body.lousa .dock #secondaryAction{width:auto;min-width:170px;margin:0;height:50px;font-size:15px}body.lousa .dock #primaryAction{background:linear-gradient(135deg,#22C55E,#15803D);border:0}body.lousa .dock [data-action="hear"]{display:none}
+body.lousa .gameLayout>.pitch{position:relative;padding:12px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+body.lousa .gameLayout>.pitch>*{max-width:100%}
+body.lousa .childFlow{gap:10px;width:min(1120px,100%)}
+body.lousa .mascot{padding:6px 12px}body.lousa .mascot .rosto{font-size:40px}body.lousa .mascot .bubble,body.lousa .bubble{font-size:19px;padding:8px 12px}body.lousa .sayBtn{width:42px;height:42px;font-size:19px}
+body.lousa .gameLayout>.pitch .feedback{position:absolute;left:14px;right:14px;top:10px;z-index:6;max-height:calc(100% - 20px);overflow:auto;box-shadow:0 14px 34px #0f2c4a55;animation:pdeFbIn .25s ease-out;margin:0}@keyframes pdeFbIn{from{transform:translateY(-12px);opacity:0}to{transform:none;opacity:1}}
+@media(max-width:900px){body.lousa .gameLayout,body.lousa .work.guided .gameLayout{position:absolute;padding:10px 7px 74px}body.lousa .gameLayout>.pitch{min-height:0}}
 </style>
 </head>
 <body>
@@ -254,5 +275,49 @@ $("#soundBtn").onclick=()=>{st.sound=!st.sound;$("#soundBtn").textContent=st.sou
 $("#setup").addEventListener("click",e=>{const y=e.target.closest("[data-year]");if(y){st.year=Number(y.dataset.year);buildSetup();return}const m=e.target.closest("[data-mode]");if(m){st.mode=m.dataset.mode;if(st.mode==="turma"&&!OPP.includes(st.teamB))st.teamB=OPP[0];buildSetup();return}const a=e.target.closest("[data-team]");if(a){st.teamA=a.dataset.team;if(st.teamA===st.teamB)st.teamB=st.mode==="turma"?OPP[0]:TEAMS.find(t=>t!==st.teamA);buildSetup();return}const b=e.target.closest("[data-team-b]");if(b){st.teamB=b.dataset.team;buildSetup();}});
 document.addEventListener("pointerdown",()=>{if(!document.fullscreenElement&&innerWidth>900)document.documentElement.requestFullscreen?.().catch(()=>{})},{once:true});
 buildSetup();view("home");
+</script>
+<script>
+/* ===== PDE-LOUSA-JOGO v1 ===== */
+(function(){
+ var $=function(s,r){return (r||document).querySelector(s)};
+ var CH="pde_lousa_"+location.pathname.replace(/[^a-z0-9]+/gi,"_");
+ var header=$("header"),work=$("#game"),layout=$(".gameLayout"),teacher=$(".gameLayout>.teacher"),stage=$(".gameLayout>.pitch"),dock=$(".dock");
+ if(!header||!layout||!stage)return;
+ var topbar=$("#game .gameTop"),pa=$("#primaryAction"),sa=$("#secondaryAction");
+ var btn=document.createElement("button");btn.className="hbtn icon";btn.setAttribute("data-lousa","toggle");btn.id="lousaBtn";btn.title="Modo lousa: palco inteiro, sem colunas laterais";btn.textContent="🖥";
+ var full=$('[data-action="full"],#fullBtn,#fsBtn,[data-action="tela"]',header);if(full)header.insertBefore(btn,full);else header.appendChild(btn);
+ if(teacher){var tab=document.createElement("button");tab.className="pdeLousaTab";tab.type="button";tab.setAttribute("data-lousa","drawer");tab.title="Painel do professor";tab.textContent="Professor";layout.appendChild(tab);}
+ var content=null,ro=null,fitPend=false;
+ var MODO=1; /* 1 = escala o filho único do palco; 2 = escala o próprio palco contra a altura da janela */
+ function fit(){fitPend=false;if(!document.body.classList.contains("lousa"))return;
+  if(MODO===2){stage.style.zoom="";var top=stage.getBoundingClientRect().top,avail2=innerHeight-top-12,need2=stage.scrollHeight;if(need2<=avail2+1)return;var z2=Math.max(.55,Math.floor(avail2/need2*100)/100);stage.style.zoom=String(z2);return;}
+  var c=stage.firstElementChild;if(!c)return;
+  if(c!==content){content=c;}
+  c.style.zoom="";c.style.width="";
+  var cs=getComputedStyle(stage),avail=stage.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
+  var need=c.scrollHeight;if(need<=avail+1)return;
+  var z=Math.max(.55,Math.floor(avail/need*100)/100);c.style.zoom=String(z);c.style.width=Math.min(100/z,100/z)+"%";c.style.maxWidth=(stage.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight))/z+"px";}
+ function agendar(){if(fitPend)return;fitPend=true;requestAnimationFrame(fit)}
+ var mo=new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var r=rs[i];if(!(r.type==="attributes"&&r.attributeName==="style"&&(r.target===stage.firstElementChild||r.target===stage))){agendar();return;}}});
+ function setLousa(on,salvar){
+  document.body.classList.toggle("lousa",on);btn.classList.toggle("off",!on);
+  if(on){if(topbar)header.insertBefore(topbar,$("#levelTop",header)||btn);if(dock){if(pa)dock.appendChild(pa);if(sa)dock.appendChild(sa);}
+   mo.observe(stage,{childList:true,subtree:true,attributes:true,characterData:true});if(!ro){ro=new ResizeObserver(agendar);ro.observe(stage);}agendar();}
+  else{if(topbar&&work)work.insertBefore(topbar,layout);if(teacher){if(pa)teacher.appendChild(pa);if(sa)teacher.appendChild(sa);teacher.classList.remove("open");}
+   mo.disconnect();if(ro){ro.disconnect();ro=null;}stage.style.zoom="";var c=stage.firstElementChild;if(c){c.style.zoom="";c.style.width="";c.style.maxWidth="";}}
+  if(salvar){try{localStorage.setItem(CH,on?"1":"0")}catch(e){}}
+ }
+ function auto(){var q=new URLSearchParams(location.search);if(q.get("lousa")==="0")return false;if(q.get("lousa")==="1")return true;
+  try{var s=localStorage.getItem(CH);if(s==="1")return true;if(s==="0")return false;}catch(e){}
+  var coarse=matchMedia("(pointer:coarse)").matches,dpr=devicePixelRatio||1,emIframe=false;try{emIframe=window.top!==window.self}catch(e){emIframe=true}
+  return innerWidth>=900;}
+ document.addEventListener("click",function(e){var b=e.target.closest("[data-lousa]");if(!b)return;var a=b.getAttribute("data-lousa");
+  if(a==="toggle")setLousa(!document.body.classList.contains("lousa"),true);else if(a==="drawer"&&teacher)teacher.classList.toggle("open");});
+ var vis=new MutationObserver(function(){document.body.classList.toggle("inwork",!!work&&!work.classList.contains("hidden"))});
+ if(work){vis.observe(work,{attributes:true,attributeFilter:["class"]});document.body.classList.toggle("inwork",!work.classList.contains("hidden"));}
+ window.addEventListener("resize",agendar);
+ setLousa(auto(),false);
+ window.PDELousaJogo={set:setLousa,fit:fit,zoom:function(){var c=stage.firstElementChild;return c?(c.style.zoom||"1"):"1"}};
+})();
 </script>
 </body></html>
