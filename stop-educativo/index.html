@@ -150,6 +150,28 @@ main{flex:1;min-height:0;padding:8px}.view{height:100%}
 @media(max-width:1180px){.modules.three{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:900px){.modules.three{grid-template-columns:1fr}.catRow{grid-template-columns:1fr}.stopHead{grid-template-columns:auto 1fr}.stopHead .timer{grid-column:1/-1;margin:0 auto}}
 @media(max-width:560px){.catRow input{font-size:20px;min-height:50px}.catRow .word{font-size:21px}.stopHead{padding:10px}.stopHead .letraMini{width:70px;height:70px;font-size:44px}.stopHead .who b{font-size:20px}.bigStop{font-size:26px;min-height:70px}.letraBig{width:150px;height:150px;font-size:100px}}
+
+/* ===== PDE-LOUSA-JOGO v1 · Modo Lousa: palco inteiro, sem colunas, sem rolagem ===== */
+.pdeLousaTab{display:none}
+body.lousa header{height:58px;padding:5px 12px}body.lousa header img{width:40px;height:40px}body.lousa header h1{font-size:19px}body.lousa header small{display:none}
+body.lousa header .topbar{position:static;display:flex;flex:1;gap:6px;flex-wrap:nowrap;overflow:hidden;margin-left:10px;top:auto;left:auto;right:auto}body.lousa header .topbar .pill{padding:5px 10px;white-space:nowrap;flex:none}body.lousa header .topbar .pill small{font-size:8px}body.lousa header .topbar .pill b{font-size:13px}body.lousa header .topbar .pill[style*="margin-left"]{display:none}
+body.lousa header .sp{display:none}body.lousa:not(.inwork) header .topbar{display:none}body.lousa:not(.inwork) header .sp{display:block}
+body.lousa .routeStrip{top:6px;padding:4px 6px}body.lousa .routeDot{width:26px;height:26px;font-size:11px}
+body.lousa .layout,body.lousa .work.guided .layout{padding:10px 10px 74px!important;grid-template-columns:minmax(0,1fr)!important;gap:0!important}body.lousa .work.guided .layout{padding-top:44px!important}
+body.lousa .layout>.side{display:none!important}
+body.lousa.inwork{overflow:hidden!important}html:has(body.lousa.inwork){overflow:hidden!important}
+body.lousa .layout>.teacher{position:absolute;z-index:40;top:0;bottom:0;right:0;width:min(360px,80vw);border-radius:19px 0 0 19px;transform:translateX(102%);transition:transform .25s;box-shadow:-10px 0 30px #0008;overflow:auto}body.lousa .layout>.teacher.open{transform:none}
+body.lousa .layout>.teacher .action,body.lousa .layout>.teacher .altAction{display:none}
+body.lousa .pdeLousaTab{display:grid;place-items:center;position:absolute;z-index:41;right:0;top:50%;width:34px;height:110px;border:1px solid #3A6D84;border-right:0;border-radius:14px 0 0 14px;background:#123D53;color:#fff;font-size:11px;font-weight:900;font-family:inherit;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);cursor:pointer}
+body.lousa .layout>.teacher.open~.pdeLousaTab{right:min(360px,80vw)}
+body.lousa .layout:has(.teacherChecklist,.checkBtn,.teacherQuestion) .pdeLousaTab{background:#F5C84A;color:#3b2a00;border-color:#F5C84A}
+body.lousa .dock{gap:6px;padding:6px;max-width:calc(100% - 20px);flex-wrap:nowrap}body.lousa .dock button{min-width:90px;font-size:13px}body.lousa .dock #primaryAction,body.lousa .dock #secondaryAction{width:auto;min-width:170px;margin:0;height:50px;font-size:15px}body.lousa .dock #primaryAction{background:linear-gradient(135deg,#22C55E,#15803D);border:0}body.lousa .dock [data-action="hear"]{display:none}
+body.lousa #stage{position:relative;padding:12px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+body.lousa #stage>*{max-width:100%}
+body.lousa .childFlow{gap:10px;width:min(1120px,100%)}
+body.lousa .mascot{padding:6px 12px}body.lousa .mascot .rosto{font-size:40px}body.lousa .mascot .bubble,body.lousa .bubble{font-size:19px;padding:8px 12px}body.lousa .sayBtn{width:42px;height:42px;font-size:19px}
+body.lousa #stage .feedback{position:absolute;left:14px;right:14px;top:10px;z-index:6;max-height:calc(100% - 20px);overflow:auto;box-shadow:0 14px 34px #0f2c4a55;animation:pdeFbIn .25s ease-out;margin:0}@keyframes pdeFbIn{from{transform:translateY(-12px);opacity:0}to{transform:none;opacity:1}}
+@media(max-width:900px){body.lousa .layout,body.lousa .work.guided .layout{position:absolute;padding:10px 7px 74px}body.lousa #stage{min-height:0}}
 </style>
 </head>
 <body>
@@ -544,6 +566,59 @@ if(!/fs=0/.test(location.search))document.addEventListener("pointerdown",()=>{if
 $("#soundBtn").textContent=st.sound?"🔊":"🔇";$("#soundBtn").classList.toggle("off",!st.sound);
 show("home");setMeta();
 window.PDE={st,CATS,DIC,MODS,NIVEIS,startMode,validar,sortearLetra,report,norm,pararEscrita,fecharRodada,exemplos};
+</script>
+<script>
+/* ===== PDE-LOUSA-JOGO v1 ===== */
+(function(){
+ var $=function(s,r){return (r||document).querySelector(s)};
+ var CH="pde_lousa_"+location.pathname.replace(/[^a-z0-9]+/gi,"_");
+ var header=$("header"),work=$("#work"),layout=$(".layout"),teacher=$(".layout>.teacher"),stage=$("#stage"),dock=$(".dock");
+ if(!header||!layout||!stage)return;
+ var topbar=$("#work .topbar"),pa=$("#primaryAction"),sa=$("#secondaryAction");
+ var btn=document.createElement("button");btn.className="hbtn icon";btn.setAttribute("data-lousa","toggle");btn.id="lousaBtn";btn.title="Modo lousa: palco inteiro, sem colunas laterais";btn.textContent="🖥";
+ var full=$('[data-action="full"],#fullBtn,#fsBtn,[data-action="tela"]',header);if(full)header.insertBefore(btn,full);else header.appendChild(btn);
+ if(teacher){var tab=document.createElement("button");tab.className="pdeLousaTab";tab.type="button";tab.setAttribute("data-lousa","drawer");tab.title="Painel do professor";tab.textContent="Professor";layout.appendChild(tab);}
+ var content=null,ro=null,fitPend=false;
+ var MODO=1; /* 1 = escala o filho único do palco; 2 = escala o próprio palco contra a altura da janela */
+ function fit(){fitPend=false;if(!document.body.classList.contains("lousa"))return;
+  if(MODO===2){stage.style.zoom="";var rb=stage.getBoundingClientRect(),extra=Math.max(0,document.documentElement.scrollHeight-rb.bottom-scrollY),avail2=innerHeight-rb.top-scrollY-extra-4,need2=stage.scrollHeight;if(need2<=avail2+1)return;var z2=Math.max(.4,Math.floor(avail2/need2*100)/100);stage.style.zoom=String(z2);return;}
+  var c=stage.firstElementChild;if(!c)return;
+  if(c!==content){content=c;}
+  c.style.zoom="";c.style.width="";
+  var cs=getComputedStyle(stage),avail=stage.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
+  var need=c.scrollHeight;if(need<=avail+1)return;
+  var z=Math.max(.4,Math.floor(avail/need*100)/100);c.style.zoom=String(z);c.style.width=Math.min(100/z,100/z)+"%";c.style.maxWidth=(stage.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight))/z+"px";}
+ function agendar(){if(fitPend)return;fitPend=true;requestAnimationFrame(fit)}
+ var mo=new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var r=rs[i];if(!(r.type==="attributes"&&r.attributeName==="style"&&(r.target===stage.firstElementChild||r.target===stage))){agendar();return;}}});
+ function setLousa(on,salvar){
+  document.body.classList.toggle("lousa",on);btn.classList.toggle("off",!on);
+  if(on){if(topbar)header.insertBefore(topbar,$("#levelTop",header)||btn);if(dock){if(pa)dock.appendChild(pa);if(sa)dock.appendChild(sa);}
+   mo.observe(stage,{childList:true,subtree:true,attributes:true,characterData:true});if(!ro){ro=new ResizeObserver(agendar);ro.observe(stage);}agendar();}
+  else{if(topbar&&work)work.insertBefore(topbar,layout);if(teacher){if(pa)teacher.appendChild(pa);if(sa)teacher.appendChild(sa);teacher.classList.remove("open");}
+   mo.disconnect();if(ro){ro.disconnect();ro=null;}stage.style.zoom="";var c=stage.firstElementChild;if(c){c.style.zoom="";c.style.width="";c.style.maxWidth="";}}
+  if(salvar){try{localStorage.setItem(CH,on?"1":"0")}catch(e){}}
+ }
+ function auto(){var q=new URLSearchParams(location.search);if(q.get("lousa")==="0")return false;if(q.get("lousa")==="1")return true;
+  try{var s=localStorage.getItem(CH);if(s==="1")return true;if(s==="0")return false;}catch(e){}
+  var coarse=matchMedia("(pointer:coarse)").matches,dpr=devicePixelRatio||1,emIframe=false;try{emIframe=window.top!==window.self}catch(e){emIframe=true}
+  return innerWidth>=900;}
+ function diag(){var s=stage,c=s.firstElementChild,m=[["Jogo",document.title],["Largura x altura da janela",innerWidth+" x "+innerHeight],["devicePixelRatio",devicePixelRatio],["Tela (screen)",screen.width+" x "+screen.height],["Tela cheia",document.fullscreenElement?"sim":"não"],["Modo lousa",document.body.classList.contains("lousa")?"ligado":"desligado"],["Palco (altura útil)",s.clientHeight+" px"],["Conteúdo do palco",(c?c.scrollHeight:0)+" px, zoom "+(c&&c.style.zoom||"1")],["Palco rola?",(s.scrollHeight-s.clientHeight)+" px"],["Página rola?",(document.documentElement.scrollHeight-innerHeight)+" px"],["Toque",(matchMedia("(pointer:coarse)").matches?"sim":"não")+", pontos "+(navigator.maxTouchPoints||0)],["Navegador",navigator.userAgent]];
+  var txt="DIAGNÓSTICO · "+location.pathname+"\n"+m.map(function(l){return l[0]+": "+l[1]}).join("\n");
+  var box=document.getElementById("pdeLousaDiag");if(!box){box=document.createElement("div");box.id="pdeLousaDiag";box.style.cssText="position:fixed;inset:0;z-index:2147483000;background:rgba(5,12,20,.95);color:#eaf2f8;padding:24px;overflow:auto;font:15px/1.5 'Segoe UI',Roboto,sans-serif";document.body.appendChild(box);}
+  box.innerHTML='<div style="max-width:820px;margin:0 auto"><h2 style="color:#B6D752;margin:0 0 6px">Diagnóstico da tela</h2><p style="opacity:.7;margin:0 0 14px">Toque em Copiar e cole na conversa.</p><pre style="white-space:pre-wrap;background:#0f2c4a;padding:14px;border-radius:12px;font:14px/1.5 monospace">'+txt.replace(/</g,"&lt;")+'</pre><div style="display:flex;gap:10px;margin-top:14px"><button data-lousa="copiar" style="min-height:48px;padding:0 18px;border-radius:10px;border:0;background:#37B1DA;color:#08131f;font:inherit;font-weight:700">Copiar</button><button data-lousa="fechar" style="min-height:48px;padding:0 18px;border-radius:10px;border:1px solid #37B1DA;background:#0f2c4a;color:#eaf2f8;font:inherit;font-weight:700">Fechar</button></div></div>';box.dataset.txt=txt;box.style.display="block";}
+ var lastTap=0;
+ document.addEventListener("click",function(e){var b=e.target.closest("[data-lousa]");if(!b)return;var a=b.getAttribute("data-lousa");
+  if(a==="toggle"){var now=Date.now();if(now-lastTap<450){lastTap=0;setLousa(true,false);diag();return;}lastTap=now;setLousa(!document.body.classList.contains("lousa"),true);}
+  else if(a==="drawer"&&teacher)teacher.classList.toggle("open");
+  else if(a==="fechar"){var bx=document.getElementById("pdeLousaDiag");if(bx)bx.style.display="none";}
+  else if(a==="copiar"){var bx2=document.getElementById("pdeLousaDiag"),t=bx2?bx2.dataset.txt:"";var ok=function(){b.textContent="Copiado ✓"};if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,function(){var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");ok()}catch(e){}document.body.removeChild(ta)});}});
+ if(/[?&]diag=1/.test(location.search))setTimeout(diag,800);
+ var vis=new MutationObserver(function(){document.body.classList.toggle("inwork",!!work&&!work.classList.contains("hidden"))});
+ if(work){vis.observe(work,{attributes:true,attributeFilter:["class"]});document.body.classList.toggle("inwork",!work.classList.contains("hidden"));}
+ window.addEventListener("resize",agendar);
+ setLousa(auto(),false);
+ window.PDELousaJogo={set:setLousa,fit:fit,zoom:function(){var c=stage.firstElementChild;return c?(c.style.zoom||"1"):"1"}};
+})();
 </script>
 </body>
 </html>
