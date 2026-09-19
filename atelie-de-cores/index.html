@@ -128,7 +128,38 @@ body.lousa .childFlow{gap:10px;width:min(1120px,100%)}
 body.lousa .mascot{padding:6px 12px}body.lousa .mascot .rosto{font-size:40px}body.lousa .mascot .bubble,body.lousa .bubble{font-size:19px;padding:8px 12px}body.lousa .sayBtn{width:42px;height:42px;font-size:19px}
 body.lousa .game-shell>.game-card .feedback{position:absolute;left:14px;right:14px;top:10px;z-index:6;max-height:calc(100% - 20px);overflow:auto;box-shadow:0 14px 34px #0f2c4a55;animation:pdeFbIn .25s ease-out;margin:0}@keyframes pdeFbIn{from{transform:translateY(-12px);opacity:0}to{transform:none;opacity:1}}
 @media(max-width:900px){body.lousa .game-shell,body.lousa .work.guided .game-shell{position:absolute;padding:10px 7px 74px}body.lousa .game-shell>.game-card{min-height:0}}
-body.lousa .game-shell{display:block!important;min-height:0!important}body.lousa .game-shell>.game-card{display:block;overflow:visible;align-items:initial}body.lousa.inwork{overflow:hidden}body.lousa.inwork .app{min-height:0}body.lousa.inwork main{padding-bottom:0}body.lousa .game-card>.game-head{display:none}body.lousa .game-card{padding:10px 18px}body.lousa .arena{padding:8px}</style>
+body.lousa .game-shell{display:block!important;min-height:0!important}body.lousa .game-shell>.game-card{display:block;overflow:visible;align-items:initial}body.lousa.inwork{overflow:hidden}body.lousa.inwork .app{min-height:0}body.lousa.inwork main{padding-bottom:0}body.lousa .game-card>.game-head{display:none}body.lousa .game-card{padding:10px 18px}body.lousa .arena{padding:8px}
+/* ===== v2 · lógica pedagógica ===== */
+.paint.nolabel{font-size:0}.paint.nolabel small{display:none}
+.listen.big{font-size:22px;min-height:60px;padding:0 26px}
+.chip{display:inline-block;width:.9em;height:.9em;border-radius:50%;vertical-align:-.08em;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.intro-text{max-width:720px;margin:14px auto 0;font-size:clamp(17px,1.7vw,22px);line-height:1.5;color:var(--muted)}
+.mix-table{display:grid;gap:8px;max-width:520px;margin:14px auto 0}
+.mix-row{display:flex;align-items:center;justify-content:center;gap:10px;font-size:22px;font-weight:900;color:var(--navy)}
+.mix-row i{width:44px;height:44px;border-radius:12px;border:4px solid #fff;box-shadow:0 6px 14px rgba(0,0,0,.15)}
+.temp-intro{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:760px;margin:10px auto 0}
+.temp-box{border-radius:22px;padding:18px;border:2px solid var(--line);background:#fff}
+.temp-box.quente{background:linear-gradient(160deg,#fff4e5,#ffe0cc)}.temp-box.fria{background:linear-gradient(160deg,#e8f4ff,#dcecff)}
+.temp-ico{font-size:40px}.temp-box b{display:block;font-size:24px;color:var(--navy);margin-top:4px}.temp-box small{display:block;color:var(--muted);font-weight:800;margin-top:2px}
+.temp-box .dots{display:flex;justify-content:center;gap:8px;margin-top:10px}.temp-box .dots i{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.15)}
+.wheel-svg{width:clamp(200px,24vw,300px);height:auto;display:block;margin:0 auto 12px;filter:drop-shadow(0 12px 24px rgba(0,0,0,.15))}
+.wheel-svg .wbase{stroke:#0f2c4a;stroke-width:5}
+.mix-text b{color:var(--navy)}
+.brushes{display:flex;gap:8px;justify-content:center;margin-top:10px}
+.brush{width:44px;height:44px;border-radius:12px;border:2px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;font-size:20px}
+.brush i{display:block;border-radius:50%;background:#243542}.brush.on{outline:3px solid var(--navy)}
+.tp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left}
+.tp-box{background:#f4f8fa;border:1px solid var(--line);border-radius:16px;padding:14px}
+.tp-box small{display:block;font-size:11px;letter-spacing:.1em;font-weight:950;color:var(--petrol);margin-bottom:6px}
+.tp-box b{display:block;font-size:18px;color:var(--navy)}.tp-box p{font-size:14px!important;line-height:1.45!important;margin:6px 0 0!important;color:#45606f!important}
+.tp-box pre{white-space:pre-wrap;font:13px/1.45 ui-monospace,Consolas,monospace;background:#fff;border-radius:10px;padding:10px;margin:0;max-height:220px;overflow:auto;color:#243542}
+.tp-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.tp-row .action{margin:0;min-height:44px;font-size:14px}
+.tp-lab{display:block;font-size:13px;font-weight:800;color:#45606f}.tp-lab input{display:block;width:100%;margin-top:4px;padding:10px;border-radius:10px;border:1px solid var(--line);font:inherit}
+#teacherModal .modal-card{width:min(900px,100%);text-align:left;max-height:92vh;overflow:auto}
+@media(max-width:760px){.temp-intro,.tp-grid{grid-template-columns:1fr}}
+
+body.lousa .game-shell>.game-card .feedback{position:absolute;left:50%!important;right:auto!important;top:auto!important;bottom:17px!important;transform:translateX(-50%)!important;max-width:86%!important;width:auto!important;max-height:none!important;overflow:visible!important;animation:none!important;padding:13px 18px}
+</style>
 </head>
 <body>
 <div class="app">
@@ -138,6 +169,7 @@ body.lousa .game-shell{display:block!important;min-height:0!important}body.lousa
  <div class="hud"><div class="pill">Aventura <b id="stageTop">&nbsp;0/7</b></div><div class="pill">⭐ <b id="scoreTop">&nbsp;0</b></div></div>
  <button class="iconbtn" id="soundBtn" title="Som">🔊</button>
  <button class="iconbtn" id="fsBtn" title="Tela cheia">⛶</button>
+ <button class="iconbtn" data-action="professor" title="Painel do professor">⚙️</button>
  <button class="iconbtn" id="helpBtn" title="Ajuda">?</button>
 </header>
 
@@ -190,119 +222,248 @@ body.lousa .game-shell{display:block!important;min-height:0!important}body.lousa
  <div class="modal-actions"><button class="big secondary" id="mapBtn">Mapa</button><button class="big primary" id="nextBtn">Próxima aventura →</button></div>
 </div></div>
 
+<div class="modal" id="teacherModal"><div class="modal-card">
+ <h2 style="font-size:26px;margin:0 0 10px">⚙️ Painel do professor</h2>
+ <div id="teacherBody"></div>
+ <div class="modal-actions" style="margin-top:14px"><button class="big primary" data-action="fechar-professor">Fechar</button></div>
+</div></div>
+
 <div class="modal" id="helpModal"><div class="modal-card">
  <div class="modal-icon">🎨</div><h2>Como aprender no Ateliê</h2>
- <p>Primeiro a criança reconhece e ouve as cores; depois mistura, procura cores em objetos, compara sensações, descobre complementares e conclui desafios bilíngues. O Ateliê Livre permite experimentar sem certo ou errado.</p>
+ <p><b>1. Descubra:</b> ver e ouvir, depois ler o nome, depois só pelo som. <b>2. Misturas:</b> primárias formam secundárias; errar mostra a cor que saiu. <b>3. Caça:</b> cores nas coisas do dia a dia. <b>4. Quente ou fria:</b> sensações. <b>5. Círculo:</b> complementares ficam do lado oposto. <b>6. Mestre:</b> tudo junto, sem ajudas. <b>7. Ateliê Livre:</b> pintar sem certo ou errado. O ⚙️ mostra o registro e o que observar.</p>
  <div class="modal-actions"><button class="big primary" id="closeHelp">Entendi</button></div>
 </div></div>
 
 <script>
+/* ===== Ateliê de Cores · lógica v2 (pedagogia real, fluxo guiado, painel do professor) ===== */
 const COLORS={
- vermelho:{hex:"#ef3340",pt:"Vermelho",en:"Red"},
- azul:{hex:"#1884e8",pt:"Azul",en:"Blue"},
- amarelo:{hex:"#ffd326",pt:"Amarelo",en:"Yellow"},
- verde:{hex:"#45bd63",pt:"Verde",en:"Green"},
- laranja:{hex:"#ff861c",pt:"Laranja",en:"Orange"},
- roxo:{hex:"#8246e7",pt:"Roxo",en:"Purple"},
- rosa:{hex:"#ef5a9a",pt:"Rosa",en:"Pink"},
- branco:{hex:"#f7f7f7",pt:"Branco",en:"White"},
- preto:{hex:"#20242a",pt:"Preto",en:"Black"}
+ vermelho:{hex:"#ef3340",pt:"Vermelho",en:"Red",pl:"vermelhas"},
+ azul:{hex:"#1884e8",pt:"Azul",en:"Blue",pl:"azuis"},
+ amarelo:{hex:"#ffd326",pt:"Amarelo",en:"Yellow",pl:"amarelas"},
+ verde:{hex:"#45bd63",pt:"Verde",en:"Green",pl:"verdes"},
+ laranja:{hex:"#ff861c",pt:"Laranja",en:"Orange",pl:"laranja"},
+ roxo:{hex:"#8246e7",pt:"Roxo",en:"Purple",pl:"roxas"},
+ rosa:{hex:"#ef5a9a",pt:"Rosa",en:"Pink",pl:"rosa"},
+ branco:{hex:"#f7f7f7",pt:"Branco",en:"White",pl:"brancas"},
+ preto:{hex:"#20242a",pt:"Preto",en:"Black",pl:"pretas"}
 };
 const STAGES=[
- {id:1,type:"discover",title:"Descubra as Cores",desc:"Veja, toque, ouça e associe os nomes em português e inglês.",total:8},
- {id:2,type:"mix",title:"Laboratório de Misturas",desc:"Experimente combinações e descubra como novas cores aparecem.",total:6},
- {id:3,type:"hunt",title:"Caça às Cores",desc:"Encontre cores em objetos do dia a dia.",total:6},
- {id:4,type:"temp",title:"Quente ou Fria",desc:"Associe cores a sensações de calor e frescor.",total:8},
- {id:5,type:"wheel",title:"Círculo das Cores",desc:"Explore relações e cores complementares.",total:6},
- {id:6,type:"master",title:"Mestre das Cores",desc:"Resolva desafios misturando português, inglês e raciocínio.",total:10},
- {id:7,type:"free",title:"Ateliê Livre",desc:"Pinte, experimente e misture sem certo ou errado.",total:1}
+ {id:1,type:"discover",title:"Descubra as Cores",desc:"Primeiro veja e ouça. Depois encontre pelo nome. Por fim, só pelo som.",total:9,
+  observar:"A criança encontra a cor pelo nome escrito? E só ouvindo? Cores que confunde (azul e roxo, laranja e amarelo) merecem retomada."},
+ {id:2,type:"mix",title:"Laboratório de Misturas",desc:"Vermelho, amarelo e azul são as cores primárias. Misture duas e veja nascer uma cor nova.",total:6,
+  observar:"A criança antecipa o resultado antes de misturar? Quando erra, repare se ela usa a cor que apareceu para corrigir a próxima tentativa."},
+ {id:3,type:"hunt",title:"Caça às Cores",desc:"As cores estão nas coisas do dia a dia. Encontre objetos da cor pedida.",total:6,
+  observar:"Peça para nomear outros objetos da mesma cor que existem na sala. Bom momento para vocabulário."},
+ {id:4,type:"temp",title:"Quente ou Fria",desc:"Cores quentes lembram sol e fogo. Cores frias lembram água e gelo.",total:8,
+  observar:"Pergunte: 'que sensação essa cor dá?'. Não há resposta única na vida real; o jogo usa a convenção da arte."},
+ {id:5,type:"wheel",title:"Círculo das Cores",desc:"No círculo, cada cor tem uma parceira do lado oposto: a complementar. Juntas, uma faz a outra brilhar.",total:6,
+  observar:"Nos primeiros desafios o círculo mostra a linha até a oposta. Depois some. Veja se a criança continua usando o círculo para pensar."},
+ {id:6,type:"master",title:"Mestre das Cores",desc:"Tudo junto: inglês, misturas, caça, sensações e círculo, sem ajudas.",total:10,
+  observar:"Aqui não há apoio visual. Erros repetidos num tipo de desafio indicam qual aventura vale repetir."},
+ {id:7,type:"free",title:"Ateliê Livre",desc:"Pinte, experimente e misture sem certo ou errado.",total:1,
+  observar:"Deixe a criança explorar. Pergunte que cores usou e por quê."}
 ];
+const PRIM=["vermelho","amarelo","azul"];
 const MIX=[["vermelho","amarelo","laranja"],["amarelo","azul","verde"],["azul","vermelho","roxo"]];
+const mixOf=(a,b)=>{let m=MIX.find(x=>(x[0]===a&&x[1]===b)||(x[0]===b&&x[1]===a));return m?m[2]:null};
 const TEMP={vermelho:"quente",laranja:"quente",amarelo:"quente",azul:"fria",verde:"fria",roxo:"fria"};
+const WHEEL=["vermelho","laranja","amarelo","verde","azul","roxo"];
 const COMP={vermelho:"verde",verde:"vermelho",azul:"laranja",laranja:"azul",amarelo:"roxo",roxo:"amarelo"};
 const OBJECTS=[
- {e:"🍎",name:"maçã",c:"vermelho"},{e:"🍓",name:"morango",c:"vermelho"},{e:"🍌",name:"banana",c:"amarelo"},
- {e:"🌽",name:"milho",c:"amarelo"},{e:"🥕",name:"cenoura",c:"laranja"},{e:"🍊",name:"laranja",c:"laranja"},
- {e:"🌿",name:"folha",c:"verde"},{e:"🥦",name:"brócolis",c:"verde"},{e:"🫐",name:"mirtilo",c:"azul"},
- {e:"💙",name:"coração azul",c:"azul"},{e:"🍇",name:"uva",c:"roxo"},{e:"💜",name:"coração roxo",c:"roxo"}
+ {e:"🍎",name:"maçã",c:"vermelho"},{e:"🍓",name:"morango",c:"vermelho"},{e:"🍅",name:"tomate",c:"vermelho"},{e:"🌹",name:"rosa vermelha",c:"vermelho"},{e:"🚒",name:"caminhão de bombeiro",c:"vermelho"},{e:"🍒",name:"cereja",c:"vermelho"},
+ {e:"🍌",name:"banana",c:"amarelo"},{e:"🌽",name:"milho",c:"amarelo"},{e:"🍋",name:"limão siciliano",c:"amarelo"},{e:"🌻",name:"girassol",c:"amarelo"},{e:"⭐",name:"estrela",c:"amarelo"},{e:"🧀",name:"queijo",c:"amarelo"},
+ {e:"🥕",name:"cenoura",c:"laranja"},{e:"🍊",name:"laranja",c:"laranja"},{e:"🎃",name:"abóbora",c:"laranja"},{e:"🏀",name:"bola de basquete",c:"laranja"},{e:"🦊",name:"raposa",c:"laranja"},
+ {e:"🌿",name:"folha",c:"verde"},{e:"🥦",name:"brócolis",c:"verde"},{e:"🐸",name:"sapo",c:"verde"},{e:"🍀",name:"trevo",c:"verde"},{e:"🥒",name:"pepino",c:"verde"},{e:"🌵",name:"cacto",c:"verde"},
+ {e:"🫐",name:"mirtilo",c:"azul"},{e:"🐳",name:"baleia",c:"azul"},{e:"💧",name:"gota de água",c:"azul"},{e:"🧢",name:"boné",c:"azul"},{e:"🦋",name:"borboleta",c:"azul"},{e:"🐟",name:"peixe",c:"azul"},
+ {e:"🍇",name:"uva",c:"roxo"},{e:"🍆",name:"berinjela",c:"roxo"},{e:"🔮",name:"bola de cristal",c:"roxo"},{e:"☂️",name:"guarda-chuva",c:"roxo"},{e:"👾",name:"monstrinho",c:"roxo"}
 ];
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const state={stage:1,step:0,score:0,correct:0,wrong:0,done:{},voice:true,locked:false,used:[],mixSel:[],freeColor:"vermelho"};
-function save(){try{localStorage.setItem("pde_cores_v2",JSON.stringify({score:state.score,done:state.done,voice:state.voice}))}catch(e){}}
-function load(){try{Object.assign(state,JSON.parse(localStorage.getItem("pde_cores_v2")||"{}"))}catch(e){}}
-function speak(t){if(!state.voice||!("speechSynthesis"in window))return;speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang="pt-BR";u.rate=.88;let vs=speechSynthesis.getVoices(),v=vs.find(x=>/pt-BR/i.test(x.lang))||vs.find(x=>/^pt/i.test(x.lang));if(v)u.voice=v;speechSynthesis.speak(u)}
-function beep(ok=true){try{let A=new(window.AudioContext||webkitAudioContext)(),o=A.createOscillator(),g=A.createGain();o.connect(g);g.connect(A.destination);o.frequency.value=ok?680:220;g.gain.setValueAtTime(.05,A.currentTime);g.gain.exponentialRampToValueAtTime(.001,A.currentTime+.18);o.start();o.stop(A.currentTime+.18)}catch(e){}}
-function feedback(t,ok=true){let f=$("#feedback");if(!f)return;f.textContent=t;f.className="feedback "+(ok?"ok":"no");clearTimeout(feedback.t);feedback.t=setTimeout(()=>f.classList.add("hidden"),1500)}
-function colorPhrase(k){let c=COLORS[k];return `${c.pt}. Em inglês, ${c.en}.`}
+const state={stage:1,step:0,score:0,correct:0,wrong:0,done:{},voice:true,locked:false,used:[],mixSel:[],freeColor:"vermelho",brush:18,reg:{},nome:"",erros:{}};
+function save(){try{localStorage.setItem("pde_cores_v3",JSON.stringify({score:state.score,done:state.done,voice:state.voice,reg:state.reg,nome:state.nome,erros:state.erros}))}catch(e){}}
+function load(){try{Object.assign(state,JSON.parse(localStorage.getItem("pde_cores_v3")||"{}"))}catch(e){}}
+
+/* ---------- voz em fila (padrão da linha) ---------- */
+const VOZ={fila:[],falando:false};
+function speak(t,opts={}){if(!state.voice||!("speechSynthesis"in window))return;if(!opts.append){speechSynthesis.cancel();VOZ.fila=[];VOZ.falando=false}VOZ.fila.push(t);if(!VOZ.falando)falaProxima()}
+function speakEn(t){if(!state.voice||!("speechSynthesis"in window))return;let u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=.85;let vs=speechSynthesis.getVoices(),v=vs.find(x=>/en[-_](US|GB)/i.test(x.lang))||vs.find(x=>/^en/i.test(x.lang));if(v)u.voice=v;VOZ.fila.push({en:u});if(!VOZ.falando)falaProxima()}
+function falaProxima(){if(!VOZ.fila.length){VOZ.falando=false;return}VOZ.falando=true;let it=VOZ.fila.shift();let u=it.en?it.en:Object.assign(new SpeechSynthesisUtterance(it),{lang:"pt-BR",rate:.9});if(!it.en){let vs=speechSynthesis.getVoices(),v=vs.find(x=>/pt[-_]BR/i.test(x.lang))||vs.find(x=>/^pt/i.test(x.lang));if(v)u.voice=v}u.onend=u.onerror=()=>setTimeout(falaProxima,120);speechSynthesis.speak(u)}
+function falarCor(k){speak(`${COLORS[k].pt}.`);speakEn(COLORS[k].en)}
+
+function beep(ok=true){try{let A=beep.A||(beep.A=new(window.AudioContext||webkitAudioContext)()),o=A.createOscillator(),g=A.createGain();o.connect(g);g.connect(A.destination);o.frequency.value=ok?680:220;g.gain.setValueAtTime(.05,A.currentTime);g.gain.exponentialRampToValueAtTime(.001,A.currentTime+.18);o.start();o.stop(A.currentTime+.18)}catch(e){}}
+function feedback(t,ok=true,ms=1800){let f=$("#feedback");if(!f)return;f.innerHTML=t;f.className="feedback "+(ok?"ok":"no");clearTimeout(feedback.t);feedback.t=setTimeout(()=>f.classList.add("hidden"),ms)}
 function updateHud(){$("#score").textContent=state.score;$("#scoreTop").textContent=" "+state.score;$("#stageTop").textContent=` ${state.stage}/7`;$("#soundBtn").textContent=state.voice?"🔊":"🔇"}
 function updateJourney(){let n=Object.keys(state.done).filter(k=>+k<=6&&state.done[k]).length;$("#journey").textContent=`${n} de 6 desafios concluídos · Ateliê Livre sempre disponível`}
-function startStage(id){state.stage=id;state.step=0;state.correct=0;state.wrong=0;state.locked=false;state.used=[];let s=STAGES[id-1];$("#lobby").classList.add("hidden");$("#game").classList.remove("hidden");$("#sideTitle").textContent=s.title;$("#sideDesc").textContent=s.desc;$("#title").textContent=s.title;$("#desc").textContent=s.desc;updateHud();updateProgress();nextExercise();speak(`${s.title}. ${s.desc}`)}
-function backLobby(){speechSynthesis?.cancel?.();$("#game").classList.add("hidden");$("#lobby").classList.remove("hidden");updateJourney();updateHud()}
 function updateProgress(){let s=STAGES[state.stage-1];$("#bar").style.width=(state.stage===7?100:Math.min(100,state.step/s.total*100))+"%";$("#progressText").textContent=state.stage===7?"Modo livre":`${Math.min(state.step+1,s.total)} de ${s.total}`}
-function success(points,msg){state.correct++;state.score+=points;beep(true);feedback("✓ "+msg,true);updateHud();save()}
-function fail(msg){state.wrong++;beep(false);feedback(msg,false)}
-function advance(delay=900){state.locked=true;setTimeout(()=>{state.step++;updateProgress();let s=STAGES[state.stage-1];if(state.step>=s.total)finishStage();else{state.locked=false;nextExercise()}},delay)}
-function finishStage(){let total=state.correct+state.wrong,rate=total?state.correct/total:1,stars=rate>=.85?3:rate>=.65?2:1;state.done[state.stage]={stars};save();$("#finishStars").textContent="★".repeat(stars)+"☆".repeat(3-stars);$("#finishText").textContent=`Você completou ${STAGES[state.stage-1].title} com ${state.correct} acertos.`;$("#nextBtn").textContent=state.stage<6?"Próxima aventura →":"Voltar ao mapa";$("#finishModal").classList.add("open");speak("Parabéns! Aventura concluída.")}
+function registrar(ok,tipo){let r=state.reg[state.stage]||(state.reg[state.stage]={ok:0,erro:0});ok?r.ok++:r.erro++;if(!ok&&tipo){state.erros[tipo]=(state.erros[tipo]||0)+1}save()}
+function success(points,msg,tipo){state.correct++;state.score+=points;beep(true);feedback("✓ "+msg,true);registrar(true,tipo);updateHud()}
+function fail(msg,tipo){state.wrong++;beep(false);feedback(msg,false,2600);registrar(false,tipo)}
+function advance(delay=1000){state.locked=true;setTimeout(()=>{state.step++;updateProgress();let s=STAGES[state.stage-1];if(state.step>=s.total)finishStage();else{state.locked=false;nextExercise()}},delay)}
+function startStage(id){state.stage=id;state.step=0;state.correct=0;state.wrong=0;state.locked=false;state.used=[];state.intro=false;let s=STAGES[id-1];$("#lobby").classList.add("hidden");$("#game").classList.remove("hidden");$("#sideTitle").textContent=s.title;$("#sideDesc").textContent=s.desc;$("#title").textContent=s.title;$("#desc").textContent=s.desc;updateHud();updateProgress();if(["mix","temp","wheel"].includes(s.type))intro(s);else{nextExercise();speak(`${s.title}. ${s.desc}`)}}
+function backLobby(){try{speechSynthesis.cancel()}catch(e){}$("#game").classList.add("hidden");$("#lobby").classList.remove("hidden");$("#finishModal").classList.remove("open");updateJourney();updateHud()}
+function finishStage(){let total=state.correct+state.wrong,rate=total?state.correct/total:1,stars=rate>=.85?3:rate>=.65?2:1;state.done[state.stage]={stars,ok:state.correct,erro:state.wrong};save();$("#finishStars").textContent="★".repeat(stars)+"☆".repeat(3-stars);$("#finishText").textContent=`${STAGES[state.stage-1].title}: ${state.correct} acertos e ${state.wrong} ${state.wrong===1?"erro":"erros"}.${stars===3?" Perfeito!":stars===2?" Muito bem!":" Vale repetir esta aventura."}`;$("#nextBtn").textContent=state.stage<6?"Próxima aventura →":"Voltar ao mapa";$("#finishModal").classList.add("open");speak(stars===3?"Parabéns! Aventura concluída sem erros.":"Aventura concluída. Você pode repetir quando quiser.")}
 function nextExercise(){updateProgress();let t=STAGES[state.stage-1].type;({discover:exDiscover,mix:exMix,hunt:exHunt,temp:exTemp,wheel:exWheel,master:exMaster,free:exFree})[t]()}
-function paintButton(k){let c=COLORS[k];return `<button class="paint" data-c="${k}" style="background:${c.hex};color:${k==="amarelo"||k==="branco"?"#243542":"#fff"}">${c.pt}<small>${c.en}</small></button>`}
 function freshColor(keys){let avail=keys.filter(k=>!state.used.includes(k));if(!avail.length){state.used=[];avail=[...keys]}let k=pick(avail);state.used.push(k);return k}
+const swatch=(k,label)=>`<button class="paint ${label?"":"nolabel"}" data-action="opt" data-c="${k}" style="background:${COLORS[k].hex};color:${k==="amarelo"||k==="branco"?"#243542":"#fff"}" aria-label="${COLORS[k].pt}">${label==="pt"?COLORS[k].pt:label==="both"?COLORS[k].pt+`<small>${COLORS[k].en}</small>`:label==="en"?COLORS[k].en:""}</button>`;
+const orb=(k,extra="")=>`<div class="orb" style="background:${COLORS[k].hex}${k==="branco"?";border-color:#dfe8ec":""}" ${extra}></div>`;
+function marcar(b,ok){b.classList.add(ok?"good":"bad");if(!ok)setTimeout(()=>b.classList.remove("bad"),400)}
 
+/* ---------- cartão de introdução (misturas, quente/fria, círculo) ---------- */
+function intro(s){
+ let html="";
+ if(s.type==="mix")html=`<div class="kicker">Antes de começar</div><h3 class="prompt">As três cores primárias</h3><div class="paint-row">${PRIM.map(k=>swatch(k,"both")).join("")}</div><p class="intro-text">Primárias são as cores que <b>não nascem de nenhuma mistura</b>. Misturando duas delas, aparecem as <b>secundárias</b>:</p><div class="mix-table">${MIX.map(([a,b,r])=>`<div class="mix-row"><i style="background:${COLORS[a].hex}"></i><span>+</span><i style="background:${COLORS[b].hex}"></i><span>=</span><i style="background:${COLORS[r].hex}"></i><b>${COLORS[r].pt}</b></div>`).join("")}</div>`;
+ if(s.type==="temp")html=`<div class="kicker">Antes de começar</div><h3 class="prompt">Quentes e frias</h3><div class="temp-intro"><div class="temp-box quente"><div class="temp-ico">☀️🔥</div><b>Cores quentes</b><small>lembram sol, fogo e calor</small><div class="dots">${["vermelho","laranja","amarelo"].map(k=>`<i style="background:${COLORS[k].hex}"></i>`).join("")}</div></div><div class="temp-box fria"><div class="temp-ico">🌊❄️</div><b>Cores frias</b><small>lembram água, gelo e sombra</small><div class="dots">${["azul","verde","roxo"].map(k=>`<i style="background:${COLORS[k].hex}"></i>`).join("")}</div></div></div>`;
+ if(s.type==="wheel")html=`<div class="kicker">Antes de começar</div><h3 class="prompt">O círculo das cores</h3>${wheelSvg("vermelho",true)}<p class="intro-text">Cada cor tem uma parceira <b>do lado oposto</b> do círculo: a <b>complementar</b>. Vermelho e verde, azul e laranja, amarelo e roxo. Colocadas lado a lado, uma faz a outra parecer mais forte.</p>`;
+ $("#arena").innerHTML=`<div class="exercise">${html}<button class="action" data-action="comecar" style="margin-top:14px;min-width:220px">Entendi, vamos lá →</button></div><div class="feedback hidden" id="feedback"></div>`;
+ speak(s.type==="mix"?"Vermelho, amarelo e azul são as cores primárias. Misturando duas delas, nascem outras cores.":s.type==="temp"?"Cores quentes lembram sol e fogo: vermelho, laranja e amarelo. Cores frias lembram água e gelo: azul, verde e roxo.":"No círculo das cores, a complementar é a cor que fica do lado oposto.");
+}
+
+/* ---------- 1 · Descubra ---------- */
 function exDiscover(){
- let keys=["vermelho","azul","amarelo","verde","laranja","roxo","rosa","branco","preto"],k=freshColor(keys),c=COLORS[k];
+ let keys=Object.keys(COLORS),k=freshColor(keys),c=COLORS[k],fase=state.step<3?"ver":state.step<6?"ler":"ouvir";
  let opts=shuffle([k,...shuffle(keys.filter(x=>x!==k)).slice(0,3)]);
- $("#arena").innerHTML=`<div class="exercise"><div class="kicker">Ver + ouvir + reconhecer</div><h3 class="prompt">Conheça esta cor</h3><div class="orb" style="background:${c.hex}"></div><div class="color-name">${c.pt}</div><div class="english">${c.en}</div><button class="listen" id="listenColor">🔊 Ouvir</button><div class="paint-row">${opts.map(paintButton).join("")}</div><p class="subprompt">Agora toque na mesma cor.</p></div><div class="feedback hidden" id="feedback"></div>`;
- $("#listenColor").onclick=()=>speak(colorPhrase(k));$$(".paint").forEach(b=>b.onclick=()=>{if(state.locked)return;if(b.dataset.c===k){b.classList.add("good");success(15,`${c.pt} · ${c.en}`);speak(colorPhrase(k));advance(1100)}else{b.classList.add("bad");setTimeout(()=>b.classList.remove("bad"),350);fail("Observe a cor grande e tente novamente.")}});speak(colorPhrase(k))
+ let topo=fase==="ver"?`<div class="kicker">Ver + ouvir · ${state.step+1} de 3</div><h3 class="prompt">Esta cor é ${c.pt}</h3>${orb(k)}<div class="english">${c.en}</div><button class="listen" data-action="ouvir">🔊 Ouvir</button><p class="subprompt">Agora toque na cor igual.</p>`
+  :fase==="ler"?`<div class="kicker">Ler o nome · ${state.step-2} de 3</div><h3 class="prompt">Toque em <span style="color:${k==="branco"?"#243542":c.hex}">${c.pt.toUpperCase()}</span></h3><div class="english">${c.en}</div><button class="listen" data-action="ouvir">🔊 Ouvir</button>`
+  :`<div class="kicker">Só pelo som · ${state.step-5} de 3</div><h3 class="prompt">Ouça e toque na cor</h3><button class="listen big" data-action="ouvir">🔊 Ouvir de novo</button>`;
+ $("#arena").innerHTML=`<div class="exercise" data-k="${k}">${topo}<div class="paint-row">${opts.map(x=>swatch(x,"")).join("")}</div></div><div class="feedback hidden" id="feedback"></div>`;
+ EX.k=k;EX.tipo="discover";EX.onOpt=(b)=>{if(b.dataset.c===k){marcar(b,true);success(15,`${c.pt} · ${c.en}`,"discover");if(fase==="ouvir")$(".prompt").textContent=c.pt;falarCor(k);advance(1300)}else{marcar(b,false);fail(fase==="ver"?"Olhe a cor grande e compare.":fase==="ler"?`Procure a cor <b>${c.pt}</b>.`:"Ouça de novo e tente outra.","discover");if(fase==="ouvir")speak(c.pt)}};
+ EX.onOuvir=()=>falarCor(k);
+ if(fase==="ouvir")speak(`Toque em ${c.pt}.`);else falarCor(k);
 }
-function exMix(){
- let [a,b,res]=MIX[state.step%MIX.length];state.mixSel=[];
- $("#arena").innerHTML=`<div class="exercise"><div class="kicker">Experimentar para descobrir</div><h3 class="prompt">Crie ${COLORS[res].pt} · ${COLORS[res].en}</h3><p class="subprompt">Quais duas tintas devemos misturar?</p><div class="paint-row">${["vermelho","amarelo","azul"].map(paintButton).join("")}</div><div class="mix-lab"><div class="bucket"><div class="bucket-fill" id="fill"></div></div><div class="mix-text" id="mixText">Escolha duas tintas.</div><button class="action" id="mixBtn">🧪 Misturar</button><button class="action alt" id="clearMix">Limpar</button></div></div><div class="feedback hidden" id="feedback"></div>`;
- $$(".paint").forEach(p=>p.onclick=()=>{let k=p.dataset.c;if(state.mixSel.includes(k)){state.mixSel=state.mixSel.filter(x=>x!==k);p.classList.remove("selected")}else if(state.mixSel.length<2){state.mixSel.push(k);p.classList.add("selected")}$("#mixText").textContent=state.mixSel.length?state.mixSel.map(x=>COLORS[x].pt).join(" + "):"Escolha duas tintas."});
- $("#clearMix").onclick=()=>{state.mixSel=[];$$(".paint").forEach(x=>x.classList.remove("selected"));$("#mixText").textContent="Escolha duas tintas.";$("#fill").style.height="0"};
- $("#mixBtn").onclick=()=>{if(state.mixSel.length!==2){fail("Escolha duas tintas primeiro.");return}let ok=state.mixSel.includes(a)&&state.mixSel.includes(b);if(ok){$("#fill").style.height="100%";$("#fill").style.background=COLORS[res].hex;success(25,`${COLORS[a].pt} + ${COLORS[b].pt} = ${COLORS[res].pt}`);speak(`${COLORS[a].pt} com ${COLORS[b].pt} formam ${COLORS[res].pt}. Em inglês, ${COLORS[res].en}.`);advance(1400)}else{fail("Essa combinação forma outra cor. Experimente novamente.");state.mixSel=[];$$(".paint").forEach(x=>x.classList.remove("selected"))}}
+
+/* ---------- 2 · Misturas ---------- */
+function exMix(hard){
+ let idx=state.step%3,[a,b,res]=MIX[idx],reverso=hard||state.step>=3;state.mixSel=[];
+ let topo=reverso?`<div class="kicker">Descubra a receita</div><h3 class="prompt">Que tintas formam esta cor?</h3>${orb(res)}<div class="color-name" style="font-size:30px">${COLORS[res].pt} · ${COLORS[res].en}</div>`
+  :`<div class="kicker">Experimentar para descobrir · ${idx+1} de 3</div><h3 class="prompt">Crie ${COLORS[res].pt} · ${COLORS[res].en}</h3><p class="subprompt">Escolha duas tintas primárias e misture.</p>`;
+ $("#arena").innerHTML=`<div class="exercise">${topo}<div class="paint-row">${PRIM.map(k=>swatch(k,"pt")).join("")}</div><div class="mix-lab"><div class="bucket"><div class="bucket-fill" id="fill"></div></div><div class="mix-text" id="mixText">Escolha duas tintas.</div><button class="action" data-action="misturar">🧪 Misturar</button><button class="action alt" data-action="limpar">Limpar</button></div></div><div class="feedback hidden" id="feedback"></div>`;
+ EX.tipo="mix";EX.res=res;
+ EX.onOpt=(p)=>{let k=p.dataset.c;if(state.locked)return;if(state.mixSel.includes(k)){state.mixSel=state.mixSel.filter(x=>x!==k);p.classList.remove("selected")}else if(state.mixSel.length<2){state.mixSel.push(k);p.classList.add("selected")}else{fail("Só duas tintas. Toque em Limpar para trocar.");return}
+  let f=$("#fill");if(state.mixSel.length===1){f.style.height="45%";f.style.background=COLORS[state.mixSel[0]].hex}else if(state.mixSel.length===2){f.style.height="70%";f.style.background=`linear-gradient(90deg,${COLORS[state.mixSel[0]].hex} 50%,${COLORS[state.mixSel[1]].hex} 50%)`}else{f.style.height="0"}
+  $("#mixText").textContent=state.mixSel.length?state.mixSel.map(x=>COLORS[x].pt).join(" + ")+(state.mixSel.length===2?" = ?":""):"Escolha duas tintas."};
+ EX.onLimpar=()=>{state.mixSel=[];$$(".paint").forEach(x=>x.classList.remove("selected"));$("#mixText").textContent="Escolha duas tintas.";$("#fill").style.height="0"};
+ EX.onMisturar=()=>{if(state.locked)return;if(state.mixSel.length!==2){fail("Escolha duas tintas primeiro.");return}let [x,y]=state.mixSel,got=mixOf(x,y);state.locked=true;
+  $("#fill").style.height="100%";$("#fill").style.background=COLORS[got].hex;$("#mixText").innerHTML=`${COLORS[x].pt} + ${COLORS[y].pt} = <b>${COLORS[got].pt}</b>`;
+  if(got===res){success(25,`${COLORS[x].pt} + ${COLORS[y].pt} = ${COLORS[res].pt}`,"mix");speak(`${COLORS[x].pt} com ${COLORS[y].pt} formam ${COLORS[res].pt}.`);speakEn(COLORS[res].en);advance(1800)}
+  else{fail(`${COLORS[x].pt} + ${COLORS[y].pt} forma <b>${COLORS[got].pt}</b>, não ${COLORS[res].pt}. Troque uma das tintas.`,"mix");speak(`${COLORS[x].pt} com ${COLORS[y].pt} formam ${COLORS[got].pt}. Precisamos de ${COLORS[res].pt}. Troque uma tinta.`);setTimeout(()=>{state.locked=false;EX.onLimpar()},2200)}};
+ speak(reverso?`Que tintas formam ${COLORS[res].pt}?`:`Vamos criar ${COLORS[res].pt}. Escolha duas tintas.`);
 }
-function exHunt(){
- let keys=["vermelho","azul","amarelo","verde","laranja","roxo"],target=freshColor(keys),corrects=shuffle(OBJECTS.filter(o=>o.c===target)).slice(0,2),wrong=shuffle(OBJECTS.filter(o=>o.c!==target)).slice(0,6),items=shuffle([...corrects,...wrong]),found=0;
- $("#arena").innerHTML=`<div class="exercise"><div class="kicker">Cor no mundo real</div><h3 class="prompt">Encontre 2 objetos ${COLORS[target].pt.toLowerCase()}s</h3><div class="english">Find ${COLORS[target].en.toUpperCase()}</div><button class="listen" id="huntListen">🔊 Ouvir instrução</button><div class="object-scene">${items.map((o,i)=>`<button class="obj" data-c="${o.c}" data-i="${i}">${o.e}<small>${o.name}</small></button>`).join("")}</div></div><div class="feedback hidden" id="feedback"></div>`;
- $("#huntListen").onclick=()=>speak(`Encontre dois objetos ${COLORS[target].pt.toLowerCase()}s. Em inglês, find ${COLORS[target].en}.`);
- $$(".obj").forEach(b=>b.onclick=()=>{if(b.classList.contains("good"))return;if(b.dataset.c===target){b.classList.add("good");found++;beep(true);feedback(`${found}/2 encontrados`,true);if(found===2){success(25,`Você encontrou objetos ${COLORS[target].pt.toLowerCase()}s!`);advance(1100)}}else{b.classList.add("bad");setTimeout(()=>b.classList.remove("bad"),350);fail("Esse objeto tem outra cor predominante.")}});speak(`Encontre dois objetos ${COLORS[target].pt.toLowerCase()}s.`)
+
+/* ---------- 3 · Caça ---------- */
+function exHunt(hard){
+ let keys=["vermelho","azul","amarelo","verde","laranja","roxo"],target=freshColor(keys),c=COLORS[target],n=hard?3:2;
+ let corrects=shuffle(OBJECTS.filter(o=>o.c===target)).slice(0,n),wrong=shuffle(OBJECTS.filter(o=>o.c!==target)).slice(0,8-n),items=shuffle([...corrects,...wrong]),found=0;
+ let frase=`Encontre ${n} coisas ${c.pl}`;
+ $("#arena").innerHTML=`<div class="exercise"><div class="kicker">Cor no mundo real</div><h3 class="prompt">${frase} <i class="chip" style="background:${c.hex}"></i></h3><div class="english">Find ${n} ${c.en.toLowerCase()} things</div><button class="listen" data-action="ouvir">🔊 Ouvir</button><div class="object-scene">${items.map((o,i)=>`<button class="obj" data-action="obj" data-c="${o.c}" data-n="${o.name}">${o.e}<small>${hard?"":o.name}</small></button>`).join("")}</div><p class="subprompt" id="huntCount">0 de ${n}</p></div><div class="feedback hidden" id="feedback"></div>`;
+ EX.tipo="hunt";EX.onOuvir=()=>{speak(`${frase}.`);speakEn(`Find ${c.en}.`)};
+ EX.onObj=(b)=>{if(state.locked||b.classList.contains("good"))return;if(b.dataset.c===target){b.classList.add("good");found++;beep(true);$("#huntCount").textContent=`${found} de ${n}`;speak(b.dataset.n+".");if(found===n){success(25,`Você encontrou ${n} coisas ${c.pl}!`,"hunt");advance(1200)}}else{marcar(b,false);let oc=COLORS[b.dataset.c];fail(`${b.dataset.n[0].toUpperCase()+b.dataset.n.slice(1)} é ${oc.pt.toLowerCase()}. Procure ${c.pt.toLowerCase()}.`,"hunt");speak(`${b.dataset.n} é ${oc.pt}.`)}};
+ speak(`${frase}.`);
 }
-function exTemp(){
- let k=freshColor(Object.keys(TEMP)),ans=TEMP[k];
- $("#arena").innerHTML=`<div class="exercise"><div class="kicker">Cores e sensações</div><h3 class="prompt">${COLORS[k].pt} · ${COLORS[k].en}</h3><div class="orb" style="background:${COLORS[k].hex}"></div><p class="subprompt">Essa cor lembra mais calor ou frescor?</p><div class="choice-grid"><button class="choice" data-a="quente">☀️🔥 Quente<br><small>Warm</small></button><button class="choice" data-a="fria">🌊❄️ Fria<br><small>Cool</small></button></div></div><div class="feedback hidden" id="feedback"></div>`;
- $$(".choice").forEach(b=>b.onclick=()=>{if(state.locked)return;if(b.dataset.a===ans){b.classList.add("good");success(15,`${COLORS[k].pt} é considerada uma cor ${ans}.`);speak(`${COLORS[k].pt} é uma cor ${ans}.`);advance()}else{b.classList.add("bad");setTimeout(()=>b.classList.remove("bad"),350);fail("Pense na sensação que essa cor transmite.")}})
+
+/* ---------- 4 · Quente ou fria ---------- */
+function exTemp(hard){
+ if(!hard&&state.step>=6){return exTempPaleta()}
+ let k=freshColor(Object.keys(TEMP)),ans=TEMP[k],c=COLORS[k];
+ $("#arena").innerHTML=`<div class="exercise"><div class="kicker">Cores e sensações</div><h3 class="prompt">${c.pt} · ${c.en}</h3>${orb(k)}<p class="subprompt">Essa cor lembra calor ou frescor?</p><div class="choice-grid"><button class="choice" data-action="temp" data-a="quente">☀️🔥 Quente<br><small>Warm</small></button><button class="choice" data-action="temp" data-a="fria">🌊❄️ Fria<br><small>Cool</small></button></div></div><div class="feedback hidden" id="feedback"></div>`;
+ EX.tipo="temp";EX.onTemp=(b)=>{if(state.locked)return;if(b.dataset.a===ans){marcar(b,true);success(15,`${c.pt} é uma cor ${ans}${ans==="quente"?": lembra sol e fogo.":": lembra água e gelo."}`,"temp");speak(`${c.pt} é uma cor ${ans}.`);advance(1400)}else{marcar(b,false);fail(ans==="quente"?`Pense no sol e no fogo. ${c.pt} está com eles.`:`Pense na água e no gelo. ${c.pt} está com eles.`,"temp")}};
+ speak(`${c.pt}. Quente ou fria?`);
 }
-function exWheel(){
- let base=freshColor(Object.keys(COMP)),target=COMP[base],opts=shuffle([target,...shuffle(Object.keys(COMP).filter(x=>x!==target&&x!==base)).slice(0,3)]);
- $("#arena").innerHTML=`<div class="exercise"><div class="kicker">Relações entre cores</div><h3 class="prompt">Qual é a complementar de ${COLORS[base].pt}?</h3><div class="wheel"></div><div class="color-name" style="font-size:34px">${COLORS[base].pt} · ${COLORS[base].en}</div><div class="paint-row">${opts.map(paintButton).join("")}</div></div><div class="feedback hidden" id="feedback"></div>`;
- $$(".paint").forEach(b=>b.onclick=()=>{if(state.locked)return;if(b.dataset.c===target){b.classList.add("good");success(20,`${COLORS[base].pt} + ${COLORS[target].pt}: cores complementares.`);speak(`${COLORS[base].pt} e ${COLORS[target].pt} são cores complementares.`);advance()}else{b.classList.add("bad");setTimeout(()=>b.classList.remove("bad"),350);fail("Observe o círculo e tente outra cor.")}})
+function exTempPaleta(){
+ let alvo=state.step===6?"quente":"fria",sel=new Set(),cores=shuffle(Object.keys(TEMP));
+ $("#arena").innerHTML=`<div class="exercise"><div class="kicker">Monte a paleta</div><h3 class="prompt">Escolha as 3 cores ${alvo==="quente"?"quentes ☀️":"frias ❄️"}</h3><div class="paint-row">${cores.map(k=>swatch(k,"pt")).join("")}</div><button class="action" data-action="confirmar" style="margin-top:14px">✓ Confirmar</button></div><div class="feedback hidden" id="feedback"></div>`;
+ EX.tipo="temp";EX.onOpt=(b)=>{if(state.locked)return;let k=b.dataset.c;if(sel.has(k)){sel.delete(k);b.classList.remove("selected")}else{sel.add(k);b.classList.add("selected")}};
+ EX.onConfirmar=()=>{if(state.locked)return;if(sel.size!==3){fail("Escolha exatamente 3 cores.");return}let ok=[...sel].every(k=>TEMP[k]===alvo);$$(".paint").forEach(b=>{if(sel.has(b.dataset.c))b.classList.add(TEMP[b.dataset.c]===alvo?"good":"bad")});
+  if(ok){success(30,`Paleta ${alvo}: ${[...sel].map(k=>COLORS[k].pt).join(", ")}.`,"temp");speak(`Paleta ${alvo} completa.`);advance(1600)}else{let erradas=[...sel].filter(k=>TEMP[k]!==alvo).map(k=>COLORS[k].pt);fail(`${erradas.join(" e ")} ${erradas.length>1?"são":"é"} ${alvo==="quente"?"fria":"quente"}${erradas.length>1?"s":""}. Troque.`,"temp");setTimeout(()=>$$(".paint").forEach(b=>b.classList.remove("bad")),800)}};
+ speak(`Escolha as três cores ${alvo==="quente"?"quentes":"frias"} e confirme.`);
 }
+
+/* ---------- 5 · Círculo ---------- */
+function wheelSvg(base,linha){
+ let n=6,R=100,r=48,cx=120,cy=120,paths="",marks="";
+ for(let i=0;i<n;i++){let a0=(i*60-90-30)*Math.PI/180,a1=((i+1)*60-90-30)*Math.PI/180,x0=cx+R*Math.cos(a0),y0=cy+R*Math.sin(a0),x1=cx+R*Math.cos(a1),y1=cy+R*Math.sin(a1),xi0=cx+r*Math.cos(a0),yi0=cy+r*Math.sin(a0),xi1=cx+r*Math.cos(a1),yi1=cy+r*Math.sin(a1);let k=WHEEL[i];paths+=`<path d="M${x0},${y0} A${R},${R} 0 0 1 ${x1},${y1} L${xi1},${yi1} A${r},${r} 0 0 0 ${xi0},${yi0} Z" fill="${COLORS[k].hex}" stroke="#fff" stroke-width="3" class="${k===base?"wbase":""}"/>`}
+ let bi=WHEEL.indexOf(base),ci=(bi+3)%6,am=(bi*60-90)*Math.PI/180,ac=(ci*60-90)*Math.PI/180,mr=(R+r)/2;
+ let bx=cx+mr*Math.cos(am),by=cy+mr*Math.sin(am),cxx=cx+mr*Math.cos(ac),cyy=cy+mr*Math.sin(ac);
+ marks+=`<circle cx="${bx}" cy="${by}" r="13" fill="#fff" stroke="#0f2c4a" stroke-width="4"/>`;
+ if(linha)marks+=`<line x1="${bx}" y1="${by}" x2="${cxx}" y2="${cyy}" stroke="#0f2c4a" stroke-width="4" stroke-dasharray="7 6"/><circle cx="${cxx}" cy="${cyy}" r="13" fill="none" stroke="#0f2c4a" stroke-width="4" stroke-dasharray="4 4"/>`;
+ return `<svg class="wheel-svg" viewBox="0 0 240 240">${paths}${marks}</svg>`;
+}
+function exWheel(hard){
+ let base=freshColor(Object.keys(COMP)),target=COMP[base],linha=!hard&&state.step<3,opts=shuffle([target,...shuffle(Object.keys(COMP).filter(x=>x!==target&&x!==base)).slice(0,3)]);
+ $("#arena").innerHTML=`<div class="exercise"><div class="kicker">${linha?"Siga a linha até o lado oposto":"Sem a linha: pense no lado oposto"}</div><h3 class="prompt">Qual é a complementar de <span style="color:${COLORS[base].hex}">${COLORS[base].pt}</span>?</h3>${wheelSvg(base,linha)}<div class="paint-row">${opts.map(x=>swatch(x,"pt")).join("")}</div></div><div class="feedback hidden" id="feedback"></div>`;
+ EX.tipo="wheel";EX.onOpt=(b)=>{if(state.locked)return;if(b.dataset.c===target){marcar(b,true);success(20,`${COLORS[base].pt} e ${COLORS[target].pt} são complementares.`,"wheel");speak(`${COLORS[base].pt} e ${COLORS[target].pt} são complementares.`);advance(1400)}else{marcar(b,false);fail(`${COLORS[b.dataset.c].pt} não está do lado oposto de ${COLORS[base].pt} no círculo.`,"wheel")}};
+ speak(`Qual é a complementar de ${COLORS[base].pt}? Olhe o lado oposto do círculo.`);
+}
+
+/* ---------- 6 · Mestre ---------- */
 function exMaster(){
  let kinds=["english","mix","hunt","temp","wheel"],kind=kinds[state.step%kinds.length];
  if(kind==="english"){
-   let keys=["vermelho","azul","amarelo","verde","laranja","roxo"],target=freshColor(keys),opts=shuffle([target,...shuffle(keys.filter(x=>x!==target)).slice(0,3)]);
-   $("#arena").innerHTML=`<div class="exercise"><div class="kicker">Desafio bilíngue</div><h3 class="prompt">Find ${COLORS[target].en.toUpperCase()}</h3><p class="subprompt">Encontre a cor em inglês.</p><div class="paint-row">${opts.map(paintButton).join("")}</div></div><div class="feedback hidden" id="feedback"></div>`;
-   $$(".paint").forEach(b=>b.onclick=()=>{if(state.locked)return;if(b.dataset.c===target){b.classList.add("good");success(25,`${COLORS[target].en} = ${COLORS[target].pt}`);speak(`${COLORS[target].en}. ${COLORS[target].pt}.`);advance()}else{b.classList.add("bad");setTimeout(()=>b.classList.remove("bad"),350);fail("Escute novamente e tente outra cor.")}});speak(`Find ${COLORS[target].en}.`);
- }else if(kind==="mix") exMix(); else if(kind==="hunt") exHunt(); else if(kind==="temp") exTemp(); else exWheel()
-}
-function exFree(){
- state.freeColor="vermelho";
- $("#arena").innerHTML=`<div class="exercise"><div class="kicker">Sem certo ou errado</div><h3 class="prompt">Ateliê Livre</h3><p class="subprompt">Escolha uma cor, pinte com o dedo ou mouse e experimente.</p><div class="canvas-wrap"><div><div class="palette">${["vermelho","amarelo","azul","verde","laranja","roxo","rosa","preto","branco"].map(k=>`<button class="swatch ${k==="vermelho"?"on":""}" data-c="${k}" style="background:${COLORS[k].hex}" title="${COLORS[k].pt} · ${COLORS[k].en}"></button>`).join("")}</div><button class="listen" id="freeSpeak" style="width:100%;margin-top:12px">🔊 Ouvir cor</button></div><canvas class="paint-canvas" id="canvas"></canvas></div><div class="free-tools"><button class="action alt" id="clearCanvas">🧽 Limpar</button><button class="action" id="freeBack">✓ Finalizar</button></div></div><div class="feedback hidden" id="feedback"></div>`;
- const canvas=$("#canvas"),ctx=canvas.getContext("2d");
- function resize(){let r=canvas.getBoundingClientRect(),tmp=document.createElement("canvas");tmp.width=canvas.width;tmp.height=canvas.height;tmp.getContext("2d").drawImage(canvas,0,0);canvas.width=Math.max(1,Math.floor(r.width*devicePixelRatio));canvas.height=Math.max(1,Math.floor(r.height*devicePixelRatio));ctx.scale(devicePixelRatio,devicePixelRatio);ctx.lineCap="round";ctx.lineJoin="round";ctx.lineWidth=18;ctx.drawImage(tmp,0,0,tmp.width,tmp.height,0,0,r.width,r.height)}
- setTimeout(resize,30);let drawing=false,last=null;
- const pos=e=>{let r=canvas.getBoundingClientRect(),p=e.touches?e.touches[0]:e;return{x:p.clientX-r.left,y:p.clientY-r.top}};
- function down(e){e.preventDefault();drawing=true;last=pos(e)} function move(e){if(!drawing)return;e.preventDefault();let p=pos(e);ctx.strokeStyle=COLORS[state.freeColor].hex;ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p} function up(){drawing=false;last=null}
- canvas.addEventListener("pointerdown",down);canvas.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
- $$(".swatch").forEach(s=>s.onclick=()=>{state.freeColor=s.dataset.c;$$(".swatch").forEach(x=>x.classList.toggle("on",x===s));speak(colorPhrase(state.freeColor))});
- $("#freeSpeak").onclick=()=>speak(colorPhrase(state.freeColor));
- $("#clearCanvas").onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
- $("#freeBack").onclick=backLobby;speak("Ateliê Livre. Escolha uma cor e comece a pintar.")
+  let keys=["vermelho","azul","amarelo","verde","laranja","roxo"],target=freshColor(keys),opts=shuffle([target,...shuffle(keys.filter(x=>x!==target)).slice(0,3)]);
+  $("#arena").innerHTML=`<div class="exercise"><div class="kicker">Desafio bilíngue</div><h3 class="prompt">Find ${COLORS[target].en.toUpperCase()}</h3><button class="listen" data-action="ouvir">🔊 Listen</button><div class="paint-row">${opts.map(x=>swatch(x,"")).join("")}</div></div><div class="feedback hidden" id="feedback"></div>`;
+  EX.tipo="english";EX.onOuvir=()=>speakEn(`Find ${COLORS[target].en}.`);
+  EX.onOpt=(b)=>{if(state.locked)return;if(b.dataset.c===target){marcar(b,true);success(25,`${COLORS[target].en} = ${COLORS[target].pt}`,"english");speakEn(COLORS[target].en);speak(COLORS[target].pt+".",{append:true});advance(1300)}else{marcar(b,false);fail(`${COLORS[b.dataset.c].en} é ${COLORS[b.dataset.c].pt}. Ouça de novo.`,"english")}};
+  speakEn(`Find ${COLORS[target].en}.`);
+ }else if(kind==="mix")exMix(true);else if(kind==="hunt")exHunt(true);else if(kind==="temp")exTemp(true);else exWheel(true)
 }
 
+/* ---------- 7 · Livre ---------- */
+function exFree(){
+ state.freeColor="vermelho";state.brush=18;
+ $("#arena").innerHTML=`<div class="exercise"><div class="kicker">Sem certo ou errado</div><h3 class="prompt">Ateliê Livre</h3><p class="subprompt">Escolha uma cor, um pincel, e pinte com o dedo ou o mouse.</p><div class="canvas-wrap"><div><div class="palette">${Object.keys(COLORS).map(k=>`<button class="swatch ${k==="vermelho"?"on":""}" data-action="cor" data-c="${k}" style="background:${COLORS[k].hex}" title="${COLORS[k].pt} · ${COLORS[k].en}" aria-label="${COLORS[k].pt}"></button>`).join("")}</div><div class="brushes"><button class="brush" data-action="pincel" data-b="8" title="Fino"><i style="width:8px;height:8px"></i></button><button class="brush on" data-action="pincel" data-b="18" title="Médio"><i style="width:16px;height:16px"></i></button><button class="brush" data-action="pincel" data-b="36" title="Grosso"><i style="width:26px;height:26px"></i></button><button class="brush" data-action="borracha" title="Borracha">🧽</button></div><button class="listen" data-action="ouvir" style="width:100%;margin-top:10px">🔊 Ouvir cor</button></div><canvas class="paint-canvas" id="canvas"></canvas></div><div class="free-tools"><button class="action alt" data-action="limpar-tela">🗑️ Limpar tudo</button><button class="action" data-action="finalizar">✓ Finalizar</button></div></div><div class="feedback hidden" id="feedback"></div>`;
+ const canvas=$("#canvas"),ctx=canvas.getContext("2d");let eraser=false;
+ function resize(){let r=canvas.getBoundingClientRect(),tmp=document.createElement("canvas");tmp.width=canvas.width;tmp.height=canvas.height;if(tmp.width&&tmp.height)tmp.getContext("2d").drawImage(canvas,0,0);canvas.width=Math.max(1,Math.floor(r.width*devicePixelRatio));canvas.height=Math.max(1,Math.floor(r.height*devicePixelRatio));ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);ctx.lineCap="round";ctx.lineJoin="round";if(tmp.width&&tmp.height)ctx.drawImage(tmp,0,0,tmp.width,tmp.height,0,0,r.width,r.height)}
+ setTimeout(resize,30);let drawing=false,last=null;
+ const pos=e=>{let r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*(canvas.width/devicePixelRatio)/r.width,y:(e.clientY-r.top)*(canvas.height/devicePixelRatio)/r.height}};
+ canvas.addEventListener("pointerdown",e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);drawing=true;last=pos(e);ctx.beginPath();ctx.fillStyle=eraser?"#fff":COLORS[state.freeColor].hex;ctx.arc(last.x,last.y,state.brush/2,0,Math.PI*2);ctx.fill()});
+ canvas.addEventListener("pointermove",e=>{if(!drawing)return;e.preventDefault();let p=pos(e);ctx.strokeStyle=eraser?"#fff":COLORS[state.freeColor].hex;ctx.lineWidth=eraser?state.brush*2:state.brush;ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p});
+ const up=()=>{drawing=false;last=null};canvas.addEventListener("pointerup",up);canvas.addEventListener("pointercancel",up);
+ EX.tipo="free";
+ EX.onCor=(b)=>{eraser=false;state.freeColor=b.dataset.c;$$(".swatch").forEach(x=>x.classList.toggle("on",x===b));$$(".brush").forEach(x=>x.classList.toggle("on",x.dataset.b===String(state.brush)));falarCor(state.freeColor)};
+ EX.onPincel=(b)=>{eraser=false;state.brush=+b.dataset.b;$$(".brush").forEach(x=>x.classList.toggle("on",x===b))};
+ EX.onBorracha=(b)=>{eraser=true;$$(".brush").forEach(x=>x.classList.toggle("on",x===b));speak("Borracha.")};
+ EX.onOuvir=()=>falarCor(state.freeColor);
+ EX.onLimparTela=()=>{ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.restore()};
+ EX.onFinalizar=()=>{state.done[7]={stars:3};save();backLobby()};
+ speak("Ateliê Livre. Escolha uma cor e comece a pintar.");
+}
+
+/* ---------- painel do professor ---------- */
+function relatorioTexto(){
+ let linhas=STAGES.slice(0,6).map(s=>{let d=state.done[s.id],r=state.reg[s.id];return `${s.id}. ${s.title}: ${d?("★".repeat(d.stars)+"☆".repeat(3-d.stars)+` (${d.ok} acertos, ${d.erro} erros)`):(r?`em andamento (${r.ok} acertos, ${r.erro} erros)`:"não iniciada")}`});
+ let tipos={discover:"Reconhecer cores",mix:"Misturas",hunt:"Cores em objetos",temp:"Quente/fria",wheel:"Complementares",english:"Nomes em inglês"};
+ let erros=Object.entries(state.erros).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${tipos[k]||k}: ${v}`);
+ return `ATELIÊ DE CORES · Registro${state.nome?" · "+state.nome:""}\nData: ${new Date().toLocaleDateString("pt-BR")}\nPontos: ${state.score}\n\n${linhas.join("\n")}\n\nErros por tipo: ${erros.length?erros.join(" · "):"nenhum"}\n\nBNCC (conferir): EI03TS02 · EF15AR02 · EF15AR04 · EF15AR05`;
+}
+function abrirProfessor(){
+ let s=STAGES[state.stage-1],emJogo=!$("#game").classList.contains("hidden");
+ $("#teacherBody").innerHTML=`
+  <div class="tp-grid">
+   <div class="tp-box"><small>ESTA AVENTURA</small><b>${emJogo?s.title:"No mapa"}</b>${emJogo?`<p>${s.observar}</p>`:"<p>Escolha uma aventura no mapa para ver o que observar.</p>"}</div>
+   <div class="tp-box"><small>REGISTRO</small><pre id="tpRel">${relatorioTexto().replace(/</g,"&lt;")}</pre><div class="tp-row"><button class="action alt" data-action="copiar-rel">📋 Copiar registro</button><button class="action alt" data-action="zerar">🔄 Zerar tudo</button></div></div>
+   <div class="tp-box"><small>CONFIGURAÇÕES</small><label class="tp-lab">Nome da criança ou turma <input id="tpNome" value="${(state.nome||"").replace(/"/g,"&quot;")}" placeholder="opcional"></label><div class="tp-row"><button class="action alt" data-action="voz">${state.voice?"🔊 Voz ligada":"🔇 Voz desligada"}</button><button class="action alt" data-action="testar-voz">▶ Testar voz</button></div></div>
+   <div class="tp-box"><small>COMO USAR EM SALA</small><p>Na lousa, uma criança por vez toca; a turma responde antes em voz alta. As aventuras 2, 4 e 5 começam com um cartão de explicação: leia com a turma antes de tocar em "Entendi".</p><p><b>BNCC</b> (conferir com a coordenação): EI03TS02 (expressar-se por desenho e pintura), EF15AR02 (explorar elementos das artes visuais: cor), EF15AR04 e EF15AR05 (experimentar materiais e processos de criação). Inglês: vocabulário de cores como enriquecimento.</p></div>
+  </div>`;
+ $("#teacherModal").classList.add("open");
+}
+
+/* ---------- eventos (delegação, Regra 9) ---------- */
+const EX={};
+document.addEventListener("click",e=>{
+ let x=e.target.closest("[data-stage]");if(x){startStage(+x.dataset.stage);return}
+ let b=e.target.closest("[data-action]");if(!b)return;let a=b.dataset.action;
+ if(a==="opt"&&EX.onOpt)EX.onOpt(b);else if(a==="obj"&&EX.onObj)EX.onObj(b);else if(a==="temp"&&EX.onTemp)EX.onTemp(b);
+ else if(a==="ouvir"&&EX.onOuvir)EX.onOuvir(b);else if(a==="misturar"&&EX.onMisturar)EX.onMisturar();else if(a==="limpar"&&EX.onLimpar)EX.onLimpar();
+ else if(a==="confirmar"&&EX.onConfirmar)EX.onConfirmar();else if(a==="comecar"){nextExercise();speak(STAGES[state.stage-1].desc)}
+ else if(a==="cor"&&EX.onCor)EX.onCor(b);else if(a==="pincel"&&EX.onPincel)EX.onPincel(b);else if(a==="borracha"&&EX.onBorracha)EX.onBorracha(b);
+ else if(a==="limpar-tela"&&EX.onLimparTela)EX.onLimparTela();else if(a==="finalizar"&&EX.onFinalizar)EX.onFinalizar();
+ else if(a==="professor")abrirProfessor();else if(a==="fechar-professor"){state.nome=($("#tpNome")||{}).value||state.nome;save();$("#teacherModal").classList.remove("open")}
+ else if(a==="copiar-rel"){let t=relatorioTexto();(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{b.textContent="✓ Copiado"},()=>{let ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");b.textContent="✓ Copiado"}catch(e){}document.body.removeChild(ta)})}
+ else if(a==="zerar"){state.score=0;state.done={};state.reg={};state.erros={};save();updateHud();updateJourney();$("#tpRel").textContent=relatorioTexto()}
+ else if(a==="voz"){state.voice=!state.voice;save();updateHud();b.textContent=state.voice?"🔊 Voz ligada":"🔇 Voz desligada"}
+ else if(a==="testar-voz"){speak("Vermelho.");speakEn("Red")}
+});
 load();updateHud();updateJourney();
-document.addEventListener("click",e=>{let x=e.target.closest("[data-stage]");if(x)startStage(+x.dataset.stage)});
 $("#backBtn").onclick=backLobby;
 $("#soundBtn").onclick=()=>{state.voice=!state.voice;updateHud();save();if(state.voice)speak("Som ligado.")};
 $("#fsBtn").onclick=()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.()};
@@ -310,6 +471,7 @@ $("#helpBtn").onclick=()=>$("#helpModal").classList.add("open");
 $("#closeHelp").onclick=()=>$("#helpModal").classList.remove("open");
 $("#mapBtn").onclick=()=>{$("#finishModal").classList.remove("open");backLobby()};
 $("#nextBtn").onclick=()=>{$("#finishModal").classList.remove("open");if(state.stage<6)startStage(state.stage+1);else backLobby()};
+if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=()=>{};
 </script>
 <script>
 /* ===== PDE-LOUSA-JOGO v1 ===== */
