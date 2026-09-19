@@ -72,6 +72,7 @@ body.lousa header .sp{display:none}body.lousa:not(.inwork) header .gameTop{displ
 body.lousa .routeStrip{top:6px;padding:4px 6px}body.lousa .routeDot{width:26px;height:26px;font-size:11px}
 body.lousa .gameLayout,body.lousa .work.guided .gameLayout{padding:10px 10px 74px!important;grid-template-columns:minmax(0,1fr)!important;gap:0!important}body.lousa .work.guided .gameLayout{padding-top:44px!important}
 body.lousa .gameLayout>.side{display:none!important}
+body.lousa.inwork{overflow:hidden!important}html:has(body.lousa.inwork){overflow:hidden!important}
 body.lousa .gameLayout>.teacher{position:absolute;z-index:40;top:0;bottom:0;right:0;width:min(360px,80vw);border-radius:19px 0 0 19px;transform:translateX(102%);transition:transform .25s;box-shadow:-10px 0 30px #0008;overflow:auto}body.lousa .gameLayout>.teacher.open{transform:none}
 body.lousa .gameLayout>.teacher .action,body.lousa .gameLayout>.teacher .altAction{display:none}
 body.lousa .pdeLousaTab{display:grid;place-items:center;position:absolute;z-index:41;right:0;top:50%;width:34px;height:110px;border:1px solid #3A6D84;border-right:0;border-radius:14px 0 0 14px;background:#123D53;color:#fff;font-size:11px;font-weight:900;font-family:inherit;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);cursor:pointer}
@@ -290,13 +291,13 @@ buildSetup();view("home");
  var content=null,ro=null,fitPend=false;
  var MODO=1; /* 1 = escala o filho único do palco; 2 = escala o próprio palco contra a altura da janela */
  function fit(){fitPend=false;if(!document.body.classList.contains("lousa"))return;
-  if(MODO===2){stage.style.zoom="";var top=stage.getBoundingClientRect().top,avail2=innerHeight-top-12,need2=stage.scrollHeight;if(need2<=avail2+1)return;var z2=Math.max(.55,Math.floor(avail2/need2*100)/100);stage.style.zoom=String(z2);return;}
+  if(MODO===2){stage.style.zoom="";var rb=stage.getBoundingClientRect(),extra=Math.max(0,document.documentElement.scrollHeight-rb.bottom-scrollY),avail2=innerHeight-rb.top-scrollY-extra-4,need2=stage.scrollHeight;if(need2<=avail2+1)return;var z2=Math.max(.4,Math.floor(avail2/need2*100)/100);stage.style.zoom=String(z2);return;}
   var c=stage.firstElementChild;if(!c)return;
   if(c!==content){content=c;}
   c.style.zoom="";c.style.width="";
   var cs=getComputedStyle(stage),avail=stage.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
   var need=c.scrollHeight;if(need<=avail+1)return;
-  var z=Math.max(.55,Math.floor(avail/need*100)/100);c.style.zoom=String(z);c.style.width=Math.min(100/z,100/z)+"%";c.style.maxWidth=(stage.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight))/z+"px";}
+  var z=Math.max(.4,Math.floor(avail/need*100)/100);c.style.zoom=String(z);c.style.width=Math.min(100/z,100/z)+"%";c.style.maxWidth=(stage.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight))/z+"px";}
  function agendar(){if(fitPend)return;fitPend=true;requestAnimationFrame(fit)}
  var mo=new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var r=rs[i];if(!(r.type==="attributes"&&r.attributeName==="style"&&(r.target===stage.firstElementChild||r.target===stage))){agendar();return;}}});
  function setLousa(on,salvar){
@@ -311,8 +312,17 @@ buildSetup();view("home");
   try{var s=localStorage.getItem(CH);if(s==="1")return true;if(s==="0")return false;}catch(e){}
   var coarse=matchMedia("(pointer:coarse)").matches,dpr=devicePixelRatio||1,emIframe=false;try{emIframe=window.top!==window.self}catch(e){emIframe=true}
   return innerWidth>=900;}
+ function diag(){var s=stage,c=s.firstElementChild,m=[["Jogo",document.title],["Largura x altura da janela",innerWidth+" x "+innerHeight],["devicePixelRatio",devicePixelRatio],["Tela (screen)",screen.width+" x "+screen.height],["Tela cheia",document.fullscreenElement?"sim":"não"],["Modo lousa",document.body.classList.contains("lousa")?"ligado":"desligado"],["Palco (altura útil)",s.clientHeight+" px"],["Conteúdo do palco",(c?c.scrollHeight:0)+" px, zoom "+(c&&c.style.zoom||"1")],["Palco rola?",(s.scrollHeight-s.clientHeight)+" px"],["Página rola?",(document.documentElement.scrollHeight-innerHeight)+" px"],["Toque",(matchMedia("(pointer:coarse)").matches?"sim":"não")+", pontos "+(navigator.maxTouchPoints||0)],["Navegador",navigator.userAgent]];
+  var txt="DIAGNÓSTICO · "+location.pathname+"\n"+m.map(function(l){return l[0]+": "+l[1]}).join("\n");
+  var box=document.getElementById("pdeLousaDiag");if(!box){box=document.createElement("div");box.id="pdeLousaDiag";box.style.cssText="position:fixed;inset:0;z-index:2147483000;background:rgba(5,12,20,.95);color:#eaf2f8;padding:24px;overflow:auto;font:15px/1.5 'Segoe UI',Roboto,sans-serif";document.body.appendChild(box);}
+  box.innerHTML='<div style="max-width:820px;margin:0 auto"><h2 style="color:#B6D752;margin:0 0 6px">Diagnóstico da tela</h2><p style="opacity:.7;margin:0 0 14px">Toque em Copiar e cole na conversa.</p><pre style="white-space:pre-wrap;background:#0f2c4a;padding:14px;border-radius:12px;font:14px/1.5 monospace">'+txt.replace(/</g,"&lt;")+'</pre><div style="display:flex;gap:10px;margin-top:14px"><button data-lousa="copiar" style="min-height:48px;padding:0 18px;border-radius:10px;border:0;background:#37B1DA;color:#08131f;font:inherit;font-weight:700">Copiar</button><button data-lousa="fechar" style="min-height:48px;padding:0 18px;border-radius:10px;border:1px solid #37B1DA;background:#0f2c4a;color:#eaf2f8;font:inherit;font-weight:700">Fechar</button></div></div>';box.dataset.txt=txt;box.style.display="block";}
+ var lastTap=0;
  document.addEventListener("click",function(e){var b=e.target.closest("[data-lousa]");if(!b)return;var a=b.getAttribute("data-lousa");
-  if(a==="toggle")setLousa(!document.body.classList.contains("lousa"),true);else if(a==="drawer"&&teacher)teacher.classList.toggle("open");});
+  if(a==="toggle"){var now=Date.now();if(now-lastTap<450){lastTap=0;setLousa(true,false);diag();return;}lastTap=now;setLousa(!document.body.classList.contains("lousa"),true);}
+  else if(a==="drawer"&&teacher)teacher.classList.toggle("open");
+  else if(a==="fechar"){var bx=document.getElementById("pdeLousaDiag");if(bx)bx.style.display="none";}
+  else if(a==="copiar"){var bx2=document.getElementById("pdeLousaDiag"),t=bx2?bx2.dataset.txt:"";var ok=function(){b.textContent="Copiado ✓"};if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,function(){var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");ok()}catch(e){}document.body.removeChild(ta)});}});
+ if(/[?&]diag=1/.test(location.search))setTimeout(diag,800);
  var vis=new MutationObserver(function(){document.body.classList.toggle("inwork",!!work&&!work.classList.contains("hidden"))});
  if(work){vis.observe(work,{attributes:true,attributeFilter:["class"]});document.body.classList.toggle("inwork",!work.classList.contains("hidden"));}
  window.addEventListener("resize",agendar);
