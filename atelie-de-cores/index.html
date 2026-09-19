@@ -107,6 +107,7 @@ main{width:min(1540px,100%);margin:0 auto;padding:clamp(9px,1.5vw,20px)}
  main{padding:8px}.mobile-levels{grid-template-columns:1fr}.mobile-card{min-height:102px}.arena{min-height:calc(100dvh - 205px);padding:9px}.choice-grid{grid-template-columns:1fr}.object-scene{grid-template-columns:repeat(2,1fr)}.canvas-wrap{grid-template-columns:1fr}.palette{grid-template-columns:repeat(6,1fr)}.paint-canvas{min-height:330px}
 }
 
+
 /* ===== PDE-LOUSA-JOGO v1 · Modo Lousa: palco inteiro, sem colunas, sem rolagem ===== */
 .pdeLousaTab{display:none}
 body.lousa header{height:58px;padding:5px 12px}body.lousa header img{width:40px;height:40px}body.lousa header h1{font-size:19px}body.lousa header small{display:none}
@@ -128,38 +129,7 @@ body.lousa .childFlow{gap:10px;width:min(1120px,100%)}
 body.lousa .mascot{padding:6px 12px}body.lousa .mascot .rosto{font-size:40px}body.lousa .mascot .bubble,body.lousa .bubble{font-size:19px;padding:8px 12px}body.lousa .sayBtn{width:42px;height:42px;font-size:19px}
 body.lousa .game-shell>.game-card .feedback{position:absolute;left:14px;right:14px;top:10px;z-index:6;max-height:calc(100% - 20px);overflow:auto;box-shadow:0 14px 34px #0f2c4a55;animation:pdeFbIn .25s ease-out;margin:0}@keyframes pdeFbIn{from{transform:translateY(-12px);opacity:0}to{transform:none;opacity:1}}
 @media(max-width:900px){body.lousa .game-shell,body.lousa .work.guided .game-shell{position:absolute;padding:10px 7px 74px}body.lousa .game-shell>.game-card{min-height:0}}
-body.lousa .game-shell{display:block!important;min-height:0!important}body.lousa .game-shell>.game-card{display:block;overflow:visible;align-items:initial}body.lousa.inwork{overflow:hidden}body.lousa.inwork .app{min-height:0}body.lousa.inwork main{padding-bottom:0}body.lousa .game-card>.game-head{display:none}body.lousa .game-card{padding:10px 18px}body.lousa .arena{padding:8px}
-/* ===== v2 · lógica pedagógica ===== */
-.paint.nolabel{font-size:0}.paint.nolabel small{display:none}
-.listen.big{font-size:22px;min-height:60px;padding:0 26px}
-.chip{display:inline-block;width:.9em;height:.9em;border-radius:50%;vertical-align:-.08em;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.2)}
-.intro-text{max-width:720px;margin:14px auto 0;font-size:clamp(17px,1.7vw,22px);line-height:1.5;color:var(--muted)}
-.mix-table{display:grid;gap:8px;max-width:520px;margin:14px auto 0}
-.mix-row{display:flex;align-items:center;justify-content:center;gap:10px;font-size:22px;font-weight:900;color:var(--navy)}
-.mix-row i{width:44px;height:44px;border-radius:12px;border:4px solid #fff;box-shadow:0 6px 14px rgba(0,0,0,.15)}
-.temp-intro{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:760px;margin:10px auto 0}
-.temp-box{border-radius:22px;padding:18px;border:2px solid var(--line);background:#fff}
-.temp-box.quente{background:linear-gradient(160deg,#fff4e5,#ffe0cc)}.temp-box.fria{background:linear-gradient(160deg,#e8f4ff,#dcecff)}
-.temp-ico{font-size:40px}.temp-box b{display:block;font-size:24px;color:var(--navy);margin-top:4px}.temp-box small{display:block;color:var(--muted);font-weight:800;margin-top:2px}
-.temp-box .dots{display:flex;justify-content:center;gap:8px;margin-top:10px}.temp-box .dots i{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.15)}
-.wheel-svg{width:clamp(200px,24vw,300px);height:auto;display:block;margin:0 auto 12px;filter:drop-shadow(0 12px 24px rgba(0,0,0,.15))}
-.wheel-svg .wbase{stroke:#0f2c4a;stroke-width:5}
-.mix-text b{color:var(--navy)}
-.brushes{display:flex;gap:8px;justify-content:center;margin-top:10px}
-.brush{width:44px;height:44px;border-radius:12px;border:2px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;font-size:20px}
-.brush i{display:block;border-radius:50%;background:#243542}.brush.on{outline:3px solid var(--navy)}
-.tp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left}
-.tp-box{background:#f4f8fa;border:1px solid var(--line);border-radius:16px;padding:14px}
-.tp-box small{display:block;font-size:11px;letter-spacing:.1em;font-weight:950;color:var(--petrol);margin-bottom:6px}
-.tp-box b{display:block;font-size:18px;color:var(--navy)}.tp-box p{font-size:14px!important;line-height:1.45!important;margin:6px 0 0!important;color:#45606f!important}
-.tp-box pre{white-space:pre-wrap;font:13px/1.45 ui-monospace,Consolas,monospace;background:#fff;border-radius:10px;padding:10px;margin:0;max-height:220px;overflow:auto;color:#243542}
-.tp-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.tp-row .action{margin:0;min-height:44px;font-size:14px}
-.tp-lab{display:block;font-size:13px;font-weight:800;color:#45606f}.tp-lab input{display:block;width:100%;margin-top:4px;padding:10px;border-radius:10px;border:1px solid var(--line);font:inherit}
-#teacherModal .modal-card{width:min(900px,100%);text-align:left;max-height:92vh;overflow:auto}
-@media(max-width:760px){.temp-intro,.tp-grid{grid-template-columns:1fr}}
-
-body.lousa .game-shell>.game-card .feedback{position:absolute;left:50%!important;right:auto!important;top:auto!important;bottom:17px!important;transform:translateX(-50%)!important;max-width:86%!important;width:auto!important;max-height:none!important;overflow:visible!important;animation:none!important;padding:13px 18px}
-</style>
+body.lousa .game-shell{display:block!important;min-height:0!important}body.lousa .game-shell>.game-card{display:block;overflow:visible;align-items:initial}body.lousa.inwork{overflow:hidden}body.lousa.inwork .app{min-height:0}body.lousa.inwork main{padding-bottom:0}body.lousa .game-card>.game-head{display:none}body.lousa .game-shell>.game-card .feedback{position:absolute;left:50%!important;right:auto!important;top:auto!important;bottom:17px!important;transform:translateX(-50%)!important;max-width:86%!important;width:auto!important;max-height:none!important;overflow:visible!important;animation:none!important;padding:13px 18px}body.lousa .game-card{padding:10px 18px}body.lousa .arena{padding:8px}</style>
 </head>
 <body>
 <div class="app">
@@ -508,6 +478,15 @@ if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=()=>{};
   try{var s=localStorage.getItem(CH);if(s==="1")return true;if(s==="0")return false;}catch(e){}
   var coarse=matchMedia("(pointer:coarse)").matches,dpr=devicePixelRatio||1,emIframe=false;try{emIframe=window.top!==window.self}catch(e){emIframe=true}
   return innerWidth>=900;}
+ var fsTried=false;
+ function tryAutoFS(){
+  if(fsTried||!document.body.classList.contains("lousa"))return;fsTried=true;
+  if(document.fullscreenElement||document.webkitFullscreenElement)return;
+  var el=document.documentElement,req=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  if(!req)return;try{var p=req.call(el);if(p&&p.catch)p.catch(function(){});}catch(e){}
+ }
+ document.addEventListener("click",tryAutoFS,{capture:true});
+ document.addEventListener("touchend",tryAutoFS,{capture:true,passive:true});
  function diag(){var s=stage,c=s.firstElementChild,m=[["Jogo",document.title],["Largura x altura da janela",innerWidth+" x "+innerHeight],["devicePixelRatio",devicePixelRatio],["Tela (screen)",screen.width+" x "+screen.height],["Tela cheia",document.fullscreenElement?"sim":"não"],["Modo lousa",document.body.classList.contains("lousa")?"ligado":"desligado"],["Palco (altura útil)",s.clientHeight+" px"],["Conteúdo do palco",(c?c.scrollHeight:0)+" px, zoom "+(c&&c.style.zoom||"1")],["Palco rola?",(s.scrollHeight-s.clientHeight)+" px"],["Página rola?",(document.documentElement.scrollHeight-innerHeight)+" px"],["Toque",(matchMedia("(pointer:coarse)").matches?"sim":"não")+", pontos "+(navigator.maxTouchPoints||0)],["Navegador",navigator.userAgent]];
   var txt="DIAGNÓSTICO · "+location.pathname+"\n"+m.map(function(l){return l[0]+": "+l[1]}).join("\n");
   var box=document.getElementById("pdeLousaDiag");if(!box){box=document.createElement("div");box.id="pdeLousaDiag";box.style.cssText="position:fixed;inset:0;z-index:2147483000;background:rgba(5,12,20,.95);color:#eaf2f8;padding:24px;overflow:auto;font:15px/1.5 'Segoe UI',Roboto,sans-serif";document.body.appendChild(box);}
