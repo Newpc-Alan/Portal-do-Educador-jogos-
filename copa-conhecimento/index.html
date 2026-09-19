@@ -147,7 +147,7 @@ body.lousa .gameLayout>.pitch .feedback{position:absolute;left:14px;right:14px;t
        <div class="feedback" id="feedback"><b></b><span></span></div>
      </div>
    </div>
-   <aside class="teacher"><h3>Painel do professor</h3><div id="teacherBody"></div><button class="nextBtn hidden" id="nextBtn">Próxima jogada →</button></aside>
+   <aside class="teacher"><h3>Painel do professor</h3><div id="teacherBody"></div><button class="nextBtn hidden" id="primaryAction">Próxima jogada →</button></aside>
  </div>
  <div class="dock"><button id="readBtn">🔊 Ler pergunta</button><button id="hintBtn">💡 Pista pedagógica</button><button id="exitBtn">⌂ Encerrar</button></div>
 </section>
@@ -242,7 +242,7 @@ function renderQuestion(){
  $("#phaseTrack").innerHTML=PHASES.map((p,i)=>`<div class="phase ${i<pi?"done":i===pi?"on":""}">${p}</div>`).join("");
  const letters=["A","B","C","D"];
  $("#answers").innerHTML=q.alts.map((a,i)=>`<button class="answer" data-a="${i}"><span class="letter">${letters[i]}</span><span>${a}</span></button>`).join("");
- $("#feedback").className="feedback";$("#feedback b").textContent="";$("#feedback span").textContent="";$("#nextBtn").classList.add("hidden");
+ $("#feedback").className="feedback";$("#feedback b").textContent="";$("#feedback span").textContent="";$("#primaryAction").classList.add("hidden");
  let current=st.mode==="duelo"?(st.turn%2===0?st.teamA:st.teamB):st.teamA;$("#turnTag").textContent=st.mode==="duelo"?"VEZ DA EQUIPE":"JOGADA DA TURMA";$("#turnTitle").textContent=current;$("#turnText").textContent=st.mode==="duelo"?`A equipe ${current} conversa e escolhe a resposta.`:"A turma conversa antes de responder. Acertou: gol. Errou: o adversário aproveita o contra-ataque.";
  setTeacher([["ANTES DE RESPONDER","Peça a um aluno para explicar como pensou."],["DISCIPLINA",q.d],["FASE",PHASES[pi]]]);
  $$(".answer").forEach(b=>b.onclick=()=>answer(Number(b.dataset.a)));
@@ -254,7 +254,7 @@ function answer(choice){
  st.history.push({q,choice,ok});$("#scoreA").textContent=st.scoreA;$("#scoreB").textContent=st.scoreB;
  const fb=$("#feedback");fb.className="feedback show "+(ok?"ok":"bad");$("#feedback b").textContent=ok?"⚽ GOL! Resposta correta.":"🧤 Defesa! Vamos entender a resposta.";$("#feedback span").textContent=q.exp;
  setTeacher([["EXPLICAÇÃO",q.exp],["PERGUNTA PARA A TURMA",ok?"Quem consegue explicar essa resposta com outras palavras?":"O que nos fez escolher a outra alternativa? O que precisamos observar na próxima?"],["PRÓXIMO PASSO","Leia a explicação e só então avance."]]);
- $("#nextBtn").classList.remove("hidden");$("#nextBtn").textContent=st.idx===st.questions.length-1?"Ver resultado 🏆":"Próxima jogada →";
+ $("#primaryAction").classList.remove("hidden");$("#primaryAction").textContent=st.idx===st.questions.length-1?"Ver resultado 🏆":"Próxima jogada →";
  speak((ok?"Gol. Resposta correta. ":"Vamos aprender com essa jogada. ")+q.exp);
 }
 function next(){st.idx++;if(st.idx>=st.questions.length)finish();else renderQuestion()}
@@ -270,7 +270,7 @@ function showReview(){
 }
 function hint(){const q=st.questions[st.idx];if(!q)return;const t={"Matemática":"Procure os números e descubra qual operação a situação pede.","Português":"Leia a frase devagar e observe a função de cada palavra.","Geografia":"Pense na localização, no mapa e nas relações entre os países.","Ciências":"Relacione a pergunta ao funcionamento do corpo e aos hábitos saudáveis."}[q.d]||"Elimine as alternativas que não combinam com o enunciado.";setTeacher([["PISTA PEDAGÓGICA",t],["SEM ENTREGAR A RESPOSTA","Dê alguns segundos para a turma discutir antes de escolher."]])}
 
-$("#startHome").onclick=()=>{buildSetup();view("setup")};$("#setupBack").onclick=()=>view("home");$("#homeBtn").onclick=()=>view("home");$("#startGame").onclick=startGame;$("#nextBtn").onclick=next;$("#readBtn").onclick=()=>{const q=st.questions[st.idx];if(q)speak(q.p+". "+q.alts.map((a,i)=>`${String.fromCharCode(65+i)}. ${a}`).join(". "))};$("#hintBtn").onclick=hint;$("#exitBtn").onclick=()=>view("home");$("#againBtn").onclick=()=>{buildSetup();view("setup")};$("#reviewBtn").onclick=showReview;
+$("#startHome").onclick=()=>{buildSetup();view("setup")};$("#setupBack").onclick=()=>view("home");$("#homeBtn").onclick=()=>view("home");$("#startGame").onclick=startGame;$("#primaryAction").onclick=next;$("#readBtn").onclick=()=>{const q=st.questions[st.idx];if(q)speak(q.p+". "+q.alts.map((a,i)=>`${String.fromCharCode(65+i)}. ${a}`).join(". "))};$("#hintBtn").onclick=hint;$("#exitBtn").onclick=()=>view("home");$("#againBtn").onclick=()=>{buildSetup();view("setup")};$("#reviewBtn").onclick=showReview;
 $("#howBtn").onclick=()=>alert("Escolha o ano e as seleções. A turma conversa sobre cada pergunta, responde, lê a explicação e avança pelas fases da Copa. No fim, a aplicação mostra o desempenho por disciplina e permite revisar os erros.");
 $("#soundBtn").onclick=()=>{st.sound=!st.sound;$("#soundBtn").textContent=st.sound?"🔊":"🔇";if(!st.sound&&"speechSynthesis"in window)speechSynthesis.cancel()};$("#fullBtn").onclick=()=>document.fullscreenElement?document.exitFullscreen?.():document.documentElement.requestFullscreen?.();
 $("#setup").addEventListener("click",e=>{const y=e.target.closest("[data-year]");if(y){st.year=Number(y.dataset.year);buildSetup();return}const m=e.target.closest("[data-mode]");if(m){st.mode=m.dataset.mode;if(st.mode==="turma"&&!OPP.includes(st.teamB))st.teamB=OPP[0];buildSetup();return}const a=e.target.closest("[data-team]");if(a){st.teamA=a.dataset.team;if(st.teamA===st.teamB)st.teamB=st.mode==="turma"?OPP[0]:TEAMS.find(t=>t!==st.teamA);buildSetup();return}const b=e.target.closest("[data-team-b]");if(b){st.teamB=b.dataset.team;buildSetup();}});
