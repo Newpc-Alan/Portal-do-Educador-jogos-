@@ -330,6 +330,7 @@ main{flex:1;min-height:0;padding:8px}
   .dockIcon{width:34px;height:34px}
 }
 
+
 /* ===== PDE-LOUSA-JOGO v1 · Modo Lousa: palco inteiro, sem colunas, sem rolagem ===== */
 .pdeLousaTab{display:none}
 body.lousa header{height:58px;padding:5px 12px}body.lousa header img{width:40px;height:40px}body.lousa header h1{font-size:19px}body.lousa header small{display:none}
@@ -1076,6 +1077,15 @@ $("#gradeBtn").onclick = () => {
   try{var s=localStorage.getItem(CH);if(s==="1")return true;if(s==="0")return false;}catch(e){}
   var coarse=matchMedia("(pointer:coarse)").matches,dpr=devicePixelRatio||1,emIframe=false;try{emIframe=window.top!==window.self}catch(e){emIframe=true}
   return innerWidth>=900;}
+ var fsTried=false;
+ function tryAutoFS(){
+  if(fsTried||!document.body.classList.contains("lousa"))return;fsTried=true;
+  if(document.fullscreenElement||document.webkitFullscreenElement)return;
+  var el=document.documentElement,req=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  if(!req)return;try{var p=req.call(el);if(p&&p.catch)p.catch(function(){});}catch(e){}
+ }
+ document.addEventListener("click",tryAutoFS,{capture:true});
+ document.addEventListener("touchend",tryAutoFS,{capture:true,passive:true});
  function diag(){var s=stage,c=s.firstElementChild,m=[["Jogo",document.title],["Largura x altura da janela",innerWidth+" x "+innerHeight],["devicePixelRatio",devicePixelRatio],["Tela (screen)",screen.width+" x "+screen.height],["Tela cheia",document.fullscreenElement?"sim":"não"],["Modo lousa",document.body.classList.contains("lousa")?"ligado":"desligado"],["Palco (altura útil)",s.clientHeight+" px"],["Conteúdo do palco",(c?c.scrollHeight:0)+" px, zoom "+(c&&c.style.zoom||"1")],["Palco rola?",(s.scrollHeight-s.clientHeight)+" px"],["Página rola?",(document.documentElement.scrollHeight-innerHeight)+" px"],["Toque",(matchMedia("(pointer:coarse)").matches?"sim":"não")+", pontos "+(navigator.maxTouchPoints||0)],["Navegador",navigator.userAgent]];
   var txt="DIAGNÓSTICO · "+location.pathname+"\n"+m.map(function(l){return l[0]+": "+l[1]}).join("\n");
   var box=document.getElementById("pdeLousaDiag");if(!box){box=document.createElement("div");box.id="pdeLousaDiag";box.style.cssText="position:fixed;inset:0;z-index:2147483000;background:rgba(5,12,20,.95);color:#eaf2f8;padding:24px;overflow:auto;font:15px/1.5 'Segoe UI',Roboto,sans-serif";document.body.appendChild(box);}
