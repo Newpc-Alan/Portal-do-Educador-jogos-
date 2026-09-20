@@ -1177,6 +1177,17 @@ document.addEventListener("click",e=>{
 $("#explainBtn").onclick=explain;$("#classBtn").onclick=showTeacherQuestion;$("#bossBtn").onclick=bossNow;
 $("#soundBtn").onclick=()=>{state.voice=!state.voice;update();if(state.voice)speak("Som ligado.")};
 $("#fsBtn").onclick=()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.()};
+(function(){
+ var fsTried=false;
+ function tryAutoFS(){
+  if(fsTried)return;fsTried=true;
+  if(document.fullscreenElement||document.webkitFullscreenElement)return;
+  var el=document.documentElement,req=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  if(!req)return;try{var p=req.call(el);if(p&&p.catch)p.catch(function(){});}catch(e){}
+ }
+ document.addEventListener("click",tryAutoFS,{capture:true});
+ document.addEventListener("touchend",tryAutoFS,{capture:true,passive:true});
+})();
 $("#helpBtn").onclick=()=>$("#helpModal").classList.add("open");
 $("#closeHelp").onclick=()=>$("#helpModal").classList.remove("open");
 $("#homeBtn").onclick=()=>{$("#resultModal").classList.remove("open");home()};$("#rematchBtn").onclick=()=>{$("#resultModal").classList.remove("open");startGame(state.mode)};$("#resultReportBtn").onclick=()=>{$("#resultModal").classList.remove("open");report()};
